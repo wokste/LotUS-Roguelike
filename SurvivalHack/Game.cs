@@ -10,6 +10,7 @@ namespace SurvivalHack
     class Game
     {
         private Creature _player;
+        private readonly Inventory _inventory = new Inventory();
 
         public Game(Creature player)
         {
@@ -24,26 +25,49 @@ namespace SurvivalHack
 
         private void ShowMenu()
         {
-            var menu = new OptionMenu("What do you want to do?");
+            _inventory.Write();
+
+            var menu = new ActionMenu("What do you want to do?");
             menu.Add("Cut Wood", CutWood);
-            menu.Add("Farm", Farm);
+            menu.Add("Farming", FarmMenu);
             menu.Add("Craft", Craft);
             menu.Show();
         }
-        
-        private void Craft()
+
+        internal void Init()
         {
-            Console.WriteLine("You craft an item");
+            ItemTypeList.InitTypes();
+
         }
 
-        private void Farm()
+        private void Craft()
         {
-            Console.WriteLine("You farm some food");
+            /*
+            if (wood < 10)
+            {
+                Console.WriteLine("Can't craft this item. You have too few components.");
+                return;
+            }
+
+            wood -= 10;
+            Console.WriteLine("You craft an item");
+            */
+        }
+
+        private void FarmMenu()
+        {
+            var t = ItemTypeList.Get("food");
+            var i = t.Make(5);
+
+            _inventory.Add(i);
         }
 
         private void CutWood()
         {
-            Console.WriteLine("You cut some wood");
+            var t = ItemTypeList.Get("wood");
+            var i = t.Make(5);
+
+            _inventory.Add(i);
         }
     }
 }

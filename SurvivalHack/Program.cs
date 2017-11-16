@@ -24,6 +24,7 @@ namespace SurvivalHack
             };
 
             var game = new Game(player);
+            game.Init();
             game.Run();
         }
     }
