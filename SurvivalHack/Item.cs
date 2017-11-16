@@ -18,11 +18,14 @@ namespace SurvivalHack
             return Name;
         }
 
-        internal Item Make(int count)
+        internal Item Make(int min = 1, int max = -1)
         {
+            if (max == -1)
+                max = min;
+
             return new Item
             {
-                Count = count,
+                Count = Program.Rnd.Next(min,max + 1),
                 Type = this
             };
         }
@@ -44,11 +47,25 @@ namespace SurvivalHack
 
             _types.Add(new ItemType
             {
-                Tag = "ore",
-                Name = "Ore",
+                Tag = "stone",
+                Name = "Stone",
                 Stacking = true
             });
 
+            _types.Add(new ItemType
+            {
+                Tag = "ore",
+                Name = "Iron Ore",
+                Stacking = true
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "bar",
+                Name = "Iron Bar",
+                Stacking = true
+            });
+            
             _types.Add(new ItemType
             {
                 Tag = "food",
@@ -58,15 +75,52 @@ namespace SurvivalHack
 
             _types.Add(new ItemType
             {
-                Tag = "tool-axe",
-                Name = "Axe",
+                Tag = "tool-axe1",
+                Name = "Stone Axe",
+                Stacking = false
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "tool-axe2",
+                Name = "Iron Axe",
+                Stacking = false
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "tool-pick1",
+                Name = "Stone Pickaxe",
+                Stacking = false
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "tool-pick2",
+                Name = "Iron Pickaxe",
+                Stacking = false
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "tool-sword1",
+                Name = "Wooden Sword",
+                Stacking = false
+            });
+
+            _types.Add(new ItemType
+            {
+                Tag = "tool-sword2",
+                Name = "Iron Sword",
                 Stacking = false
             });
         }
 
         internal static ItemType Get(string tag)
         {
-            return _types.Find(t => t.Tag == tag);
+            var itemType = _types.Find(t => t.Tag == tag);
+            Debug.Assert(itemType != null);
+            return itemType;
         }
     }
 

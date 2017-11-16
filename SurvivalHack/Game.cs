@@ -29,6 +29,7 @@ namespace SurvivalHack
 
             var menu = new ActionMenu("What do you want to do?");
             menu.Add("Cut Wood", CutWood);
+            menu.Add("Mine", Mine);
             menu.Add("Farming", FarmMenu);
             menu.Add("Craft", Craft);
             menu.Show();
@@ -42,32 +43,29 @@ namespace SurvivalHack
 
         private void Craft()
         {
-            /*
-            if (wood < 10)
-            {
-                Console.WriteLine("Can't craft this item. You have too few components.");
-                return;
-            }
+            CraftingStation station = new CraftingStation();
+            station.Init();
+            station.OpenCraftingMenu(_inventory);
+        }
+        
+        private void Mine()
+        {
+            _inventory.Add("stone", Program.Rnd.Next(2, 4));
 
-            wood -= 10;
-            Console.WriteLine("You craft an item");
-            */
+            if (Program.Rnd.Next(25) == 1)
+            {
+                _inventory.Add("ore", Program.Rnd.Next(2, 4));
+            }
         }
 
         private void FarmMenu()
         {
-            var t = ItemTypeList.Get("food");
-            var i = t.Make(5);
-
-            _inventory.Add(i);
+            _inventory.Add("food", Program.Rnd.Next(2, 4));
         }
 
         private void CutWood()
         {
-            var t = ItemTypeList.Get("wood");
-            var i = t.Make(5);
-
-            _inventory.Add(i);
+            _inventory.Add("wood", Program.Rnd.Next(3, 6));
         }
     }
 }

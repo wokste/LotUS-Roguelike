@@ -12,6 +12,7 @@ namespace SurvivalHack
 
         internal void Add(Item item)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"You aquired {item}");
 
             if (item.Type.Stacking)
@@ -34,11 +35,19 @@ namespace SurvivalHack
 
         public void Write()
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Inventory:");
+            Console.ForegroundColor = ConsoleColor.Gray;
             foreach (var i in items)
             {
                 Console.WriteLine($"  {i}");
             }
+        }
+
+        internal void Add(string itemTag, int count)
+        {
+            var type = ItemTypeList.Get(itemTag);
+            Add(type.Make(count));
         }
     }
 }

@@ -9,24 +9,28 @@ namespace SurvivalHack
 {
     static class Menu
     {
-        public static T ShowList<T>(string question, List<T> options)
+        public static T ShowList<T>(string question, List<T> options, Func<T,bool> canSelect)
         {
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(question);
                 var i = 1;
-
+                
                 foreach (var o in options)
                 {
+                    Console.ForegroundColor = (canSelect(o) ? ConsoleColor.Yellow : ConsoleColor.DarkGray);
                     Console.WriteLine($"{i}. {o}");
                     i++;
                 }
 
                 var keyStr = Console.ReadLine();
-                int index;
+                if (keyStr == "")
+                    return default(T);
 
-                if (!int.TryParse(keyStr, out index))
+                if (!int.TryParse(keyStr, out var index))
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Didn't understand answer");
                     continue;
                 }
@@ -35,11 +39,13 @@ namespace SurvivalHack
 
                 if (index < 0 || index >= options.Count)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Out of bounds");
                     continue;
                 }
-
-                return options[index];
+                
+                if (canSelect(options[index]))
+                    return options[index];
             }
         }
     }
@@ -65,8 +71,8 @@ namespace SurvivalHack
 
         public void Show()
         {
-            var option = Menu.ShowList(_question, _options);
-            option.Action();
+            var option = Menu.ShowList(_question, _options, o => true);
+            option?.Action();
         }
 
         private class Option
