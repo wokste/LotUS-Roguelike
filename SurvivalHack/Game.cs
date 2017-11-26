@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Media;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-
-using System;
-using System.Text;
-using System.IO;
-//
+using HackLib;
 
 namespace SurvivalHack
 {
@@ -57,7 +48,7 @@ namespace SurvivalHack
             menu.Show();
         }
 
-        internal void Init()
+        public void Init()
         {
             ItemTypeList.InitTypes();
             TileTypeList.InitTypes();

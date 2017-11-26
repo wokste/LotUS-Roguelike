@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SurvivalHack
+namespace HackLib
 {
     class PerlinNoise
     {
@@ -53,7 +53,7 @@ namespace SurvivalHack
             return Lerp(i1, i2, yFrac);
         }
 
-        internal float Get(float x, float y)
+        public float Get(float x, float y)
         {
             var total = 0f;
 

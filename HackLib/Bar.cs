@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SurvivalHack
+namespace HackLib
 {
-    struct Bar
+    public struct Bar
     {
         private int _current;
         private int _max;

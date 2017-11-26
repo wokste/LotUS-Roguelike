@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HackLib;
 
 namespace SurvivalHack
 {
     class Program
     {
-        internal static Random Rnd = new Random();
+        public static Random Rnd = new Random();
 
         static void Main(string[] args)
         {

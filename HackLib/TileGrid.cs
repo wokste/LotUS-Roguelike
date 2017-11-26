@@ -1,21 +1,17 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
-namespace SurvivalHack
+namespace HackLib
 {
-    class TileGrid
+    public class TileGrid
     {
-        internal int[,] Grid;
-        internal readonly int Width;
-        internal readonly int Height;
+        public int[,] Grid;
+        public readonly int Width;
+        public readonly int Height;
 
-        internal TileGrid(int width, int height)
+        public TileGrid(int width, int height)
         {
             Grid = new int[width,height];
             Width = width;
@@ -30,7 +26,7 @@ namespace SurvivalHack
                 Octaves = 4,
                 Persistence = 0.5f,
                 Scale = 6f,
-                Seed = Program.Rnd.Next()
+                Seed = Dicebag.UniformInt()
             };
             for (var y = 0; y < Height; y++)
             {
@@ -39,9 +35,9 @@ namespace SurvivalHack
                     var isRock = heightMap.Get(x, y) > 0.3;
                     
                     if (isRock)
-                        Grid[x, y] = Program.Rnd.Next(30) == 1 ? TileTypeList.GetID("ore") : TileTypeList.GetID("rock");
+                        Grid[x, y] = Dicebag.UniformInt(30) == 1 ? TileTypeList.GetID("ore") : TileTypeList.GetID("rock");
                     else
-                        Grid[x, y] = Program.Rnd.Next(5) == 1 ? TileTypeList.GetID("tree") : TileTypeList.GetID("grass");
+                        Grid[x, y] = Dicebag.UniformInt(5) == 1 ? TileTypeList.GetID("tree") : TileTypeList.GetID("grass");
                 }
             }
         }
@@ -75,7 +71,7 @@ namespace SurvivalHack
         }
     }
 
-    class TileType
+    public class TileType
     {
         public string Tag;
         public char Char;
@@ -86,7 +82,7 @@ namespace SurvivalHack
         public bool Walkable = false;
     }
 
-    static class TileTypeList
+    public static class TileTypeList
     {
         private static readonly List<TileType> _types = new List<TileType>();
 
@@ -132,14 +128,14 @@ namespace SurvivalHack
             });
         }
         
-        internal static int GetID(string tag)
+        public static int GetID(string tag)
         {
             var tileID = _types.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileID != -1);
             return tileID;
         }
 
-        internal static TileType Get(int id)
+        public static TileType Get(int id)
         {
             return _types[id];
         }

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SurvivalHack
+namespace HackLib
 {
-    class Inventory
+    public class Inventory
     {
-        private List<Item> items = new List<Item>();
+        private readonly List<Item> items = new List<Item>();
 
-        internal void Add(Item item)
+        public void Add(Item item)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"You aquired {item}");
@@ -28,7 +25,7 @@ namespace SurvivalHack
             items.Add(item);
         }
 
-        internal Item Find(ItemType type)
+        public Item Find(ItemType type)
         {
             return items.Find(i => i.Type == type);
         }
@@ -44,7 +41,7 @@ namespace SurvivalHack
             }
         }
 
-        internal void Add(string itemTag, int count)
+        public void Add(string itemTag, int count)
         {
             var type = ItemTypeList.Get(itemTag);
             Add(type.Make(count));

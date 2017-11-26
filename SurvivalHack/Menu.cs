@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack
 {
@@ -98,8 +94,8 @@ namespace SurvivalHack
 
         private class Option
         {
-            internal string Name;
-            internal Action Action;
+            public string Name;
+            public Action Action;
 
             public override string ToString()
             {

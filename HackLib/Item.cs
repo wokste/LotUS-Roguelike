@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SurvivalHack
+namespace HackLib
 {
-    class ItemType
+    public class ItemType
     {
         public string Tag;
         public string Name;
@@ -18,21 +14,21 @@ namespace SurvivalHack
             return Name;
         }
 
-        internal Item Make(int min = 1, int max = -1)
+        public Item Make(int min = 1, int max = -1)
         {
             if (max == -1)
                 max = min;
 
             return new Item
             {
-                Count = Program.Rnd.Next(min,max + 1),
+                Count = Dicebag.UniformInt(min,max + 1),
                 Type = this
             };
         }
     }
 
-    static class ItemTypeList {
-        private static List<ItemType> _types = new List<ItemType>();
+    public static class ItemTypeList {
+        private static readonly List<ItemType> _types = new List<ItemType>();
 
         public static void InitTypes()
         {
@@ -116,7 +112,7 @@ namespace SurvivalHack
             });
         }
 
-        internal static ItemType Get(string tag)
+        public static ItemType Get(string tag)
         {
             var itemType = _types.Find(t => t.Tag == tag);
             Debug.Assert(itemType != null);
@@ -124,7 +120,7 @@ namespace SurvivalHack
         }
     }
 
-    class Item
+    public class Item
     {
         public ItemType Type;
         public int Count;

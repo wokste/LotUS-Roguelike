@@ -1,6 +1,6 @@
-﻿namespace SurvivalHack
+﻿namespace HackLib
 {
-    internal class Attack
+    public class Attack
     {
         public float HitChance;
         public int Damage;

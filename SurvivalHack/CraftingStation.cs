@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Deployment.Internal;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HackLib;
 
 namespace SurvivalHack
 {
-    internal class CraftingStation
+    public class CraftingStation
     {
-        List<CraftingRecipy> Recipies = new List<CraftingRecipy>();
+        readonly List<CraftingRecipy> Recipies = new List<CraftingRecipy>();
         
-        internal void Init()
+        public void Init()
         {
             Recipies.Add(new CraftingRecipy
             {
@@ -82,7 +80,7 @@ namespace SurvivalHack
             });
         }
 
-        internal void OpenCraftingMenu(Inventory inventory)
+        public void OpenCraftingMenu(Inventory inventory)
         {
             while (true)
             {
@@ -99,12 +97,12 @@ namespace SurvivalHack
         }
     }
 
-    internal class CraftingRecipy
+    public class CraftingRecipy
     {
-        internal List<ItemRef> Input = new List<ItemRef>();
-        internal ItemRef Output;
+        public List<ItemRef> Input = new List<ItemRef>();
+        public ItemRef Output;
 
-        internal void Craft(Inventory inventory, int count = 1)
+        public void Craft(Inventory inventory, int count = 1)
         {
             foreach (var tuple in Input)
             {
@@ -118,7 +116,7 @@ namespace SurvivalHack
             inventory.Add(Output.Type.Make(count * Output.Count));
         }
 
-        internal int CraftCount(Inventory inventory)
+        public int CraftCount(Inventory inventory)
         {
             var returnValue = Int32.MaxValue;
             foreach (var tuple in Input)
@@ -138,10 +136,10 @@ namespace SurvivalHack
             return Output.Type.ToString();
         }
 
-        internal class ItemRef
+        public class ItemRef
         {
-            internal ItemType Type;
-            internal int Count;
+            public ItemType Type;
+            public int Count;
 
             public ItemRef(string typeName, int count)
             {
