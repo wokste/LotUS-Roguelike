@@ -8,13 +8,11 @@ namespace SurvivalHack
 {
     class MonsterFactory
     {
-        internal Creature Create()
+        internal Creature Create(string tag)
         {
-            var r = Program.Rnd.Next(0, 2);
-
-            switch (r)
+            switch (tag)
             {
-                case 1:
+                case "slime":
                     return new Creature
                     {
                         Name = "Slime",
@@ -25,7 +23,7 @@ namespace SurvivalHack
                         },
                         HP = new Bar(10)
                     };
-                case 2:
+                case "orc":
                     return new Creature
                     {
                         Name = "Orc",

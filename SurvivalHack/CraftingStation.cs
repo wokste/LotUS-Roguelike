@@ -84,18 +84,18 @@ namespace SurvivalHack
 
         internal void OpenCraftingMenu(Inventory inventory)
         {
-            var recipy = Menu.ShowList("What do you want to craft?", Recipies, r => r.CraftCount(inventory) > 0);
-            if (recipy == null)
-                return;
-
-            if (recipy.CraftCount(inventory) < 1)
+            while (true)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You have insufficient materials.");
-                return;
-            }
+                var recipies = Recipies.Where(r => r.CraftCount(inventory) > 0).ToArray();
+                var recipy = Menu.ShowList("What do you want to craft?", recipies);
+                if (recipy == null)
+                    return;
 
-            recipy.Craft(inventory);
+                int max = recipy.CraftCount(inventory);
+                var count = recipy.Output.Type.Stacking ? Menu.AskInt("How Many? (Max {max})", 0, max) : 1;
+                
+                recipy.Craft(inventory,count);
+            }
         }
     }
 
@@ -115,7 +115,7 @@ namespace SurvivalHack
                 Debug.Assert(item.Count >= 0);
             }
 
-            inventory.Add(Output.Type.Make(Output.Count));
+            inventory.Add(Output.Type.Make(count * Output.Count));
         }
 
         internal int CraftCount(Inventory inventory)

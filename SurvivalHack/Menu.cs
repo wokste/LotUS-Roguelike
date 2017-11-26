@@ -9,7 +9,7 @@ namespace SurvivalHack
 {
     static class Menu
     {
-        public static T ShowList<T>(string question, List<T> options, Func<T,bool> canSelect)
+        public static T ShowList<T>(string question, IList<T> options)
         {
             while (true)
             {
@@ -19,11 +19,12 @@ namespace SurvivalHack
                 
                 foreach (var o in options)
                 {
-                    Console.ForegroundColor = (canSelect(o) ? ConsoleColor.Yellow : ConsoleColor.DarkGray);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"{i}. {o}");
                     i++;
                 }
 
+                Console.ForegroundColor = ConsoleColor.White;
                 var keyStr = Console.ReadLine();
                 if (keyStr == "")
                     return default(T);
@@ -43,9 +44,29 @@ namespace SurvivalHack
                     Console.WriteLine("Out of bounds");
                     continue;
                 }
+                return options[index];
+            }
+        }
+
+        public static int AskInt(string question, int min, int max)
+        {
+            while (true)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(question);
                 
-                if (canSelect(options[index]))
-                    return options[index];
+                var valStr = Console.ReadLine();
+                if (valStr == "")
+                    return 0;
+
+                if (!int.TryParse(valStr, out var val))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Didn't understand answer");
+                    continue;
+                }
+
+                return Math.Min(Math.Max(0, val), max);
             }
         }
     }
@@ -71,7 +92,7 @@ namespace SurvivalHack
 
         public void Show()
         {
-            var option = Menu.ShowList(_question, _options, o => true);
+            var option = Menu.ShowList(_question, _options);
             option?.Action();
         }
 

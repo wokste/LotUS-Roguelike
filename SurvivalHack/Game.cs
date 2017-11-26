@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
+using System;
+using System.Text;
+using System.IO;
+//
 
 namespace SurvivalHack
 {
@@ -11,6 +18,7 @@ namespace SurvivalHack
     {
         private Creature _player;
         private readonly Inventory _inventory = new Inventory();
+        private TileGrid _grid;
 
         public Game(Creature player)
         {
@@ -20,7 +28,21 @@ namespace SurvivalHack
         public void Run()
         {
             while (true)
-                ShowMenu();
+            {
+                //Console.Clear();
+                Console.CursorVisible = false;
+
+                var windowWidth = Console.WindowWidth;
+                var windowHeight = Console.WindowHeight;
+
+                var barLeft = windowWidth / 4;
+                var barRight = windowWidth / 4;
+
+                _grid.Render(new Rectangle(barLeft, 0, windowWidth - barLeft - barRight, windowHeight),new Point(0,0));
+                Thread.Sleep(50);
+                //ShowMenu();
+            }
+                
         }
 
         private void ShowMenu()
@@ -38,7 +60,9 @@ namespace SurvivalHack
         internal void Init()
         {
             ItemTypeList.InitTypes();
+            TileTypeList.InitTypes();
 
+            _grid = new TileGrid(128, 128);
         }
 
         private void Craft()
