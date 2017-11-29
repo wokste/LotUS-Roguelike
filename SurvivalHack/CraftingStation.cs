@@ -8,11 +8,11 @@ namespace SurvivalHack
 {
     public class CraftingStation
     {
-        readonly List<CraftingRecipy> Recipies = new List<CraftingRecipy>();
+        private readonly List<CraftingRecipy> _recipies = new List<CraftingRecipy>();
         
         public void Init()
         {
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -22,7 +22,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-axe1",1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -32,7 +32,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-axe2", 1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -42,7 +42,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-pick1", 1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -52,7 +52,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-pick2", 1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -61,7 +61,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-sword1", 1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -70,7 +70,7 @@ namespace SurvivalHack
                 Output = new CraftingRecipy.ItemRef("tool-sword2", 1)
             });
 
-            Recipies.Add(new CraftingRecipy
+            _recipies.Add(new CraftingRecipy
             {
                 Input = new List<CraftingRecipy.ItemRef>
                 {
@@ -84,12 +84,12 @@ namespace SurvivalHack
         {
             while (true)
             {
-                var recipies = Recipies.Where(r => r.CraftCount(inventory) > 0).ToArray();
+                var recipies = _recipies.Where(r => r.CraftCount(inventory) > 0).ToArray();
                 var recipy = Menu.ShowList("What do you want to craft?", recipies);
                 if (recipy == null)
                     return;
 
-                int max = recipy.CraftCount(inventory);
+                var max = recipy.CraftCount(inventory);
                 var count = recipy.Output.Type.Stacking ? Menu.AskInt("How Many? (Max {max})", 0, max) : 1;
                 
                 recipy.Craft(inventory,count);

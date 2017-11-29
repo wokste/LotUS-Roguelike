@@ -5,21 +5,21 @@ namespace HackLib
     public static class Dicebag
     {
         // TODO: This should be ThreadLocal<Random>()
-        private static readonly Random _rnd = new Random();
+        private static readonly Random Rnd = new Random();
 
         public static int UniformInt()
         {
-            return _rnd.Next();
+            return Rnd.Next();
         }
 
         public static int UniformInt(int max)
         {
-            return _rnd.Next(max);
+            return Rnd.Next(max);
         }
 
         public static int UniformInt(int min, int max)
         {
-            return _rnd.Next(min, max);
+            return Rnd.Next(min, max);
         }
     }
 }

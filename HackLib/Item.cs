@@ -28,83 +28,83 @@ namespace HackLib
     }
 
     public static class ItemTypeList {
-        private static readonly List<ItemType> _types = new List<ItemType>();
+        private static readonly List<ItemType> Types = new List<ItemType>();
 
         public static void InitTypes()
         {
-            Debug.Assert(_types.Count == 0);
+            Debug.Assert(Types.Count == 0);
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "wood",
                 Name = "Wood",
                 Stacking = true
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "stone",
                 Name = "Stone",
                 Stacking = true
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "ore",
                 Name = "Iron Ore",
                 Stacking = true
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "bar",
                 Name = "Iron Bar",
                 Stacking = true
             });
             
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "food",
                 Name = "Food",
                 Stacking = true
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-axe1",
                 Name = "Stone Axe",
                 Stacking = false
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-axe2",
                 Name = "Iron Axe",
                 Stacking = false
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-pick1",
                 Name = "Stone Pickaxe",
                 Stacking = false
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-pick2",
                 Name = "Iron Pickaxe",
                 Stacking = false
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-sword1",
                 Name = "Wooden Sword",
                 Stacking = false
             });
 
-            _types.Add(new ItemType
+            Types.Add(new ItemType
             {
                 Tag = "tool-sword2",
                 Name = "Iron Sword",
@@ -114,7 +114,7 @@ namespace HackLib
 
         public static ItemType Get(string tag)
         {
-            var itemType = _types.Find(t => t.Tag == tag);
+            var itemType = Types.Find(t => t.Tag == tag);
             Debug.Assert(itemType != null);
             return itemType;
         }

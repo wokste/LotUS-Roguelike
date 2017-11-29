@@ -21,7 +21,7 @@ namespace HackLib
 
         private void Generate()
         {
-            PerlinNoise heightMap = new PerlinNoise
+            var heightMap = new PerlinNoise
             {
                 Octaves = 4,
                 Persistence = 0.5f,
@@ -35,9 +35,9 @@ namespace HackLib
                     var isRock = heightMap.Get(x, y) > 0.3;
                     
                     if (isRock)
-                        Grid[x, y] = Dicebag.UniformInt(30) == 1 ? TileTypeList.GetID("ore") : TileTypeList.GetID("rock");
+                        Grid[x, y] = Dicebag.UniformInt(30) == 1 ? TileTypeList.GetId("ore") : TileTypeList.GetId("rock");
                     else
-                        Grid[x, y] = Dicebag.UniformInt(5) == 1 ? TileTypeList.GetID("tree") : TileTypeList.GetID("grass");
+                        Grid[x, y] = Dicebag.UniformInt(5) == 1 ? TileTypeList.GetId("tree") : TileTypeList.GetId("grass");
                 }
             }
         }
@@ -80,17 +80,19 @@ namespace HackLib
         public string DropTag = "";
         public int DropCount = 0;
         public bool Walkable = false;
+
+        public Point SourcePos;
     }
 
     public static class TileTypeList
     {
-        private static readonly List<TileType> _types = new List<TileType>();
+        private static readonly List<TileType> Types = new List<TileType>();
 
         public static void InitTypes()
         {
-            Debug.Assert(_types.Count == 0);
+            Debug.Assert(Types.Count == 0);
 
-            _types.Add(new TileType
+            Types.Add(new TileType
             {
                 Tag = "grass",
                 Char = '.',
@@ -98,46 +100,50 @@ namespace HackLib
                 DropTag = "",
                 DropCount = 0,
                 Walkable = true,
+                SourcePos = new Point(0,0),
             });
 
-            _types.Add(new TileType
+            Types.Add(new TileType
             {
                 Tag = "tree",
                 Char = '^',
                 Color = ConsoleColor.Green,
                 DropTag = "wood",
-                DropCount = 5
+                DropCount = 5,
+                SourcePos = new Point(1, 0),
             });
 
-            _types.Add(new TileType
+            Types.Add(new TileType
             {
                 Tag = "rock",
                 Char = '#',
                 Color = ConsoleColor.Red,
                 DropTag = "stone",
-                DropCount = 1
+                DropCount = 1,
+                SourcePos = new Point(3, 0),
             });
 
-            _types.Add(new TileType
+            Types.Add(new TileType
             {
                 Tag = "ore",
                 Char = '#',
                 Color = ConsoleColor.Yellow,
                 DropTag = "ore",
-                DropCount = 1
+                DropCount = 1,
+                SourcePos = new Point(5, 0),
             });
         }
         
-        public static int GetID(string tag)
+        public static int GetId(string tag)
         {
-            var tileID = _types.FindIndex(t => t.Tag == tag);
-            Debug.Assert(tileID != -1);
-            return tileID;
+            var tileId = Types.FindIndex(t => t.Tag == tag);
+            Debug.Assert(tileId != -1);
+            return tileId;
         }
 
         public static TileType Get(int id)
         {
-            return _types[id];
+            return Types[id];
         }
     }
 }

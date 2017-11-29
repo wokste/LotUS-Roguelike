@@ -9,13 +9,8 @@ namespace SurvivalHack
     {
         private Creature _player;
         private readonly Inventory _inventory = new Inventory();
-        private TileGrid _grid;
-
-        public Game(Creature player)
-        {
-            _player = player;
-        }
-
+        public TileGrid Grid;
+        
         public void Run()
         {
             while (true)
@@ -29,7 +24,7 @@ namespace SurvivalHack
                 var barLeft = windowWidth / 4;
                 var barRight = windowWidth / 4;
 
-                _grid.Render(new Rectangle(barLeft, 0, windowWidth - barLeft - barRight, windowHeight),new Point(0,0));
+                Grid.Render(new Rectangle(barLeft, 0, windowWidth - barLeft - barRight, windowHeight),new Point(0,0));
                 Thread.Sleep(50);
                 //ShowMenu();
             }
@@ -53,34 +48,45 @@ namespace SurvivalHack
             ItemTypeList.InitTypes();
             TileTypeList.InitTypes();
 
-            _grid = new TileGrid(128, 128);
+            Grid = new TileGrid(128, 128);
+            _player = new Creature
+            {
+                Name = "Steven",
+                Attack = new Attack
+                {
+                    Damage = 7,
+                    HitChance = 0.75f
+                },
+                HitPoints = new Bar(25)
+            };
         }
 
         private void Craft()
         {
-            CraftingStation station = new CraftingStation();
+            var station = new CraftingStation();
             station.Init();
             station.OpenCraftingMenu(_inventory);
         }
         
         private void Mine()
         {
-            _inventory.Add("stone", Program.Rnd.Next(2, 4));
+            _inventory.Add("stone", Dicebag.UniformInt(2, 4));
 
-            if (Program.Rnd.Next(25) == 1)
+            if (Dicebag.UniformInt(25) == 1)
             {
-                _inventory.Add("ore", Program.Rnd.Next(2, 4));
+                _inventory.Add("ore", Dicebag.UniformInt(2, 4));
             }
         }
 
         private void FarmMenu()
         {
-            _inventory.Add("food", Program.Rnd.Next(2, 4));
+            _inventory.Add("food", Dicebag.UniformInt(2, 4));
         }
 
         private void CutWood()
         {
-            _inventory.Add("wood", Program.Rnd.Next(3, 6));
+            _inventory.Add("wood", Dicebag.UniformInt(3, 6));
         }
     }
 }
+ 

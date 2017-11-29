@@ -5,7 +5,7 @@ namespace HackLib
     public class Creature
     {
         public String Name;
-        public Bar HP;
+        public Bar HitPoints;
         public Attack Attack;
     }
 }
