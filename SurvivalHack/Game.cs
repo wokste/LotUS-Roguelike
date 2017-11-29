@@ -7,8 +7,8 @@ namespace SurvivalHack
 {
     class Game
     {
-        private Creature _player;
-        private readonly Inventory _inventory = new Inventory();
+        public Creature Player;
+        public readonly Inventory Inventory = new Inventory();
         public TileGrid Grid;
         
         public void Run()
@@ -33,7 +33,7 @@ namespace SurvivalHack
 
         private void ShowMenu()
         {
-            _inventory.Write();
+            Inventory.Write();
 
             var menu = new ActionMenu("What do you want to do?");
             menu.Add("Cut Wood", CutWood);
@@ -49,7 +49,7 @@ namespace SurvivalHack
             TileTypeList.InitTypes();
 
             Grid = new TileGrid(128, 128);
-            _player = new Creature
+            Player = new Creature
             {
                 Name = "Steven",
                 Attack = new Attack
@@ -65,27 +65,27 @@ namespace SurvivalHack
         {
             var station = new CraftingStation();
             station.Init();
-            station.OpenCraftingMenu(_inventory);
+            station.OpenCraftingMenu(Inventory);
         }
         
         private void Mine()
         {
-            _inventory.Add("stone", Dicebag.UniformInt(2, 4));
+            Inventory.Add("stone", Dicebag.UniformInt(2, 4));
 
             if (Dicebag.UniformInt(25) == 1)
             {
-                _inventory.Add("ore", Dicebag.UniformInt(2, 4));
+                Inventory.Add("ore", Dicebag.UniformInt(2, 4));
             }
         }
 
         private void FarmMenu()
         {
-            _inventory.Add("food", Dicebag.UniformInt(2, 4));
+            Inventory.Add("food", Dicebag.UniformInt(2, 4));
         }
 
         private void CutWood()
         {
-            _inventory.Add("wood", Dicebag.UniformInt(3, 6));
+            Inventory.Add("wood", Dicebag.UniformInt(3, 6));
         }
     }
 }

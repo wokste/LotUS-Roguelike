@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using HackLib;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -7,6 +9,7 @@ namespace SurvivalHack
     class SfmlApp
     {
         private readonly Game _game;
+        private readonly Camera _camera;
         private readonly SfmlGridRenderer _gridRenderer;
         private readonly RenderWindow _window;
 
@@ -30,19 +33,46 @@ namespace SurvivalHack
             _window.SetVisible(true);
             _window.SetVerticalSyncEnabled(true);
 
-            _window.Closed += Window_Closed;
+            _window.Closed += OnClosed;
+            _window.KeyPressed += OnKeyPressed;
 
             _window.SetFramerateLimit(60);
             
             _game = new Game();
             _game.Init();
 
-            _gridRenderer = new SfmlGridRenderer(_game.Grid);
+            _camera = new Camera(_game.Player);
+            _camera.WindowSize = new Size(640,480);
+            _gridRenderer = new SfmlGridRenderer(_game.Grid, _camera);
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
         {
+            //TODO: Some of this needs to move to game
+            switch (keyEventArgs.Code)
+            {
+                case Keyboard.Key.W:
+                    _game.Player.Walk(new Point(0, -1), _game.Grid);
+                    break;
+                case Keyboard.Key.A:
+                    _game.Player.Walk(new Point(-1, 0), _game.Grid);
+                    break;
+                case Keyboard.Key.S:
+                    _game.Player.Walk(new Point(0, 1), _game.Grid);
+                    break;
+                case Keyboard.Key.D:
+                    _game.Player.Walk(new Point(1, 0), _game.Grid);
+                    break;
+                case Keyboard.Key.Space:
+                    // Temporary method because the player can start in rock;
+                    _game.Player.Position = new Point(Dicebag.UniformInt(_game.Grid.Width), Dicebag.UniformInt(_game.Grid.Height));
+                    break;
+            }
+        }
 
+        private void OnClosed(object sender, EventArgs e)
+        {
+            _window.Close();
         }
 
         public void Run()
@@ -59,7 +89,7 @@ namespace SurvivalHack
 
         private void Update()
         {
-
+            _camera.Update();
         }
 
         private void Render()
