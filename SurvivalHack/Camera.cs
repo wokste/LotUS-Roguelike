@@ -22,7 +22,7 @@ namespace SurvivalHack
             set
             {
                 _following = value;
-                _center = new Vector2f(_following.Position.X * TileX, _following.Position.Y * TileY);
+                _center = new Vector2f((_following.Position.X + 0.5f) * TileX, (_following.Position.Y + 0.5f) * TileY);
                 // TODO: More stuff
             }
         }
@@ -34,7 +34,7 @@ namespace SurvivalHack
 
         public void Update()
         {
-            _center = new Vector2f(_following.Position.X * TileX, _following.Position.Y * TileY);
+            _center = new Vector2f((_following.Position.X * TileX + 0.5f), (_following.Position.Y + 0.5f) * TileY);
         }
 
         public Rectangle GetRenderAreaPx()

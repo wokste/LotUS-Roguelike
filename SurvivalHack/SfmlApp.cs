@@ -15,7 +15,6 @@ namespace SurvivalHack
 
         static void Main(string[] args)
         {
-            Console.WriteLine("STUFF");
             var app = new SfmlApp();
             app.Run();
         }
@@ -35,6 +34,7 @@ namespace SurvivalHack
 
             _window.Closed += OnClosed;
             _window.KeyPressed += OnKeyPressed;
+            _window.Resized += OnResized;
 
             _window.SetFramerateLimit(60);
             
@@ -44,6 +44,12 @@ namespace SurvivalHack
             _camera = new Camera(_game.Player);
             _camera.WindowSize = new Size(640,480);
             _gridRenderer = new SfmlGridRenderer(_game.Grid, _camera);
+        }
+
+        private void OnResized(object sender, SizeEventArgs e)
+        {
+            _camera.WindowSize = new Size((int)e.Width, (int)e.Height);
+            _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
