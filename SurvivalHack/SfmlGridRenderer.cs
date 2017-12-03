@@ -49,10 +49,10 @@ namespace SurvivalHack
 
                     _tileSetSprite.Position = vecScreen;
 
-                    var tileId = _grid.Grid[x, y];
-                    var tile = TileTypeList.Get(tileId);
+                    var tile = _grid.Grid[x, y];
+                    var sprite = (tile.Wall != null) ? tile.Wall : tile.Floor;
 
-                    _tileSetSprite.TextureRect = new IntRect((tile.SourcePos.X) * _camera.TileX, (tile.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                    _tileSetSprite.TextureRect = new IntRect((sprite.SourcePos.X) * _camera.TileX, (sprite.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
 
                     target.Draw(_tileSetSprite);
                 }

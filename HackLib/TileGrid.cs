@@ -7,13 +7,13 @@ namespace HackLib
 {
     public class TileGrid
     {
-        public int[,] Grid;
+        public Tile[,] Grid;
         public readonly int Width;
         public readonly int Height;
 
         public TileGrid(int width, int height)
         {
-            Grid = new int[width,height];
+            Grid = new Tile[width,height];
             Width = width;
             Height = height;
             Generate();
@@ -33,53 +33,40 @@ namespace HackLib
                 for (var x = 0; x < Width; x++)
                 {
                     var isRock = heightMap.Get(x, y) > 0.3;
-                    
+
+                    Grid[x, y].Floor = TileTypeList.Get("grass");
                     if (isRock)
-                        Grid[x, y] = Dicebag.UniformInt(30) == 1 ? TileTypeList.GetId("ore") : TileTypeList.GetId("rock");
-                    else
-                        Grid[x, y] = Dicebag.UniformInt(5) == 1 ? TileTypeList.GetId("tree") : TileTypeList.GetId("grass");
-                }
-            }
-        }
-
-        public void Render(Rectangle viewport, Point translation)
-        {
-            for (var y = 0; y < viewport.Height; y++)
-            {
-                var tY = y + translation.Y;
-                if (tY < 0 || tY >= Height)
-                    continue;
-                
-                Console.SetCursorPosition(viewport.Left, viewport.Top + y);
-                
-                for (var x = 0; x < viewport.Width; x++)
-                {
-                    var tX = x + translation.X;
-
-                    if (tX < 0 || tX >= Width)
                     {
-                        Console.Write(' ');
-                        continue;
+                        Grid[x, y].Wall = Dicebag.UniformInt(30) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
                     }
-                    
-                    var tile = TileTypeList.Get(Grid[x + translation.X, y + translation.Y]);
-
-                    Console.ForegroundColor = tile.Color;
-                    Console.Write(tile.Char);
+                    else
+                    {
+                        if (Dicebag.UniformInt(5) == 1)
+                            Grid[x, y].Wall = TileTypeList.Get("tree");
+                    }
                 }
             }
         }
+    }
+    
+    public struct Tile
+    {
+        public TileType Floor;
+        public TileType Wall;
+        public TileVisibility Visibility;
+    }
+
+    public enum TileVisibility
+    {
+        Hidden, Dark, Visible
     }
 
     public class TileType
     {
         public string Tag;
-        public char Char;
-        public ConsoleColor Color;
 
         public string DropTag = "";
         public int DropCount = 0;
-        public bool Walkable = false;
 
         public Point SourcePos;
     }
@@ -95,19 +82,14 @@ namespace HackLib
             Types.Add(new TileType
             {
                 Tag = "grass",
-                Char = '.',
-                Color = ConsoleColor.Gray,
                 DropTag = "",
                 DropCount = 0,
-                Walkable = true,
                 SourcePos = new Point(0,0),
             });
 
             Types.Add(new TileType
             {
                 Tag = "tree",
-                Char = '^',
-                Color = ConsoleColor.Green,
                 DropTag = "wood",
                 DropCount = 5,
                 SourcePos = new Point(1, 0),
@@ -116,34 +98,25 @@ namespace HackLib
             Types.Add(new TileType
             {
                 Tag = "rock",
-                Char = '#',
-                Color = ConsoleColor.Red,
                 DropTag = "stone",
                 DropCount = 1,
-                SourcePos = new Point(3, 0),
+                SourcePos = new Point(4, 1),
             });
 
             Types.Add(new TileType
             {
                 Tag = "ore",
-                Char = '#',
-                Color = ConsoleColor.Yellow,
                 DropTag = "ore",
                 DropCount = 1,
-                SourcePos = new Point(5, 0),
+                SourcePos = new Point(5, 1),
             });
         }
-        
-        public static int GetId(string tag)
+
+        public static TileType Get(string tag)
         {
             var tileId = Types.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileId != -1);
-            return tileId;
-        }
-
-        public static TileType Get(int id)
-        {
-            return Types[id];
+            return Types[tileId];
         }
     }
 }

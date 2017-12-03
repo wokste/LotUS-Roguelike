@@ -69,9 +69,13 @@ namespace SurvivalHack
                 case Keyboard.Key.D:
                     _game.Player.Walk(new Point(1, 0), _game.Grid);
                     break;
-                case Keyboard.Key.Space:
+                case Keyboard.Key.SemiColon:
                     // Temporary method because the player can start in rock;
                     _game.Player.Position = new Point(Dicebag.UniformInt(_game.Grid.Width), Dicebag.UniformInt(_game.Grid.Height));
+                    break;
+                case Keyboard.Key.Space:
+                    _game.Player.Mine(_game.Grid);
+
                     break;
             }
         }
