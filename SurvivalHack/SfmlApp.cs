@@ -10,7 +10,7 @@ namespace SurvivalHack
     {
         private readonly Game _game;
         private readonly Camera _camera;
-        private readonly SfmlGridRenderer _gridRenderer;
+        private readonly SfmlGameRenderer _gameRenderer;
         private readonly RenderWindow _window;
 
         static void Main(string[] args)
@@ -43,7 +43,7 @@ namespace SurvivalHack
 
             _camera = new Camera(_game.Player);
             _camera.WindowSize = new Size(640,480);
-            _gridRenderer = new SfmlGridRenderer(_game.Grid, _camera);
+            _gameRenderer = new SfmlGameRenderer(_game, _camera);
         }
 
         private void OnResized(object sender, SizeEventArgs e)
@@ -58,16 +58,16 @@ namespace SurvivalHack
             switch (keyEventArgs.Code)
             {
                 case Keyboard.Key.W:
-                    _game.Player.Walk(new Point(0, -1), _game.Grid);
+                    _game.PlayerWalk(new Point(0, -1));
                     break;
                 case Keyboard.Key.A:
-                    _game.Player.Walk(new Point(-1, 0), _game.Grid);
+                    _game.PlayerWalk(new Point(-1, 0));
                     break;
                 case Keyboard.Key.S:
-                    _game.Player.Walk(new Point(0, 1), _game.Grid);
+                    _game.PlayerWalk(new Point(0, 1));
                     break;
                 case Keyboard.Key.D:
-                    _game.Player.Walk(new Point(1, 0), _game.Grid);
+                    _game.PlayerWalk(new Point(1, 0));
                     break;
                 case Keyboard.Key.SemiColon:
                     // Temporary method because the player can start in rock;
@@ -106,7 +106,7 @@ namespace SurvivalHack
         {
             _window.Clear();
 
-            _gridRenderer.Draw(_window, new RenderStates());
+            _gameRenderer.Draw(_window, new RenderStates());
 
             _window.Display();
         }

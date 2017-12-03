@@ -9,6 +9,7 @@ namespace SurvivalHack
     {
         public Creature Player;
         public TileGrid Grid;
+        public FieldOfView FieldOfView;
 
         private void ShowMenu()
         {
@@ -35,6 +36,7 @@ namespace SurvivalHack
                 },
                 HitPoints = new Bar(25)
             };
+            FieldOfView = new FieldOfView(Grid);
         }
 
         private void Craft()
@@ -42,6 +44,12 @@ namespace SurvivalHack
             var station = new CraftingStation();
             station.Init();
             station.OpenCraftingMenu(Player.Inventory);
+        }
+
+        internal void PlayerWalk(Point point)
+        {
+            Player.Walk(point, Grid);
+            FieldOfView.PlayerPos = Player.Position;
         }
     }
 }

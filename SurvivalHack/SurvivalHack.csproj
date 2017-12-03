@@ -82,7 +82,7 @@
     <Compile Include="Menu.cs" />
     <Compile Include="SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SfmlGridRenderer.cs" />
+    <Compile Include="SfmlGameRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

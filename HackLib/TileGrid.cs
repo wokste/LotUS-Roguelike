@@ -44,6 +44,8 @@ namespace HackLib
                         if (Dicebag.UniformInt(5) == 1)
                             Grid[x, y].Wall = TileTypeList.Get("tree");
                     }
+
+                    Grid[x, y].Visibility = TileVisibility.Hidden;
                 }
             }
         }
@@ -54,6 +56,8 @@ namespace HackLib
         public TileType Floor;
         public TileType Wall;
         public TileVisibility Visibility;
+
+        public bool BlocksSights => (Wall != null);
     }
 
     public enum TileVisibility
