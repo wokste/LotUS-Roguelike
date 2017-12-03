@@ -26,7 +26,7 @@ namespace SurvivalHack
                 DepthBits = 24
             };
             
-            _window = new RenderWindow(new VideoMode(640, 480), "SFML SurvivalHack", Styles.Default, contextSettings);
+            _window = new RenderWindow(new VideoMode(640, 480), "SFML SurvivalHack - How much ore can you collect?", Styles.Default, contextSettings);
             _window.SetActive();
 
             _window.SetVisible(true);
@@ -71,7 +71,9 @@ namespace SurvivalHack
                     break;
                 case Keyboard.Key.Space:
                     _game.PlayerMine();
-
+                    break;
+                case Keyboard.Key.I:
+                    _game.Player.Inventory.Write();
                     break;
             }
         }

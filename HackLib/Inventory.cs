@@ -9,9 +9,6 @@ namespace HackLib
 
         public void Add(Item item)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"You aquired {item}");
-
             if (item.Type.Stacking)
             {
                 var existing = _items.Find(i => i.Type == item.Type);
@@ -19,9 +16,14 @@ namespace HackLib
                 {
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     existing.Count += item.Count;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"You aquired {item} making a total of {existing}");
                     return;
                 }
             }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"You aquired first {item}");
             _items.Add(item);
         }
 

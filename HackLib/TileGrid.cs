@@ -95,7 +95,7 @@ namespace HackLib
             {
                 Tag = "tree",
                 DropTag = "wood",
-                DropCount = 5,
+                DropCount = 3,
                 SourcePos = new Point(1, 0),
             });
 
@@ -103,7 +103,7 @@ namespace HackLib
             {
                 Tag = "rock",
                 DropTag = "stone",
-                DropCount = 1,
+                DropCount = 3,
                 SourcePos = new Point(4, 1),
             });
 
@@ -111,7 +111,7 @@ namespace HackLib
             {
                 Tag = "ore",
                 DropTag = "ore",
-                DropCount = 1,
+                DropCount = 3,
                 SourcePos = new Point(5, 1),
             });
         }

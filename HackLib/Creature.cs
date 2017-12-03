@@ -55,8 +55,7 @@ namespace HackLib
             Inventory.Add(new Item
             {
                 Type = ItemTypeList.Get(wall.DropTag),
-                Count = wall.DropCount,
-                
+                Count = Dicebag.Randomize(wall.DropCount),
             });
 
             map.Grid[minePosition.X, minePosition.Y].Wall = null;

@@ -54,13 +54,6 @@ namespace HackLib
                 Name = "Iron Ore",
                 Stacking = true
             });
-
-            Types.Add(new ItemType
-            {
-                Tag = "bar",
-                Name = "Iron Bar",
-                Stacking = true
-            });
             
             Types.Add(new ItemType
             {

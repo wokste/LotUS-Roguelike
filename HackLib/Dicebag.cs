@@ -21,5 +21,13 @@ namespace HackLib
         {
             return Rnd.Next(min, max);
         }
+
+        internal static int Randomize(int mean)
+        {
+            var var = (double)(mean);
+            var r = Rnd.NextDouble();
+
+            return mean + (int)Math.Round((r - 0.5) * var);
+        }
     }
 }
