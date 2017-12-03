@@ -37,11 +37,11 @@ namespace HackLib
                     Grid[x, y].Floor = TileTypeList.Get("grass");
                     if (isRock)
                     {
-                        Grid[x, y].Wall = Dicebag.UniformInt(30) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
+                        Grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
                     }
                     else
                     {
-                        if (Dicebag.UniformInt(5) == 1)
+                        if (Dicebag.UniformInt(10) == 1)
                             Grid[x, y].Wall = TileTypeList.Get("tree");
                     }
 

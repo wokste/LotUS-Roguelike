@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Drawing;
 using System.Threading;
 using HackLib;
@@ -25,7 +26,7 @@ namespace SurvivalHack
             ItemTypeList.InitTypes();
             TileTypeList.InitTypes();
 
-            Grid = new TileGrid(128, 128);
+            Grid = new TileGrid(256, 256);
             Player = new Creature
             {
                 Name = "Steven",
@@ -34,9 +35,23 @@ namespace SurvivalHack
                     Damage = 7,
                     HitChance = 0.75f
                 },
-                HitPoints = new Bar(25)
+                HitPoints = new Bar(25),
+                Position = GetSpawnPoint(),
             };
             FieldOfView = new FieldOfView(Grid);
+            FieldOfView.PlayerPos = Player.Position;
+        }
+
+        private Point GetSpawnPoint()
+        {
+            int x, y;
+            do
+            {
+                x = Dicebag.UniformInt(Grid.Width);
+                y = Dicebag.UniformInt(Grid.Height);
+            } while (Grid.Grid[x, y].Wall != null);
+            
+            return new Point(x, y);
         }
 
         private void Craft()
@@ -50,6 +65,12 @@ namespace SurvivalHack
         {
             Player.Walk(point, Grid);
             FieldOfView.PlayerPos = Player.Position;
+        }
+
+        internal void PlayerMine()
+        {
+            Player.Mine(Grid);
+            FieldOfView.OnMapUpdate();
         }
     }
 }

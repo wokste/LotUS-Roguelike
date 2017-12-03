@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace HackLib
 
         public readonly TileGrid Map;
 
-        private int _visualRange = 16;
+        private int _visualRange = 24;
         private int VisualRangeSq => _visualRange * _visualRange;
 
         public int VisualRange
@@ -73,105 +74,99 @@ namespace HackLib
         {
             MarkAsSeen(PlayerPos.X, PlayerPos.Y);
 
-            ScanQuatrantV(1, -1, -1.0, 1.0);
-            ScanQuatrantV(1, 1, -1.0, 1.0);
+            ScanQuatrantV(1, 'N', -1.0, 1.0);
+            ScanQuatrantV(1, 'S', -1.0, 1.0);
 
-            ScanQuatrantH(1, -1, -1.0, 1.0);
-            ScanQuatrantH(1, 1, -1.0, 1.0);
+            ScanQuatrantH(1, 'W', -1.0, 1.0);
+            ScanQuatrantH(1, 'E', -1.0, 1.0);
         }
 
         /// <summary>
         /// Examine the provided quatrant and calculate the visible cells within it.
         /// </summary>
-        /// <param name="pDepth">Depth of the scan</param>
+        /// <param name="depth">Depth of the scan</param>
         /// <param name="direction">1 is east, -1 is west</param>
-        /// <param name="pStartSlope">Start slope of the quatrant</param>
-        /// <param name="pEndSlope">End slope of the octance</param>
-        protected void ScanQuatrantH(int pDepth, int direction, double pStartSlope, double pEndSlope)
+        /// <param name="minSlope">Start slope of the quatrant</param>
+        /// <param name="maxSlope">End slope of the octance</param>
+        protected void ScanQuatrantH(int depth, char direction, double minSlope, double maxSlope)
         {
-            for (; pDepth < _visualRange; pDepth++)
+            if (depth > VisualRange)
+                return;
+
+            int x = direction == 'W' ? _playerPos.X - depth : _playerPos.X + depth;
+
+            if (x < 0 || x >= Map.Width)
+                return;
+
+            var yMin = Clamp(_playerPos.Y + (int)Math.Floor(minSlope * depth), 0, Map.Height - 1);
+            var yMax = Clamp(_playerPos.Y + (int)Math.Ceiling(maxSlope * depth), 0, Map.Height - 1);
+
+            for (int y = yMin; y <= yMax; y++)
             {
-                int x = _playerPos.X + pDepth * direction;
-
-                if (x < 0 || x >= Map.Width)
-                    return;
-
-                var y0 = Clamp(_playerPos.Y + (int)(pStartSlope * pDepth), 0, Map.Height);
-                var y1 = Clamp(_playerPos.Y + (int)(pEndSlope * pDepth), 0, Map.Height);
-
-                for (int y = y0; y <= y1; y++)
-                {
-                    //if (!GetVisDistance(x, y, player.X, player.Y) <= VisualRangeSq)
-                    //	continue;
-
+                if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
-
-                    if (Map.Grid[x, y].BlocksSights)
+                
+                if (Map.Grid[x, y].BlocksSights)
+                {
+                    if (y > yMin && !Map.Grid[x, y - 1].BlocksSights)
                     {
-                        if (y > y0 && !Map.Grid[x, y - 1].BlocksSights)
-                        {
-                            ScanQuatrantH(pDepth + 1, direction, pStartSlope, GetSlope(x, y, _playerPos.X, _playerPos.Y, true));
-                        }
-                    }
-                    else
-                    {
-                        if (y > y0 && Map.Grid[x, y - 1].BlocksSights)
-                            pStartSlope = -GetSlope(x, y, _playerPos.X, _playerPos.Y, true);
-
-                        
+                        ScanQuatrantH(depth + 1, direction, minSlope, GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction));
                     }
                 }
-
-                if (Map.Grid[x, y1].BlocksSights)
-                    break;
+                else
+                {
+                    if (y > yMin && Map.Grid[x, y - 1].BlocksSights)
+                        minSlope = GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction);
+                }
             }
+
+            if (!Map.Grid[x, yMax].BlocksSights)
+                ScanQuatrantH(depth + 1, direction, minSlope, maxSlope);
         }
 
         /// <summary>
         /// Examine the provided quatrant and calculate the visible cells within it.
         /// </summary>
-        /// <param name="pDepth">Depth of the scan</param>
+        /// <param name="depth">Depth of the scan</param>
         /// <param name="direction">1 is south, -1 is north</param>
-        /// <param name="pStartSlope">Start slope of the quatrant</param>
-        /// <param name="pEndSlope">End slope of the octance</param>
-        protected void ScanQuatrantV(int pDepth, int direction, double pStartSlope, double pEndSlope)
+        /// <param name="minSlope">Start slope of the quatrant</param>
+        /// <param name="maxSlope">End slope of the octance</param>
+        protected void ScanQuatrantV(int depth, char direction, double minSlope, double maxSlope)
         {
-            for (; pDepth < _visualRange; pDepth++)
+            if (depth > VisualRange)
+                return;
+
+            int y = direction == 'N' ? _playerPos.Y - depth : _playerPos.Y + depth;
+
+            if (y < 0 || y >= Map.Width)
+                return;
+
+            // TODO: This is prone to rounding errors. Solve it.
+            var xMin = Clamp(_playerPos.X + (int)Math.Floor(minSlope * depth), 0, Map.Width - 1);
+            var xMax = Clamp(_playerPos.X + (int)Math.Ceiling(maxSlope * depth), 0, Map.Width - 1);
+
+            for (int x = xMin; x <= xMax; x++)
             {
-                int y = _playerPos.Y + pDepth * direction;
-
-                if (y < 0 || y >= Map.Width)
-                    return;
-
-                var x0 = Clamp(_playerPos.X + (int)(pStartSlope * pDepth), 0, Map.Width);
-                var x1 = Clamp(_playerPos.X + (int)(pEndSlope * pDepth), 0, Map.Width);
-
-                for (int x = x0; x <= x1; x++)
-                {
-                    //if (!GetVisDistance(x, y, player.X, player.Y) <= VisualRangeSq)
-                    //	continue;
-
+                if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
 
-                    if (Map.Grid[x, y].BlocksSights)
+                if (Map.Grid[x, y].BlocksSights)
+                {
+                    if (x > xMin && !Map.Grid[x - 1, y].BlocksSights)
                     {
-                        if (x > x0 && !Map.Grid[x - 1, y].BlocksSights)
-                        {
-                            ScanQuatrantV(pDepth + 1, direction, pStartSlope, GetSlope(x, y, _playerPos.X, _playerPos.Y, false));
-                        }
-                    }
-                    else
-                    {
-                        if (x > x0 && Map.Grid[x - 1, y].BlocksSights)
-                            pStartSlope = -GetSlope(x, y, _playerPos.X, _playerPos.Y, false);
-
-                        
+                        ScanQuatrantV(depth + 1, direction, minSlope, GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction));
                     }
                 }
-
-                if (Map.Grid[x1, y].BlocksSights)
-                    break;
+                else
+                {
+                    // TODO: Wut? x > XMin?
+                    if (x > xMin && Map.Grid[x - 1, y].BlocksSights)
+                        minSlope = GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction);
+                }
             }
+
+            if (!Map.Grid[xMax, y].BlocksSights)
+                ScanQuatrantV(depth + 1, direction, minSlope, maxSlope);
         }
 
         private void MarkAsSeen(int x, int y)
@@ -191,20 +186,31 @@ namespace HackLib
         /// <summary>
         /// Get the gradient of the slope formed by the two points
         /// </summary>
-        private double GetSlope(double pX1, double pY1, double pX2, double pY2, bool pInvert)
+        private double GetSlope(double x1, double y1, double x2, double y2, char direction)
         {
-            if (pInvert)
-                return (pY1 - pY2) / (pX1 - pX2);
-            else
-                return (pX1 - pX2) / (pY1 - pY2);
+            switch (direction)
+            {
+                case 'N':
+                case 'S':
+                    return (x1 - x2) / (Math.Abs(y1 - y2) + 0.5);
+                case 'W':
+                case 'E':
+                    return (y1 - y2) / (Math.Abs(x1 - x2) + 0.5);
+                default:
+                    throw new ArgumentException($"Character '{direction}' not a valid direction.");
+            }
+            //TODO: Check this. Is the abs at the correct location?
         }
         
         /// <summary>
         /// Calculate the distance between the two points
         /// </summary>
-        private int GetVisDistance(int pX1, int pY1, int pX2, int pY2)
+        private bool InSightRadius(int x, int y)
         {
-            return ((pX1 - pX2) * (pX1 - pX2)) + ((pY1 - pY2) * (pY1 - pY2));
+            var dx = x - PlayerPos.X;
+            var dy = y - PlayerPos.Y;
+
+            return dx * dx + dy * dy < VisualRange * (VisualRange + 1);
         }
     }
 }
