@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Threading;
@@ -27,10 +28,14 @@ namespace SurvivalHack
                     HitChance = 0.75f
                 },
                 HitPoints = new Bar(25),
+                Hunger = new Bar(20),
                 Position = GetSpawnPoint(),
             };
-            FieldOfView = new FieldOfView(Grid);
-            FieldOfView.PlayerPos = Player.Position;
+
+            FieldOfView = new FieldOfView(Grid)
+            {
+                PlayerPos = Player.Position
+            };
         }
 
         private Point GetSpawnPoint()
@@ -47,14 +52,43 @@ namespace SurvivalHack
 
         internal void PlayerWalk(Point point)
         {
-            Player.Walk(point, Grid);
-            FieldOfView.PlayerPos = Player.Position;
+            if (!Player.Alive)
+                return;
+
+            if (Player.Walk(point, Grid))
+            {
+                FieldOfView.PlayerPos = Player.Position;
+                TimeAdvance(1);
+            }
         }
 
         internal void PlayerMine()
         {
+            if (!Player.Alive)
+                return;
+
             Player.Mine(Grid);
             FieldOfView.OnMapUpdate();
+
+            TimeAdvance(20);
+        }
+
+        public const int HUNGER_TICKS = 50;
+        private int _ticksTillHungerLoss = HUNGER_TICKS;
+
+        private void TimeAdvance(int ticks)
+        {
+            _ticksTillHungerLoss -= ticks;
+
+            while (_ticksTillHungerLoss <= 0)
+            {
+                _ticksTillHungerLoss += HUNGER_TICKS;
+                Player.Hunger.Current--;
+                if (Player.Hunger.Current == 0)
+                    Player.Alive = false;
+
+                Player.Hunger.PrintBar("Hunger");
+            }
         }
     }
 }

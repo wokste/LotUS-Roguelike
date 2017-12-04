@@ -8,9 +8,11 @@ namespace HackLib
     {
         public String Name;
         public Bar HitPoints;
+        public Bar Hunger;
         public Attack Attack;
         
         public readonly Inventory Inventory = new Inventory();
+        public bool Alive = true;
 
         public Point Position { get; set; }
         public Point Facing { get; set; }
@@ -61,6 +63,31 @@ namespace HackLib
             map.Grid[minePosition.X, minePosition.Y].Wall = null;
 
             return true;
+        }
+
+        public void Eat()
+        {
+            if (Hunger.Current == Hunger.Max)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You are not hungry");
+                return;
+            }
+
+            var foodStack = Inventory.Find(ItemTypeList.Get("food"));
+
+            if (foodStack == null || foodStack.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Nothing to eat");
+                return;
+            }
+
+            foodStack.Count--;
+            Hunger.Current += 5;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Eaten food. Food left: {foodStack.Count}.");
+            Hunger.PrintBar("Hunger");
         }
     }
 }
