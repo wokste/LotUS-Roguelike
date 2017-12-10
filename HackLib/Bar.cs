@@ -35,11 +35,5 @@ namespace HackLib
                 _max = bar.Max
             };
         }
-
-        public void PrintBar(string name)
-        {
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"{name}: {_current}/{_max}");
-        }
     }
 }

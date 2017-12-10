@@ -5,7 +5,7 @@ namespace HackLib
 {
     public class Inventory
     {
-        private readonly List<Item> _items = new List<Item>();
+        public readonly List<Item> _items = new List<Item>();
 
         public void Add(Item item)
         {

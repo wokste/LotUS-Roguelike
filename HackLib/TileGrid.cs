@@ -43,9 +43,10 @@ namespace HackLib
                     {
                         if (Dicebag.UniformInt(10) == 1)
                             Grid[x, y].Wall = TileTypeList.Get("tree");
-                        else if (Dicebag.UniformInt(500) == 1)
+                        else if (Dicebag.UniformInt(2500) == 1)
                             Grid[x, y].Wall = TileTypeList.Get("pumpkin");
-
+                        else if (Dicebag.UniformInt(500) == 1)
+                            Grid[x, y].Wall = TileTypeList.Get("mushroom");
 
                     }
 
@@ -122,9 +123,17 @@ namespace HackLib
             Types.Add(new TileType
             {
                 Tag = "pumpkin",
-                DropTag = "food",
+                DropTag = "pumpkin",
                 DropCount = 1,
                 SourcePos = new Point(6, 0),
+            });
+
+            Types.Add(new TileType
+            {
+                Tag = "mushroom",
+                DropTag = "mushroom",
+                DropCount = 1,
+                SourcePos = new Point(7, 0),
             });
         }
 

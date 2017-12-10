@@ -18,7 +18,7 @@ namespace SurvivalHack
                             Damage = 5,
                             HitChance = 0.5f
                         },
-                        HitPoints = new Bar(10)
+                        Health = new Bar(10)
                     };
                 case "orc":
                     return new Creature
@@ -29,7 +29,7 @@ namespace SurvivalHack
                             Damage = 6,
                             HitChance = 0.6f
                         },
-                        HitPoints = new Bar(10)
+                        Health = new Bar(10)
                     };
                 default:
                     throw new Exception("WHUT");

@@ -27,7 +27,7 @@ namespace SurvivalHack
                     Damage = 7,
                     HitChance = 0.75f
                 },
-                HitPoints = new Bar(25),
+                Health = new Bar(20),
                 Hunger = new Bar(20),
                 Position = GetSpawnPoint(),
             };
@@ -87,7 +87,7 @@ namespace SurvivalHack
                 if (Player.Hunger.Current == 0)
                     Player.Alive = false;
 
-                Player.Hunger.PrintBar("Hunger");
+                Player.DisplayStats();
             }
         }
     }

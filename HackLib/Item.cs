@@ -8,6 +8,7 @@ namespace HackLib
         public string Tag;
         public string Name;
         public bool Stacking;
+        public ConsumableComponent EatComponent;
 
         public override string ToString()
         {
@@ -57,9 +58,28 @@ namespace HackLib
             
             Types.Add(new ItemType
             {
-                Tag = "food",
-                Name = "Food",
-                Stacking = true
+                Tag = "pumpkin",
+                Name = "Pumpkin",
+                Stacking = true,
+                EatComponent = new ConsumableComponent
+                {
+                    FoodRestore = 5,
+                    HealthRestore = 2,
+                    Quality = 7
+                }
+            });
+
+
+            Types.Add(new ItemType
+            {
+                Tag = "mushroom",
+                Name = "Mushroom",
+                Stacking = true,
+                EatComponent = new ConsumableComponent
+                {
+                    FoodRestore = 2,
+                    Quality = 3
+                }
             });
 
             Types.Add(new ItemType

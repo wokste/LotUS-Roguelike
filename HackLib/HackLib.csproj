@@ -95,6 +95,7 @@
     <Compile Include="Bar.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="Dicebag.cs" />
+    <Compile Include="ConsumableComponent.cs" />
     <Compile Include="FieldOfView.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />

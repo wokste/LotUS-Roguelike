@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 
 namespace HackLib
 {
     public class Creature
     {
         public String Name;
-        public Bar HitPoints;
+        public Bar Health;
         public Bar Hunger;
         public Attack Attack;
         
@@ -67,27 +69,34 @@ namespace HackLib
 
         public void Eat()
         {
-            if (Hunger.Current == Hunger.Max)
+            var foodItems = Inventory._items.Where(i => i.Type.EatComponent != null);
+            var food = foodItems.OrderBy(f => f.Type.EatComponent.Quality).LastOrDefault();
+            
+            if (food == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You are not hungry");
+                Console.WriteLine("You have no food in your inventory.");
                 return;
             }
+            
+            food.Type.EatComponent.Use(food, this);
+            DisplayStats();
+        }
 
-            var foodStack = Inventory.Find(ItemTypeList.Get("food"));
-
-            if (foodStack == null || foodStack.Count == 0)
+        public void DisplayStats()
+        {
+            void DisplayStat(string name, Bar bar)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Nothing to eat");
-                return;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{name}: ");
+                var perc = bar.Perc;
+                
+                Console.ForegroundColor = (perc > 0.5 ? ConsoleColor.Green : (perc > 0.2 ? ConsoleColor.Yellow : ConsoleColor.Red));
+                Console.WriteLine($"{bar.Current:##}/{bar.Max:##}");
             }
 
-            foodStack.Count--;
-            Hunger.Current += 5;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Eaten food. Food left: {foodStack.Count}.");
-            Hunger.PrintBar("Hunger");
+            DisplayStat("Health", Health);
+            DisplayStat("Hunger", Hunger);
         }
     }
 }
