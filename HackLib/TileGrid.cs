@@ -32,15 +32,16 @@ namespace HackLib
             {
                 for (var x = 0; x < Width; x++)
                 {
-                    var isRock = heightMap.Get(x, y) > 0.3;
-
-                    Grid[x, y].Floor = TileTypeList.Get("grass");
-                    if (isRock)
+                    var height = heightMap.Get(x, y);
+                    
+                    if (height > 0.3)
                     {
+                        Grid[x, y].Floor = TileTypeList.Get("gravel");
                         Grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
                     }
                     else
                     {
+                        Grid[x, y].Floor = TileTypeList.Get("grass");
                         if (Dicebag.UniformInt(10) == 1)
                             Grid[x, y].Wall = TileTypeList.Get("tree");
                         else if (Dicebag.UniformInt(2500) == 1)
@@ -98,10 +99,18 @@ namespace HackLib
 
             Types.Add(new TileType
             {
+                Tag = "gravel",
+                DropTag = "",
+                DropCount = 0,
+                SourcePos = new Point(1, 0),
+            });
+
+            Types.Add(new TileType
+            {
                 Tag = "tree",
                 DropTag = "wood",
                 DropCount = 3,
-                SourcePos = new Point(1, 0),
+                SourcePos = new Point(4, 0),
             });
 
             Types.Add(new TileType
@@ -110,6 +119,14 @@ namespace HackLib
                 DropTag = "stone",
                 DropCount = 3,
                 SourcePos = new Point(4, 1),
+            });
+
+            Types.Add(new TileType
+            {
+                Tag = "stone",
+                DropTag = "stone",
+                DropCount = 1,
+                SourcePos = new Point(5, 0),
             });
 
             Types.Add(new TileType

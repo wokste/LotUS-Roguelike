@@ -91,7 +91,7 @@ namespace HackLib
                 Console.Write($"{name}: ");
                 var perc = bar.Perc;
                 
-                Console.ForegroundColor = (perc > 0.5 ? ConsoleColor.Green : (perc > 0.2 ? ConsoleColor.Yellow : ConsoleColor.Red));
+                Console.ForegroundColor = (perc > 0.6 ? ConsoleColor.Green : (perc > 0.3 ? ConsoleColor.Yellow : ConsoleColor.Red));
                 Console.WriteLine($"{bar.Current:##}/{bar.Max:##}");
             }
 

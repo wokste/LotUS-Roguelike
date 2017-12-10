@@ -82,10 +82,7 @@ namespace SurvivalHack
             foreach (var tuple in Input)
             {
                 var item = inventory.Find(tuple.Type);
-                Debug.Assert(item != null);
-
-                item.Count -= count * tuple.Count;
-                Debug.Assert(item.Count >= 0);
+                inventory.Consume(item, count * tuple.Count);
             }
 
             inventory.Add(Output.Type.Make(count * Output.Count));

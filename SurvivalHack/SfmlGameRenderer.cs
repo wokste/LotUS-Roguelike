@@ -12,6 +12,7 @@ namespace SurvivalHack
     {
         private readonly Game _game;
         private readonly Sprite _tileSetSprite;
+        private readonly Sprite _playerSprite;
         private readonly Camera _camera;
 
         public SfmlGameRenderer(Game game, Camera camera)
@@ -20,6 +21,7 @@ namespace SurvivalHack
             _camera = camera;
 
             _tileSetSprite = MakeSprite("tileset.png");
+            _playerSprite = MakeSprite("player.png");
         }
         
         private Sprite MakeSprite(string texName)
@@ -42,16 +44,15 @@ namespace SurvivalHack
         {
             var areaPx = _camera.GetRenderAreaPx();
 
-            _tileSetSprite.Scale = new Vector2f(1, 1);
+            _playerSprite.Scale = new Vector2f(1, 1);
 
             var x = _game.Player.Position.X;
             var y = _game.Player.Position.Y;
             var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
 
-            _tileSetSprite.Position = vecScreen;
-            _tileSetSprite.TextureRect = new IntRect((3) * _camera.TileX, (1) * _camera.TileY, _camera.TileX, _camera.TileY);
+            _playerSprite.Position = vecScreen;
 
-            target.Draw(_tileSetSprite);
+            target.Draw(_playerSprite);
         }
 
         private void DrawGrid(RenderTarget target, RenderStates states)
@@ -81,11 +82,18 @@ namespace SurvivalHack
                     _tileSetSprite.Color = (tile.Visibility == TileVisibility.Visible)
                         ? new Color(255, 255, 255)
                         : new Color(128, 128, 128);
-
-                    var sprite = (tile.Wall != null) ? tile.Wall : tile.Floor;
-                    _tileSetSprite.TextureRect = new IntRect((sprite.SourcePos.X) * _camera.TileX, (sprite.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                    
+                    _tileSetSprite.TextureRect = new IntRect((tile.Floor.SourcePos.X) * _camera.TileX, (tile.Floor.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
 
                     target.Draw(_tileSetSprite);
+
+                    if (tile.Wall != null)
+                    {
+                        _tileSetSprite.TextureRect = new IntRect((tile.Wall.SourcePos.X) * _camera.TileX,
+                            (tile.Wall.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+
+                        target.Draw(_tileSetSprite);
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@ namespace HackLib
 
         public bool Use(Item item, Creature user)
         {
-            item.Count--;
+            user.Inventory.Consume(item,1);
             user.Hunger.Current += 5;
 
             return true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HackLib
 {
@@ -47,6 +48,16 @@ namespace HackLib
         {
             var type = ItemTypeList.Get(itemTag);
             Add(type.Make(count));
+        }
+
+        public void Consume(Item item, int count = 1)
+        {
+            item.Count -= count;
+            
+            Debug.Assert(item.Count >= 0);
+
+            if (item.Count == 0)
+                _items.Remove(item);
         }
     }
 }
