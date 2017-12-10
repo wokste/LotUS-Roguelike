@@ -73,10 +73,10 @@ namespace HackLib
         private void ToVisible()
         {
             MarkAsSeen(PlayerPos.X, PlayerPos.Y);
-
+            
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
-
+            
             ScanQuatrantH(1, 'W', -1.0, 1.0);
             ScanQuatrantH(1, 'E', -1.0, 1.0);
         }
@@ -98,9 +98,9 @@ namespace HackLib
             if (x < 0 || x >= Map.Width)
                 return;
 
-            var yMin = Clamp(_playerPos.Y + (int)Math.Floor(minSlope * depth), 0, Map.Height - 1);
-            var yMax = Clamp(_playerPos.Y + (int)Math.Ceiling(maxSlope * depth), 0, Map.Height - 1);
-
+            var yMin = Clamp(_playerPos.Y + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Height - 1);
+            var yMax = Clamp(_playerPos.Y + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Height - 1);
+            
             for (int y = yMin; y <= yMax; y++)
             {
                 if (InSightRadius(x, y))
@@ -140,10 +140,9 @@ namespace HackLib
 
             if (y < 0 || y >= Map.Width)
                 return;
-
-            // TODO: This is prone to rounding errors. Solve it.
-            var xMin = Clamp(_playerPos.X + (int)Math.Floor(minSlope * depth), 0, Map.Width - 1);
-            var xMax = Clamp(_playerPos.X + (int)Math.Ceiling(maxSlope * depth), 0, Map.Width - 1);
+            
+            var xMin = Clamp(_playerPos.X + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Width - 1);
+            var xMax = Clamp(_playerPos.X + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Width - 1);
 
             for (int x = xMin; x <= xMax; x++)
             {
