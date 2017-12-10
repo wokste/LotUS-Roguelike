@@ -97,6 +97,7 @@
     <Compile Include="Dicebag.cs" />
     <Compile Include="ConsumableComponent.cs" />
     <Compile Include="FieldOfView.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="PerlinNoise.cs" />

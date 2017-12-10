@@ -2,6 +2,7 @@
 using System.Drawing;
 using SFML.Graphics;
 using SFML.Window;
+using HackLib;
 
 namespace SurvivalHack
 {

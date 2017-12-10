@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
-using HackLib;
 
-namespace SurvivalHack
+namespace HackLib
 {
-    class Game
+    public class Game
     {
         public Creature Player;
         public TileGrid Grid;
@@ -46,7 +45,7 @@ namespace SurvivalHack
             return new Point(x, y);
         }
 
-        internal void PlayerWalk(Point point)
+        public void PlayerWalk(Point point)
         {
             if (!Player.Alive)
                 return;
@@ -58,7 +57,7 @@ namespace SurvivalHack
             }
         }
 
-        internal void PlayerMine()
+        public void PlayerMine()
         {
             if (!Player.Alive)
                 return;
@@ -70,7 +69,7 @@ namespace SurvivalHack
             TimeAdvance(20);
         }
 
-        public const int HUNGER_TICKS = 50;
+        private const int HUNGER_TICKS = 50;
         private int _ticksTillHungerLoss = HUNGER_TICKS;
 
         private void TimeAdvance(int ticks)
