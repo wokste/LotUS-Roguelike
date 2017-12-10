@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using HackLib;
 using SFML.Graphics;
 using SFML.Window;

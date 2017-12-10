@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Threading;
+﻿using System.Drawing;
 using HackLib;
 
 namespace SurvivalHack

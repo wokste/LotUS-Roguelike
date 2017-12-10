@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using HackLib;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -41,8 +40,10 @@ namespace SurvivalHack
             _game = new Game();
             _game.Init();
 
-            _camera = new Camera(_game.Player);
-            _camera.WindowSize = new Size(640,480);
+            _camera = new Camera(_game.Player)
+            {
+                WindowSize = new Size(640, 480)
+            };
             _gameRenderer = new SfmlGameRenderer(_game, _camera);
         }
 

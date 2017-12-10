@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HackLib
 {
@@ -28,7 +21,6 @@ namespace HackLib
         public readonly TileGrid Map;
 
         private int _visualRange = 24;
-        private int VisualRangeSq => _visualRange * _visualRange;
 
         public int VisualRange
         {
@@ -60,8 +52,8 @@ namespace HackLib
             var y0 = Math.Max(_playerPos.Y - _visualRange, 0);
             var y1 = Math.Min(_playerPos.Y + _visualRange + 1, Map.Height);
 
-            for (int x = x0; x < x1; x++)
-                for (int y = y0; y < y1; y++)
+            for (var x = x0; x < x1; x++)
+                for (var y = y0; y < y1; y++)
                     if (Map.Grid[x, y].Visibility == TileVisibility.Visible)
                         Map.Grid[x, y].Visibility = TileVisibility.Dark;
         }
@@ -93,7 +85,7 @@ namespace HackLib
             if (depth > VisualRange)
                 return;
 
-            int x = direction == 'W' ? _playerPos.X - depth : _playerPos.X + depth;
+            var x = direction == 'W' ? _playerPos.X - depth : _playerPos.X + depth;
 
             if (x < 0 || x >= Map.Width)
                 return;
@@ -101,7 +93,7 @@ namespace HackLib
             var yMin = Clamp(_playerPos.Y + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Height - 1);
             var yMax = Clamp(_playerPos.Y + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Height - 1);
             
-            for (int y = yMin; y <= yMax; y++)
+            for (var y = yMin; y <= yMax; y++)
             {
                 if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
@@ -136,7 +128,7 @@ namespace HackLib
             if (depth > VisualRange)
                 return;
 
-            int y = direction == 'N' ? _playerPos.Y - depth : _playerPos.Y + depth;
+            var y = direction == 'N' ? _playerPos.Y - depth : _playerPos.Y + depth;
 
             if (y < 0 || y >= Map.Width)
                 return;
@@ -144,7 +136,7 @@ namespace HackLib
             var xMin = Clamp(_playerPos.X + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Width - 1);
             var xMax = Clamp(_playerPos.X + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Width - 1);
 
-            for (int x = xMin; x <= xMax; x++)
+            for (var x = xMin; x <= xMax; x++)
             {
                 if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
