@@ -63,9 +63,10 @@ namespace SurvivalHack
             if (!Player.Alive)
                 return;
 
-            Player.Mine(Grid);
-            FieldOfView.OnMapUpdate();
+            if (!Player.Mine(Grid))
+                return;
 
+            FieldOfView.OnMapUpdate();
             TimeAdvance(20);
         }
 
