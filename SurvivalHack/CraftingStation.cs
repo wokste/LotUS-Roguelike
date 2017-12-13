@@ -17,7 +17,7 @@ namespace SurvivalHack
                     new CraftingRecipy.ItemRef("stone",5),
                     new CraftingRecipy.ItemRef("wood",1)
                 },
-                Output = new CraftingRecipy.ItemRef("tool-axe1",1)
+                Output = new CraftingRecipy.ItemRef("axe1",1)
             });
 
             _recipies.Add(new CraftingRecipy
@@ -27,7 +27,7 @@ namespace SurvivalHack
                     new CraftingRecipy.ItemRef("ore",5),
                     new CraftingRecipy.ItemRef("wood",1)
                 },
-                Output = new CraftingRecipy.ItemRef("tool-axe2", 1)
+                Output = new CraftingRecipy.ItemRef("axe2", 1)
             });
 
             _recipies.Add(new CraftingRecipy
@@ -37,7 +37,7 @@ namespace SurvivalHack
                     new CraftingRecipy.ItemRef("stone",5),
                     new CraftingRecipy.ItemRef("wood",1)
                 },
-                Output = new CraftingRecipy.ItemRef("tool-pick1", 1)
+                Output = new CraftingRecipy.ItemRef("pick1", 1)
             });
 
             _recipies.Add(new CraftingRecipy
@@ -47,7 +47,7 @@ namespace SurvivalHack
                     new CraftingRecipy.ItemRef("ore",5),
                     new CraftingRecipy.ItemRef("wood",1)
                 },
-                Output = new CraftingRecipy.ItemRef("tool-pick2", 1)
+                Output = new CraftingRecipy.ItemRef("pick2", 1)
             });
 
             _recipies.Add(new CraftingRecipy
@@ -56,7 +56,7 @@ namespace SurvivalHack
                 {
                     new CraftingRecipy.ItemRef("wood",5),
                 },
-                Output = new CraftingRecipy.ItemRef("tool-sword1", 1)
+                Output = new CraftingRecipy.ItemRef("sword1", 1)
             });
 
             _recipies.Add(new CraftingRecipy
@@ -65,7 +65,7 @@ namespace SurvivalHack
                 {
                     new CraftingRecipy.ItemRef("ore",5),
                 },
-                Output = new CraftingRecipy.ItemRef("tool-sword2", 1)
+                Output = new CraftingRecipy.ItemRef("sword2", 1)
             });
         }
     }

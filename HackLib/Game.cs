@@ -1,10 +1,12 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace HackLib
 {
     public class Game
     {
         public Creature Player;
+        public List<Creature> Creatures = new List<Creature>();
         public TileGrid Grid;
         public FieldOfView FieldOfView;
 
@@ -17,15 +19,17 @@ namespace HackLib
             Player = new Creature
             {
                 Name = "Steven",
-                Attack = new Attack
+                Attack = new AttackComponent
                 {
                     Damage = 7,
                     HitChance = 0.75f
                 },
                 Health = new Bar(20),
                 Hunger = new Bar(20),
-                Position = GetSpawnPoint(),
+                Position = GetEmptyLocation(),
             };
+
+            Creatures.Add(Player);
 
             FieldOfView = new FieldOfView(Grid)
             {
@@ -33,7 +37,7 @@ namespace HackLib
             };
         }
 
-        private Point GetSpawnPoint()
+        public Point GetEmptyLocation()
         {
             int x, y;
             do

@@ -8,7 +8,8 @@ namespace HackLib
         public string Tag;
         public string Name;
         public bool Stacking;
-        public ConsumableComponent EatComponent;
+        public ConsumableComponent OnEat;
+        internal AttackComponent OnMelee;
 
         public override string ToString()
         {
@@ -61,7 +62,7 @@ namespace HackLib
                 Tag = "pumpkin",
                 Name = "Pumpkin",
                 Stacking = true,
-                EatComponent = new ConsumableComponent
+                OnEat = new ConsumableComponent
                 {
                     FoodRestore = 5,
                     HealthRestore = 2,
@@ -75,7 +76,7 @@ namespace HackLib
                 Tag = "mushroom",
                 Name = "Mushroom",
                 Stacking = true,
-                EatComponent = new ConsumableComponent
+                OnEat = new ConsumableComponent
                 {
                     FoodRestore = 2,
                     Quality = 3
@@ -84,44 +85,55 @@ namespace HackLib
 
             Types.Add(new ItemType
             {
-                Tag = "tool-axe1",
+                Tag = "axe1",
                 Name = "Stone Axe",
                 Stacking = false
+
             });
 
             Types.Add(new ItemType
             {
-                Tag = "tool-axe2",
+                Tag = "axe2",
                 Name = "Iron Axe",
                 Stacking = false
             });
 
             Types.Add(new ItemType
             {
-                Tag = "tool-pick1",
+                Tag = "pick1",
                 Name = "Stone Pickaxe",
                 Stacking = false
             });
 
             Types.Add(new ItemType
             {
-                Tag = "tool-pick2",
+                Tag = "pick2",
                 Name = "Iron Pickaxe",
                 Stacking = false
             });
 
             Types.Add(new ItemType
             {
-                Tag = "tool-sword1",
+                Tag = "sword1",
                 Name = "Wooden Sword",
-                Stacking = false
+                Stacking = false,
+                OnMelee = new AttackComponent
+                {
+                    Damage = 6,
+                    HitChance = 70,
+                }
             });
 
             Types.Add(new ItemType
             {
-                Tag = "tool-sword2",
+                Tag = "sword2",
                 Name = "Iron Sword",
-                Stacking = false
+                Stacking = false,
+                OnMelee = new AttackComponent
+                {
+                    Damage = 8,
+                    HitChance = 70,
+                }
             });
         }
 

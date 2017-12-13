@@ -11,7 +11,7 @@ namespace SurvivalHack
     {
         private readonly Game _game;
         private readonly Sprite _tileSetSprite;
-        private readonly Sprite _playerSprite;
+        private readonly Sprite _creatureSprite;
         private readonly Camera _camera;
 
         public SfmlGameRenderer(Game game, Camera camera)
@@ -20,7 +20,7 @@ namespace SurvivalHack
             _camera = camera;
 
             _tileSetSprite = MakeSprite("tileset.png");
-            _playerSprite = MakeSprite("player.png");
+            _creatureSprite = MakeSprite("player.png");
         }
         
         private Sprite MakeSprite(string texName)
@@ -36,22 +36,23 @@ namespace SurvivalHack
         public void Draw(RenderTarget target, RenderStates states)
         {
             DrawGrid(target, states);
-            DrawPlayer(target, states);
+            DrawCreatures(target, states);
         }
 
-        private void DrawPlayer(RenderTarget target, RenderStates states)
+        private void DrawCreatures(RenderTarget target, RenderStates states)
         {
             var areaPx = _camera.GetRenderAreaPx();
+            _creatureSprite.Scale = new Vector2f(1, 1);
 
-            _playerSprite.Scale = new Vector2f(1, 1);
+            foreach (var creature in _game.Creatures) {
+                var x = creature.Position.X;
+                var y = creature.Position.Y;
+                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
 
-            var x = _game.Player.Position.X;
-            var y = _game.Player.Position.Y;
-            var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
+                _creatureSprite.Position = vecScreen;
 
-            _playerSprite.Position = vecScreen;
-
-            target.Draw(_playerSprite);
+                target.Draw(_creatureSprite);
+            }
         }
 
         private void DrawGrid(RenderTarget target, RenderStates states)

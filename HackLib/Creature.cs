@@ -9,7 +9,7 @@ namespace HackLib
         public String Name;
         public Bar Health;
         public Bar Hunger;
-        public Attack Attack;
+        public AttackComponent Attack;
         
         public readonly Inventory Inventory = new Inventory();
         public bool Alive = true;
@@ -40,6 +40,20 @@ namespace HackLib
             return true;
         }
 
+        internal void TakeDamage(int damage)
+        {
+            Health.Current -= damage;
+
+            if (Health.Current == 0)
+            {
+                Alive = false;
+                // TODO: Stuff
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("{Name} died");
+            }
+        }
+
         public bool Mine(TileGrid map)
         {
             var minePosition = Position;
@@ -67,8 +81,8 @@ namespace HackLib
 
         public void Eat()
         {
-            var foodItems = Inventory._items.Where(i => i.Type.EatComponent != null);
-            var food = foodItems.OrderBy(f => f.Type.EatComponent.Quality).LastOrDefault();
+            var foodItems = Inventory._items.Where(i => i.Type.OnEat != null);
+            var food = foodItems.OrderBy(f => f.Type.OnEat.Quality).LastOrDefault();
             
             if (food == null)
             {
@@ -77,7 +91,7 @@ namespace HackLib
                 return;
             }
             
-            food.Type.EatComponent.Use(food, this);
+            food.Type.OnEat.Use(food, this);
             DisplayStats();
         }
 
