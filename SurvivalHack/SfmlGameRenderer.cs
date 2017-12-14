@@ -47,9 +47,16 @@ namespace SurvivalHack
             foreach (var creature in _game.Creatures) {
                 var x = creature.Position.X;
                 var y = creature.Position.Y;
-                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
+
+                var tile = _game.Grid.Grid[x, y];
+                if (tile.Visibility != TileVisibility.Visible)
+                    continue;
+
+                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y - 16);
 
                 _creatureSprite.Position = vecScreen;
+
+                _creatureSprite.TextureRect = new IntRect((creature.SourcePos.X) * 16, (creature.SourcePos.Y) * 32, 16, 32);
 
                 target.Draw(_creatureSprite);
             }

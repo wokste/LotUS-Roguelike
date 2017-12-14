@@ -7,6 +7,7 @@ namespace HackLib
     {
         public Creature Player;
         public List<Creature> Creatures = new List<Creature>();
+        public MonsterSpawner Spawner;
         public TileGrid Grid;
         public FieldOfView FieldOfView;
 
@@ -24,6 +25,7 @@ namespace HackLib
                     Damage = 7,
                     HitChance = 0.75f
                 },
+                SourcePos = new Point(0, 0),
                 Health = new Bar(20),
                 Hunger = new Bar(20),
                 Position = GetEmptyLocation(),
@@ -35,6 +37,9 @@ namespace HackLib
             {
                 PlayerPos = Player.Position
             };
+
+            Spawner = new MonsterSpawner(this);
+            Spawner.Spawn(32);
         }
 
         public Point GetEmptyLocation()

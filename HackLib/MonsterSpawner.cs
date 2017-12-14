@@ -1,34 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HackLib
 {
-    class MonsterSpawner
+    public class MonsterSpawner
     {
         private Game _game;
 
-        MonsterSpawner(Game game)
+        public MonsterSpawner(Game game)
         {
             _game = game;
         }
 
-        void Spawn()
+        public void Spawn(int count)
         {
-            _game.Creatures.Add(new Creature
+            for (var i = 0; i < count; i++)
+                _game.Creatures.Add(CreateMonster());
+        }
+
+        private Creature CreateMonster()
+        {
+            int rnd = Dicebag.UniformInt(100);
+
+            if (rnd < 60)
             {
-                Name = "Zombie",
-                Attack = new AttackComponent
+                return new Creature
                 {
-                    Damage = 5,
-                    HitChance = 60
-                },
-                Health = new Bar(5),
-                Hunger = new Bar(5),
-                Position = _game.GetEmptyLocation(),
-            });
+                    Name = "Zombie",
+                    Attack = new AttackComponent
+                    {
+                        Damage = 4,
+                        HitChance = 60
+                    },
+                    SourcePos = new Point(2,0),
+                    Health = new Bar(8),
+                    Position = _game.GetEmptyLocation(),
+                };
+            }
+            else if (rnd < 80)
+            {
+                return new Creature
+                {
+                    Name = "Zombie Guard",
+                    Attack = new AttackComponent
+                    {
+                        Damage = 6,
+                        HitChance = 60
+                    },
+                    SourcePos = new Point(3, 0),
+                    Health = new Bar(16),
+                    Position = _game.GetEmptyLocation(),
+                };
+            }
+            else
+            {
+                return new Creature
+                {
+                    Name = "Skeleton Warrior",
+                    Attack = new AttackComponent
+                    {
+                        Damage = 6,
+                        HitChance = 60
+                    },
+                    SourcePos = new Point(1, 0),
+                    Health = new Bar(4),
+                    Position = _game.GetEmptyLocation(),
+                };
+            }
         }
     }
 }

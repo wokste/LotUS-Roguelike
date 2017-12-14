@@ -10,7 +10,9 @@ namespace HackLib
         public Bar Health;
         public Bar Hunger;
         public AttackComponent Attack;
-        
+
+        public Point SourcePos;
+
         public readonly Inventory Inventory = new Inventory();
         public bool Alive = true;
 

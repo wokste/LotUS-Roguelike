@@ -71,6 +71,32 @@ namespace SurvivalHack
                 case Keyboard.Key.D:
                     _game.PlayerWalk(new Point(1, 0));
                     break;
+
+                case Keyboard.Key.Numpad1:
+                    _game.PlayerWalk(new Point(-1, 1));
+                    break;
+                case Keyboard.Key.Numpad2:
+                    _game.PlayerWalk(new Point(0, 1));
+                    break;
+                case Keyboard.Key.Numpad3:
+                    _game.PlayerWalk(new Point(1, 1));
+                    break;
+                case Keyboard.Key.Numpad4:
+                    _game.PlayerWalk(new Point(-1, 0));
+                    break;
+                case Keyboard.Key.Numpad6:
+                    _game.PlayerWalk(new Point(1, 0));
+                    break;
+                case Keyboard.Key.Numpad7:
+                    _game.PlayerWalk(new Point(-1, -1));
+                    break;
+                case Keyboard.Key.Numpad8:
+                    _game.PlayerWalk(new Point(0, -1));
+                    break;
+                case Keyboard.Key.Numpad9:
+                    _game.PlayerWalk(new Point(1, -1));
+                    break;
+                    
                 case Keyboard.Key.Space:
                     _game.PlayerMine();
                     break;
