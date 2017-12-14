@@ -20,7 +20,7 @@ namespace HackLib
 
         public readonly TileGrid Map;
 
-        private int _visualRange = 24;
+        private int _visualRange = 10;
 
         public int VisualRange
         {

@@ -19,7 +19,7 @@ namespace SurvivalHack
             this._game = game;
             _camera = camera;
 
-            _tileSetSprite = MakeSprite("tileset.png");
+            _tileSetSprite = MakeSprite("tileset32.png");
             _creatureSprite = MakeSprite("player.png");
         }
         
@@ -52,7 +52,7 @@ namespace SurvivalHack
                 if (tile.Visibility != TileVisibility.Visible)
                     continue;
 
-                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y - 16);
+                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X + 8, y * _camera.TileY - areaPx.Y);
 
                 _creatureSprite.Position = vecScreen;
 

@@ -13,7 +13,8 @@
         public bool Use(Item item, Creature user)
         {
             user.Inventory.Consume(item,1);
-            user.Hunger.Current += 5;
+            user.Hunger.Current += FoodRestore;
+            user.Health.Current += HealthRestore;
 
             return true;
         }

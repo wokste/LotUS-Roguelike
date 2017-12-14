@@ -6,8 +6,8 @@ namespace SurvivalHack
 {
     public class Camera
     {
-        public int TileX = 16;
-        public int TileY = 16;
+        public int TileX = 32;
+        public int TileY = 32;
 
         private Vector2f _center;
 
