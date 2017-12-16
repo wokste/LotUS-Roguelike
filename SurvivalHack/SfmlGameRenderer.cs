@@ -10,13 +10,15 @@ namespace SurvivalHack
     class SfmlGameRenderer : Drawable
     {
         private readonly Game _game;
+        private readonly FieldOfView _view;
         private readonly Sprite _tileSetSprite;
         private readonly Sprite _creatureSprite;
         private readonly Camera _camera;
 
-        public SfmlGameRenderer(Game game, Camera camera)
+        public SfmlGameRenderer(Game game, FieldOfView view, Camera camera)
         {
-            this._game = game;
+            _game = game;
+            _view = view;
             _camera = camera;
 
             _tileSetSprite = MakeSprite("tileset32.png");
@@ -47,9 +49,8 @@ namespace SurvivalHack
             foreach (var creature in _game.Creatures) {
                 var x = creature.Position.X;
                 var y = creature.Position.Y;
-
-                var tile = _game.Grid.Grid[x, y];
-                if (tile.Visibility != TileVisibility.Visible)
+                
+                if (_view.Visibility[x,y] < 128)
                     continue;
 
                 var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X + 8, y * _camera.TileY - areaPx.Y);
@@ -82,22 +83,23 @@ namespace SurvivalHack
 
                     _tileSetSprite.Position = vecScreen;
 
-                    var tile = grid.Grid[x, y];
-                    if (tile.Visibility == TileVisibility.Hidden)
+                    if (_view.Visibility[x, y] == 0)
                         continue;
 
-                    _tileSetSprite.Color = (tile.Visibility == TileVisibility.Visible)
-                        ? new Color(255, 255, 255)
-                        : new Color(128, 128, 128);
-                    
-                    _tileSetSprite.TextureRect = new IntRect((tile.Floor.SourcePos.X) * _camera.TileX, (tile.Floor.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                    byte v = _view.Visibility[x, y];
+
+                    _tileSetSprite.Color = new Color(v, v, v);
+
+                    var floor = _game.Grid.GetFloor(x, y);
+                    var wall = _game.Grid.GetWall(x, y);
+
+                    _tileSetSprite.TextureRect = new IntRect((floor.SourcePos.X) * _camera.TileX, (floor.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
 
                     target.Draw(_tileSetSprite);
 
-                    if (tile.Wall != null)
+                    if (wall != null)
                     {
-                        _tileSetSprite.TextureRect = new IntRect((tile.Wall.SourcePos.X) * _camera.TileX,
-                            (tile.Wall.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                        _tileSetSprite.TextureRect = new IntRect((wall.SourcePos.X) * _camera.TileX, (wall.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
 
                         target.Draw(_tileSetSprite);
                     }

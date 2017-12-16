@@ -49,7 +49,7 @@ namespace HackLib
             {
                 x = Dicebag.UniformInt(Grid.Width);
                 y = Dicebag.UniformInt(Grid.Height);
-            } while (Grid.Grid[x, y].Wall != null);
+            } while (Grid.HasFlag(x,y,TerrainFlag.BlockWalk));
             
             return new Point(x, y);
         }

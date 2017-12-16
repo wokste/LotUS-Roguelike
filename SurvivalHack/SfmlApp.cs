@@ -6,7 +6,7 @@ using HackLib;
 
 namespace SurvivalHack
 {
-    class SfmlApp
+    public class SfmlApp
     {
         private readonly Game _game;
         private readonly Camera _camera;
@@ -25,8 +25,8 @@ namespace SurvivalHack
             {
                 DepthBits = 24
             };
-            
-            _window = new RenderWindow(new VideoMode(640, 480), "SFML SurvivalHack - How much ore can you collect before you starve?", Styles.Default, contextSettings);
+
+            _window = new RenderWindow(new VideoMode(800, 600), "SFML SurvivalHack - How much ore can you collect before you starve?", Styles.Default, contextSettings);
             _window.SetActive();
 
             _window.SetVisible(true);
@@ -43,9 +43,9 @@ namespace SurvivalHack
 
             _camera = new Camera(_game.Player)
             {
-                WindowSize = new Size(640, 480)
+                WindowSize = new Size((int)_window.Size.X, (int)_window.Size.Y)
             };
-            _gameRenderer = new SfmlGameRenderer(_game, _camera);
+            _gameRenderer = new SfmlGameRenderer(_game, _game.FieldOfView, _camera);
         }
 
         private void OnResized(object sender, SizeEventArgs e)

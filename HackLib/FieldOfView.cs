@@ -33,9 +33,12 @@ namespace HackLib
             }
         }
 
+        public byte[,] Visibility;
+
         public FieldOfView(TileGrid map)
         {
             Map = map;
+            Visibility = new byte[map.Width,map.Height]; // 0 initialized so everything is dark.
         }
         
         public void OnMapUpdate()
@@ -54,8 +57,7 @@ namespace HackLib
 
             for (var x = x0; x < x1; x++)
                 for (var y = y0; y < y1; y++)
-                    if (Map.Grid[x, y].Visibility == TileVisibility.Visible)
-                        Map.Grid[x, y].Visibility = TileVisibility.Dark;
+                    Visibility[x, y] = Math.Min(Visibility[x, y], (byte)128);
         }
         
         /// <summary>
@@ -98,21 +100,21 @@ namespace HackLib
                 if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
                 
-                if (Map.Grid[x, y].BlocksSights)
+                if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
                 {
-                    if (y > yMin && !Map.Grid[x, y - 1].BlocksSights)
+                    if (y > yMin && !Map.HasFlag(x, y-1, TerrainFlag.BlockSight))
                     {
                         ScanQuatrantH(depth + 1, direction, minSlope, GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction));
                     }
                 }
                 else
                 {
-                    if (y > yMin && Map.Grid[x, y - 1].BlocksSights)
+                    if (y > yMin && Map.HasFlag(x, y - 1, TerrainFlag.BlockSight))
                         minSlope = GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction);
                 }
             }
 
-            if (!Map.Grid[x, yMax].BlocksSights)
+            if (!Map.HasFlag(x, yMax, TerrainFlag.BlockSight))
                 ScanQuatrantH(depth + 1, direction, minSlope, maxSlope);
         }
 
@@ -141,9 +143,9 @@ namespace HackLib
                 if (InSightRadius(x, y))
                     MarkAsSeen(x, y);
 
-                if (Map.Grid[x, y].BlocksSights)
+                if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
                 {
-                    if (x > xMin && !Map.Grid[x - 1, y].BlocksSights)
+                    if (x > xMin && !Map.HasFlag(x-1, y, TerrainFlag.BlockSight))
                     {
                         ScanQuatrantV(depth + 1, direction, minSlope, GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction));
                     }
@@ -151,18 +153,18 @@ namespace HackLib
                 else
                 {
                     // TODO: Wut? x > XMin?
-                    if (x > xMin && Map.Grid[x - 1, y].BlocksSights)
+                    if (x > xMin && Map.HasFlag(x - 1, y, TerrainFlag.BlockSight))
                         minSlope = GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction);
                 }
             }
 
-            if (!Map.Grid[xMax, y].BlocksSights)
+            if (!Map.HasFlag(xMax, y, TerrainFlag.BlockSight))
                 ScanQuatrantV(depth + 1, direction, minSlope, maxSlope);
         }
 
         private void MarkAsSeen(int x, int y)
         {
-            Map.Grid[x, y].Visibility = TileVisibility.Visible;
+            Visibility[x, y] = 255;
         }
 
         private int Clamp(int cur, int min, int max)

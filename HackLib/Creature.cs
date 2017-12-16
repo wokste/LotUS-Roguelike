@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HackLib
 {
@@ -33,7 +34,7 @@ namespace HackLib
                 return false;
 
             // Terrain collisions;
-            if (map.Grid[newPosition.X, newPosition.Y].Wall != null)
+            if (map.HasFlag(newPosition.X, newPosition.Y, TerrainFlag.BlockWalk))
                 return false;
 
             // TODO: Creature collision
@@ -42,7 +43,7 @@ namespace HackLib
             return true;
         }
 
-        internal void TakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
             Health.Current -= damage;
 
@@ -61,10 +62,13 @@ namespace HackLib
             var minePosition = Position;
             minePosition.Offset(Facing);
 
-            if (minePosition.X < 0 || minePosition.X >= map.Width || minePosition.Y < 0 || minePosition.Y >= map.Height)
+            int x = minePosition.X;
+            int y = minePosition.Y;
+
+            if (x < 0 || x >= map.Width || y < 0 || y >= map.Height)
                 return false;
 
-            var wall = (map.Grid[minePosition.X, minePosition.Y]).Wall;
+            var wall = map.GetWall(x,y);
 
             // Nothing to drop
             if (wall == null)
@@ -76,7 +80,7 @@ namespace HackLib
                 Count = Dicebag.Randomize(wall.DropCount),
             });
 
-            map.Grid[minePosition.X, minePosition.Y].Wall = null;
+            map.DestroyWall(x,y);
 
             return true;
         }

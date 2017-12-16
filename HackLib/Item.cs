@@ -9,7 +9,7 @@ namespace HackLib
         public string Name;
         public bool Stacking;
         public ConsumableComponent OnEat;
-        internal AttackComponent OnMelee;
+        public AttackComponent OnMelee;
 
         public override string ToString()
         {

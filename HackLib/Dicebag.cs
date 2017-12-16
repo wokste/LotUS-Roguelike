@@ -22,7 +22,7 @@ namespace HackLib
             return Rnd.Next(min, max);
         }
 
-        internal static int Randomize(int mean)
+        public static int Randomize(int mean)
         {
             var var = (double)(mean);
             var r = Rnd.NextDouble();

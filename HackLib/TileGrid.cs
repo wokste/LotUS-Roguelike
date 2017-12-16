@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -6,13 +7,13 @@ namespace HackLib
 {
     public class TileGrid
     {
-        public Tile[,] Grid;
+        private readonly Tile[,] _grid;
         public readonly int Width;
         public readonly int Height;
 
         public TileGrid(int width, int height)
         {
-            Grid = new Tile[width,height];
+            _grid = new Tile[width,height];
             Width = width;
             Height = height;
             Generate();
@@ -35,24 +36,46 @@ namespace HackLib
                     
                     if (height > 0.3)
                     {
-                        Grid[x, y].Floor = TileTypeList.Get("gravel");
-                        Grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
+                        _grid[x, y].Floor = TileTypeList.Get("gravel");
+                        _grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
                     }
                     else
                     {
-                        Grid[x, y].Floor = TileTypeList.Get("grass");
+                        _grid[x, y].Floor = TileTypeList.Get("grass");
                         if (Dicebag.UniformInt(10) == 1)
-                            Grid[x, y].Wall = TileTypeList.Get("tree");
+                            _grid[x, y].Wall = TileTypeList.Get("tree");
                         else if (Dicebag.UniformInt(2500) == 1)
-                            Grid[x, y].Wall = TileTypeList.Get("pumpkin");
+                            _grid[x, y].Wall = TileTypeList.Get("pumpkin");
                         else if (Dicebag.UniformInt(500) == 1)
-                            Grid[x, y].Wall = TileTypeList.Get("mushroom");
+                            _grid[x, y].Wall = TileTypeList.Get("mushroom");
 
                     }
-
-                    Grid[x, y].Visibility = TileVisibility.Hidden;
                 }
             }
+        }
+
+        public bool HasFlag(int x, int y, TerrainFlag testFlag)
+        {
+            var flags = _grid[x, y].Floor.Flags;
+            if (_grid[x, y].Wall != null)
+                flags |= _grid[x, y].Wall.Flags;
+
+            return (testFlag & flags) != 0;
+        }
+
+        public TileType GetFloor(int x, int y)
+        {
+            return _grid[x,y].Floor;
+        }
+
+        public TileType GetWall(int x, int y)
+        {
+            return _grid[x,y].Wall;
+        }
+
+        public void DestroyWall(int x, int y)
+        {
+            _grid[x, y].Wall = null;
         }
     }
     
@@ -60,14 +83,17 @@ namespace HackLib
     {
         public TileType Floor;
         public TileType Wall;
-        public TileVisibility Visibility;
 
-        public bool BlocksSights => (Wall != null);
+        public bool BlocksSights => (Wall != null && (Wall.Flags & TerrainFlag.BlockSight) != 0);
     }
 
-    public enum TileVisibility
+    [Flags]
+    public enum TerrainFlag
     {
-        Hidden, Dark, Visible
+        BlockWalk = 1,
+        BlockFly = 2,
+        BlockSwim = 4,
+        BlockSight = 8,
     }
 
     public class TileType
@@ -78,6 +104,8 @@ namespace HackLib
         public int DropCount = 0;
 
         public Point SourcePos;
+
+        public TerrainFlag Flags;
     }
 
     public static class TileTypeList
@@ -94,6 +122,7 @@ namespace HackLib
                 DropTag = "",
                 DropCount = 0,
                 SourcePos = new Point(0,0),
+                Flags = TerrainFlag.BlockSwim,
             });
 
             Types.Add(new TileType
@@ -102,6 +131,7 @@ namespace HackLib
                 DropTag = "",
                 DropCount = 0,
                 SourcePos = new Point(1, 0),
+                Flags = TerrainFlag.BlockSwim,
             });
 
             Types.Add(new TileType
@@ -110,6 +140,7 @@ namespace HackLib
                 DropTag = "wood",
                 DropCount = 3,
                 SourcePos = new Point(4, 0),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly,
             });
 
             Types.Add(new TileType
@@ -118,6 +149,7 @@ namespace HackLib
                 DropTag = "stone",
                 DropCount = 3,
                 SourcePos = new Point(4, 1),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
             });
 
             Types.Add(new TileType
@@ -126,6 +158,7 @@ namespace HackLib
                 DropTag = "stone",
                 DropCount = 1,
                 SourcePos = new Point(5, 0),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
 
             Types.Add(new TileType
@@ -134,6 +167,7 @@ namespace HackLib
                 DropTag = "ore",
                 DropCount = 3,
                 SourcePos = new Point(5, 1),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
             });
 
             Types.Add(new TileType
@@ -142,6 +176,7 @@ namespace HackLib
                 DropTag = "pumpkin",
                 DropCount = 1,
                 SourcePos = new Point(6, 0),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
 
             Types.Add(new TileType
@@ -150,6 +185,7 @@ namespace HackLib
                 DropTag = "mushroom",
                 DropCount = 1,
                 SourcePos = new Point(7, 0),
+                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
         }
 
