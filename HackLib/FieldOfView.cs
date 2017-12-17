@@ -5,6 +5,9 @@ namespace HackLib
 {
     public class FieldOfView
     {
+        public const byte BRIGHTNESS_LIGHT = 255;
+        public const byte BRIGHTNESS_DARK = 100;
+
         private Point _playerPos;
 
         public Point PlayerPos
@@ -57,7 +60,7 @@ namespace HackLib
 
             for (var x = x0; x < x1; x++)
                 for (var y = y0; y < y1; y++)
-                    Visibility[x, y] = Math.Min(Visibility[x, y], (byte)128);
+                    Visibility[x, y] = Math.Min(Visibility[x, y], BRIGHTNESS_DARK);
         }
         
         /// <summary>
@@ -66,7 +69,7 @@ namespace HackLib
         /// </summary>
         private void ToVisible()
         {
-            MarkAsSeen(PlayerPos.X, PlayerPos.Y);
+            Visibility[PlayerPos.X, PlayerPos.Y] = BRIGHTNESS_LIGHT;
             
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
@@ -92,14 +95,13 @@ namespace HackLib
             if (x < 0 || x >= Map.Width)
                 return;
 
-            var yMin = Clamp(_playerPos.Y + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Height - 1);
-            var yMax = Clamp(_playerPos.Y + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Height - 1);
-            
+            var yMin = (int)Math.Floor(Clamp(_playerPos.Y + minSlope * depth + 0.49, 0, Map.Height - 1));
+            var yMax = (int)Math.Ceiling(Clamp(_playerPos.Y + maxSlope * depth - 0.49, 0, Map.Height - 1));
+
             for (var y = yMin; y <= yMax; y++)
             {
-                if (InSightRadius(x, y))
-                    MarkAsSeen(x, y);
-                
+                UpdateVisibility(x,y);
+
                 if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
                 {
                     if (y > yMin && !Map.HasFlag(x, y-1, TerrainFlag.BlockSight))
@@ -135,15 +137,14 @@ namespace HackLib
             if (y < 0 || y >= Map.Width)
                 return;
             
-            var xMin = Clamp(_playerPos.X + (int)Math.Floor(minSlope * depth + 0.49), 0, Map.Width - 1);
-            var xMax = Clamp(_playerPos.X + (int)Math.Ceiling(maxSlope * depth - 0.49), 0, Map.Width - 1);
+            var xMin = (int)Math.Floor(Clamp(_playerPos.X + minSlope * depth + 0.49, 0, Map.Width - 1));
+            var xMax = (int)Math.Ceiling(Clamp(_playerPos.X + maxSlope * depth - 0.49, 0, Map.Width - 1));
 
             for (var x = xMin; x <= xMax; x++)
             {
-                if (InSightRadius(x, y))
-                    MarkAsSeen(x, y);
+                UpdateVisibility(x, y);
 
-                if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
+                    if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
                 {
                     if (x > xMin && !Map.HasFlag(x-1, y, TerrainFlag.BlockSight))
                     {
@@ -162,12 +163,7 @@ namespace HackLib
                 ScanQuatrantV(depth + 1, direction, minSlope, maxSlope);
         }
 
-        private void MarkAsSeen(int x, int y)
-        {
-            Visibility[x, y] = 255;
-        }
-
-        private int Clamp(int cur, int min, int max)
+        private double Clamp(double cur, double min, double max)
         {
             if (cur < min)
                 return min;
@@ -198,12 +194,16 @@ namespace HackLib
         /// <summary>
         /// Calculate the distance between the two points
         /// </summary>
-        private bool InSightRadius(int x, int y)
+        private void UpdateVisibility(int x, int y)
         {
             var dx = x - PlayerPos.X;
             var dy = y - PlayerPos.Y;
 
-            return dx * dx + dy * dy < VisualRange * (VisualRange + 1);
+            var dist = Math.Sqrt(dx * dx + dy * dy);
+            var antiAliasRadius = 2f;
+            var distanceVisibility = dist < VisualRange - antiAliasRadius ? 1f : (VisualRange - dist) / antiAliasRadius;
+
+            Visibility[x, y] = (byte)Math.Max(Visibility[x, y], BRIGHTNESS_LIGHT * distanceVisibility);
         }
     }
 }
