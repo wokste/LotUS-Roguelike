@@ -18,7 +18,7 @@ namespace HackLib
 
         public Point Position { get; set; }
         public Point Facing { get; set; }
-        public TileGrid Map;
+        public World Map;
         
         public bool Walk(Point direction)
         {
@@ -30,7 +30,7 @@ namespace HackLib
             newPosition.Offset(direction);
 
             // You cannot walk of the edge of map
-            if (newPosition.X < 0 || newPosition.X >= Map.Width || newPosition.Y < 0 || newPosition.Y >= Map.Height)
+            if (!Map.InBoundary(newPosition.X, newPosition.Y))
                 return false;
 
             // Terrain collisions;
@@ -65,7 +65,7 @@ namespace HackLib
             int x = minePosition.X;
             int y = minePosition.Y;
 
-            if (x < 0 || x >= Map.Width || y < 0 || y >= Map.Height)
+            if (!Map.InBoundary(x, y))
                 return false;
 
             var wall = Map.GetWall(x,y);

@@ -8,33 +8,20 @@ namespace HackLib
     {
         [System.Obsolete]
         public Creature Player;
-        public List<Creature> Creatures = new List<Creature>();
         public Queue<Controller> Controllers = new Queue<Controller>();
 
         public MonsterSpawner Spawner;
-        public TileGrid Grid;
+        public World World;
 
         public void Init()
         {
             ItemTypeList.InitTypes();
             TileTypeList.InitTypes();
 
-            Grid = new TileGrid(256, 256);
+            World = new World();
 
             Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(Grid, 32);
-        }
-
-        public Point GetEmptyLocation()
-        {
-            int x, y;
-            do
-            {
-                x = Dicebag.UniformInt(Grid.Width);
-                y = Dicebag.UniformInt(Grid.Height);
-            } while (Grid.HasFlag(x,y,TerrainFlag.BlockWalk));
-            
-            return new Point(x, y);
+            Spawner.Spawn(World, 32);
         }
 
         private const int HUNGER_TICKS = 50;
@@ -48,7 +35,7 @@ namespace HackLib
                 if (c.ShouldDelete)
                 {
                     Controllers.Dequeue();
-                    Creatures.Remove(c.Self);
+                    World.Creatures.Remove(c.Self);
                     continue;
                 }
 
@@ -81,7 +68,7 @@ namespace HackLib
         public void AddCreature(Controller controller)
         {
             Controllers.Enqueue(controller);
-            Creatures.Add(controller.Self);
+            World.Creatures.Add(controller.Self);
         }
     }
 }

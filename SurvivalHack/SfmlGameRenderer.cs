@@ -46,7 +46,7 @@ namespace SurvivalHack
             var areaPx = _camera.GetRenderAreaPx();
             _creatureSprite.Scale = new Vector2f(1, 1);
 
-            foreach (var creature in _game.Creatures) {
+            foreach (var creature in _game.World.Creatures) {
                 var x = creature.Position.X;
                 var y = creature.Position.Y;
                 
@@ -65,13 +65,13 @@ namespace SurvivalHack
 
         private void DrawGrid(RenderTarget target, RenderStates states)
         {
-            var grid = _game.Grid;
+            var grid = _game.World;
 
             var areaPx = _camera.GetRenderAreaPx();
-            var x0 = Math.Max(areaPx.Left / _camera.TileX, 0);
-            var y0 = Math.Max(areaPx.Top / _camera.TileY, 0);
-            var x1 = Math.Min(areaPx.Right / _camera.TileX + 1, grid.Width);
-            var y1 = Math.Min(areaPx.Bottom / _camera.TileY + 1, grid.Height);
+            var x0 = (int)Math.Floor((float)areaPx.Left / _camera.TileX);
+            var y0 = (int)Math.Floor((float)areaPx.Top / _camera.TileY);
+            var x1 = (int)Math.Ceiling((float)areaPx.Right / _camera.TileX);
+            var y1 = (int)Math.Ceiling((float)areaPx.Bottom / _camera.TileY);
 
             _tileSetSprite.Scale = new Vector2f(1, 1);
 
@@ -79,6 +79,9 @@ namespace SurvivalHack
             {
                 for (var y = y0; y < y1; y++)
                 {
+                    if (!_game.World.InBoundary(x, y))
+                        continue;
+
                     var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
 
                     _tileSetSprite.Position = vecScreen;
@@ -90,8 +93,8 @@ namespace SurvivalHack
 
                     _tileSetSprite.Color = new Color(v, v, v);
 
-                    var floor = _game.Grid.GetFloor(x, y);
-                    var wall = _game.Grid.GetWall(x, y);
+                    var floor = _game.World.GetFloor(x, y);
+                    var wall = _game.World.GetWall(x, y);
 
                     _tileSetSprite.TextureRect = new IntRect((floor.SourcePos.X) * _camera.TileX, (floor.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
 

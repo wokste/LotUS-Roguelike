@@ -30,7 +30,7 @@ namespace HackLib
 
         public PlayerController(Creature self) : base(self)
         {
-            FieldOfView = new FieldOfView(Self.Map);
+            FieldOfView = new FieldOfView(Self.Map._map);
             FieldOfView.Update(Self.Position);
         }
 

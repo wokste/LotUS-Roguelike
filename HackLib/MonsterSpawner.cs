@@ -12,7 +12,7 @@ namespace HackLib
             _game = game;
         }
 
-        public void Spawn(TileGrid map, int count)
+        public void Spawn(World map, int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -39,7 +39,7 @@ namespace HackLib
                     },
                     SourcePos = new Point(2,0),
                     Health = new Bar(8),
-                    Position = _game.GetEmptyLocation(),
+                    Position = _game.World.GetEmptyLocation(),
                 };
             }
             else if (rnd < 80)
@@ -54,7 +54,7 @@ namespace HackLib
                     },
                     SourcePos = new Point(3, 0),
                     Health = new Bar(16),
-                    Position = _game.GetEmptyLocation(),
+                    Position = _game.World.GetEmptyLocation(),
                 };
             }
             else
@@ -69,7 +69,7 @@ namespace HackLib
                     },
                     SourcePos = new Point(1, 0),
                     Health = new Bar(4),
-                    Position = _game.GetEmptyLocation(),
+                    Position = _game.World.GetEmptyLocation(),
                 };
             }
         }

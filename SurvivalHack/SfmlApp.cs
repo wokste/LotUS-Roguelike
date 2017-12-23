@@ -50,11 +50,11 @@ namespace SurvivalHack
                         Damage = 7,
                         HitChance = 0.75f
                     },
-                    Map = _game.Grid,
+                    Map = _game.World,
                     SourcePos = new Point(0, 0),
                     Health = new Bar(20),
                     Hunger = new Bar(20),
-                    Position = _game.GetEmptyLocation(),
+                    Position = _game.World.GetEmptyLocation(),
                 }
             );
 
