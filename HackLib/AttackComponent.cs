@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace HackLib
 {
@@ -6,6 +7,7 @@ namespace HackLib
     {
         public float HitChance;
         public int Damage;
+        public float Range;
 
         public void Attack(Creature attacker, Creature defender)
         {
@@ -22,6 +24,14 @@ namespace HackLib
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"{attacker.Name} attacks {defender.Name} but misses.");
             }
+        }
+
+        public bool InRange(Creature attacker, Creature defender)
+        {
+            var delta = new Point(attacker.Position.X - defender.Position.X, attacker.Position.Y - defender.Position.Y);
+            return (delta.X * delta.X + delta.Y * delta.Y <= Range * (Range + 1));
+
+            //TODO: Line of sight algorithm
         }
     }
 }

@@ -10,16 +10,7 @@ namespace HackLib
 
         private Point _playerPos;
 
-        public Point PlayerPos
-        {
-            get => _playerPos;
-            set
-            {
-                VisibleToDark();
-                _playerPos = value;
-                ToVisible();
-            }
-        }
+        //public Point PlayerPos => _playerPos;
 
         public readonly TileGrid Map;
 
@@ -44,9 +35,10 @@ namespace HackLib
             Visibility = new byte[map.Width,map.Height]; // 0 initialized so everything is dark.
         }
         
-        public void OnMapUpdate()
+        public void Update(Point playerPos)
         {
             VisibleToDark();
+            _playerPos = playerPos;
             ToVisible();
         }
 
@@ -69,7 +61,7 @@ namespace HackLib
         /// </summary>
         private void ToVisible()
         {
-            Visibility[PlayerPos.X, PlayerPos.Y] = BRIGHTNESS_LIGHT;
+            Visibility[_playerPos.X, _playerPos.Y] = BRIGHTNESS_LIGHT;
             
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
@@ -196,8 +188,8 @@ namespace HackLib
         /// </summary>
         private void UpdateVisibility(int x, int y)
         {
-            var dx = x - PlayerPos.X;
-            var dy = y - PlayerPos.Y;
+            var dx = x - _playerPos.X;
+            var dy = y - _playerPos.Y;
 
             var dist = Math.Sqrt(dx * dx + dy * dy);
             var antiAliasRadius = 2f;

@@ -12,6 +12,7 @@ namespace SurvivalHack
         private readonly Camera _camera;
         private readonly SfmlGameRenderer _gameRenderer;
         private readonly RenderWindow _window;
+        private readonly PlayerController Controller;
 
         static void Main(string[] args)
         {
@@ -40,12 +41,30 @@ namespace SurvivalHack
             
             _game = new Game();
             _game.Init();
+            
+            Controller = new PlayerController(new Creature
+                {
+                    Name = "Steven",
+                    Attack = new AttackComponent
+                    {
+                        Damage = 7,
+                        HitChance = 0.75f
+                    },
+                    Map = _game.Grid,
+                    SourcePos = new Point(0, 0),
+                    Health = new Bar(20),
+                    Hunger = new Bar(20),
+                    Position = _game.GetEmptyLocation(),
+                }
+            );
 
-            _camera = new Camera(_game.Player)
+            _game.AddCreature(Controller);
+            
+            _camera = new Camera(Controller.Self)
             {
                 WindowSize = new Size((int)_window.Size.X, (int)_window.Size.Y)
             };
-            _gameRenderer = new SfmlGameRenderer(_game, _game.FieldOfView, _camera);
+            _gameRenderer = new SfmlGameRenderer(_game, Controller.FieldOfView, _camera);
         }
 
         private void OnResized(object sender, SizeEventArgs e)
@@ -59,52 +78,54 @@ namespace SurvivalHack
             //TODO: Some of this needs to move to game
             switch (keyEventArgs.Code)
             {
-                case Keyboard.Key.W:
-                    _game.PlayerWalk(new Point(0, -1));
-                    break;
-                case Keyboard.Key.A:
-                    _game.PlayerWalk(new Point(-1, 0));
-                    break;
-                case Keyboard.Key.S:
-                    _game.PlayerWalk(new Point(0, 1));
-                    break;
-                case Keyboard.Key.D:
-                    _game.PlayerWalk(new Point(1, 0));
-                    break;
-
                 case Keyboard.Key.Numpad1:
-                    _game.PlayerWalk(new Point(-1, 1));
+                    Controller.DoWalk(new Point(-1, 1));
                     break;
+                case Keyboard.Key.Down:
                 case Keyboard.Key.Numpad2:
-                    _game.PlayerWalk(new Point(0, 1));
+                    Controller.DoWalk(new Point(0, 1));
                     break;
                 case Keyboard.Key.Numpad3:
-                    _game.PlayerWalk(new Point(1, 1));
+                    Controller.DoWalk(new Point(1, 1));
                     break;
+                case Keyboard.Key.Left:
                 case Keyboard.Key.Numpad4:
-                    _game.PlayerWalk(new Point(-1, 0));
+                    Controller.DoWalk(new Point(-1, 0));
                     break;
+                case Keyboard.Key.Right:
                 case Keyboard.Key.Numpad6:
-                    _game.PlayerWalk(new Point(1, 0));
+                    Controller.DoWalk(new Point(1, 0));
                     break;
                 case Keyboard.Key.Numpad7:
-                    _game.PlayerWalk(new Point(-1, -1));
+                    Controller.DoWalk(new Point(-1, -1));
                     break;
+                case Keyboard.Key.Up:
                 case Keyboard.Key.Numpad8:
-                    _game.PlayerWalk(new Point(0, -1));
+                    Controller.DoWalk(new Point(0, -1));
                     break;
                 case Keyboard.Key.Numpad9:
-                    _game.PlayerWalk(new Point(1, -1));
+                    Controller.DoWalk(new Point(1, -1));
                     break;
                     
                 case Keyboard.Key.Space:
-                    _game.PlayerMine();
+                    Controller.Do(s => s.Mine());
                     break;
                 case Keyboard.Key.I:
-                    _game.Player.Inventory.Write();
+                    Controller.Self.Inventory.Write();
                     break;
                 case Keyboard.Key.E:
-                    _game.Player.Eat();
+                    Controller.Do(s => s.Eat());
+                    break;
+                case Keyboard.Key.Return:
+                    {
+                        foreach( var c in _game.Controllers)
+                        {
+                            var ai = c as AiController;
+                            if (ai == null)
+                                continue;
+                            ai.Enemy = Controller.Self;
+                        }
+                    }
                     break;
             }
         }
@@ -128,6 +149,7 @@ namespace SurvivalHack
 
         private void Update()
         {
+            _game.Update();
             _camera.Update();
         }
 

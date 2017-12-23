@@ -18,8 +18,9 @@ namespace HackLib
 
         public Point Position { get; set; }
         public Point Facing { get; set; }
+        public TileGrid Map;
         
-        public bool Walk(Point direction, TileGrid map)
+        public bool Walk(Point direction)
         {
             // TODO: Precondition |direction| == 1
 
@@ -29,11 +30,11 @@ namespace HackLib
             newPosition.Offset(direction);
 
             // You cannot walk of the edge of map
-            if (newPosition.X < 0 || newPosition.X >= map.Width || newPosition.Y < 0 || newPosition.Y >= map.Height)
+            if (newPosition.X < 0 || newPosition.X >= Map.Width || newPosition.Y < 0 || newPosition.Y >= Map.Height)
                 return false;
 
             // Terrain collisions;
-            if (map.HasFlag(newPosition.X, newPosition.Y, TerrainFlag.BlockWalk))
+            if (Map.HasFlag(newPosition.X, newPosition.Y, TerrainFlag.BlockWalk))
                 return false;
 
             // TODO: Creature collision
@@ -56,7 +57,7 @@ namespace HackLib
             }
         }
 
-        public bool Mine(TileGrid map)
+        public bool Mine()
         {
             var minePosition = Position;
             minePosition.Offset(Facing);
@@ -64,10 +65,10 @@ namespace HackLib
             int x = minePosition.X;
             int y = minePosition.Y;
 
-            if (x < 0 || x >= map.Width || y < 0 || y >= map.Height)
+            if (x < 0 || x >= Map.Width || y < 0 || y >= Map.Height)
                 return false;
 
-            var wall = map.GetWall(x,y);
+            var wall = Map.GetWall(x,y);
 
             // Nothing to drop
             if (wall == null)
@@ -79,12 +80,12 @@ namespace HackLib
                 Count = Dicebag.Randomize(wall.DropCount),
             });
 
-            map.DestroyWall(x,y);
+            Map.DestroyWall(x,y);
 
             return true;
         }
 
-        public void Eat()
+        public bool Eat()
         {
             var foodItems = Inventory._items.Where(i => i.Type.OnEat != null);
             var food = foodItems.OrderBy(f => f.Type.OnEat.Quality).LastOrDefault();
@@ -93,11 +94,12 @@ namespace HackLib
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("You have no food in your inventory.");
-                return;
+                return false;
             }
             
             food.Type.OnEat.Use(food, this);
             DisplayStats();
+            return true;
         }
 
         public void DisplayStats()

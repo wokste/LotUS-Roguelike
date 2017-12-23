@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace HackLib
 {
     public class Game
     {
+        [System.Obsolete]
         public Creature Player;
         public List<Creature> Creatures = new List<Creature>();
+        public Queue<Controller> Controllers = new Queue<Controller>();
+
         public MonsterSpawner Spawner;
         public TileGrid Grid;
-        public FieldOfView FieldOfView;
 
         public void Init()
         {
@@ -17,29 +20,9 @@ namespace HackLib
             TileTypeList.InitTypes();
 
             Grid = new TileGrid(256, 256);
-            Player = new Creature
-            {
-                Name = "Steven",
-                Attack = new AttackComponent
-                {
-                    Damage = 7,
-                    HitChance = 0.75f
-                },
-                SourcePos = new Point(0, 0),
-                Health = new Bar(20),
-                Hunger = new Bar(20),
-                Position = GetEmptyLocation(),
-            };
-
-            Creatures.Add(Player);
-
-            FieldOfView = new FieldOfView(Grid)
-            {
-                PlayerPos = Player.Position
-            };
 
             Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(32);
+            Spawner.Spawn(Grid, 32);
         }
 
         public Point GetEmptyLocation()
@@ -54,33 +37,32 @@ namespace HackLib
             return new Point(x, y);
         }
 
-        public void PlayerWalk(Point point)
-        {
-            if (!Player.Alive)
-                return;
-
-            if (Player.Walk(point, Grid))
-            {
-                FieldOfView.PlayerPos = Player.Position;
-                TimeAdvance(1);
-            }
-        }
-
-        public void PlayerMine()
-        {
-            if (!Player.Alive)
-                return;
-
-            if (!Player.Mine(Grid))
-                return;
-
-            FieldOfView.OnMapUpdate();
-            TimeAdvance(20);
-        }
-
         private const int HUNGER_TICKS = 50;
         private int _ticksTillHungerLoss = HUNGER_TICKS;
 
+        public void Update()
+        {
+            while (true)
+            {
+                var c = Controllers.Peek();
+                if (c.ShouldDelete)
+                {
+                    Controllers.Dequeue();
+                    Creatures.Remove(c.Self);
+                    continue;
+                }
+
+                var r = c.Act();
+                
+                if (r == true)
+                    Controllers.Enqueue(Controllers.Dequeue());
+                else
+                    return;
+
+            }
+        }
+
+        /*
         private void TimeAdvance(int ticks)
         {
             _ticksTillHungerLoss -= ticks;
@@ -94,6 +76,12 @@ namespace HackLib
 
                 Player.DisplayStats();
             }
+        }*/
+
+        public void AddCreature(Controller controller)
+        {
+            Controllers.Enqueue(controller);
+            Creatures.Add(controller.Self);
         }
     }
 }

@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="AttackComponent.cs" />
     <Compile Include="Bar.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="Dicebag.cs" />
     <Compile Include="ConsumableComponent.cs" />

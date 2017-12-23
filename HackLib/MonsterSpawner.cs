@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace HackLib
 {
@@ -11,15 +12,20 @@ namespace HackLib
             _game = game;
         }
 
-        public void Spawn(int count)
+        public void Spawn(TileGrid map, int count)
         {
             for (var i = 0; i < count; i++)
-                _game.Creatures.Add(CreateMonster());
+            {
+                var monster = CreateMonster();
+                monster.Map = map;
+                var ai = new AiController(monster);
+                _game.AddCreature(ai);
+            }
         }
 
         private Creature CreateMonster()
         {
-            int rnd = Dicebag.UniformInt(100);
+            var rnd = Dicebag.UniformInt(100);
 
             if (rnd < 60)
             {
