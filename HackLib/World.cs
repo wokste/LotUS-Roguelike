@@ -42,7 +42,14 @@ namespace HackLib
 
         public bool HasFlag(int x, int y, TerrainFlag flag)
         {
-            return _map.HasFlag(x, y, flag);
+            if (_map.HasFlag(x, y, flag))
+                return true;
+
+            foreach (var c in Creatures)
+                if (c.Position.X == x && c.Position.Y == y)
+                    return true;
+            
+            return false;
         }
 
         public TileType GetFloor(int x, int y)

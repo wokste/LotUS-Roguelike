@@ -16,7 +16,7 @@ namespace HackLib
         public int Current
         {
             get => _current;
-            set => _current = Math.Min(value, _max);
+            set => _current = Math.Min(Math.Max(value,0), _max);
         }
 
         public int Max

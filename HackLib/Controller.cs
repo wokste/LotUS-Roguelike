@@ -36,6 +36,9 @@ namespace HackLib
 
         public override bool Act()
         {
+            if (!Self.Alive)
+                return false;
+
             if (_actions.Count == 0)
                 return false;
 
@@ -69,7 +72,7 @@ namespace HackLib
 
         public override bool Act()
         {
-            if (Enemy == null)
+            if (Enemy == null || !Enemy.Alive)
                 Enemy = FindEnemy();
 
             if (Enemy == null)
@@ -100,16 +103,50 @@ namespace HackLib
                 return true;
             }
 
-            delta.X = delta.X < -1 ? -1 : delta.X > 1 ? 1 : delta.X;
-            delta.Y = delta.Y < -1 ? -1 : delta.Y > 1 ? 1 : delta.Y;
+            var deltaClamped = new Point(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
 
-            Self.Walk(delta);
+            if (Self.Walk(deltaClamped))
+                return true;
 
-            return true;
+            if (Math.Abs(delta.X) > Math.Abs(delta.Y))
+            {
+                if (Self.Walk(new Point(deltaClamped.X, 0)))
+                    return true;
+
+                if (Self.Walk(new Point(0, deltaClamped.Y)))
+                    return true;
+            }
+            else
+            {
+                if (Self.Walk(new Point(0, deltaClamped.Y)))
+                    return true;
+
+                if (Self.Walk(new Point(deltaClamped.X, 0)))
+                    return true;
+            }
+
+            // Fallback. Enemy could not be reached.
+            Enemy = null;
+            return ActWander();
         }
 
         public Creature FindEnemy()
         {
+            foreach(var c in Self.Map.Creatures)
+            {
+                if (c == Self)
+                    continue;
+
+                if (c.Name != "Steven") // TODO: Better criteria for what creature to attack
+                    continue;
+
+                var delta = new Point(Self.Position.X - c.Position.X, Self.Position.Y - c.Position.Y);
+                var deltalen = delta.X * delta.X + delta.Y * delta.Y;
+
+                if (deltalen < 100)
+                    return c;
+            }
+
             return null;
         }
 

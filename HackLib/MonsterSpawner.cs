@@ -35,7 +35,8 @@ namespace HackLib
                     Attack = new AttackComponent
                     {
                         Damage = 4,
-                        HitChance = 60
+                        HitChance = 60,
+                        Range = 1
                     },
                     SourcePos = new Point(2,0),
                     Health = new Bar(8),
@@ -50,7 +51,8 @@ namespace HackLib
                     Attack = new AttackComponent
                     {
                         Damage = 6,
-                        HitChance = 60
+                        HitChance = 60,
+                        Range = 1
                     },
                     SourcePos = new Point(3, 0),
                     Health = new Bar(16),
@@ -61,11 +63,12 @@ namespace HackLib
             {
                 return new Creature
                 {
-                    Name = "Skeleton Warrior",
+                    Name = "Skeleton Archer",
                     Attack = new AttackComponent
                     {
-                        Damage = 6,
-                        HitChance = 60
+                        Damage = 2,
+                        HitChance = 60,
+                        Range = 6
                     },
                     SourcePos = new Point(1, 0),
                     Health = new Bar(4),

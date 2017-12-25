@@ -53,7 +53,7 @@ namespace HackLib
                 // TODO: Stuff
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("{Name} died");
+                Console.WriteLine($"{Name} died");
             }
         }
 

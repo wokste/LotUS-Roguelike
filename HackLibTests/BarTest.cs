@@ -15,12 +15,12 @@ namespace HackLibTests
             Assert.AreEqual(b.Max, 10);
             Assert.AreEqual(b.Perc, 1f);
 
-            b.Current = 5;
+            b.Current -= 5;
             Assert.AreEqual(b.Current, 5);
             Assert.AreEqual(b.Max, 10);
             Assert.AreEqual(b.Perc, 0.5f);
 
-            b.Current = 15;
+            b.Current += 15;
             Assert.AreEqual(b.Current, 10);
             Assert.AreEqual(b.Max, 10);
             Assert.AreEqual(b.Perc, 1f);
@@ -38,6 +38,11 @@ namespace HackLibTests
             Assert.AreEqual(b.Current, 5);
             Assert.AreEqual(b.Max, 10);
             Assert.AreEqual(b.Perc, 0.5f);
+            
+            b.Current -= 20;
+            Assert.AreEqual(b.Current, 0);
+            Assert.AreEqual(b.Max, 10);
+            Assert.AreEqual(b.Perc, 0f);
         }
     }
 }
