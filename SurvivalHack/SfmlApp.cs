@@ -48,7 +48,7 @@ namespace SurvivalHack
                     Attack = new AttackComponent
                     {
                         Damage = 7,
-                        HitChance = 0.75f
+                        HitChance = 75f
                     },
                     Map = _game.World,
                     SourcePos = new Point(0, 0),

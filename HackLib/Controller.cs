@@ -58,6 +58,16 @@ namespace HackLib
 
         public void DoWalk(Point point)
         {
+            var actPoint = new Point(Self.Position.X + point.X, Self.Position.Y + point.Y);
+            foreach (var c in Self.Map.Creatures)
+            {
+                if (c.Position == actPoint)
+                {
+                    Do(s => s.Attack.Attack(s, c));
+                    return;
+                }
+            }
+
             Do(s => s.Walk(point));
         }
     }

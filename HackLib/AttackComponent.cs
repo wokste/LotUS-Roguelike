@@ -9,9 +9,9 @@ namespace HackLib
         public int Damage;
         public float Range;
 
-        public void Attack(Creature attacker, Creature defender)
+        public bool Attack(Creature attacker, Creature defender)
         {
-            if (Dicebag.UniformInt(100) >= HitChance)
+            if (Dicebag.UniformInt(100) <= HitChance)
             {
                 var damage = Dicebag.Randomize(Damage);
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -24,6 +24,7 @@ namespace HackLib
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"{attacker.Name} attacks {defender.Name} but misses.");
             }
+            return true;
         }
 
         public bool InRange(Creature attacker, Creature defender)
