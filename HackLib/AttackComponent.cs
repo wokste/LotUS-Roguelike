@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 namespace HackLib
 {
@@ -29,7 +28,7 @@ namespace HackLib
 
         public bool InRange(Creature attacker, Creature defender)
         {
-            var delta = new Point(attacker.Position.X - defender.Position.X, attacker.Position.Y - defender.Position.Y);
+            var delta = attacker.Position - defender.Position;
             return (delta.X * delta.X + delta.Y * delta.Y <= Range * (Range + 1));
 
             //TODO: Line of sight algorithm

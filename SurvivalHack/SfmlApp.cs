@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using Size = System.Drawing.Size;
 using SFML.Graphics;
 using SFML.Window;
 using HackLib;
@@ -12,7 +12,7 @@ namespace SurvivalHack
         private readonly Camera _camera;
         private readonly SfmlGameRenderer _gameRenderer;
         private readonly RenderWindow _window;
-        private readonly PlayerController Controller;
+        private readonly PlayerController _controller;
 
         static void Main(string[] args)
         {
@@ -42,7 +42,7 @@ namespace SurvivalHack
             _game = new Game();
             _game.Init();
             
-            Controller = new PlayerController(new Creature
+            _controller = new PlayerController(new Creature
                 {
                     Name = "Steven",
                     Attack = new AttackComponent
@@ -51,20 +51,20 @@ namespace SurvivalHack
                         HitChance = 75f
                     },
                     Map = _game.World,
-                    SourcePos = new Point(0, 0),
+                    SourcePos = new Vec(0, 0),
                     Health = new Bar(20),
                     Hunger = new Bar(20),
                     Position = _game.World.GetEmptyLocation(),
                 }
             );
 
-            _game.AddCreature(Controller);
+            _game.AddCreature(_controller);
             
-            _camera = new Camera(Controller.Self)
+            _camera = new Camera(_controller.Self)
             {
                 WindowSize = new Size((int)_window.Size.X, (int)_window.Size.Y)
             };
-            _gameRenderer = new SfmlGameRenderer(_game, Controller.FieldOfView, _camera);
+            _gameRenderer = new SfmlGameRenderer(_game, _controller.FieldOfView, _camera);
         }
 
         private void OnResized(object sender, SizeEventArgs e)
@@ -79,42 +79,42 @@ namespace SurvivalHack
             switch (keyEventArgs.Code)
             {
                 case Keyboard.Key.Numpad1:
-                    Controller.DoWalk(new Point(-1, 1));
+                    _controller.DoWalk(new Vec(-1, 1));
                     break;
                 case Keyboard.Key.Down:
                 case Keyboard.Key.Numpad2:
-                    Controller.DoWalk(new Point(0, 1));
+                    _controller.DoWalk(new Vec(0, 1));
                     break;
                 case Keyboard.Key.Numpad3:
-                    Controller.DoWalk(new Point(1, 1));
+                    _controller.DoWalk(new Vec(1, 1));
                     break;
                 case Keyboard.Key.Left:
                 case Keyboard.Key.Numpad4:
-                    Controller.DoWalk(new Point(-1, 0));
+                    _controller.DoWalk(new Vec(-1, 0));
                     break;
                 case Keyboard.Key.Right:
                 case Keyboard.Key.Numpad6:
-                    Controller.DoWalk(new Point(1, 0));
+                    _controller.DoWalk(new Vec(1, 0));
                     break;
                 case Keyboard.Key.Numpad7:
-                    Controller.DoWalk(new Point(-1, -1));
+                    _controller.DoWalk(new Vec(-1, -1));
                     break;
                 case Keyboard.Key.Up:
                 case Keyboard.Key.Numpad8:
-                    Controller.DoWalk(new Point(0, -1));
+                    _controller.DoWalk(new Vec(0, -1));
                     break;
                 case Keyboard.Key.Numpad9:
-                    Controller.DoWalk(new Point(1, -1));
+                    _controller.DoWalk(new Vec(1, -1));
                     break;
                     
                 case Keyboard.Key.Space:
-                    Controller.Do(s => s.Mine());
+                    _controller.Do(s => s.Mine());
                     break;
                 case Keyboard.Key.I:
-                    Controller.Self.Inventory.Write();
+                    _controller.Self.Inventory.Write();
                     break;
                 case Keyboard.Key.E:
-                    Controller.Do(s => s.Eat());
+                    _controller.Do(s => s.Eat());
                     break;
                 case Keyboard.Key.Return:
                     {
@@ -123,7 +123,7 @@ namespace SurvivalHack
                             var ai = c as AiController;
                             if (ai == null)
                                 continue;
-                            ai.Enemy = Controller.Self;
+                            ai.Enemy = _controller.Self;
                         }
                     }
                     break;

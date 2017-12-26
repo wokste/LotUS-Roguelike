@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 
 namespace HackLib
@@ -11,23 +10,23 @@ namespace HackLib
         public Bar Hunger;
         public AttackComponent Attack;
 
-        public Point SourcePos;
+        public Vec SourcePos;
 
         public readonly Inventory Inventory = new Inventory();
         public bool Alive = true;
 
-        public Point Position { get; set; }
-        public Point Facing { get; set; }
+        public Vec Position { get; set; }
+        public Vec Facing { get; set; }
         public World Map;
         
-        public bool Walk(Point direction)
+        public bool Walk(Vec direction)
         {
             // TODO: Precondition |direction| == 1
 
             Facing = direction;
 
             var newPosition = Position;
-            newPosition.Offset(direction);
+            newPosition += direction;
 
             // You cannot walk of the edge of map
             if (!Map.InBoundary(newPosition.X, newPosition.Y))
@@ -60,7 +59,7 @@ namespace HackLib
         public bool Mine()
         {
             var minePosition = Position;
-            minePosition.Offset(Facing);
+            minePosition += Facing;
 
             int x = minePosition.X;
             int y = minePosition.Y;

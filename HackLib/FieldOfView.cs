@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+
 
 namespace HackLib
 {
@@ -8,9 +8,9 @@ namespace HackLib
         public const byte BRIGHTNESS_LIGHT = 255;
         public const byte BRIGHTNESS_DARK = 100;
 
-        private Point _playerPos;
+        private Vec _playerPos;
 
-        //public Point PlayerPos => _playerPos;
+        //public Vec PlayerPos => _playerPos;
 
         public readonly TileGrid Map;
 
@@ -35,7 +35,7 @@ namespace HackLib
             Visibility = new byte[map.Width,map.Height]; // 0 initialized so everything is dark.
         }
         
-        public void Update(Point playerPos)
+        public void Update(Vec playerPos)
         {
             VisibleToDark();
             _playerPos = playerPos;

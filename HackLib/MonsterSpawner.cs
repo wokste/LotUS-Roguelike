@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+
 
 namespace HackLib
 {
@@ -38,7 +38,7 @@ namespace HackLib
                         HitChance = 60,
                         Range = 1
                     },
-                    SourcePos = new Point(2,0),
+                    SourcePos = new Vec(2,0),
                     Health = new Bar(8),
                     Position = _game.World.GetEmptyLocation(),
                 };
@@ -54,7 +54,7 @@ namespace HackLib
                         HitChance = 60,
                         Range = 1
                     },
-                    SourcePos = new Point(3, 0),
+                    SourcePos = new Vec(3, 0),
                     Health = new Bar(16),
                     Position = _game.World.GetEmptyLocation(),
                 };
@@ -70,7 +70,7 @@ namespace HackLib
                         HitChance = 60,
                         Range = 6
                     },
-                    SourcePos = new Point(1, 0),
+                    SourcePos = new Vec(1, 0),
                     Health = new Bar(4),
                     Position = _game.World.GetEmptyLocation(),
                 };

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,9 +55,9 @@ namespace HackLib
             _actions.Enqueue(action);
         }
 
-        public void DoWalk(Point point)
+        public void DoWalk(Vec direction)
         {
-            var actPoint = new Point(Self.Position.X + point.X, Self.Position.Y + point.Y);
+            var actPoint = Self.Position + direction;
             foreach (var c in Self.Map.Creatures)
             {
                 if (c.Position == actPoint)
@@ -68,7 +67,7 @@ namespace HackLib
                 }
             }
 
-            Do(s => s.Walk(point));
+            Do(s => s.Walk(direction));
         }
     }
 
@@ -94,7 +93,7 @@ namespace HackLib
         {
             for (int i = 0; i < 10; i++)
             {
-                var delta = new Point(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
+                var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
 
                 if (Self.Walk(delta))
                     return true;
@@ -105,7 +104,7 @@ namespace HackLib
 
         public bool ActChase()
         {
-            var delta = new Point(Enemy.Position.X - Self.Position.X, Enemy.Position.Y - Self.Position.Y);
+            var delta = Enemy.Position - Self.Position;
 
             if (Self.Attack != null && Self.Attack.InRange(Self, Enemy))
             {
@@ -113,25 +112,25 @@ namespace HackLib
                 return true;
             }
 
-            var deltaClamped = new Point(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
+            var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
 
             if (Self.Walk(deltaClamped))
                 return true;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (Self.Walk(new Point(deltaClamped.X, 0)))
+                if (Self.Walk(new Vec(deltaClamped.X, 0)))
                     return true;
 
-                if (Self.Walk(new Point(0, deltaClamped.Y)))
+                if (Self.Walk(new Vec(0, deltaClamped.Y)))
                     return true;
             }
             else
             {
-                if (Self.Walk(new Point(0, deltaClamped.Y)))
+                if (Self.Walk(new Vec(0, deltaClamped.Y)))
                     return true;
 
-                if (Self.Walk(new Point(deltaClamped.X, 0)))
+                if (Self.Walk(new Vec(deltaClamped.X, 0)))
                     return true;
             }
 
@@ -150,10 +149,9 @@ namespace HackLib
                 if (c.Name != "Steven") // TODO: Better criteria for what creature to attack
                     continue;
 
-                var delta = new Point(Self.Position.X - c.Position.X, Self.Position.Y - c.Position.Y);
-                var deltalen = delta.X * delta.X + delta.Y * delta.Y;
+                var delta = Self.Position - c.Position;
 
-                if (deltalen < 100)
+                if (delta.LengthSquared < 100)
                     return c;
             }
 

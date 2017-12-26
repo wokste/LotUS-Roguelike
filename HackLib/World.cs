@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ namespace HackLib
             _map = new TileGrid(256, 256);
         }
         
-        public Point GetEmptyLocation()
+        public Vec GetEmptyLocation()
         {
             int x, y;
             do
@@ -26,7 +26,7 @@ namespace HackLib
                 y = Dicebag.UniformInt(_map.Height);
             } while (_map.HasFlag(x, y, TerrainFlag.BlockWalk));
 
-            return new Point(x, y);
+            return new Vec(x, y);
         }
 
         // Encaptulated functions

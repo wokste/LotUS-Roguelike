@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 
 namespace HackLib
 {
@@ -103,7 +102,7 @@ namespace HackLib
         public string DropTag = "";
         public int DropCount = 0;
 
-        public Point SourcePos;
+        public Vec SourcePos;
 
         public TerrainFlag Flags;
     }
@@ -121,7 +120,7 @@ namespace HackLib
                 Tag = "grass",
                 DropTag = "",
                 DropCount = 0,
-                SourcePos = new Point(0,0),
+                SourcePos = new Vec(0,0),
                 Flags = TerrainFlag.BlockSwim,
             });
 
@@ -130,7 +129,7 @@ namespace HackLib
                 Tag = "gravel",
                 DropTag = "",
                 DropCount = 0,
-                SourcePos = new Point(1, 0),
+                SourcePos = new Vec(1, 0),
                 Flags = TerrainFlag.BlockSwim,
             });
 
@@ -139,7 +138,7 @@ namespace HackLib
                 Tag = "tree",
                 DropTag = "wood",
                 DropCount = 3,
-                SourcePos = new Point(4, 0),
+                SourcePos = new Vec(4, 0),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly,
             });
 
@@ -148,7 +147,7 @@ namespace HackLib
                 Tag = "rock",
                 DropTag = "stone",
                 DropCount = 3,
-                SourcePos = new Point(4, 1),
+                SourcePos = new Vec(4, 1),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
             });
 
@@ -157,7 +156,7 @@ namespace HackLib
                 Tag = "stone",
                 DropTag = "stone",
                 DropCount = 1,
-                SourcePos = new Point(5, 0),
+                SourcePos = new Vec(5, 0),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
 
@@ -166,7 +165,7 @@ namespace HackLib
                 Tag = "ore",
                 DropTag = "ore",
                 DropCount = 3,
-                SourcePos = new Point(5, 1),
+                SourcePos = new Vec(5, 1),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
             });
 
@@ -175,7 +174,7 @@ namespace HackLib
                 Tag = "pumpkin",
                 DropTag = "pumpkin",
                 DropCount = 1,
-                SourcePos = new Point(6, 0),
+                SourcePos = new Vec(6, 0),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
 
@@ -184,7 +183,7 @@ namespace HackLib
                 Tag = "mushroom",
                 DropTag = "mushroom",
                 DropCount = 1,
-                SourcePos = new Point(7, 0),
+                SourcePos = new Vec(7, 0),
                 Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
             });
         }

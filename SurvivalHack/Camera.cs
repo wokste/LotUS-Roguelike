@@ -1,6 +1,7 @@
-﻿using System.Drawing;
-using HackLib;
+﻿using HackLib;
 using SFML.Window;
+using Size = System.Drawing.Size;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace SurvivalHack
 {
@@ -37,7 +38,7 @@ namespace SurvivalHack
 
         public Rectangle GetRenderAreaPx()
         {
-            var topLeft = new Point((int)(_center.X - WindowSize.Width / 2f), (int)(_center.Y - WindowSize.Height / 2f));
+            var topLeft = new System.Drawing.Point((int)(_center.X - WindowSize.Width / 2f), (int)(_center.Y - WindowSize.Height / 2f));
             return new Rectangle(topLeft, WindowSize);
         }
     }
