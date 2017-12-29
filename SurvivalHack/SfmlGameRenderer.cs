@@ -21,7 +21,7 @@ namespace SurvivalHack
             _view = view;
             _camera = camera;
 
-            _tileSetSprite = MakeSprite("tileset32.png");
+            _tileSetSprite = MakeSprite("tileset.png");
             _creatureSprite = MakeSprite("player.png");
         }
         
@@ -53,11 +53,11 @@ namespace SurvivalHack
                 if (_view.Visibility[x,y] < 128)
                     continue;
 
-                var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X + 8, y * _camera.TileY - areaPx.Y);
+                var vecScreen = new Vector2f(x * _camera.TileSize - areaPx.Left, y * _camera.TileSize - areaPx.Top);
 
                 _creatureSprite.Position = vecScreen;
 
-                _creatureSprite.TextureRect = new IntRect((creature.SourcePos.X) * 16, (creature.SourcePos.Y) * 32, 16, 32);
+                _creatureSprite.TextureRect = new IntRect((creature.SourcePos.X) * _camera.TileSize, (creature.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
 
                 target.Draw(_creatureSprite);
             }
@@ -68,10 +68,10 @@ namespace SurvivalHack
             var grid = _game.World;
 
             var areaPx = _camera.GetRenderAreaPx();
-            var x0 = (int)Math.Floor((float)areaPx.Left / _camera.TileX);
-            var y0 = (int)Math.Floor((float)areaPx.Top / _camera.TileY);
-            var x1 = (int)Math.Ceiling((float)areaPx.Right / _camera.TileX);
-            var y1 = (int)Math.Ceiling((float)areaPx.Bottom / _camera.TileY);
+            var x0 = (int)Math.Floor((float)areaPx.Left / _camera.TileSize);
+            var y0 = (int)Math.Floor((float)areaPx.Top / _camera.TileSize);
+            var x1 = (int)Math.Ceiling((float)areaPx.Right / _camera.TileSize);
+            var y1 = (int)Math.Ceiling((float)areaPx.Bottom / _camera.TileSize);
 
             _tileSetSprite.Scale = new Vector2f(1, 1);
 
@@ -82,7 +82,7 @@ namespace SurvivalHack
                     if (!_game.World.InBoundary(x, y))
                         continue;
 
-                    var vecScreen = new Vector2f(x * _camera.TileX - areaPx.X, y * _camera.TileY - areaPx.Y);
+                    var vecScreen = new Vector2f(x * _camera.TileSize - areaPx.Left, y * _camera.TileSize - areaPx.Top);
 
                     _tileSetSprite.Position = vecScreen;
 
@@ -96,13 +96,13 @@ namespace SurvivalHack
                     var floor = _game.World.GetFloor(x, y);
                     var wall = _game.World.GetWall(x, y);
 
-                    _tileSetSprite.TextureRect = new IntRect((floor.SourcePos.X) * _camera.TileX, (floor.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                    _tileSetSprite.TextureRect = new IntRect((floor.SourcePos.X) * _camera.TileSize, (floor.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
 
                     target.Draw(_tileSetSprite);
 
                     if (wall != null)
                     {
-                        _tileSetSprite.TextureRect = new IntRect((wall.SourcePos.X) * _camera.TileX, (wall.SourcePos.Y) * _camera.TileY, _camera.TileX, _camera.TileY);
+                        _tileSetSprite.TextureRect = new IntRect((wall.SourcePos.X) * _camera.TileSize, (wall.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
 
                         target.Draw(_tileSetSprite);
                     }

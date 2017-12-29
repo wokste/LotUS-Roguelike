@@ -17,6 +17,11 @@ namespace HackLib
 
         public Vec Position { get; set; }
         public Vec Facing { get; set; }
+
+        public int Speed = 100;
+        public int WalkCost = 1000;
+        public int MineCost = 1000;
+
         public World Map;
         
         public bool Walk(Vec direction)
@@ -35,8 +40,6 @@ namespace HackLib
             // Terrain collisions;
             if (Map.HasFlag(newPosition.X, newPosition.Y, TerrainFlag.BlockWalk))
                 return false;
-
-            // TODO: Creature collision
 
             Position = newPosition;
             return true;

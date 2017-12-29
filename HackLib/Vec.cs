@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HackLib
 {
@@ -16,9 +12,12 @@ namespace HackLib
             X = x;
             Y = y;
         }
-        
+
         public static Vec operator +(Vec l, Vec r) => new Vec(l.X + r.X, l.Y + r.Y);
         public static Vec operator -(Vec l, Vec r) => new Vec(l.X - r.X, l.Y - r.Y);
+
+        public static Vec operator *(Vec l, int r) => new Vec(l.X * r, l.Y * r);
+        public static Vec operator /(Vec l, int r) => new Vec(l.X / r, l.Y / r);
 
         public static bool operator ==(Vec l, Vec r) => (l.X == r.X && l.Y == r.Y);
         public static bool operator !=(Vec l, Vec r) => (l.X != r.X || l.Y != r.Y);
@@ -29,7 +28,7 @@ namespace HackLib
 
         public override bool Equals(object obj)
         {
-            return (obj is Vec) && (this == (Vec)obj);
+            return (obj is Vec) && (this == (Vec) obj);
         }
 
         public override int GetHashCode()
@@ -38,6 +37,22 @@ namespace HackLib
             {
                 return (X * 397) ^ Y;
             }
+        }
+    }
+
+    public struct Rect
+    {
+        public int Left, Top, Width, Height;
+
+        public int Bottom => Top + Height;
+        public int Right => Left + Width;
+
+        public Rect(Vec pos, Vec size)
+        {
+            Left = pos.X;
+            Top = pos.Y;
+            Width = size.X;
+            Height = size.Y;
         }
     }
 }

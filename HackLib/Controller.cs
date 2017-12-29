@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HackLib
 {
@@ -17,7 +14,7 @@ namespace HackLib
             Self = self;
         }
 
-        public abstract bool Act();
+        public abstract int Act();
     }
 
     public class PlayerController : Controller
@@ -33,13 +30,13 @@ namespace HackLib
             FieldOfView.Update(Self.Position);
         }
 
-        public override bool Act()
+        public override int Act()
         {
             if (!Self.Alive)
-                return false;
+                return -1;
 
             if (_actions.Count == 0)
-                return false;
+                return -1;
 
             var nextAction = _actions.Dequeue();
             var res = nextAction(Self);
@@ -47,7 +44,7 @@ namespace HackLib
             if (res)
                 FieldOfView.Update(Self.Position); // Forces update, even if no position change
 
-            return res;
+            return res ? 1000 : -1;
         }
 
         public void Do(Func<Creature, bool> action)
@@ -79,7 +76,7 @@ namespace HackLib
         {
         }
 
-        public override bool Act()
+        public override int Act()
         {
             if (Enemy == null || !Enemy.Alive)
                 Enemy = FindEnemy();
@@ -89,49 +86,48 @@ namespace HackLib
             return ActChase();
         }
 
-        public bool ActWander()
+        public int ActWander()
         {
             for (int i = 0; i < 10; i++)
             {
                 var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
-
+                
                 if (Self.Walk(delta))
-                    return true;
+                    return 1000;
             }
             
-            return true;
+            return 1000;
         }
 
-        public bool ActChase()
+        public int ActChase()
         {
             var delta = Enemy.Position - Self.Position;
 
             if (Self.Attack != null && Self.Attack.InRange(Self, Enemy))
             {
                 Self.Attack.Attack(Self, Enemy);
-                return true;
+                return 1000;
             }
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
-
             if (Self.Walk(deltaClamped))
-                return true;
+                return 1000;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
                 if (Self.Walk(new Vec(deltaClamped.X, 0)))
-                    return true;
+                    return 1000;
 
                 if (Self.Walk(new Vec(0, deltaClamped.Y)))
-                    return true;
+                    return 1000;
             }
             else
             {
                 if (Self.Walk(new Vec(0, deltaClamped.Y)))
-                    return true;
-
+                    return 1000;
+                
                 if (Self.Walk(new Vec(deltaClamped.X, 0)))
-                    return true;
+                    return 1000;
             }
 
             // Fallback. Enemy could not be reached.

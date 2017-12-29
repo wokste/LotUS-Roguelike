@@ -1,5 +1,4 @@
 ﻿using System;
-using Size = System.Drawing.Size;
 using SFML.Graphics;
 using SFML.Window;
 using HackLib;
@@ -62,14 +61,14 @@ namespace SurvivalHack
             
             _camera = new Camera(_controller.Self)
             {
-                WindowSize = new Size((int)_window.Size.X, (int)_window.Size.Y)
+                WindowSize = new Vec((int)_window.Size.X, (int)_window.Size.Y)
             };
             _gameRenderer = new SfmlGameRenderer(_game, _controller.FieldOfView, _camera);
         }
 
         private void OnResized(object sender, SizeEventArgs e)
         {
-            _camera.WindowSize = new Size((int)e.Width, (int)e.Height);
+            _camera.WindowSize = new Vec((int)e.Width, (int)e.Height);
             _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
         }
 

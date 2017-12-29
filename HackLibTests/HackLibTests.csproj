@@ -55,9 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarTest.cs" />
-    <Compile Include="CreatureTest.cs" />
     <Compile Include="InventoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimelineTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

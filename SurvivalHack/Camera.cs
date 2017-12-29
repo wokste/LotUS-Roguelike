@@ -1,18 +1,14 @@
 ﻿using HackLib;
-using SFML.Window;
-using Size = System.Drawing.Size;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace SurvivalHack
 {
     public class Camera
     {
-        public int TileX = 32;
-        public int TileY = 32;
+        public int TileSize = 32;
 
-        private Vector2f _center;
+        private Vec _center;
 
-        public Size WindowSize { get; set; }
+        public Vec WindowSize { get; set; }
         
         private Creature _following;
 
@@ -21,7 +17,7 @@ namespace SurvivalHack
             set
             {
                 _following = value;
-                _center = new Vector2f((_following.Position.X + 0.5f) * TileX, (_following.Position.Y + 0.5f) * TileY);
+                _center = _following.Position * TileSize + new Vec(TileSize / 2, TileSize / 2);
                 // TODO: More stuff
             }
         }
@@ -33,13 +29,13 @@ namespace SurvivalHack
 
         public void Update()
         {
-            _center = new Vector2f((_following.Position.X * TileX + 0.5f), (_following.Position.Y + 0.5f) * TileY);
+            _center = _following.Position * TileSize + new Vec(TileSize / 2, TileSize / 2);
         }
 
-        public Rectangle GetRenderAreaPx()
+        public Rect GetRenderAreaPx()
         {
-            var topLeft = new System.Drawing.Point((int)(_center.X - WindowSize.Width / 2f), (int)(_center.Y - WindowSize.Height / 2f));
-            return new Rectangle(topLeft, WindowSize);
+            var topLeft = new Vec((int)(_center.X - WindowSize.X / 2f), (int)(_center.Y - WindowSize.Y / 2f));
+            return new Rect(topLeft, WindowSize);
         }
     }
 }

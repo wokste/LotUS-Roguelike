@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace HackLib
+﻿namespace HackLib
 {
     public class MonsterSpawner
     {
@@ -36,43 +33,29 @@ namespace HackLib
                     {
                         Damage = 4,
                         HitChance = 60,
-                        Range = 1
+                        Range = 1,
                     },
-                    SourcePos = new Vec(2,0),
+                    SourcePos = new Vec(0,1),
                     Health = new Bar(8),
                     Position = _game.World.GetEmptyLocation(),
-                };
-            }
-            else if (rnd < 80)
-            {
-                return new Creature
-                {
-                    Name = "Zombie Guard",
-                    Attack = new AttackComponent
-                    {
-                        Damage = 6,
-                        HitChance = 60,
-                        Range = 1
-                    },
-                    SourcePos = new Vec(3, 0),
-                    Health = new Bar(16),
-                    Position = _game.World.GetEmptyLocation(),
+                    Speed = 60,
                 };
             }
             else
             {
                 return new Creature
                 {
-                    Name = "Skeleton Archer",
+                    Name = "Giant Bat",
                     Attack = new AttackComponent
                     {
                         Damage = 2,
                         HitChance = 60,
-                        Range = 6
+                        Range = 1,
                     },
-                    SourcePos = new Vec(1, 0),
+                    SourcePos = new Vec(2, 1),
                     Health = new Bar(4),
                     Position = _game.World.GetEmptyLocation(),
+                    Speed = 150,
                 };
             }
         }

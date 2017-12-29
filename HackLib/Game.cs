@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HackLib
 {
@@ -40,7 +39,7 @@ namespace HackLib
 
                 var r = c.Act();
                 
-                if (r == true)
+                if (r > 0)
                     Controllers.Enqueue(Controllers.Dequeue());
                 else
                     return;
