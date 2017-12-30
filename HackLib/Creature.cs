@@ -19,6 +19,7 @@ namespace HackLib
         public Vec Facing { get; set; }
 
         public float Speed = 1;
+        public TerrainFlag MovementType = TerrainFlag.Walk;
 
         public World Map;
         
@@ -35,8 +36,8 @@ namespace HackLib
             if (!Map.InBoundary(newPosition.X, newPosition.Y))
                 return false;
 
-            // Terrain collisions;
-            if (Map.HasFlag(newPosition.X, newPosition.Y, TerrainFlag.BlockWalk))
+            // Terrain collisions
+            if (!Map.HasFlag(newPosition.X, newPosition.Y, MovementType))
                 return false;
 
             Position = newPosition;

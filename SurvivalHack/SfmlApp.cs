@@ -46,7 +46,7 @@ namespace SurvivalHack
                     Name = "Steven",
                     Attack = new AttackComponent
                     {
-                        Damage = 7,
+                        Damage = 4,
                         HitChance = 75f
                     },
                     Map = _game.World,

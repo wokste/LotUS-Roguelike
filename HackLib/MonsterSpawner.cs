@@ -40,10 +40,10 @@ namespace HackLib
                     Health = new Bar(8),
                     Position = _game.World.GetEmptyLocation(),
                     Speed = 0.6f,
-                    Symbol = new Symbol('Z', Color.Red)
+                    Symbol = new Symbol('z', Color.Red)
                 };
             }
-            else
+            else if (rnd < 98)
             {
                 return new Creature
                 {
@@ -55,9 +55,28 @@ namespace HackLib
                         Range = 1,
                     },
                     Health = new Bar(4),
-                    Position = _game.World.GetEmptyLocation(),
+                    Position = _game.World.GetEmptyLocation(TerrainFlag.Fly),
                     Speed = 1.5f,
-                    Symbol = new Symbol('B', Color.Cyan)
+                    Symbol = new Symbol('b', Color.Red),
+                    MovementType = TerrainFlag.Fly
+                };
+            }
+            else
+            {
+                return new Creature
+                {
+                    Name = "Giant Fish",
+                    Attack = new AttackComponent
+                    {
+                        Damage = 8,
+                        HitChance = 60,
+                        Range = 1,
+                    },
+                    Health = new Bar(8),
+                    Position = _game.World.GetEmptyLocation(TerrainFlag.Swim),
+                    Speed = 1f,
+                    Symbol = new Symbol('f', Color.Red),
+                    MovementType = TerrainFlag.Swim
                 };
             }
         }

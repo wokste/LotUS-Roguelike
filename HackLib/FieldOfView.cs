@@ -94,21 +94,21 @@ namespace HackLib
             {
                 UpdateVisibility(x,y);
 
-                if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
+                if (!Map.HasFlag(x, y, TerrainFlag.Sight))
                 {
-                    if (y > yMin && !Map.HasFlag(x, y-1, TerrainFlag.BlockSight))
+                    if (y > yMin && Map.HasFlag(x, y-1, TerrainFlag.Sight))
                     {
                         ScanQuatrantH(depth + 1, direction, minSlope, GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction));
                     }
                 }
                 else
                 {
-                    if (y > yMin && Map.HasFlag(x, y - 1, TerrainFlag.BlockSight))
+                    if (y > yMin && !Map.HasFlag(x, y - 1, TerrainFlag.Sight))
                         minSlope = GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction);
                 }
             }
 
-            if (!Map.HasFlag(x, yMax, TerrainFlag.BlockSight))
+            if (Map.HasFlag(x, yMax, TerrainFlag.Sight))
                 ScanQuatrantH(depth + 1, direction, minSlope, maxSlope);
         }
 
@@ -136,9 +136,9 @@ namespace HackLib
             {
                 UpdateVisibility(x, y);
 
-                    if (Map.HasFlag(x, y, TerrainFlag.BlockSight))
+                    if (!Map.HasFlag(x, y, TerrainFlag.Sight))
                 {
-                    if (x > xMin && !Map.HasFlag(x-1, y, TerrainFlag.BlockSight))
+                    if (x > xMin && Map.HasFlag(x-1, y, TerrainFlag.Sight))
                     {
                         ScanQuatrantV(depth + 1, direction, minSlope, GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction));
                     }
@@ -146,12 +146,12 @@ namespace HackLib
                 else
                 {
                     // TODO: Wut? x > XMin?
-                    if (x > xMin && Map.HasFlag(x - 1, y, TerrainFlag.BlockSight))
+                    if (x > xMin && !Map.HasFlag(x - 1, y, TerrainFlag.Sight))
                         minSlope = GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction);
                 }
             }
 
-            if (!Map.HasFlag(xMax, y, TerrainFlag.BlockSight))
+            if (Map.HasFlag(xMax, y, TerrainFlag.Sight))
                 ScanQuatrantV(depth + 1, direction, minSlope, maxSlope);
         }
 

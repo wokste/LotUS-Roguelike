@@ -12,14 +12,14 @@ namespace HackLib
             _map = new TileGrid(256, 256);
         }
         
-        public Vec GetEmptyLocation()
+        public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
             int x, y;
             do
             {
                 x = Dicebag.UniformInt(_map.Width);
                 y = Dicebag.UniformInt(_map.Height);
-            } while (_map.HasFlag(x, y, TerrainFlag.BlockWalk));
+            } while (!_map.HasFlag(x, y, flag));
 
             return new Vec(x, y);
         }
@@ -39,11 +39,11 @@ namespace HackLib
         {
             if (_map.HasFlag(x, y, flag))
                 return true;
-
+            /*
             foreach (var c in Creatures)
                 if (c.Position.X == x && c.Position.Y == y)
                     return true;
-            
+            */
             return false;
         }
 

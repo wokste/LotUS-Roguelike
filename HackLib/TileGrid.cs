@@ -60,7 +60,7 @@ namespace HackLib
         {
             var flags = _grid[x, y].Floor.Flags;
             if (_grid[x, y].Wall != null)
-                flags |= _grid[x, y].Wall.Flags;
+                flags &= _grid[x, y].Wall.Flags;
 
             return (testFlag & flags) != 0;
         }
@@ -86,16 +86,19 @@ namespace HackLib
         public TileType Floor;
         public TileType Wall;
 
-        public bool BlocksSights => (Wall != null && (Wall.Flags & TerrainFlag.BlockSight) != 0);
+        public bool BlocksSights => (Wall != null && (Wall.Flags & TerrainFlag.Sight) != 0);
     }
 
     [Flags]
     public enum TerrainFlag
     {
-        BlockWalk = 1,
-        BlockFly = 2,
-        BlockSwim = 4,
-        BlockSight = 8,
+        Walk = 1,
+        Fly = 2,
+        Swim = 4,
+        Sight = 8,
+
+        None = 0,
+        All = 0x7fffffff,
     }
 
     public class TileType
@@ -123,7 +126,7 @@ namespace HackLib
                 Tag = "grass",
                 DropTag = "",
                 DropCount = 0,
-                Flags = TerrainFlag.BlockSwim,
+                Flags = ~TerrainFlag.Swim,
                 Char = new Symbol('.', Color.Green)
             });
 
@@ -132,7 +135,7 @@ namespace HackLib
                 Tag = "water",
                 DropTag = "",
                 DropCount = 0,
-                Flags = TerrainFlag.BlockWalk,
+                Flags = ~TerrainFlag.Walk,
                 Char = new Symbol('~', Color.Cyan)
             });
 
@@ -141,7 +144,7 @@ namespace HackLib
                 Tag = "gravel",
                 DropTag = "",
                 DropCount = 0,
-                Flags = TerrainFlag.BlockSwim,
+                Flags = ~TerrainFlag.Swim,
                 Char = new Symbol(',', Color.Gray)
             });
 
@@ -150,7 +153,7 @@ namespace HackLib
                 Tag = "tree",
                 DropTag = "wood",
                 DropCount = 3,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly,
+                Flags = TerrainFlag.Sight,
                 Char = new Symbol((char)6, Color.Green)
             });
 
@@ -159,7 +162,7 @@ namespace HackLib
                 Tag = "rock",
                 DropTag = "stone",
                 DropCount = 3,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
+                Flags = TerrainFlag.None,
                 Char = new Symbol('#', Color.Gray)
             });
 
@@ -168,7 +171,7 @@ namespace HackLib
                 Tag = "stone",
                 DropTag = "stone",
                 DropCount = 1,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
+                Flags = TerrainFlag.Fly,
                 Char = new Symbol((char)30, Color.Gray)
             });
 
@@ -177,7 +180,7 @@ namespace HackLib
                 Tag = "ore",
                 DropTag = "ore",
                 DropCount = 3,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk | TerrainFlag.BlockFly | TerrainFlag.BlockSight,
+                Flags = TerrainFlag.None,
                 Char = new Symbol('~', Color.Red)
             });
 
@@ -186,7 +189,7 @@ namespace HackLib
                 Tag = "pumpkin",
                 DropTag = "pumpkin",
                 DropCount = 1,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
+                Flags = TerrainFlag.Fly | TerrainFlag.Sight,
                 Char = new Symbol('p', Color.Orange)
             });
 
@@ -195,7 +198,7 @@ namespace HackLib
                 Tag = "mushroom",
                 DropTag = "mushroom",
                 DropCount = 1,
-                Flags = TerrainFlag.BlockSwim | TerrainFlag.BlockWalk,
+                Flags = TerrainFlag.Fly | TerrainFlag.Sight,
                 Char = new Symbol('m', Color.Pink)
             });
         }
