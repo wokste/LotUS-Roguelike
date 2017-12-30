@@ -23,29 +23,25 @@ namespace HackLib
             Spawner.Spawn(World, 32);
         }
 
-        private const int HUNGER_TICKS = 50;
-        private int _ticksTillHungerLoss = HUNGER_TICKS;
-
         public void Update()
         {
             while (true)
             {
-                var c = Time.Peek();
-                if (c.ShouldDelete)
+                var gameEvent = Time.Peek();
+                if (gameEvent.ShouldDelete)
                 {
                     Time.Dequeue();
-                    World.Creatures.Remove(c.Self);
                     continue;
                 }
 
-                var turns = c.Act();
+                var steps = gameEvent.Do();
 
-                if (turns <= 0)
+                if (steps <= 0)
                     return;
                 
                 Time.Dequeue();
-                var ticks = (int)Math.Ceiling(1000 * turns / c.Self.Speed);
-                Time.AddRelative(c, ticks);
+                var ticks = (int)Math.Ceiling(1000 * steps / gameEvent.Self.Speed);
+                Time.AddRelative(gameEvent, ticks);
             }
         }
 

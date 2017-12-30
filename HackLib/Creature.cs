@@ -50,6 +50,7 @@ namespace HackLib
             if (Health.Current == 0)
             {
                 Alive = false;
+                Map.Creatures.Remove(this);
                 // TODO: Stuff
 
                 Console.ForegroundColor = ConsoleColor.Red;

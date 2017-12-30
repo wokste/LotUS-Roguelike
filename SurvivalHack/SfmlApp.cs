@@ -78,41 +78,41 @@ namespace SurvivalHack
             switch (keyEventArgs.Code)
             {
                 case Keyboard.Key.Numpad1:
-                    _controller.DoWalk(new Vec(-1, 1));
+                    _controller.PlanWalk(new Vec(-1, 1));
                     break;
                 case Keyboard.Key.Down:
                 case Keyboard.Key.Numpad2:
-                    _controller.DoWalk(new Vec(0, 1));
+                    _controller.PlanWalk(new Vec(0, 1));
                     break;
                 case Keyboard.Key.Numpad3:
-                    _controller.DoWalk(new Vec(1, 1));
+                    _controller.PlanWalk(new Vec(1, 1));
                     break;
                 case Keyboard.Key.Left:
                 case Keyboard.Key.Numpad4:
-                    _controller.DoWalk(new Vec(-1, 0));
+                    _controller.PlanWalk(new Vec(-1, 0));
                     break;
                 case Keyboard.Key.Right:
                 case Keyboard.Key.Numpad6:
-                    _controller.DoWalk(new Vec(1, 0));
+                    _controller.PlanWalk(new Vec(1, 0));
                     break;
                 case Keyboard.Key.Numpad7:
-                    _controller.DoWalk(new Vec(-1, -1));
+                    _controller.PlanWalk(new Vec(-1, -1));
                     break;
                 case Keyboard.Key.Up:
                 case Keyboard.Key.Numpad8:
-                    _controller.DoWalk(new Vec(0, -1));
+                    _controller.PlanWalk(new Vec(0, -1));
                     break;
                 case Keyboard.Key.Numpad9:
-                    _controller.DoWalk(new Vec(1, -1));
+                    _controller.PlanWalk(new Vec(1, -1));
                     break;
                 case Keyboard.Key.Space:
-                    _controller.Do(s => s.Mine() ? 1 : -1);
+                    _controller.Plan(s => s.Mine() ? 1 : -1);
                     break;
                 case Keyboard.Key.I:
                     _controller.Self.Inventory.Write();
                     break;
                 case Keyboard.Key.E:
-                    _controller.Do(s => s.Eat() ? 1 : -1);
+                    _controller.Plan(s => s.Eat() ? 1 : -1);
                     break;
             }
         }

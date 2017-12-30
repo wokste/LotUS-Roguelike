@@ -14,7 +14,7 @@ namespace HackLib
             Self = self;
         }
 
-        public abstract double Act();
+        public abstract double Do();
     }
 
     public class PlayerController : Controller
@@ -30,7 +30,7 @@ namespace HackLib
             FieldOfView.Update(Self.Position);
         }
 
-        public override double Act()
+        public override double Do()
         {
             if (!Self.Alive)
                 return -1;
@@ -47,19 +47,19 @@ namespace HackLib
             return res;
         }
 
-        public void Do(Func<Creature, double> action)
+        public void Plan(Func<Creature, double> action)
         {
             _actions.Enqueue(action);
         }
 
-        public void DoWalk(Vec direction)
+        public void PlanWalk(Vec direction)
         {
             var actPoint = Self.Position + direction;
             foreach (var c in Self.Map.Creatures)
             {
                 if (c.Position == actPoint)
                 {
-                    Do(s =>
+                    Plan(s =>
                     {
                         s.Attack.Attack(s, c);
                         return 1;
@@ -68,7 +68,7 @@ namespace HackLib
                 }
             }
 
-            Do(s => s.Walk(direction) ? direction.ManhattanLength : -1);
+            Plan(s => s.Walk(direction) ? direction.ManhattanLength : -1);
         }
     }
 
@@ -80,14 +80,21 @@ namespace HackLib
         {
         }
 
-        public override double Act()
+        public override double Do()
         {
             if (Enemy == null || !Enemy.Alive)
                 Enemy = FindEnemy();
 
             if (Enemy == null)
                 return ActWander();
-            return ActChase();
+
+            var r = AttackEnemy();
+
+            if (r < 0)
+            {
+                r = Math.Max(ChaseEnemy(), AttackEnemy());
+            }
+            return r;
         }
 
         public double ActWander()
@@ -103,15 +110,9 @@ namespace HackLib
             return 1;
         }
 
-        public double ActChase()
+        public double ChaseEnemy()
         {
             var delta = Enemy.Position - Self.Position;
-
-            if (Self.Attack != null && Self.Attack.InRange(Self, Enemy))
-            {
-                Self.Attack.Attack(Self, Enemy);
-                return 1;
-            }
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
             if (Self.Walk(deltaClamped))
@@ -137,6 +138,16 @@ namespace HackLib
             // Fallback. Enemy could not be reached.
             Enemy = null;
             return ActWander();
+        }
+
+        public double AttackEnemy()
+        {
+            if (Enemy != null && Self.Attack != null && Self.Attack.InRange(Self, Enemy))
+            {
+                Self.Attack.Attack(Self, Enemy);
+                return 1;
+            }
+            return -1;
         }
 
         public Creature FindEnemy()
