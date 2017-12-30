@@ -25,6 +25,15 @@ namespace HackLib
         public int LengthSquared => X * X + Y * Y;
         public double Length => Math.Sqrt(LengthSquared);
 
+        public double ManhattanLength
+        {
+            get
+            {
+                var aX = Math.Abs(X);
+                var aY = Math.Abs(Y);
+                return (aX < aY) ? aY + aX * 0.5 : aX + aY * 0.5;
+            }
+        }
 
         public override bool Equals(object obj)
         {

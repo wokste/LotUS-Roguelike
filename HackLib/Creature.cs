@@ -18,9 +18,7 @@ namespace HackLib
         public Vec Position { get; set; }
         public Vec Facing { get; set; }
 
-        public int Speed = 100;
-        public int WalkCost = 1000;
-        public int MineCost = 1000;
+        public float Speed = 1;
 
         public World Map;
         

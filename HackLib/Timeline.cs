@@ -8,13 +8,20 @@ namespace HackLib
     {
         private SortedDictionary<long,List<T>> _queue = new SortedDictionary<long, List<T>>();
         private int _index;
-        //private long _minTime = 0;
+        private long _time = 0;//long.MinValue;
         private List<T> _list;
-        
-        public void Enqueue(long time, T toInsert)
+
+        public long Time => _time;
+
+        public void AddRelative(T toInsert, long time)
+        {
+            Add(toInsert, _time + time);
+        }
+
+        public void Add(T toInsert, long time)
         {
             // If this is not the case, non-obvious bugs may arise.
-            //Debug.Assert(time > _minTime);
+            Debug.Assert(time > _time);
 
             List<T> list;
             if (!_queue.TryGetValue(time, out list))
@@ -28,16 +35,8 @@ namespace HackLib
 
         public T Dequeue()
         {
-            if (_list == null)
-            {
-                var pair = _queue.First();
-                _queue.Remove(pair.Key);
-                _index = 0;
-                //_minTime = pair.Key;
-                _list = pair.Value;
-            }
+            var ret = Peek();
 
-            var ret = _list[_index];
             _list[_index] = default(T); // Helps the GC.
             _index++;
             if (_index >= _list.Count)
@@ -45,6 +44,19 @@ namespace HackLib
                 _list = null;
             }
             return ret;
+        }
+
+        public T Peek()
+        {
+            if (_list == null)
+            {
+                var pair = _queue.First();
+                _queue.Remove(pair.Key);
+                _index = 0;
+                _time = pair.Key;
+                _list = pair.Value;
+            }
+            return _list[_index];
         }
     }
 }

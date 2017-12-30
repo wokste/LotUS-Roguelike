@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HackLib
 {
@@ -6,7 +7,7 @@ namespace HackLib
     {
         [System.Obsolete]
         public Creature Player;
-        public Queue<Controller> Controllers = new Queue<Controller>();
+        public Timeline<Controller> Time = new Timeline<Controller>();
 
         public MonsterSpawner Spawner;
         public World World;
@@ -29,21 +30,22 @@ namespace HackLib
         {
             while (true)
             {
-                var c = Controllers.Peek();
+                var c = Time.Peek();
                 if (c.ShouldDelete)
                 {
-                    Controllers.Dequeue();
+                    Time.Dequeue();
                     World.Creatures.Remove(c.Self);
                     continue;
                 }
 
-                var r = c.Act();
-                
-                if (r > 0)
-                    Controllers.Enqueue(Controllers.Dequeue());
-                else
-                    return;
+                var turns = c.Act();
 
+                if (turns <= 0)
+                    return;
+                
+                Time.Dequeue();
+                var ticks = (int)Math.Ceiling(1000 * turns / c.Self.Speed);
+                Time.AddRelative(c, ticks);
             }
         }
 
@@ -65,7 +67,7 @@ namespace HackLib
 
         public void AddCreature(Controller controller)
         {
-            Controllers.Enqueue(controller);
+            Time.AddRelative(controller, 1000);
             World.Creatures.Add(controller.Self);
         }
     }

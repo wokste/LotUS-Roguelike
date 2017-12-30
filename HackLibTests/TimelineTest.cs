@@ -14,13 +14,13 @@ namespace HackLibTests
         {
             var timeline = new Timeline<object>();
 
-            var o1 = new object();
-            var o2 = new object();
-            var o3 = new object();
+            var o1 = new StringBuilder("o1");
+            var o2 = new StringBuilder("o2");
+            var o3 = new StringBuilder("o3");
 
-            timeline.Enqueue(100, o1);
-            timeline.Enqueue(120, o2);
-            timeline.Enqueue(100, o3);
+            timeline.Add(o1, 100);
+            timeline.Add(o2, 120);
+            timeline.Add(o3, 100);
 
             Assert.AreEqual(o1, timeline.Dequeue());
             Assert.AreEqual(o3, timeline.Dequeue());
@@ -44,7 +44,7 @@ namespace HackLibTests
 
             for (int l = 0; l < ls.Count; l++)
             {
-                timeline.Enqueue(l, ls[l]);
+                timeline.Add(ls[l], l + 10);
             }
 
             for (int i = 1; i < 10; i++)
@@ -54,7 +54,7 @@ namespace HackLibTests
                     var e = timeline.Dequeue();
                     Assert.AreEqual(ls[l], e);
 
-                    timeline.Enqueue(l + i * 100, ls[l]);
+                    timeline.Add(ls[l], l + i * 100 + 10);
 
                 }
             }
@@ -69,7 +69,7 @@ namespace HackLibTests
 
             for (int l = 0; l < ls.Count; l++)
             {
-                timeline.Enqueue(0, ls[l]);
+                timeline.Add(ls[l], 10);
             }
 
             for (int i = 1; i < 10; i++)
@@ -79,7 +79,7 @@ namespace HackLibTests
                     var e = timeline.Dequeue();
                     Assert.AreEqual(ls[l], e);
 
-                    timeline.Enqueue(i * 100, ls[l]);
+                    timeline.Add(ls[l], i * 100 + 10);
 
                 }
             }

@@ -105,26 +105,14 @@ namespace SurvivalHack
                 case Keyboard.Key.Numpad9:
                     _controller.DoWalk(new Vec(1, -1));
                     break;
-                    
                 case Keyboard.Key.Space:
-                    _controller.Do(s => s.Mine());
+                    _controller.Do(s => s.Mine() ? 1 : -1);
                     break;
                 case Keyboard.Key.I:
                     _controller.Self.Inventory.Write();
                     break;
                 case Keyboard.Key.E:
-                    _controller.Do(s => s.Eat());
-                    break;
-                case Keyboard.Key.Return:
-                    {
-                        foreach( var c in _game.Controllers)
-                        {
-                            var ai = c as AiController;
-                            if (ai == null)
-                                continue;
-                            ai.Enemy = _controller.Self;
-                        }
-                    }
+                    _controller.Do(s => s.Eat() ? 1 : -1);
                     break;
             }
         }
@@ -154,6 +142,7 @@ namespace SurvivalHack
 
         private void Render()
         {
+            _window.SetTitle($"{_game.Time.Time}");
             _window.Clear();
 
             _gameRenderer.Draw(_window, new RenderStates());

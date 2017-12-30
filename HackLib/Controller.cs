@@ -14,12 +14,12 @@ namespace HackLib
             Self = self;
         }
 
-        public abstract int Act();
+        public abstract double Act();
     }
 
     public class PlayerController : Controller
     {
-        private readonly Queue<Func<Creature, bool>> _actions = new Queue<Func<Creature, bool>>();
+        private readonly Queue<Func<Creature, double>> _actions = new Queue<Func<Creature, double>>();
         public FieldOfView FieldOfView;
 
         public override bool ShouldDelete => false;
@@ -30,7 +30,7 @@ namespace HackLib
             FieldOfView.Update(Self.Position);
         }
 
-        public override int Act()
+        public override double Act()
         {
             if (!Self.Alive)
                 return -1;
@@ -41,13 +41,13 @@ namespace HackLib
             var nextAction = _actions.Dequeue();
             var res = nextAction(Self);
 
-            if (res)
+            if (res >= 0)
                 FieldOfView.Update(Self.Position); // Forces update, even if no position change
 
-            return res ? 1000 : -1;
+            return res;
         }
 
-        public void Do(Func<Creature, bool> action)
+        public void Do(Func<Creature, double> action)
         {
             _actions.Enqueue(action);
         }
@@ -59,12 +59,16 @@ namespace HackLib
             {
                 if (c.Position == actPoint)
                 {
-                    Do(s => s.Attack.Attack(s, c));
+                    Do(s =>
+                    {
+                        s.Attack.Attack(s, c);
+                        return 1;
+                    });
                     return;
                 }
             }
 
-            Do(s => s.Walk(direction));
+            Do(s => s.Walk(direction) ? direction.ManhattanLength : -1);
         }
     }
 
@@ -76,7 +80,7 @@ namespace HackLib
         {
         }
 
-        public override int Act()
+        public override double Act()
         {
             if (Enemy == null || !Enemy.Alive)
                 Enemy = FindEnemy();
@@ -86,48 +90,48 @@ namespace HackLib
             return ActChase();
         }
 
-        public int ActWander()
+        public double ActWander()
         {
             for (int i = 0; i < 10; i++)
             {
                 var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
                 
                 if (Self.Walk(delta))
-                    return 1000;
+                    return delta.ManhattanLength;
             }
             
-            return 1000;
+            return 1;
         }
 
-        public int ActChase()
+        public double ActChase()
         {
             var delta = Enemy.Position - Self.Position;
 
             if (Self.Attack != null && Self.Attack.InRange(Self, Enemy))
             {
                 Self.Attack.Attack(Self, Enemy);
-                return 1000;
+                return 1;
             }
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
             if (Self.Walk(deltaClamped))
-                return 1000;
+                return deltaClamped.ManhattanLength;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
                 if (Self.Walk(new Vec(deltaClamped.X, 0)))
-                    return 1000;
+                    return 1;
 
                 if (Self.Walk(new Vec(0, deltaClamped.Y)))
-                    return 1000;
+                    return 1;
             }
             else
             {
                 if (Self.Walk(new Vec(0, deltaClamped.Y)))
-                    return 1000;
+                    return 1;
                 
                 if (Self.Walk(new Vec(deltaClamped.X, 0)))
-                    return 1000;
+                    return 1;
             }
 
             // Fallback. Enemy could not be reached.

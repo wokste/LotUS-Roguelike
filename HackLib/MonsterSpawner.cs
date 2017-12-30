@@ -38,7 +38,7 @@
                     SourcePos = new Vec(0,1),
                     Health = new Bar(8),
                     Position = _game.World.GetEmptyLocation(),
-                    Speed = 60,
+                    Speed = 0.6f,
                 };
             }
             else
@@ -55,7 +55,7 @@
                     SourcePos = new Vec(2, 1),
                     Health = new Bar(4),
                     Position = _game.World.GetEmptyLocation(),
-                    Speed = 150,
+                    Speed = 1.5f,
                 };
             }
         }
