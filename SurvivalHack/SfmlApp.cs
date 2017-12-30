@@ -50,10 +50,10 @@ namespace SurvivalHack
                         HitChance = 75f
                     },
                     Map = _game.World,
-                    SourcePos = new Vec(0, 0),
                     Health = new Bar(20),
                     Hunger = new Bar(20),
                     Position = _game.World.GetEmptyLocation(),
+                    Symbol = new Symbol((char)2)
                 }
             );
 

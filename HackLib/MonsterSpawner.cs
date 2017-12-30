@@ -1,4 +1,6 @@
-﻿namespace HackLib
+﻿using System;
+
+namespace HackLib
 {
     public class MonsterSpawner
     {
@@ -35,10 +37,10 @@
                         HitChance = 60,
                         Range = 1,
                     },
-                    SourcePos = new Vec(0,1),
                     Health = new Bar(8),
                     Position = _game.World.GetEmptyLocation(),
                     Speed = 0.6f,
+                    Symbol = new Symbol('Z', Color.Red)
                 };
             }
             else
@@ -52,10 +54,10 @@
                         HitChance = 60,
                         Range = 1,
                     },
-                    SourcePos = new Vec(2, 1),
                     Health = new Bar(4),
                     Position = _game.World.GetEmptyLocation(),
                     Speed = 1.5f,
+                    Symbol = new Symbol('B', Color.Cyan)
                 };
             }
         }

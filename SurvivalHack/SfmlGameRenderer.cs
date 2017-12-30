@@ -11,8 +11,9 @@ namespace SurvivalHack
     {
         private readonly Game _game;
         private readonly FieldOfView _view;
-        private readonly Sprite _tileSetSprite;
-        private readonly Sprite _creatureSprite;
+        //private readonly Sprite _tileSetSprite;
+        //private readonly Sprite _creatureSprite;
+        private readonly Sprite _asciiSprite;
         private readonly Camera _camera;
 
         public SfmlGameRenderer(Game game, FieldOfView view, Camera camera)
@@ -21,8 +22,9 @@ namespace SurvivalHack
             _view = view;
             _camera = camera;
 
-            _tileSetSprite = MakeSprite("tileset.png");
-            _creatureSprite = MakeSprite("player.png");
+            //_tileSetSprite = MakeSprite("tileset.png");
+            //_creatureSprite = MakeSprite("player.png");
+            _asciiSprite = MakeSprite("ascii.png");
         }
         
         private Sprite MakeSprite(string texName)
@@ -44,7 +46,7 @@ namespace SurvivalHack
         private void DrawCreatures(RenderTarget target, RenderStates states)
         {
             var areaPx = _camera.GetRenderAreaPx();
-            _creatureSprite.Scale = new Vector2f(1, 1);
+            _asciiSprite.Scale = new Vector2f(1, 1);
 
             foreach (var creature in _game.World.Creatures) {
                 var x = creature.Position.X;
@@ -55,11 +57,14 @@ namespace SurvivalHack
 
                 var vecScreen = new Vector2f(x * _camera.TileSize - areaPx.Left, y * _camera.TileSize - areaPx.Top);
 
-                _creatureSprite.Position = vecScreen;
+                _asciiSprite.Position = vecScreen;
 
-                _creatureSprite.TextureRect = new IntRect((creature.SourcePos.X) * _camera.TileSize, (creature.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
+                var Char = creature.Symbol;
 
-                target.Draw(_creatureSprite);
+                _asciiSprite.Color = new Color((byte)(Char.TextColor >> 16 & 0xff), (byte)(Char.TextColor >> 8 & 0xff), (byte)(Char.TextColor << 0 & 0xff));
+                _asciiSprite.TextureRect = new IntRect((Char.Ascii % 16) * _camera.TileSize, (Char.Ascii / 16) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
+
+                target.Draw(_asciiSprite);
             }
         }
 
@@ -73,7 +78,7 @@ namespace SurvivalHack
             var x1 = (int)Math.Ceiling((float)areaPx.Right / _camera.TileSize);
             var y1 = (int)Math.Ceiling((float)areaPx.Bottom / _camera.TileSize);
 
-            _tileSetSprite.Scale = new Vector2f(1, 1);
+            _asciiSprite.Scale = new Vector2f(1, 1);
 
             for (var x = x0; x < x1; x++)
             {
@@ -84,28 +89,19 @@ namespace SurvivalHack
 
                     var vecScreen = new Vector2f(x * _camera.TileSize - areaPx.Left, y * _camera.TileSize - areaPx.Top);
 
-                    _tileSetSprite.Position = vecScreen;
+                    _asciiSprite.Position = vecScreen;
 
                     if (_view.Visibility[x, y] == 0)
                         continue;
 
-                    byte v = _view.Visibility[x, y];
+                    var Char = _game.World.GetTop(x, y).Char;
 
-                    _tileSetSprite.Color = new Color(v, v, v);
+                    int v = _view.Visibility[x, y];
 
-                    var floor = _game.World.GetFloor(x, y);
-                    var wall = _game.World.GetWall(x, y);
-
-                    _tileSetSprite.TextureRect = new IntRect((floor.SourcePos.X) * _camera.TileSize, (floor.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
-
-                    target.Draw(_tileSetSprite);
-
-                    if (wall != null)
-                    {
-                        _tileSetSprite.TextureRect = new IntRect((wall.SourcePos.X) * _camera.TileSize, (wall.SourcePos.Y) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
-
-                        target.Draw(_tileSetSprite);
-                    }
+                    _asciiSprite.Color = new Color((byte)(v * (Char.TextColor >> 16 & 0xff) / 256) , (byte)(v * (Char.TextColor >> 8 & 0xff) / 256), (byte)(v * (Char.TextColor << 0 & 0xff) / 256));
+                    _asciiSprite.TextureRect = new IntRect((Char.Ascii % 16) * _camera.TileSize, (Char.Ascii / 16) * _camera.TileSize, _camera.TileSize, _camera.TileSize);
+                    
+                    target.Draw(_asciiSprite);
                 }
             }
         }

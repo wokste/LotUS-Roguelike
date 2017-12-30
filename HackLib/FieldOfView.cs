@@ -192,9 +192,11 @@ namespace HackLib
             var dy = y - _playerPos.Y;
 
             var dist = Math.Sqrt(dx * dx + dy * dy);
-            var antiAliasRadius = 2f;
-            var distanceVisibility = dist < VisualRange - antiAliasRadius ? 1f : (VisualRange - dist) / antiAliasRadius;
-
+            //var antiAliasRadius = 2f;
+            //var distanceVisibility = dist < VisualRange - antiAliasRadius ? 1f : (VisualRange - dist) / antiAliasRadius;
+            
+            var distanceVisibility = dist < VisualRange ? 1f : 0f;//(VisualRange - dist) / antiAliasRadius;
+            
             Visibility[x, y] = (byte)Math.Max(Visibility[x, y], BRIGHTNESS_LIGHT * distanceVisibility);
         }
     }

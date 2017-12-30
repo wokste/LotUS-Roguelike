@@ -56,5 +56,10 @@ namespace HackLib
         {
             return _map.GetWall(x,y);
         }
+
+        public TileType GetTop(int x, int y)
+        {
+            return _map.GetWall(x, y) ?? _map.GetFloor(x, y);
+        }
     }
 }

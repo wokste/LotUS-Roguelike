@@ -4,7 +4,7 @@ namespace SurvivalHack
 {
     public class Camera
     {
-        public int TileSize = 32;
+        public int TileSize = 16;
 
         private Vec _center;
 
