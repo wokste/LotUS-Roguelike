@@ -33,12 +33,12 @@ namespace HackLib
                 {
                     var height = heightMap.Get(x, y);
                     
-                    if (height > 0.3)
+                    if (height > 0.4)
                     {
                         _grid[x, y].Floor = TileTypeList.Get("gravel");
                         _grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
                     }
-                    else
+                    else if (height > -0.4)
                     {
                         _grid[x, y].Floor = TileTypeList.Get("grass");
                         if (Dicebag.UniformInt(10) == 1)
@@ -47,7 +47,10 @@ namespace HackLib
                             _grid[x, y].Wall = TileTypeList.Get("pumpkin");
                         else if (Dicebag.UniformInt(500) == 1)
                             _grid[x, y].Wall = TileTypeList.Get("mushroom");
-
+                    }
+                    else
+                    {
+                        _grid[x, y].Floor = TileTypeList.Get("water");
                     }
                 }
             }
@@ -122,6 +125,15 @@ namespace HackLib
                 DropCount = 0,
                 Flags = TerrainFlag.BlockSwim,
                 Char = new Symbol('.', Color.Green)
+            });
+
+            Types.Add(new TileType
+            {
+                Tag = "water",
+                DropTag = "",
+                DropCount = 0,
+                Flags = TerrainFlag.BlockWalk,
+                Char = new Symbol('~', Color.Cyan)
             });
 
             Types.Add(new TileType
