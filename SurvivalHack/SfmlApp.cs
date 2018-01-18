@@ -1,4 +1,5 @@
 ﻿using System;
+using HackConsole;
 using SFML.Graphics;
 using SFML.Window;
 using HackLib;
@@ -12,13 +13,21 @@ namespace SurvivalHack
         private readonly SfmlGameRenderer _gameRenderer;
         private readonly RenderWindow _window;
         private readonly PlayerController _controller;
-
+        
         static void Main(string[] args)
         {
-            var app = new SfmlApp();
+            var app = new SfmlWindow();
+            var msgList = new MessageList {Docking = Docking.Bottom, DesiredSize = new CRect {Height = 10}};
+
+            app.Widgets.Add(msgList);
+
+            msgList.AddMessage("You obtained a small flaming rock and put it, despite your best common sense, in your (very flamable) inventory.");
+            msgList.AddMessage("You are now on fire with flames coming out of your backpack.");
+            msgList.AddMessage("You die.");
+
             app.Run();
         }
-
+        
         public SfmlApp()
         {
             var contextSettings = new ContextSettings

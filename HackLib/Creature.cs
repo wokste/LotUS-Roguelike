@@ -64,8 +64,8 @@ namespace HackLib
             var minePosition = Position;
             minePosition += Facing;
 
-            int x = minePosition.X;
-            int y = minePosition.Y;
+            var x = minePosition.X;
+            var y = minePosition.Y;
 
             if (!Map.InBoundary(x, y))
                 return false;

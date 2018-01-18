@@ -42,14 +42,14 @@ namespace HackLibTests
             var timeline = new Timeline<object>();
             var ls = new List<object>{new StringBuilder("O1"), new StringBuilder("O2"), new StringBuilder("O3") };
 
-            for (int l = 0; l < ls.Count; l++)
+            for (var l = 0; l < ls.Count; l++)
             {
                 timeline.Add(ls[l], l + 10);
             }
 
-            for (int i = 1; i < 10; i++)
+            for (var i = 1; i < 10; i++)
             {
-                for (int l = 0; l < ls.Count; l++)
+                for (var l = 0; l < ls.Count; l++)
                 {
                     var e = timeline.Dequeue();
                     Assert.AreEqual(ls[l], e);
@@ -67,14 +67,14 @@ namespace HackLibTests
             var timeline = new Timeline<object>();
             var ls = new List<object> { new StringBuilder("O1"), new StringBuilder("O2"), new StringBuilder("O3") };
 
-            for (int l = 0; l < ls.Count; l++)
+            for (var l = 0; l < ls.Count; l++)
             {
                 timeline.Add(ls[l], 10);
             }
 
-            for (int i = 1; i < 10; i++)
+            for (var i = 1; i < 10; i++)
             {
-                for (int l = 0; l < ls.Count; l++)
+                for (var l = 0; l < ls.Count; l++)
                 {
                     var e = timeline.Dequeue();
                     Assert.AreEqual(ls[l], e);

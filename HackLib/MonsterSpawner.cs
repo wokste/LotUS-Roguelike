@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HackLib
+﻿namespace HackLib
 {
     public class MonsterSpawner
     {
