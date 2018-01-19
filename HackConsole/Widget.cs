@@ -1,4 +1,6 @@
-﻿namespace HackConsole
+﻿using System;
+
+namespace HackConsole
 {
     public abstract class Widget
     {
@@ -85,6 +87,11 @@
 
         public int Right => Left + Width;
         public int Bottom => Top + Height;
+
+        public bool Contains(int x, int y)
+        {
+            return (x >= Left) && (y >= Top) && (x < Right) && (y < Bottom);
+        }
     }
 
     public enum Docking

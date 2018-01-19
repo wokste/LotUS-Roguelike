@@ -68,7 +68,7 @@
     <Compile Include="CraftingStation.cs" />
     <Compile Include="SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SfmlGameRenderer.cs" />
+    <Compile Include="WorldWidget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

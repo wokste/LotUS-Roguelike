@@ -14,12 +14,6 @@ namespace HackConsole
             Height = height;
 
             Cells = new Cell[width, height];
-
-            //TODO: Remove temporary code
-            var rnd = new Random();
-            for(var x = 0; x < Width; x++)
-                for (var y = 0; y < Height; y++)
-                    Cells[x,y].Ascii = (char) rnd.Next((int) 'a', (int) 'z');
         }
     }
 
