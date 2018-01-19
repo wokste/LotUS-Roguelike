@@ -114,7 +114,7 @@ namespace HackConsole
                     
                     var Char = CellGrid.Cells[x,y];
                     
-                    //_fontSprite.Color = ...;
+                    _fontSprite.Color = new SFML.Graphics.Color((byte)((Char.TextColor >> 16) & 0xff), (byte)((Char.TextColor >> 8) & 0xff), (byte)(Char.TextColor & 0xff));
                     _fontSprite.TextureRect = new IntRect((int)((Char.Ascii % 16) * _fontX), (int)((Char.Ascii / 16) * _fontY), (int)_fontX, (int)_fontY);
                     target.Draw(_fontSprite);
                 }
