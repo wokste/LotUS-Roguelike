@@ -63,9 +63,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HackLib\HackLib.csproj">
-      <Project>{3D460A9E-0046-4B49-B3FF-0114A6EB059B}</Project>
-      <Name>HackLib</Name>
+    <ProjectReference Include="..\HackConsole\HackConsole.csproj">
+      <Project>{8fc334f0-2d90-4b69-ae0d-7a03991729ae}</Project>
+      <Name>HackConsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SurvivalHack\SurvivalHack.csproj">
+      <Project>{4e4d139b-bc75-4264-b379-ead41b9b32aa}</Project>
+      <Name>SurvivalHack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

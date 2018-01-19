@@ -1,6 +1,5 @@
 ﻿using System;
 using HackConsole;
-using HackLib;
 
 namespace SurvivalHack
 {
@@ -44,7 +43,7 @@ namespace SurvivalHack
                 if (!Size.Contains(x,y))
                     continue;
 
-                CellGrid.Cells[x, y].Ascii = creature.Symbol.Ascii;
+                CellGrid.Cells[x, y] = creature.Symbol;
             }
         }
 
@@ -65,7 +64,7 @@ namespace SurvivalHack
                     if (_view.Visibility[x + offsetX, y + offsetY] == 0)
                         continue;
 
-                    CellGrid.Cells[x, y].Ascii = _world.GetTop(x + offsetX, y + offsetY).Char.Ascii;
+                    CellGrid.Cells[x, y] = _world.GetTop(x + offsetX, y + offsetY).Char;
                 }
             }
         }

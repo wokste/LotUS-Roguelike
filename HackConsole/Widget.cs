@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HackConsole
+﻿namespace HackConsole
 {
     public abstract class Widget
     {
@@ -20,7 +18,7 @@ namespace HackConsole
             {
                 for (var x = Size.Left; x < Size.Right; x++)
                 {
-                    CellGrid.Cells[x, y] = new Cell {Ascii = ' '};
+                    CellGrid.Cells[x, y] = new Symbol {Ascii = ' '};
                 }
             }
         }

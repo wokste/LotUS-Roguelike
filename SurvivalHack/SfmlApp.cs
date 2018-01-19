@@ -1,12 +1,10 @@
 ﻿using HackConsole;
-using HackLib;
 
 namespace SurvivalHack
 {
     public class SfmlApp
     {
         private readonly Game _game;
-        private readonly Camera _camera;
         private readonly SfmlWindow _window;
         private readonly PlayerController _controller;
 

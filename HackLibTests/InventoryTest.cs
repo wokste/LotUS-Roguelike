@@ -1,5 +1,5 @@
-﻿using HackLib;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SurvivalHack;
 
 namespace HackLibTests
 {
