@@ -19,7 +19,7 @@ namespace SurvivalHack
             _following = following;
         }
 
-        public override void Render()
+        public override void Render(bool forceUpdate)
         {
             offsetX = _following.Position.X - Size.Width / 2 - Size.Left;
             offsetY = _following.Position.Y - Size.Height / 2 - Size.Top;
@@ -60,11 +60,15 @@ namespace SurvivalHack
                 {
                     if (!_world.InBoundary(x, y))
                         continue;
-                    
-                    if (_view.Visibility[x + offsetX, y + offsetY] == 0)
+
+                    var visibility = _view.Visibility[x + offsetX, y + offsetY];
+
+                    if (visibility == 0)
                         continue;
 
                     CellGrid.Cells[x, y] = _world.GetTop(x + offsetX, y + offsetY).Char;
+                    if (_view.Visibility[x + offsetX, y + offsetY] < 255)
+                        CellGrid.Cells[x, y].TextColor = (CellGrid.Cells[x, y].TextColor >> 1) & 0x7f7f7f7f;
                 }
             }
         }

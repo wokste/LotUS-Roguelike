@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HackConsole;
+using System;
 
 
 namespace SurvivalHack

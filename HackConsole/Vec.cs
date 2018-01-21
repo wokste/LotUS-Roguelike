@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SurvivalHack
+namespace HackConsole
 {
     public struct Vec
     {
@@ -53,8 +53,8 @@ namespace SurvivalHack
     {
         public int Left, Top, Width, Height;
 
-        public int Bottom => Top + Height;
         public int Right => Left + Width;
+        public int Bottom => Top + Height;
 
         public Rect(Vec pos, Vec size)
         {
@@ -62,6 +62,11 @@ namespace SurvivalHack
             Top = pos.Y;
             Width = size.X;
             Height = size.Y;
+        }
+        
+        public bool Contains(int x, int y)
+        {
+            return (x >= Left) && (y >= Top) && (x < Right) && (y < Bottom);
         }
     }
 }

@@ -2,16 +2,26 @@
 {
     public abstract class Widget
     {
-        public CRect Size;
-        public CRect DesiredSize;
+        public Rect Size;
+        public Rect DesiredSize;
         public Docking Docking = Docking.None;
+        
+        /// <summary>
+        /// Renders the widget on the CellGrid.
+        /// </summary>
+        /// <param name="forceUpdate">If this is false, the widget may assume that the previous content is still on the same location.</param>
+        public abstract void Render(bool forceUpdate);
 
-        public abstract void Render();
-
+        /// <summary>
+        /// This will automatically be called when the widget is resized.
+        /// </summary>
         protected virtual void OnResized()
         {
         }
 
+        /// <summary>
+        /// helper function to clear the area of the widget.
+        /// </summary>
         protected void Clear()
         {
             for (var y = Size.Top; y < Size.Bottom; y++)
@@ -22,8 +32,8 @@
                 }
             }
         }
-
-        public void Resize(ref CRect free)
+        
+        public void Resize(ref Rect free)
         {
             var newSize = MakeSize(ref free);
 
@@ -35,11 +45,11 @@
             OnResized();
         }
 
-        private CRect MakeSize(ref CRect free)
+        private Rect MakeSize(ref Rect free)
         {
             if (Docking == Docking.Top || Docking == Docking.Bottom)
             {
-                var newSize = new CRect
+                var newSize = new Rect
                 {
                     Left = free.Left,
                     Width = free.Width,
@@ -55,7 +65,7 @@
             }
             if (Docking == Docking.Left || Docking == Docking.Right)
             {
-                var newSize = new CRect
+                var newSize = new Rect
                 {
                     Left = Docking == Docking.Left ? free.Left : free.Right - DesiredSize.Width,
                     Width = DesiredSize.Width,
@@ -73,22 +83,6 @@
                 return free;
 
             return DesiredSize;
-        }
-    }
-
-    public struct CRect
-    {
-        public int Left;
-        public int Top;
-        public int Width;
-        public int Height;
-
-        public int Right => Left + Width;
-        public int Bottom => Top + Height;
-
-        public bool Contains(int x, int y)
-        {
-            return (x >= Left) && (y >= Top) && (x < Right) && (y < Bottom);
         }
     }
 

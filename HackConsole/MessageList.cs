@@ -7,9 +7,16 @@ namespace HackConsole
     {
         private readonly List<String> _messages = new List<string>();
         private readonly List<String> _lines = new List<string>();
+
+        private bool _dirty = true;
         
-        public override void Render()
+        public override void Render(bool forceUpdate)
         {
+            if (!forceUpdate && !_dirty)
+                return;
+
+            _dirty = false;
+
             Clear();
 
             var y = Size.Top;
@@ -27,6 +34,8 @@ namespace HackConsole
             _lines.Clear();
             foreach (var msg in _messages)
                 WordWrap(msg);
+
+            _dirty = true;
         }
 
         void Print(int x, int y, string msg)
@@ -65,6 +74,7 @@ namespace HackConsole
         {
             _messages.Add(msg);
             WordWrap(msg);
+            _dirty = true;
         }
     }
 }

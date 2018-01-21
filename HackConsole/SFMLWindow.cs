@@ -50,7 +50,7 @@ namespace HackConsole
 
             _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
 
-            var r = new CRect{Width = (int)CellGrid.Width, Height = (int)CellGrid.Height};
+            var r = new Rect{Width = (int)CellGrid.Width, Height = (int)CellGrid.Height};
             Widgets.Resize(ref r);
         }
 
@@ -84,7 +84,7 @@ namespace HackConsole
         {
             _window.Clear();
 
-            Widgets.Render();
+            Widgets.Render(false); // TODO: First frame and when removing popups needs to be true;
             DrawGrid(_window, new RenderStates());
 
             _window.Display();

@@ -6,11 +6,11 @@ namespace HackConsole
     {
         public List<Widget> Widgets = new List<Widget>();
 
-        public override void Render()
+        public override void Render(bool forceUpdate)
         {
             foreach (var w in Widgets)
             {
-                w.Render();
+                w.Render(forceUpdate);
             }
         }
 

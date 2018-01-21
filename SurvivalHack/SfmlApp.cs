@@ -22,7 +22,7 @@ namespace SurvivalHack
         public SfmlApp()
         {
             _window = new SfmlWindow();
-            _consoleWidget = new MessageList {Docking = Docking.Bottom, DesiredSize = new CRect {Height = 10}};
+            _consoleWidget = new MessageList {Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect {Height = 10}};
             _consoleWidget.AddMessage("You wake up in an unknown world.");
             _window.Widgets.Add(_consoleWidget);
 
