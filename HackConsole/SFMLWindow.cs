@@ -39,7 +39,6 @@ namespace HackConsole
             _fontSprite = MakeSprite("ascii.png");
 
             OnResized(null, new SizeEventArgs(new SizeEvent {Width = _windowWidth, Height = _windowHeight }));
-
         }
 
         private void OnResized(object sender, SizeEventArgs e)
@@ -114,7 +113,7 @@ namespace HackConsole
                     
                     var Char = CellGrid.Cells[x,y];
                     
-                    _fontSprite.Color = new SFML.Graphics.Color((byte)((Char.TextColor >> 16) & 0xff), (byte)((Char.TextColor >> 8) & 0xff), (byte)(Char.TextColor & 0xff));
+                    _fontSprite.Color = new SFML.Graphics.Color(Char.TextColor.R, Char.TextColor.G, Char.TextColor.B);
                     _fontSprite.TextureRect = new IntRect((int)((Char.Ascii % 16) * _fontX), (int)((Char.Ascii / 16) * _fontY), (int)_fontX, (int)_fontY);
                     target.Draw(_fontSprite);
                 }

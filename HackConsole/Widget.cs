@@ -1,4 +1,6 @@
-﻿namespace HackConsole
+﻿using System;
+
+namespace HackConsole
 {
     public abstract class Widget
     {
@@ -28,11 +30,23 @@
             {
                 for (var x = Size.Left; x < Size.Right; x++)
                 {
-                    CellGrid.Cells[x, y] = new Symbol {Ascii = ' '};
+                    CellGrid.Cells[x, y] = new Symbol {Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow};
                 }
             }
         }
-        
+
+        protected void Print(int x, int y, string msg, Color fgColor, Color bgColor = default(Color))
+        {
+            x += Size.Left;
+            var length = Math.Min(msg.Length, Size.Right - x);
+            y += Size.Top;
+
+            for (int i = 0; i < length; i++)
+            {
+                CellGrid.Cells[x + i, y] = new Symbol {Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor};
+            }
+        }
+
         public void Resize(ref Rect free)
         {
             var newSize = MakeSize(ref free);

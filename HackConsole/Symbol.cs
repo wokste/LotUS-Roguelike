@@ -1,30 +1,46 @@
-﻿namespace HackConsole
+﻿using System.Runtime.InteropServices;
+
+namespace HackConsole
 {
     public struct Symbol
     {
         public char Ascii;
-        public int TextColor;
-        public int BackgroundColor;
+        public Color TextColor;
+        public Color BackgroundColor;
 
-        public Symbol(char ascii, int textColor = Color.White, int backgroundColor = Color.Black)
+        public Symbol(char ascii, Color textColor, Color backgroundColor = default(Color))
         {
             Ascii = ascii;
             TextColor = textColor;
             BackgroundColor = backgroundColor;
         }
     }
-
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Color
     {
-        public const int White  = 0xffffff;
-        public const int Black  = 0x000000;
-        public const int Red    = 0xff0000;
-        public const int Green  = 0x00ff00;
-        public const int Blue   = 0x0000ff;
-        public const int Yellow = 0xffff00;
-        public const int Orange = 0xff8000;
-        public const int Cyan   = 0x00ffff;
-        public const int Pink   = 0xff00ff;
-        public const int Gray   = 0x808080;
+        public static readonly Color White = new Color(255, 255, 255);
+        public static readonly Color Black = new Color(0, 0, 0);
+        public static readonly Color Red = new Color(255, 0, 0);
+        public static readonly Color Green = new Color(0, 255, 0);
+        public static readonly Color Blue = new Color(0, 0, 255);
+        public static readonly Color Yellow = new Color(255, 255, 0);
+        public static readonly Color Orange = new Color(255, 128, 0);
+        public static readonly Color Cyan = new Color(0, 255, 255);
+        public static readonly Color Pink = new Color(255, 0, 255);
+        public static readonly Color Gray = new Color(128, 128, 128);
+        public static readonly Color Transparent = new Color(0, 0, 0, 0);
+
+        public byte R;
+        public byte G;
+        public byte B;
+        public byte A;
+        
+        public Color(byte r, byte g, byte b, byte a = 255)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
     }
 }

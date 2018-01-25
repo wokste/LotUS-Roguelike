@@ -101,24 +101,7 @@ namespace SurvivalHack
             }
             
             food.Type.OnEat.Use(food, this);
-            DisplayStats();
             return true;
-        }
-
-        public void DisplayStats()
-        {
-            void DisplayStat(string name, Bar bar)
-            {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"{name}: ");
-                var perc = bar.Perc;
-                
-                Console.ForegroundColor = (perc > 0.6 ? ConsoleColor.Green : (perc > 0.3 ? ConsoleColor.Yellow : ConsoleColor.Red));
-                Console.WriteLine($"{bar.Current:##}/{bar.Max:##}");
-            }
-
-            DisplayStat("Health", Health);
-            DisplayStat("Hunger", Hunger);
         }
     }
 }

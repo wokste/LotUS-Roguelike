@@ -19,11 +19,11 @@ namespace HackConsole
 
             Clear();
 
-            var y = Size.Top;
+            var y = 0;
             var firstLine = Math.Max(0, _lines.Count - Size.Height);
             for (var i = firstLine; i < Math.Min(firstLine + Size.Height, _lines.Count); i++)
             {
-                Print(0, y, _lines[i]);
+                Print(0, y, _lines[i], Color.Yellow);
                 y++;
             }
         }
@@ -36,15 +36,6 @@ namespace HackConsole
                 WordWrap(msg);
 
             _dirty = true;
-        }
-
-        void Print(int x, int y, string msg)
-        {
-            for(int i = 0; i < Math.Min(msg.Length, Size.Width); i++)
-            {
-                CellGrid.Cells[x, y].Ascii = msg[i];
-                x++;
-            }
         }
 
         private void WordWrap(string msg)

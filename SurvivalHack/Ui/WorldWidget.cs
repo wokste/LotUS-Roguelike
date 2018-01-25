@@ -1,7 +1,7 @@
 ﻿using System;
 using HackConsole;
 
-namespace SurvivalHack
+namespace SurvivalHack.Ui
 {
     class WorldWidget : Widget
     {
@@ -67,8 +67,8 @@ namespace SurvivalHack
                         continue;
 
                     CellGrid.Cells[x, y] = _world.GetTop(x + offsetX, y + offsetY).Char;
-                    if (_view.Visibility[x + offsetX, y + offsetY] < 255)
-                        CellGrid.Cells[x, y].TextColor = (CellGrid.Cells[x, y].TextColor >> 1) & 0x7f7f7f7f;
+                    //if (_view.Visibility[x + offsetX, y + offsetY] < 255)
+                    //    CellGrid.Cells[x, y].TextColor = (CellGrid.Cells[x, y].TextColor >> 1) & 0x7f7f7f7f;
                 }
             }
         }

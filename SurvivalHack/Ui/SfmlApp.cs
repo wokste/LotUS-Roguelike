@@ -1,6 +1,6 @@
 ﻿using HackConsole;
 
-namespace SurvivalHack
+namespace SurvivalHack.Ui
 {
     public class SfmlApp
     {
@@ -41,15 +41,19 @@ namespace SurvivalHack
                     Health = new Bar(20),
                     Hunger = new Bar(20),
                     Position = _game.World.GetEmptyLocation(),
-                    Symbol = new Symbol((char) 2)
+                    Symbol = new Symbol((char) 2, Color.White)
                 }
             );
 
             _game.AddCreature(_controller);
 
+            var characterWidget = new CharacterWidget(_controller.Self);
+            characterWidget.DesiredSize.Width = 16;
+            characterWidget.Docking = Docking.Right;
+            _window.Widgets.Add(characterWidget);
+
             var worldWidget = new WorldWidget(_game.World, _controller.FieldOfView, _controller.Self);
             worldWidget.Docking = Docking.Fill;
-
             _window.Widgets.Add(worldWidget);
         }
 
