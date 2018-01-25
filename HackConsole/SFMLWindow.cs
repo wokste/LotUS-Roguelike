@@ -6,8 +6,8 @@ namespace HackConsole
 {
     public class SfmlWindow
     {
-        private uint _windowWidth = 800;
-        private uint _windowHeight = 600;
+        private uint _windowWidth = 1280;
+        private uint _windowHeight = 800;
 
         private readonly uint _fontX = 16;
         private readonly uint _fontY = 16;
