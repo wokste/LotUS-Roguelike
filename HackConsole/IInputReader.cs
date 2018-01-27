@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HackConsole
 {
-    interface IInputReader
+    public interface IInputReader
     {
         /// <summary>
         /// Called when a key is pressed

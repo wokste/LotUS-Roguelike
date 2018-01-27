@@ -54,15 +54,22 @@ namespace SurvivalHack.Ui
             };
             _window.Widgets.Add(characterWidget);
 
-            var worldWidget = new WorldWidget(_game.World, _controller.FieldOfView, _controller.Self)
+            var worldWidget = new WorldWidget(_game.World, _controller.FieldOfView, _controller)
             {
                 Docking = Docking.Fill
             };
             _window.Widgets.Add(worldWidget);
+
+            _window.Focus = worldWidget;
         }
 
-        public void Run() { 
+        public void Run() {
+            _window.OnUpdate = Update;
             _window.Run();
+        }
+
+        private void Update() {
+            _game.Update();
         }
     }
 }

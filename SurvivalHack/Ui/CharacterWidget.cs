@@ -11,7 +11,7 @@ namespace SurvivalHack.Ui
     {
         private readonly Creature _creature;
 
-        private static readonly char[] Gradient = new[] {(char) 0xC2, (char) 0xC1, (char) 0xC0, ' '};
+        private static readonly char[] Gradient = new[] {(char) 0xB2, (char) 0xB1, (char) 0xB0, ' '};
 
         public CharacterWidget(Creature creature)
         {

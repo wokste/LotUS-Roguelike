@@ -3,19 +3,21 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class WorldWidget : Widget
+    class WorldWidget : Widget, IInputReader
     {
         private World _world;
         private readonly FieldOfView _view;
         private readonly Creature _following;
+        PlayerController _controller;
 
         private Vec _offset;
 
-        public WorldWidget(World world, FieldOfView view, Creature following)
+        public WorldWidget(World world, FieldOfView view, PlayerController following)
         {
             _world = world;
             _view = view;
-            _following = following;
+            _following = following.Self;
+            _controller = following;
         }
 
         public override void Render(bool forceUpdate)
@@ -23,6 +25,7 @@ namespace SurvivalHack.Ui
             _offset.X = _following.Position.X - Size.Width / 2 - Size.Left;
             _offset.Y = _following.Position.Y - Size.Height / 2 - Size.Top;
 
+            Clear();
             RenderGrid();
             RenderCreatures();
         }
@@ -73,6 +76,39 @@ namespace SurvivalHack.Ui
                     }
                 }
             }
+        }
+
+        public bool OnKeyPress(char keyCode, EventFlags flags)
+        {
+            switch (keyCode)
+            {
+                case 'e':
+                    _controller.Plan(s => s.Eat() ? 1 : -1);
+                    // TODO: Change this in a mechanic that the player can choose what to eat
+                    break;
+            }
+            return true;
+        }
+
+        public bool OnArrowPress(Vec move, EventFlags flags)
+        {
+            _controller.PlanWalk(move);
+            return true;
+        }
+
+        public bool OnMouseEvent(Vec mousePos, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnMouseWheel(Vec delta, EventFlags flags)
+        {
+            return true;
         }
     }
 }

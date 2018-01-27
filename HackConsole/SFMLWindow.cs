@@ -16,6 +16,9 @@ namespace HackConsole
         private readonly RenderWindow _window;
         private readonly Sprite _fontSprite;
 
+        public IInputReader Focus;
+        public Action OnUpdate;
+
         public SfmlWindow(string name)
         {
             var contextSettings = new ContextSettings
@@ -64,8 +67,13 @@ namespace HackConsole
                 // Arrow key movements.
                 var id = keyEventArgs.Code - Keyboard.Key.Numpad1;
                 var move = new Vec(id % 3 - 1, 1 - id / 3);
-
-                //Console.WriteLine($"move {sender} ({move.X}, {move.Y})");
+                
+                Focus?.OnArrowPress(move, flags);
+            }
+            else
+            {
+                // Normal movement
+                Focus?.OnKeyPress((char)keyEventArgs.Code, flags);
             }
         }
 
@@ -81,14 +89,9 @@ namespace HackConsole
                 // Dispatch events to work with native event loop
                 _window.DispatchEvents();
 
-                Update();
+                OnUpdate?.Invoke();
                 Render();
             }
-        }
-
-        private void Update()
-        {
-
         }
 
         private void Render()
