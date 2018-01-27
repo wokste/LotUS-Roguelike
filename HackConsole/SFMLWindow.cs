@@ -12,19 +12,18 @@ namespace HackConsole
         private readonly uint _fontX = 16;
         private readonly uint _fontY = 16;
 
-        public WidgetContainer Widgets = new WidgetContainer{Docking = Docking.Fill};
+        public WidgetContainer Widgets = new WidgetContainer{Docking = Docking.Fill}; 
         private readonly RenderWindow _window;
         private readonly Sprite _fontSprite;
 
-        public SfmlWindow()
+        public SfmlWindow(string name)
         {
             var contextSettings = new ContextSettings
             {
                 DepthBits = 24
             };
 
-            _window = new RenderWindow(new VideoMode(_windowWidth, _windowHeight),
-                "SFML Console", Styles.Default, contextSettings);
+            _window = new RenderWindow(new VideoMode(_windowWidth, _windowHeight), name, Styles.Default, contextSettings);
             _window.SetActive();
 
             _window.SetVisible(true);
@@ -55,6 +54,19 @@ namespace HackConsole
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
         {
+            EventFlags flags = EventFlags.None;
+            if (keyEventArgs.Alt) flags |= EventFlags.Alt;
+            if (keyEventArgs.Control) flags |= EventFlags.Ctrl;
+            if (keyEventArgs.Shift) flags |= EventFlags.Shift;
+
+            if (keyEventArgs.Code >= Keyboard.Key.Numpad1 && keyEventArgs.Code <= Keyboard.Key.Numpad9)
+            {
+                // Arrow key movements.
+                var id = keyEventArgs.Code - Keyboard.Key.Numpad1;
+                var move = new Vec(id % 3 - 1, 1 - id / 3);
+
+                //Console.WriteLine($"move {sender} ({move.X}, {move.Y})");
+            }
         }
 
         private void OnClosed(object sender, EventArgs e)

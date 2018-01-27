@@ -9,8 +9,7 @@ namespace SurvivalHack.Ui
         private readonly FieldOfView _view;
         private readonly Creature _following;
 
-        private int offsetX;
-        private int offsetY;
+        private Vec _offset;
 
         public WorldWidget(World world, FieldOfView view, Creature following)
         {
@@ -21,8 +20,8 @@ namespace SurvivalHack.Ui
 
         public override void Render(bool forceUpdate)
         {
-            offsetX = _following.Position.X - Size.Width / 2 - Size.Left;
-            offsetY = _following.Position.Y - Size.Height / 2 - Size.Top;
+            _offset.X = _following.Position.X - Size.Width / 2 - Size.Left;
+            _offset.Y = _following.Position.Y - Size.Height / 2 - Size.Top;
 
             RenderGrid();
             RenderCreatures();
@@ -37,8 +36,8 @@ namespace SurvivalHack.Ui
                 if (_view.Visibility[x,y] < 128)
                     continue;
 
-                x -= offsetX;
-                y -= offsetY;
+                x -= _offset.X;
+                y -= _offset.Y;
 
                 if (!Size.Contains(x,y))
                     continue;
@@ -49,10 +48,10 @@ namespace SurvivalHack.Ui
 
         private void RenderGrid()
         {
-            var x0 = Math.Max(Size.Left, 0 - offsetX);
-            var y0 = Math.Max(Size.Top, 0 - offsetY);
-            var x1 = Math.Min(Size.Right, _world._map.Width - offsetX);
-            var y1 = Math.Min(Size.Bottom, _world._map.Height - offsetY);
+            var x0 = Math.Max(Size.Left, 0 - _offset.X);
+            var y0 = Math.Max(Size.Top, 0 - _offset.Y);
+            var x1 = Math.Min(Size.Right, _world._map.Width - _offset.X);
+            var y1 = Math.Min(Size.Bottom, _world._map.Height - _offset.Y);
 
             for (var x = x0; x < x1; x++)
             {
@@ -61,14 +60,17 @@ namespace SurvivalHack.Ui
                     if (!_world.InBoundary(x, y))
                         continue;
 
-                    var visibility = _view.Visibility[x + offsetX, y + offsetY];
+                    var visibility = _view.Visibility[x + _offset.X, y + _offset.Y];
 
                     if (visibility == 0)
                         continue;
 
-                    CellGrid.Cells[x, y] = _world.GetTop(x + offsetX, y + offsetY).Char;
-                    //if (_view.Visibility[x + offsetX, y + offsetY] < 255)
-                    //    CellGrid.Cells[x, y].TextColor = (CellGrid.Cells[x, y].TextColor >> 1) & 0x7f7f7f7f;
+                    CellGrid.Cells[x, y] = _world.GetTop(x + _offset.X, y + _offset.Y).Char;
+                    if (visibility < 255)
+                    {
+                        CellGrid.Cells[x, y].TextColor.Darken(visibility);
+                        CellGrid.Cells[x, y].BackgroundColor.Darken(visibility);
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@ namespace SurvivalHack.Ui
             _creature = creature;
         }
 
-        void PrintBar(string name, int y, Bar bar, Color fgColor, Color bgColor = default(Color))
+        private void PrintBar(string name, int y, Bar bar, Color fgColor, Color bgColor = default(Color))
         {
             Print(0, y, name, Color.White, Color.Transparent);
 

@@ -7,7 +7,9 @@ namespace HackConsole
         public Rect Size;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
-        
+
+        //public abstract bool CanHasFocus { get; }
+
         /// <summary>
         /// Renders the widget on the CellGrid.
         /// </summary>
@@ -21,8 +23,10 @@ namespace HackConsole
         {
         }
 
+        #region HelperFunctions
+
         /// <summary>
-        /// helper function to clear the area of the widget.
+        /// Clear the area of the widget.
         /// </summary>
         protected void Clear()
         {
@@ -30,22 +34,33 @@ namespace HackConsole
             {
                 for (var x = Size.Left; x < Size.Right; x++)
                 {
-                    CellGrid.Cells[x, y] = new Symbol {Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow};
+                    CellGrid.Cells[x, y] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
                 }
             }
         }
 
+        /// <summary>
+        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
+        /// </summary>
+        /// <param name="x">Relative X position to left of widget</param>
+        /// <param name="y">Relative Y position to left of widget</param>
+        /// <param name="msg">The text.</param>
+        /// <param name="fgColor">Foreground color</param>
+        /// <param name="bgColor">Background color</param>
         protected void Print(int x, int y, string msg, Color fgColor, Color bgColor = default(Color))
         {
             x += Size.Left;
-            var length = Math.Min(msg.Length, Size.Right - x);
             y += Size.Top;
+            var length = Math.Min(msg.Length, Size.Right - x);
 
             for (int i = 0; i < length; i++)
             {
-                CellGrid.Cells[x + i, y] = new Symbol {Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor};
+                CellGrid.Cells[x + i, y] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
             }
         }
+
+        #endregion
+
 
         public void Resize(ref Rect free)
         {
@@ -99,6 +114,7 @@ namespace HackConsole
             return DesiredSize;
         }
     }
+
 
     public enum Docking
     {
