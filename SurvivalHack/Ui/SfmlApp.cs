@@ -6,7 +6,7 @@ namespace SurvivalHack.Ui
     {
         private readonly Game _game;
         private readonly SfmlWindow _window;
-        private readonly PlayerController _controller;
+        private readonly Player _player;
 
         // Widgets
         private readonly MessageList _consoleWidget;
@@ -29,32 +29,29 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _controller = new PlayerController(new Creature
+            _player = new Player(_game.World, _game.World.GetEmptyLocation())
+            {
+                Name = "Steven",
+                Attack = new AttackComponent
                 {
-                    Name = "Steven",
-                    Attack = new AttackComponent
-                    {
-                        Damage = 4,
-                        HitChance = 75f
-                    },
-                    Map = _game.World,
-                    Health = new Bar(20),
-                    Hunger = new Bar(20),
-                    Position = _game.World.GetEmptyLocation(),
-                    Symbol = new Symbol((char) 2, Color.White)
-                }
-            );
+                    Damage = 20,
+                    HitChance = 75f
+                },
+                Health = new Bar(100),
+                Hunger = new Bar(100),
+                Symbol = new Symbol((char) 2, Color.White)
+            };
 
-            _game.AddCreature(_controller);
+            _game.AddCreature(_player);
 
-            var characterWidget = new CharacterWidget(_controller.Self)
+            var characterWidget = new CharacterWidget(_player)
             {
                 DesiredSize = {Width = 16},
                 Docking = Docking.Right
             };
             _window.Widgets.Add(characterWidget);
 
-            var worldWidget = new WorldWidget(_game.World, _controller.FieldOfView, _controller)
+            var worldWidget = new WorldWidget(_game.World, _player.FoV, _player)
             {
                 Docking = Docking.Fill
             };
@@ -69,7 +66,7 @@ namespace SurvivalHack.Ui
         }
 
         private void Update() {
-            _game.Update();
+            _game.Update(5);
         }
     }
 }

@@ -25,13 +25,13 @@ namespace HackConsole
         public int LengthSquared => X * X + Y * Y;
         public double Length => Math.Sqrt(LengthSquared);
 
-        public double ManhattanLength
+        public float ManhattanLength
         {
             get
             {
                 var aX = Math.Abs(X);
                 var aY = Math.Abs(Y);
-                return (aX < aY) ? aY + aX * 0.5 : aX + aY * 0.5;
+                return (aX < aY) ? aY + aX * 0.5f : aX + aY * 0.5f;
             }
         }
 

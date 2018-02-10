@@ -7,23 +7,21 @@ namespace SurvivalHack.Ui
     {
         private World _world;
         private readonly FieldOfView _view;
-        private readonly Creature _following;
-        PlayerController _controller;
+        private readonly Player _player;
 
         private Vec _offset;
 
-        public WorldWidget(World world, FieldOfView view, PlayerController following)
+        public WorldWidget(World world, FieldOfView view, Player following)
         {
             _world = world;
             _view = view;
-            _following = following.Self;
-            _controller = following;
+            _player = following;
         }
 
         public override void Render(bool forceUpdate)
         {
-            _offset.X = _following.Position.X - Size.Width / 2 - Size.Left;
-            _offset.Y = _following.Position.Y - Size.Height / 2 - Size.Top;
+            _offset.X = _player.Position.X - Size.Width / 2 - Size.Left;
+            _offset.Y = _player.Position.Y - Size.Height / 2 - Size.Top;
 
             Clear();
             RenderGrid();
@@ -83,7 +81,8 @@ namespace SurvivalHack.Ui
             switch (keyCode)
             {
                 case 'e':
-                    _controller.Plan(s => s.Eat() ? 1 : -1);
+                    if (_player.Eat());
+                        //TODO: Spend time
                     // TODO: Change this in a mechanic that the player can choose what to eat
                     break;
             }
@@ -92,7 +91,21 @@ namespace SurvivalHack.Ui
 
         public bool OnArrowPress(Vec move, EventFlags flags)
         {
-            _controller.PlanWalk(move);
+            var actPoint = _player.Position + move;
+            foreach (var c in _world.Creatures)
+            {
+                if (c.Position == actPoint && c != _player)
+                {
+                    _player.Attack.Attack(_player, c);
+                    // TODO: Spend time
+                    return true;
+                }
+            }
+
+            if (_player.Walk(move))
+            {
+
+            }
             return true;
         }
 

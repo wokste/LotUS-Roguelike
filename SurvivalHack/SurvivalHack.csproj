@@ -67,7 +67,7 @@
     <Compile Include="AttackComponent.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="ConsumableComponent.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="AI.cs" />
     <Compile Include="CraftingStation.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="Dicebag.cs" />

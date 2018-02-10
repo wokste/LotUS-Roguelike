@@ -18,27 +18,26 @@ namespace SurvivalHack
             {
                 var monster = CreateMonster();
                 monster.Map = map;
-                var ai = new AiController(monster);
-                _game.AddCreature(ai);
+                _game.AddCreature(monster);
             }
         }
 
-        private Creature CreateMonster()
+        private Monster CreateMonster()
         {
             var rnd = Dicebag.UniformInt(100);
 
             if (rnd < 60)
             {
-                return new Creature
+                return new Monster
                 {
                     Name = "Zombie",
                     Attack = new AttackComponent
                     {
-                        Damage = 4,
+                        Damage = 20,
                         HitChance = 60,
                         Range = 1,
                     },
-                    Health = new Bar(8),
+                    Health = new Bar(40),
                     Position = _game.World.GetEmptyLocation(),
                     Speed = 0.6f,
                     Symbol = new Symbol('z', Color.Red)
@@ -46,7 +45,7 @@ namespace SurvivalHack
             }
             else if (rnd < 98)
             {
-                return new Creature
+                return new Monster
                 {
                     Name = "Giant Bat",
                     Attack = new AttackComponent
@@ -64,7 +63,7 @@ namespace SurvivalHack
             }
             else
             {
-                return new Creature
+                return new Monster
                 {
                     Name = "Giant Fish",
                     Attack = new AttackComponent

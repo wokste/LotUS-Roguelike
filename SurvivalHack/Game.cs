@@ -6,7 +6,7 @@ namespace SurvivalHack
     {
         [System.Obsolete]
         public Creature Player;
-        public Timeline<Controller> Time = new Timeline<Controller>();
+        //public Timeline<Controller> Time = new Timeline<Controller>();
 
         public MonsterSpawner Spawner;
         public World World;
@@ -22,9 +22,9 @@ namespace SurvivalHack
             Spawner.Spawn(World, 32);
         }
 
-        public void Update()
+        public void Update(int ticks)
         {
-            while (true)
+            /*while (true)
             {
                 var gameEvent = Time.Peek();
                 if (gameEvent.ShouldDelete)
@@ -41,7 +41,7 @@ namespace SurvivalHack
                 Time.Dequeue();
                 var ticks = (int)Math.Ceiling(1000 * steps / gameEvent.Self.Speed);
                 Time.AddRelative(gameEvent, ticks);
-            }
+            }*/
         }
 
         /*
@@ -60,10 +60,10 @@ namespace SurvivalHack
             }
         }*/
 
-        public void AddCreature(Controller controller)
+        public void AddCreature(Creature creature)
         {
-            Time.AddRelative(controller, 1000);
-            World.Creatures.Add(controller.Self);
+            //Time.AddRelative(controller, 1000);
+            World.Creatures.Add(creature);
         }
     }
 }

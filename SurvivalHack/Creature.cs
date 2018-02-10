@@ -10,7 +10,7 @@ namespace SurvivalHack
         public Bar Health;
         public Bar Hunger;
         public AttackComponent Attack;
-        
+
         public Symbol Symbol;
 
         public readonly Inventory Inventory = new Inventory();
@@ -23,11 +23,9 @@ namespace SurvivalHack
         public TerrainFlag MovementType = TerrainFlag.Walk;
 
         public World Map;
-        
-        public bool Walk(Vec direction)
-        {
-            // TODO: Precondition |direction| == 1
 
+        public virtual bool Walk(Vec direction)
+        {
             Facing = direction;
 
             var newPosition = Position;
@@ -71,7 +69,7 @@ namespace SurvivalHack
             if (!Map.InBoundary(x, y))
                 return false;
 
-            var wall = Map.GetWall(x,y);
+            var wall = Map.GetWall(x, y);
 
             // Nothing to drop
             if (wall == null)
@@ -83,7 +81,7 @@ namespace SurvivalHack
                 Count = Dicebag.Randomize(wall.DropCount),
             });
 
-            Map.DestroyWall(x,y);
+            Map.DestroyWall(x, y);
 
             return true;
         }
@@ -92,16 +90,41 @@ namespace SurvivalHack
         {
             var foodItems = Inventory._items.Where(i => i.Type.OnEat != null);
             var food = foodItems.OrderBy(f => f.Type.OnEat.Quality).LastOrDefault();
-            
+
             if (food == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("You have no food in your inventory.");
                 return false;
             }
-            
+
             food.Type.OnEat.Use(food, this);
             return true;
         }
+    }
+
+    public class Player : Creature{
+        public FieldOfView FoV;
+
+        public Player(World map, Vec position) {
+            Position = position;
+            Map = map;
+
+            FoV = new FieldOfView(map._map);
+            FoV.Update(position);
+        }
+
+        public override bool Walk(Vec direction)
+        {
+            var ret = base.Walk(direction);
+            FoV.Update(Position);
+            return ret;
+        }
+    }
+
+    public class Monster : Creature {
+        public Creature Enemy;
+
+        public AiController Ai;
     }
 }
