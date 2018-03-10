@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace HackConsole
 {
-    public abstract class TextWidget : Widget
+    public abstract class TextWidget : Widget , IInputReader
     {
         protected readonly List<String> _lines = new List<string>();
         protected bool _dirty = true;
+        protected int posY;
 
         public override void Render(bool forceUpdate)
         {
@@ -21,7 +22,8 @@ namespace HackConsole
             Clear();
 
             var y = 0;
-            var firstLine = Math.Max(0, _lines.Count - Size.Height);
+
+            var firstLine = posY;
             for (var i = firstLine; i < Math.Min(firstLine + Size.Height, _lines.Count); i++)
             {
                 Print(0, y, _lines[i], Color.Yellow);
@@ -57,11 +59,39 @@ namespace HackConsole
         protected override void OnResized()
         {
             // If the width has changed, the lines need to be recalculated.
-            _lines.Clear();
             MakeLines();
+            posY = Math.Max(0, _lines.Count - Size.Height);
             _dirty = true;
         }
 
         protected abstract void MakeLines();
+
+        public bool OnKeyPress(char keyCode, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnArrowPress(Vec move, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnMouseEvent(Vec mousePos, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        {
+            return true;
+        }
+
+        public bool OnMouseWheel(Vec delta, EventFlags flags)
+        {
+            _dirty = true;
+            posY = MyMath.Clamp(posY - delta.Y, 0, _lines.Count - 1);
+
+            return true;
+        }
     }
 }

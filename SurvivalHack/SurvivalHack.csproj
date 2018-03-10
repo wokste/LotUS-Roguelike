@@ -76,7 +76,6 @@
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="MonsterSpawner.cs" />
-    <Compile Include="MyMath.cs" />
     <Compile Include="PerlinNoise.cs" />
     <Compile Include="Ui\CharacterWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />

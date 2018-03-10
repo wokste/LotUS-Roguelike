@@ -16,6 +16,7 @@ namespace HackConsole
 
         protected override void MakeLines()
         {
+            _lines.Clear();
             foreach (var msg in _messages)
                 WordWrap(msg, "> ");
         }

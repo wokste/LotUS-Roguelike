@@ -1,6 +1,6 @@
-﻿namespace SurvivalHack
+﻿namespace HackConsole
 {
-    static class MyMath
+    public static class MyMath
     {
         public static int Clamp(int val, int min, int max)
         {

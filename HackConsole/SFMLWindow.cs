@@ -20,6 +20,7 @@ namespace HackConsole
         public Action OnUpdate;
 
         private bool _dirty;
+        private Vec lastMousePos = Vec.NaV;
 
         public SfmlWindow(string name)
         {
@@ -49,6 +50,45 @@ namespace HackConsole
             OnResized(null, new SizeEventArgs(new SizeEvent {Width = _windowWidth, Height = _windowHeight }));
         }
 
+        EventFlags MakeFlags(bool keys, bool mouse) {
+            var flags = EventFlags.None;
+
+            if (keys)
+            {
+                if (Keyboard.IsKeyPressed(Keyboard.Key.RAlt) || Keyboard.IsKeyPressed(Keyboard.Key.LAlt))
+                    flags |= EventFlags.Alt;
+                if (Keyboard.IsKeyPressed(Keyboard.Key.RControl) || Keyboard.IsKeyPressed(Keyboard.Key.LControl))
+                    flags |= EventFlags.Ctrl;
+                if (Keyboard.IsKeyPressed(Keyboard.Key.RShift) || Keyboard.IsKeyPressed(Keyboard.Key.LShift))
+                    flags |= EventFlags.Shift;
+            }
+
+            if (mouse)
+            {
+                if (Mouse.IsButtonPressed(Mouse.Button.Left))
+                    flags |= EventFlags.LeftButton;
+                if (Mouse.IsButtonPressed(Mouse.Button.Middle))
+                    flags |= EventFlags.MidButton;
+                if (Mouse.IsButtonPressed(Mouse.Button.Right))
+                    flags |= EventFlags.RightButton;
+            }
+            return flags;
+        }
+
+        Widget WidgetAtPosition(Vec mousePos, WidgetContainer container = null)
+        {
+            if (container == null)
+                container = Widgets;
+
+            Widget top = null;
+
+            foreach (var w in container.Widgets)
+                if (w.Size.Contains(mousePos.X, mousePos.Y))
+                    top = w;
+
+            return top is WidgetContainer ? WidgetAtPosition(mousePos, top as WidgetContainer) : top;
+        }
+
         private void OnResized(object sender, SizeEventArgs e)
         {
             _windowWidth = e.Width;
@@ -63,7 +103,7 @@ namespace HackConsole
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
         {
-            EventFlags flags = EventFlags.None;
+            EventFlags flags = MakeFlags(false, true);
             if (keyEventArgs.Alt) flags |= EventFlags.Alt;
             if (keyEventArgs.Control) flags |= EventFlags.Ctrl;
             if (keyEventArgs.Shift) flags |= EventFlags.Shift;
@@ -86,19 +126,23 @@ namespace HackConsole
         private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)
         {
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
-            var delta = new Vec(0, e.Delta);
-            // TODO: Select widget based on mouse position
-            // TODO: flags
-            Focus.OnMouseWheel(delta, EventFlags.None);
+            var delta = new Vec(0, e.Delta > 0 ? 1 : -1);
+            
+            var widget = WidgetAtPosition(mousePos);
+            (widget as IInputReader)?.OnMouseWheel(delta, MakeFlags(true, true));
         }
 
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
-            // TODO: Select widget based on mouse position
-            // TODO: mouse movement
-            // TODO: flags
-            Focus.OnMouseMove(mousePos, Vec.Zero, EventFlags.None);
+            var move = (lastMousePos == Vec.NaV) ? Vec.Zero : (mousePos - lastMousePos);
+            lastMousePos = mousePos;
+
+            if (move == Vec.Zero)
+                return;
+
+            var widget = WidgetAtPosition(mousePos);
+            (widget as IInputReader)?.OnMouseMove(mousePos, Vec.Zero, MakeFlags(true, true));
         }
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -113,10 +157,11 @@ namespace HackConsole
 
         private void OnMouseButton(MouseButtonEventArgs e, bool pressed)
         {
-            EventFlags flags = EventFlags.None;
+            EventFlags flags = MakeFlags(true, false);
             flags |= pressed ? EventFlags.MouseEventPress : EventFlags.MouseEventRelease;
 
-            switch (e.Button) {
+            switch (e.Button)
+            {
                 case Mouse.Button.Left:
                     flags |= EventFlags.LeftButton;
                     break;
@@ -127,10 +172,10 @@ namespace HackConsole
                     flags |= EventFlags.RightButton;
                     break;
             }
-
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
 
-            Focus.OnMouseEvent(mousePos, flags);
+            var widget = WidgetAtPosition(mousePos);
+            (widget as IInputReader)?.OnMouseEvent(mousePos, flags);
         }
 
         private void OnClosed(object sender, EventArgs e)

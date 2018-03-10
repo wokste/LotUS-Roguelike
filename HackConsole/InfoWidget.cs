@@ -13,12 +13,11 @@ namespace HackConsole
         public IDescriptionProvider Item {
             get => _item;
             set {
-                //if (_item == value)
-                //    return;
+                if (_item == value)
+                    return;
 
                 _item = value;
-
-                _lines.Clear();
+                
                 MakeLines();
                 
                 _dirty = true;
@@ -27,6 +26,7 @@ namespace HackConsole
 
         protected override void MakeLines()
         {
+            _lines.Clear();
             if (_item != null)
             {
                 WordWrap(_item.Name, "");

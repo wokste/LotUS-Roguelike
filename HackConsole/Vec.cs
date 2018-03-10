@@ -8,6 +8,9 @@ namespace HackConsole
         public int Y;
         internal static Vec Zero = new Vec(0,0);
 
+        /// <summary>Not a vector. Similar to NaN</summary>
+        internal static Vec NaV = new Vec(int.MinValue, int.MinValue);
+
         public Vec(int x, int y)
         {
             X = x;
