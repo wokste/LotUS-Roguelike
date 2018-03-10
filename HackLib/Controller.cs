@@ -157,7 +157,7 @@ namespace HackLib
                 if (c == Self)
                     continue;
 
-                if (c.Name != "Steven") // TODO: Better criteria for what creature to attack
+                if (c is Player) // TODO: Better criteria for what creature to attack
                     continue;
 
                 var delta = Self.Position - c.Position;

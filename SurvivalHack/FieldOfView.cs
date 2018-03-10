@@ -1,7 +1,6 @@
 ﻿using HackConsole;
 using System;
 
-
 namespace SurvivalHack
 {
     public class FieldOfView
@@ -10,8 +9,6 @@ namespace SurvivalHack
         public const byte BRIGHTNESS_DARK = 100;
 
         private Vec _playerPos;
-
-        //public Vec PlayerPos => _playerPos;
 
         public readonly TileGrid Map;
 
@@ -137,7 +134,7 @@ namespace SurvivalHack
             {
                 UpdateVisibility(x, y);
 
-                    if (!Map.HasFlag(x, y, TerrainFlag.Sight))
+                if (!Map.HasFlag(x, y, TerrainFlag.Sight))
                 {
                     if (x > xMin && Map.HasFlag(x-1, y, TerrainFlag.Sight))
                     {
@@ -146,7 +143,6 @@ namespace SurvivalHack
                 }
                 else
                 {
-                    // TODO: Wut? x > XMin?
                     if (x > xMin && !Map.HasFlag(x - 1, y, TerrainFlag.Sight))
                         minSlope = GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction);
                 }
@@ -181,7 +177,6 @@ namespace SurvivalHack
                 default:
                     throw new ArgumentException($"Character '{direction}' not a valid direction.");
             }
-            //TODO: Check this. Is the abs at the correct location?
         }
         
         /// <summary>

@@ -28,7 +28,7 @@ namespace SurvivalHack
             }
         }
 
-        public void Wander(Monster self, int ticks)
+        private void Wander(Monster self, int ticks)
         {
             for (var i = 0; i < 10; i++)
             {
@@ -39,7 +39,7 @@ namespace SurvivalHack
             }
         }
 
-        public void ChaseEnemy(Monster self)
+        private void ChaseEnemy(Monster self)
         {
             var delta = self.Enemy.Position - self.Position;
 
@@ -69,7 +69,7 @@ namespace SurvivalHack
             Wander(self, 1);
         }
 
-        public bool AttackEnemy(Monster self)
+        private bool AttackEnemy(Monster self)
         {
             if (self.Enemy != null && self.Attack != null && self.Attack.InRange(self, self.Enemy))
             {
@@ -79,14 +79,14 @@ namespace SurvivalHack
             return false;
         }
 
-        public Creature FindEnemy(Monster self)
+        private Creature FindEnemy(Monster self)
         {
             foreach(var c in self.Map.Creatures)
             {
                 if (c == self)
                     continue;
 
-                if (!(c is Player)) // TODO: Better criteria for what creature to attack
+                if (AttitudeSee(self, c) == EAttitude.Hate) // TODO: Better criteria
                     continue;
 
                 var delta = self.Position - c.Position;
@@ -96,5 +96,16 @@ namespace SurvivalHack
             }
             return null;
         }
+
+        private EAttitude AttitudeSee(Monster self, Creature other) {
+            return (other is Player) ? EAttitude.Hate : EAttitude.Ignore;
+        }
+    }
+
+    enum EAttitude {
+        Ignore, // Ignores other character
+        Follow, // Follow it
+        Hate,   // Attacks it
+        Fear,   // Run away
     }
 }

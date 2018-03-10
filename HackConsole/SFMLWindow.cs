@@ -19,6 +19,8 @@ namespace HackConsole
         public IInputReader Focus;
         public Action OnUpdate;
 
+        private bool _dirty;
+
         public SfmlWindow(string name)
         {
             var contextSettings = new ContextSettings
@@ -98,7 +100,8 @@ namespace HackConsole
         {
             _window.Clear();
 
-            Widgets.Render(false); // TODO: First frame and when removing popups needs to be true;
+            Widgets.Render(_dirty);
+            _dirty = false;
             DrawGrid(_window, new RenderStates());
 
             _window.Display();
