@@ -56,11 +56,14 @@ namespace SurvivalHack.Ui
             var x1 = Math.Min(Size.Right, _world._map.Width - _offset.X);
             var y1 = Math.Min(Size.Bottom, _world._map.Height - _offset.Y);
 
-            for (var x = x0; x < x1; x++)
+            for (var y = y0; y < y1; y++)
             {
-                for (var y = y0; y < y1; y++)
+                if (!_world.InBoundary(0, y + _offset.Y))
+                    continue;
+
+                for (var x = x0; x < x1; x++)
                 {
-                    if (!_world.InBoundary(x, y))
+                    if (!_world.InBoundary(x + _offset.X, y + _offset.Y))
                         continue;
 
                     var visibility = _view.Visibility[x + _offset.X, y + _offset.Y];
