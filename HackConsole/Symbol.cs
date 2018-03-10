@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace HackConsole
 {
@@ -14,6 +15,7 @@ namespace HackConsole
             TextColor = textColor;
             BackgroundColor = backgroundColor;
         }
+        
     }
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Color
@@ -41,6 +43,13 @@ namespace HackConsole
             G = g;
             B = b;
             A = a;
+        }
+        
+        public void Darken(byte mult)
+        {
+            R = (byte)(R * mult / 255);
+            G = (byte)(G * mult / 255);
+            B = (byte)(B * mult / 255);
         }
     }
 }
