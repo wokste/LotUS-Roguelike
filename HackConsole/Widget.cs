@@ -96,14 +96,14 @@ namespace HackConsole
             {
                 var newSize = new Rect
                 {
-                    Left = Docking == Docking.Left ? free.Left : free.Right - DesiredSize.Width,
+                    Left = (Docking == Docking.Left) ? free.Left : free.Right - DesiredSize.Width,
                     Width = DesiredSize.Width,
                     Top = free.Top,
                     Height = free.Height
                 };
 
                 free.Width -= newSize.Width;
-                if (Docking == Docking.Top)
+                if (Docking == Docking.Left)
                     free.Left += newSize.Width;
 
                 return newSize;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HackConsole;
 
 namespace SurvivalHack
@@ -10,7 +11,7 @@ namespace SurvivalHack
 
         public World()
         {
-            _map = new TileGrid(256, 256);
+            _map = new TileGrid(64, 64);
         }
         
         public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
@@ -61,6 +62,15 @@ namespace SurvivalHack
         public TileType GetTop(int x, int y)
         {
             return _map.GetWall(x, y) ?? _map.GetFloor(x, y);
+        }
+
+        internal Creature GetCreature(int x, int y)
+        {
+            foreach (var c in Creatures)
+                if (c.Position.X == x && c.Position.Y == y)
+                    return c;
+
+            return null;
         }
     }
 }

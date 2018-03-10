@@ -37,6 +37,10 @@ namespace HackConsole
             _window.Closed += OnClosed;
             _window.KeyPressed += OnKeyPressed;
             _window.Resized += OnResized;
+            _window.MouseButtonPressed += OnMouseButtonPressed;
+            _window.MouseButtonReleased += OnMouseButtonReleased;
+            _window.MouseMoved += OnMouseMoved;
+            _window.MouseWheelMoved += OnMouseWheelMoved;
 
             _window.SetFramerateLimit(60);
 
@@ -77,6 +81,56 @@ namespace HackConsole
                 // Normal movement
                 Focus?.OnKeyPress((char)keyEventArgs.Code, flags);
             }
+        }
+        
+        private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)
+        {
+            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var delta = new Vec(0, e.Delta);
+            // TODO: Select widget based on mouse position
+            // TODO: flags
+            Focus.OnMouseWheel(delta, EventFlags.None);
+        }
+
+        private void OnMouseMoved(object sender, MouseMoveEventArgs e)
+        {
+            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            // TODO: Select widget based on mouse position
+            // TODO: mouse movement
+            // TODO: flags
+            Focus.OnMouseMove(mousePos, Vec.Zero, EventFlags.None);
+        }
+
+        private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
+        {
+            OnMouseButton(e, false);
+        }
+
+        private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
+        {
+            OnMouseButton(e, true);
+        }
+
+        private void OnMouseButton(MouseButtonEventArgs e, bool pressed)
+        {
+            EventFlags flags = EventFlags.None;
+            flags |= pressed ? EventFlags.MouseEventPress : EventFlags.MouseEventRelease;
+
+            switch (e.Button) {
+                case Mouse.Button.Left:
+                    flags |= EventFlags.LeftButton;
+                    break;
+                case Mouse.Button.Middle:
+                    flags |= EventFlags.MidButton;
+                    break;
+                case Mouse.Button.Right:
+                    flags |= EventFlags.RightButton;
+                    break;
+            }
+
+            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+
+            Focus.OnMouseEvent(mousePos, flags);
         }
 
         private void OnClosed(object sender, EventArgs e)

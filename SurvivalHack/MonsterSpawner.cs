@@ -31,6 +31,7 @@ namespace SurvivalHack
                 return new Monster
                 {
                     Name = "Zombie",
+                    Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
                     Attack = new AttackComponent
                     {
                         Damage = 20,
@@ -48,6 +49,7 @@ namespace SurvivalHack
                 return new Monster
                 {
                     Name = "Giant Bat",
+                    Description = "A flying monster that is a nuisance to any adventurer.",
                     Attack = new AttackComponent
                     {
                         Damage = 2,
@@ -66,6 +68,7 @@ namespace SurvivalHack
                 return new Monster
                 {
                     Name = "Giant Fish",
+                    Description = "A swimming monster that can't reach you on land.",
                     Attack = new AttackComponent
                     {
                         Damage = 8,

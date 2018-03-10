@@ -4,9 +4,9 @@ using HackConsole;
 
 namespace SurvivalHack
 {
-    public class Creature
+    public class Creature : IDescriptionProvider
     {
-        public String Name;
+        public String Name { get; set; }
         public Bar Health;
         public Bar Hunger;
         public AttackComponent Attack;
@@ -18,6 +18,8 @@ namespace SurvivalHack
 
         public Vec Position { get; set; }
         public Vec Facing { get; set; }
+
+        public string Description { get; set; }
 
         public float Speed = 1;
         public TerrainFlag MovementType = TerrainFlag.Walk;

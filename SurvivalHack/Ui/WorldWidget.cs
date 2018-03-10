@@ -28,6 +28,8 @@ namespace SurvivalHack.Ui
             RenderCreatures();
         }
 
+        public Action<IDescriptionProvider> OnSelected;
+
         private void RenderCreatures()
         {
             foreach (var creature in _world.Creatures) {
@@ -116,6 +118,17 @@ namespace SurvivalHack.Ui
 
         public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
+            var absPos = mousePos + _offset;
+            if (!_world.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
+            {
+                OnSelected?.Invoke(null);
+                return true;
+            }
+
+            var c = _world.GetCreature(absPos.X, absPos.Y);
+
+            OnSelected?.Invoke(c);
+
             return true;
         }
 

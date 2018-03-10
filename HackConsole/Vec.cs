@@ -6,6 +6,7 @@ namespace HackConsole
     {
         public int X;
         public int Y;
+        internal static Vec Zero = new Vec(0,0);
 
         public Vec(int x, int y)
         {
