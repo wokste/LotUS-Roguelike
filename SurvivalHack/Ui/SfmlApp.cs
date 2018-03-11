@@ -4,13 +4,9 @@ namespace SurvivalHack.Ui
 {
     public class SfmlApp
     {
-        private readonly Game _game;
+        private Game _game;
         private readonly SfmlWindow _window;
-        private readonly Player _player;
-
-        // Widgets
-        private readonly MessageListWidget _consoleWidget;
-        private readonly InfoWidget _infoWidget;
+        private Player _player;
         
         static void Main(string[] args)
         {
@@ -20,11 +16,12 @@ namespace SurvivalHack.Ui
         
         public SfmlApp()
         {
-            _window = new SfmlWindow("Lands of the undead sorceress");
-            _consoleWidget = new MessageListWidget {Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect {Height = 10}};
-            _consoleWidget.AddMessage("You wake up in an unknown world.");
-            _window.Widgets.Add(_consoleWidget);
+            InitGame();
+            _window = InitGui();
+        }
 
+        private void InitGame()
+        {
             _game = new Game();
             _game.Init();
 
@@ -39,29 +36,40 @@ namespace SurvivalHack.Ui
                 },
                 Health = new Bar(100),
                 Hunger = new Bar(100),
-                Symbol = new Symbol((char) 2, Color.White)
+                Symbol = new Symbol((char)2, Color.White)
             };
 
             _game.AddCreature(_player);
+        }
 
-            _infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new HackConsole.Rect { Width = 16 }};
-            _window.Widgets.Add(_infoWidget);
+        private SfmlWindow InitGui()
+        {
+            var window = new SfmlWindow("Lands of the undead sorceress");
+            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect { Height = 10 } };
+            consoleWidget.AddMessage("You wake up in an unknown world.");
+            window.Widgets.Add(consoleWidget);
+
+            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new HackConsole.Rect { Width = 16 } };
+            window.Widgets.Add(infoWidget);
 
             var characterWidget = new CharacterWidget(_player)
             {
-                DesiredSize = {Width = 16},
+                DesiredSize = { Width = 16 },
                 Docking = Docking.Right
             };
-            _window.Widgets.Add(characterWidget);
+            window.Widgets.Add(characterWidget);
 
             var worldWidget = new WorldWidget(_game.World, _player.FoV, _player)
             {
                 Docking = Docking.Fill
             };
-            _window.Widgets.Add(worldWidget);
+            window.Widgets.Add(worldWidget);
 
-            _window.Focus = worldWidget;
-            worldWidget.OnSelected += (IDescriptionProvider c) => { _infoWidget.Item = c; };
+            window.Focus = worldWidget;
+            worldWidget.OnSelected += (IDescriptionProvider c) => { infoWidget.Item = c; };
+            worldWidget.OnSpendTime += _game.GameTick;
+
+            return window;
         }
 
         public void Run() {

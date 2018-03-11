@@ -29,6 +29,7 @@ namespace SurvivalHack.Ui
         }
 
         public Action<IDescriptionProvider> OnSelected;
+        public Action<int> OnSpendTime;
 
         private void RenderCreatures()
         {
@@ -86,8 +87,8 @@ namespace SurvivalHack.Ui
             switch (keyCode)
             {
                 case 'e':
-                    if (_player.Eat());
-                        //TODO: Spend time
+                    if (_player.Eat())
+                        OnSpendTime.Invoke(1000);
                     // TODO: Change this in a mechanic that the player can choose what to eat
                     break;
             }
@@ -102,14 +103,14 @@ namespace SurvivalHack.Ui
                 if (c.Position == actPoint && c != _player)
                 {
                     _player.Attack.Attack(_player, c);
-                    // TODO: Spend time
+                    OnSpendTime.Invoke(1000);
                     return true;
                 }
             }
 
             if (_player.Walk(move))
             {
-
+                OnSpendTime.Invoke((int)(800 * move.Length));
             }
             return true;
         }

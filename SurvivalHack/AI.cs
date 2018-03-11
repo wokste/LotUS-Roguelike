@@ -86,7 +86,7 @@ namespace SurvivalHack
                 if (c == self)
                     continue;
 
-                if (AttitudeSee(self, c) == EAttitude.Hate) // TODO: Better criteria
+                if (AttitudeSee(self, c) == EAttitude.Ignore)
                     continue;
 
                 var delta = self.Position - c.Position;

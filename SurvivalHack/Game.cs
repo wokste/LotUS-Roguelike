@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SurvivalHack
 {
@@ -20,6 +21,17 @@ namespace SurvivalHack
 
             Spawner = new MonsterSpawner(this);
             Spawner.Spawn(World, 32);
+        }
+
+        public void GameTick(int ticks)
+        {
+            foreach (var c in World.Creatures.ToList())
+            {
+                if (!(c is Monster m))
+                    continue;
+
+                m.Ai.Act(m, ticks);
+            }
         }
 
         public void Update(int ticks)
