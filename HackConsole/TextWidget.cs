@@ -8,30 +8,30 @@ namespace HackConsole
 {
     public abstract class TextWidget : Widget , IInputReader
     {
-        protected readonly List<String> _lines = new List<string>();
-        protected bool _dirty = true;
-        protected int posY;
+        protected readonly List<(string,Color)> Lines = new List<(string, Color)>();
+        protected bool Dirty = true;
+        protected int PosY;
 
         public override void Render(bool forceUpdate)
         {
-            if (!forceUpdate && !_dirty)
+            if (!forceUpdate && !Dirty)
                 return;
 
-            _dirty = false;
+            Dirty = false;
 
             Clear();
 
             var y = 0;
 
-            var firstLine = posY;
-            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, _lines.Count); i++)
+            var firstLine = PosY;
+            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
             {
-                Print(0, y, _lines[i], Color.Yellow);
+                Print(0, y, Lines[i].Item1, Lines[i].Item2);
                 y++;
             }
         }
 
-        protected void WordWrap(string msg, string prefix)
+        protected void WordWrap(string msg, string prefix, Color color)
         {
             var noPrefix = new string(' ', prefix.Length);
 
@@ -46,22 +46,26 @@ namespace HackConsole
             {
                 if (i - lineStart > maxWidth)
                 {
-                    _lines.Add((lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, lastSpace - lineStart));
+                    var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, lastSpace - lineStart);
+                    Lines.Add((txt,color));
 
                     lineStart = lastSpace + 1;
                 }
                 if (msg[i] == ' ')
                     lastSpace = i;
             }
-            _lines.Add((lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, msg.Length - lineStart));
+            {
+                var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, msg.Length - lineStart);
+                Lines.Add((txt, color));
+            }
         }
 
         protected override void OnResized()
         {
             // If the width has changed, the lines need to be recalculated.
             MakeLines();
-            posY = Math.Max(0, _lines.Count - Size.Height);
-            _dirty = true;
+            PosY = Math.Max(0, Lines.Count - Size.Height);
+            Dirty = true;
         }
 
         protected abstract void MakeLines();
@@ -88,8 +92,8 @@ namespace HackConsole
 
         public bool OnMouseWheel(Vec delta, EventFlags flags)
         {
-            _dirty = true;
-            posY = MyMath.Clamp(posY - delta.Y, 0, _lines.Count - 1);
+            Dirty = true;
+            PosY = MyMath.Clamp(PosY - delta.Y, 0, Lines.Count - 1);
 
             return true;
         }

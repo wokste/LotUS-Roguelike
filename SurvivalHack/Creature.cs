@@ -54,9 +54,8 @@ namespace SurvivalHack
                 Alive = false;
                 Map.Creatures.Remove(this);
                 // TODO: Stuff
-
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{Name} died");
+                
+                Message.Write($"{Name} died", Position, Color.Red);
             }
         }
 
@@ -95,8 +94,7 @@ namespace SurvivalHack
 
             if (food == null)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You have no food in your inventory.");
+                Message.Write("You have no food in your inventory.", Position, Color.Red);
                 return false;
             }
 

@@ -18,6 +18,8 @@ namespace SurvivalHack.Ui
         {
             InitGame();
             _window = InitGui();
+            
+            Message.Write("You wake up in an unknown world.", _player.Position, Color.White);
         }
 
         private void InitGame()
@@ -46,7 +48,7 @@ namespace SurvivalHack.Ui
         {
             var window = new SfmlWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect { Height = 10 } };
-            consoleWidget.AddMessage("You wake up in an unknown world.");
+            Message.OnMessage += consoleWidget.AddMessage;
             window.Widgets.Add(consoleWidget);
 
             var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new HackConsole.Rect { Width = 16 } };

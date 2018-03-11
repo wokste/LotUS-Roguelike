@@ -1,4 +1,5 @@
 ﻿using System;
+using HackConsole;
 
 namespace SurvivalHack
 {
@@ -13,15 +14,13 @@ namespace SurvivalHack
             if (Dicebag.UniformInt(100) <= HitChance)
             {
                 var damage = Dicebag.Randomize(Damage);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.");
-
+                Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker.Position, Color.Yellow);
                 defender.TakeDamage(damage);
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"{attacker.Name} attacks {defender.Name} but misses.");
+                Message.Write($"{attacker.Name} attacks {defender.Name} but misses.", attacker.Position, Color.Cyan);
+
             }
         }
 

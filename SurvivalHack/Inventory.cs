@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using HackConsole;
 
 namespace SurvivalHack
 {
@@ -17,31 +18,18 @@ namespace SurvivalHack
                 {
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     existing.Count += item.Count;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"You aquired {item} making a total of {existing}");
+                    Message.Write($"You aquired {item} making a total of {existing}", Vec.NaV, Color.Green);
                     return;
                 }
             }
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"You aquired first {item}");
+            
+            Message.Write($"You aquired first {item}", Vec.NaV, Color.Green);
             _items.Add(item);
         }
 
         public Item Find(ItemType type)
         {
             return _items.Find(i => i.Type == type);
-        }
-
-        public void Write()
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Inventory:");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            foreach (var i in _items)
-            {
-                Console.WriteLine($"  {i}");
-            }
         }
 
         public void Add(string itemTag, int count)

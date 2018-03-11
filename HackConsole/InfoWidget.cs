@@ -20,17 +20,17 @@ namespace HackConsole
                 
                 MakeLines();
                 
-                _dirty = true;
+                Dirty = true;
             }
         }
 
         protected override void MakeLines()
         {
-            _lines.Clear();
+            Lines.Clear();
             if (_item != null)
             {
-                WordWrap(_item.Name, "");
-                WordWrap(_item.Description, "");
+                WordWrap(_item.Name, "", Color.White);
+                WordWrap(_item.Description, "", Color.Gray);
             }
         }
     }
