@@ -84,9 +84,14 @@ namespace SurvivalHack.Ui
 
         public bool OnKeyPress(char keyCode, EventFlags flags)
         {
+
+
             switch (keyCode)
             {
                 case 'e':
+                    if (!_player.Alive)
+                        return true;
+
                     if (_player.Eat())
                         OnSpendTime.Invoke(1000);
                     // TODO: Change this in a mechanic that the player can choose what to eat
@@ -97,6 +102,9 @@ namespace SurvivalHack.Ui
 
         public bool OnArrowPress(Vec move, EventFlags flags)
         {
+            if (!_player.Alive)
+                return true;
+
             var actPoint = _player.Position + move;
             foreach (var c in _world.Creatures)
             {
