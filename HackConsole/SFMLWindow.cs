@@ -142,7 +142,7 @@ namespace HackConsole
                 return;
 
             var widget = WidgetAtPosition(mousePos);
-            (widget as IInputReader)?.OnMouseMove(mousePos, Vec.Zero, MakeFlags(true, true));
+            (widget as IInputReader)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
         }
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)

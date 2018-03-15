@@ -20,7 +20,7 @@ namespace SurvivalHack
             World = new World();
 
             Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(World, 32);
+            Spawner.Spawn(World, 16);
         }
 
         public void GameTick(int ticks)

@@ -48,7 +48,12 @@ namespace SurvivalHack.Ui
         {
             var window = new SfmlWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect { Height = 10 } };
-            Message.OnMessage += consoleWidget.AddMessage;
+            Message.OnMessage += (m) =>
+            {
+                if (_player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
+                    consoleWidget.AddMessage(m);
+            };
+
             window.Widgets.Add(consoleWidget);
 
             var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new HackConsole.Rect { Width = 16 } };

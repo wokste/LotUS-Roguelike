@@ -135,7 +135,7 @@ namespace SurvivalHack
 
             // Moving.
             LeftoverMove += Speed;
-            for (int i = 0; i < LeftoverMove; i++)
+            for (int i = 1; i < LeftoverMove; i++)
                 Ai.Move(this);
             LeftoverMove = LeftoverMove - (int) LeftoverMove;
 
