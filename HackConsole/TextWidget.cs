@@ -10,7 +10,18 @@ namespace HackConsole
     {
         protected readonly List<(string,Color)> Lines = new List<(string, Color)>();
         protected bool Dirty = true;
-        protected int PosY;
+
+        private int _posY;
+
+        protected int PosY
+        {
+            get => _posY;
+            set
+            {
+                var max = Math.Max(0, Lines.Count - Size.Height);
+                _posY = MyMath.Clamp(value, 0, max);
+            }
+        }
 
         public override void Render(bool forceUpdate)
         {
@@ -23,7 +34,7 @@ namespace HackConsole
 
             var y = 0;
 
-            var firstLine = PosY;
+            var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
             {
                 Print(0, y, Lines[i].Item1, Lines[i].Item2);
@@ -31,8 +42,9 @@ namespace HackConsole
             }
         }
 
-        protected void WordWrap(string msg, string prefix, Color color)
+        protected int WordWrap(string msg, string prefix, Color color)
         {
+            int count = 0;
             var noPrefix = new string(' ', prefix.Length);
 
             var lineStart = 0;
@@ -40,7 +52,7 @@ namespace HackConsole
 
             var maxWidth = Size.Width - prefix.Length;
             if (maxWidth < 1)
-                return;
+                return 0;
 
             for (var i = 0; i < msg.Length; i++)
             {
@@ -48,6 +60,7 @@ namespace HackConsole
                 {
                     var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, lastSpace - lineStart);
                     Lines.Add((txt,color));
+                    count++;
 
                     lineStart = lastSpace + 1;
                 }
@@ -57,7 +70,9 @@ namespace HackConsole
             {
                 var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, msg.Length - lineStart);
                 Lines.Add((txt, color));
+                count++;
             }
+            return count;
         }
 
         protected override void OnResized()
@@ -93,8 +108,7 @@ namespace HackConsole
         public bool OnMouseWheel(Vec delta, EventFlags flags)
         {
             Dirty = true;
-            PosY = MyMath.Clamp(PosY - delta.Y, 0, Lines.Count - 1);
-
+            PosY -= delta.Y;
             return true;
         }
     }

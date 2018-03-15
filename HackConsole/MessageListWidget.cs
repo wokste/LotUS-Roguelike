@@ -10,7 +10,7 @@ namespace HackConsole
         public void AddMessage(Message msg)
         {
             _messages.Add(msg);
-            WordWrap(msg.Text, "> ", msg.Color);
+            PosY += WordWrap(msg.Text, "> ", msg.Color);
             Dirty = true;
         }
 
