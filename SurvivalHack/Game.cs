@@ -30,7 +30,7 @@ namespace SurvivalHack
                 if (!(c is Monster m))
                     continue;
 
-                m.Ai.Act(m, ticks);
+                m.Act();
             }
         }
 

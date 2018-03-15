@@ -122,9 +122,25 @@ namespace SurvivalHack
         }
     }
 
-    public class Monster : Creature {
+    public class Monster : Creature{
+        public float LeftoverMove;
+
         public Creature Enemy;
 
         public AiController Ai;
+
+        public void Act()
+        {
+            Ai.FindEnemy(this);
+
+            // Moving.
+            LeftoverMove += Speed;
+            for (int i = 0; i < LeftoverMove; i++)
+                Ai.Move(this);
+            LeftoverMove = LeftoverMove - (int) LeftoverMove;
+
+            // Acting
+            Ai.Act(this);
+        }
     }
 }

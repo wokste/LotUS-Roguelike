@@ -10,25 +10,21 @@ namespace SurvivalHack
         // TODO: Attack speed
         // TODO: Split movement and attack
 
-        public void Act(Monster self, int ticks)
+        public void Act(Monster self)
         {
             if (self.Enemy == null || !self.Enemy.Alive)
                 self.Enemy = FindEnemy(self);
 
             if (self.Enemy == null)
             {
-                Wander(self, ticks);
+                Wander(self);
                 return;
             }
 
-            if (!AttackEnemy(self))
-            {
-                ChaseEnemy(self);
-                AttackEnemy(self);
-            }
+            AttackEnemy(self);
         }
 
-        private void Wander(Monster self, int ticks)
+        private void Wander(Monster self)
         {
             for (var i = 0; i < 10; i++)
             {
@@ -44,6 +40,10 @@ namespace SurvivalHack
             var delta = self.Enemy.Position - self.Position;
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
+
+            if (delta == deltaClamped)
+                return;
+
             if (self.Walk(deltaClamped))
                 return;
 
@@ -66,7 +66,7 @@ namespace SurvivalHack
 
             // Fallback. self.Enemy could not be reached.
             self.Enemy = null;
-            Wander(self, 1);
+            Wander(self);
         }
 
         private bool AttackEnemy(Monster self)
@@ -79,7 +79,7 @@ namespace SurvivalHack
             return false;
         }
 
-        private Creature FindEnemy(Monster self)
+        internal Creature FindEnemy(Monster self)
         {
             foreach(var c in self.Map.Creatures)
             {
@@ -99,6 +99,14 @@ namespace SurvivalHack
 
         private EAttitude AttitudeSee(Monster self, Creature other) {
             return (other is Player) ? EAttitude.Hate : EAttitude.Ignore;
+        }
+
+        internal void Move(Monster self)
+        {
+            if (self.Enemy != null)
+                ChaseEnemy(self);
+            else
+                Wander(self);
         }
     }
 
