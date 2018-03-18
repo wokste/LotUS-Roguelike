@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HackConsole
 {
-    public abstract class TextWidget : Widget , IInputReader
+    public abstract class TextWidget : Widget , IMouseEventSuscriber
     {
         protected readonly List<(string,Color)> Lines = new List<(string, Color)>();
         protected bool Dirty = true;
@@ -82,31 +82,18 @@ namespace HackConsole
 
         protected abstract void MakeLines();
 
-        public virtual bool OnKeyPress(char keyCode, EventFlags flags)
+        public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            return true;
         }
 
-        public virtual bool OnArrowPress(Vec move, EventFlags flags)
+        public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            return true;
         }
 
-        public bool OnMouseEvent(Vec mousePos, EventFlags flags)
-        {
-            return true;
-        }
-
-        public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
-        {
-            return true;
-        }
-
-        public bool OnMouseWheel(Vec delta, EventFlags flags)
+        public void OnMouseWheel(Vec delta, EventFlags flags)
         {
             Dirty = true;
             PosY -= delta.Y;
-            return true;
         }
     }
 }

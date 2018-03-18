@@ -72,7 +72,7 @@ namespace SurvivalHack.Ui
             };
             window.Widgets.Add(worldWidget);
 
-            window.Focus = worldWidget;
+            window.BaseKeyHandler = worldWidget;
             worldWidget.OnSelected += c => { infoWidget.Item = c; };
             worldWidget.OnSpendTime += _game.GameTick;
 

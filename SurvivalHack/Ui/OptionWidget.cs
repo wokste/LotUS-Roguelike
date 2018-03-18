@@ -7,7 +7,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class OptionWidget<T> : TextWidget
+    class OptionWidget<T> : TextWidget, IKeyEventSuscriber
     {
         public Action<T> OnSelect;
         public Action OnAbort;
@@ -30,7 +30,7 @@ namespace SurvivalHack.Ui
             }
         }
 
-        public override bool OnKeyPress(char keyCode, EventFlags flags)
+        public void OnKeyPress(char keyCode, EventFlags flags)
         {
             if (keyCode == (char) 13) // Enter
             {
@@ -41,11 +41,9 @@ namespace SurvivalHack.Ui
             {
                 OnAbort?.Invoke();
             }
-
-            return true;
         }
         
-        public override bool OnArrowPress(Vec move, EventFlags flags)
+        public void OnArrowPress(Vec move, EventFlags flags)
         {
             _selectedIndex += move.Y;
             while (_selectedIndex < 0)
@@ -54,8 +52,6 @@ namespace SurvivalHack.Ui
                 _selectedIndex -= Set.Count;
 
             MakeLines();
-
-            return true;
         }
     }
 }

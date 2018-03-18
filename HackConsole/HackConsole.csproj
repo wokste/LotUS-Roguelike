@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IInputReader.cs" />
+    <Compile Include="EventSuscriber.cs" />
     <Compile Include="InfoWidget.cs" />
     <Compile Include="MessageListWidget.cs" />
     <Compile Include="MyMath.cs" />

@@ -7,11 +7,21 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class GameOverWidget : TextWidget
+    class GameOverWidget : TextWidget, IKeyEventSuscriber
     {
         protected override void MakeLines()
         {
             WordWrap("Game Over", "", Color.White);
+        }
+
+        public void OnKeyPress(char keyCode, EventFlags flags)
+        {
+            // You are dead, you can't do shit.
+        }
+        
+        public void OnArrowPress(Vec move, EventFlags flags)
+        {
+            // You are dead, you can't do shit.
         }
     }
 }

@@ -16,7 +16,7 @@ namespace HackConsole
         private readonly RenderWindow _window;
         private readonly Sprite _fontSprite;
 
-        public IInputReader Focus;
+        public IKeyEventSuscriber BaseKeyHandler;
         public Action OnUpdate;
 
         private bool _dirty;
@@ -108,28 +108,38 @@ namespace HackConsole
             if (keyEventArgs.Control) flags |= EventFlags.Ctrl;
             if (keyEventArgs.Shift) flags |= EventFlags.Shift;
 
-            if (keyEventArgs.Code >= Keyboard.Key.Numpad1 && keyEventArgs.Code <= Keyboard.Key.Numpad9)
+            var handler = BaseKeyHandler;
+
+            if (keyEventArgs.Code == Keyboard.Key.Up)
+                handler.OnArrowPress(new Vec(0, -1), flags);
+            else if (keyEventArgs.Code == Keyboard.Key.Down)
+                handler.OnArrowPress(new Vec(0, 1), flags);
+            else if (keyEventArgs.Code == Keyboard.Key.Left)
+                handler.OnArrowPress(new Vec(-1, 0), flags);
+            else if (keyEventArgs.Code == Keyboard.Key.Right)
+                handler.OnArrowPress(new Vec(1, 0), flags);
+            else if (keyEventArgs.Code >= Keyboard.Key.Numpad1 && keyEventArgs.Code <= Keyboard.Key.Numpad9)
             {
                 // Arrow key movements.
                 var id = keyEventArgs.Code - Keyboard.Key.Numpad1;
                 var move = new Vec(id % 3 - 1, 1 - id / 3);
-                
-                Focus?.OnArrowPress(move, flags);
+
+                handler.OnArrowPress(move, flags);
             }
             else
             {
-                // Normal movement
-                Focus?.OnKeyPress((char)keyEventArgs.Code, flags);
+                // Normal keys
+                handler.OnKeyPress((char)keyEventArgs.Code, flags);
             }
         }
-        
+
         private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)
         {
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
             var delta = new Vec(0, e.Delta > 0 ? 1 : -1);
             
             var widget = WidgetAtPosition(mousePos);
-            (widget as IInputReader)?.OnMouseWheel(delta, MakeFlags(true, true));
+            (widget as IMouseEventSuscriber)?.OnMouseWheel(delta, MakeFlags(true, true));
         }
 
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
@@ -142,7 +152,7 @@ namespace HackConsole
                 return;
 
             var widget = WidgetAtPosition(mousePos);
-            (widget as IInputReader)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
+            (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
         }
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -175,7 +185,7 @@ namespace HackConsole
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
 
             var widget = WidgetAtPosition(mousePos);
-            (widget as IInputReader)?.OnMouseEvent(mousePos, flags);
+            (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
         }
 
         private void OnClosed(object sender, EventArgs e)

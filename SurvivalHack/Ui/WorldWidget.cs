@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class WorldWidget : Widget, IInputReader
+    class WorldWidget : Widget, IMouseEventSuscriber, IKeyEventSuscriber
     {
         private readonly World _world;
         private readonly FieldOfView _view;
@@ -81,35 +82,35 @@ namespace SurvivalHack.Ui
             }
         }
 
-        public bool OnKeyPress(char keyCode, EventFlags flags)
+        public void OnKeyPress(char keyCode, EventFlags flags)
         {
             switch (keyCode)
             {
                 case 'e':
                     if (!_player.Alive)
-                        return true;
+                        throw new Exception("WUT. I am dead");
 
                     if (_player.Eat())
                         OnSpendTime.Invoke(1000);
                     // TODO: Change this in a mechanic that the player can choose what to eat
                     break;
             }
-            return true;
         }
 
-        public bool OnArrowPress(Vec move, EventFlags flags)
+        public void OnArrowPress(Vec move, EventFlags flags)
         {
             if (!_player.Alive)
-                return true;
+            {
+                throw new Exception("WUT. I am dead");
+            }
 
             var actPoint = _player.Position + move;
-            foreach (var c in _world.Creatures)
+            foreach (var c in _world.Creatures.ToArray())
             {
                 if (c.Position == actPoint && c != _player)
                 {
                     _player.Attack.Attack(_player, c);
                     OnSpendTime.Invoke(1000);
-                    return true;
                 }
             }
 
@@ -117,10 +118,9 @@ namespace SurvivalHack.Ui
             {
                 OnSpendTime.Invoke((int)(800 * move.Length));
             }
-            return true;
         }
 
-        public bool OnMouseEvent(Vec mousePos, EventFlags flags)
+        public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
             // Select creatures, etc
             if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
@@ -129,24 +129,19 @@ namespace SurvivalHack.Ui
                 if (!_world.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
                 {
                     OnSelected?.Invoke(null);
-                    return true;
                 }
 
                 var c = _world.GetCreature(absPos.X, absPos.Y);
                 OnSelected?.Invoke(c);
             }
-
-            return true;
         }
 
-        public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            return true;
         }
 
-        public bool OnMouseWheel(Vec delta, EventFlags flags)
+        public void OnMouseWheel(Vec delta, EventFlags flags)
         {
-            return true;
         }
     }
 }
