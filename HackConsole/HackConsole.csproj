@@ -57,6 +57,7 @@
     <Compile Include="InfoWidget.cs" />
     <Compile Include="MessageListWidget.cs" />
     <Compile Include="MyMath.cs" />
+    <Compile Include="PopupStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="TextWidget.cs" />

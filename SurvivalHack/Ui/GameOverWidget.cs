@@ -7,8 +7,12 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class GameOverWidget : TextWidget, IKeyEventSuscriber
+    class GameOverWidget : TextWidget, IKeyEventSuscriber, IPopupWidget
     {
+        // Well, you can't close the Game Over widget as the game is over.
+        public Action OnClose { get; set; }
+        public bool Interrupt => true;
+
         protected override void MakeLines()
         {
             WordWrap("Game Over", "", Color.White);

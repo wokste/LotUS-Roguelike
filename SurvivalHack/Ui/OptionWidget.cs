@@ -7,15 +7,16 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class OptionWidget<T> : TextWidget, IKeyEventSuscriber
+    class OptionWidget<T> : TextWidget, IKeyEventSuscriber, IPopupWidget
     {
         public Action<T> OnSelect;
-        public Action OnAbort;
         public List<T> Set;
         public string Question;
-
         private int _selectedIndex = 0;
-        
+
+        public Action OnClose { get; set; }
+        public bool Interrupt => false; // Maybe, this should be an option?
+
         protected override void MakeLines()
         {
             WordWrap(Question, "", Color.White);
@@ -35,11 +36,12 @@ namespace SurvivalHack.Ui
             if (keyCode == (char) 13) // Enter
             {
                 OnSelect?.Invoke(Set[_selectedIndex]);
+                OnClose?.Invoke();
             }
 
             if (keyCode == (char) 27) // Escape
             {
-                OnAbort?.Invoke();
+                OnClose?.Invoke();
             }
         }
         
