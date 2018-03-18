@@ -22,7 +22,7 @@ namespace SurvivalHack.Ui
         {
             _offset.X = _player.Position.X - Size.Width / 2 - Size.Left;
             _offset.Y = _player.Position.Y - Size.Height / 2 - Size.Top;
-
+            
             Clear();
             RenderGrid();
             RenderCreatures();
@@ -84,8 +84,6 @@ namespace SurvivalHack.Ui
 
         public bool OnKeyPress(char keyCode, EventFlags flags)
         {
-
-
             switch (keyCode)
             {
                 case 'e':
@@ -125,22 +123,25 @@ namespace SurvivalHack.Ui
 
         public bool OnMouseEvent(Vec mousePos, EventFlags flags)
         {
+            // Select creatures, etc
+            if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
+            {
+                var absPos = mousePos + _offset;
+                if (!_world.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
+                {
+                    OnSelected?.Invoke(null);
+                    return true;
+                }
+
+                var c = _world.GetCreature(absPos.X, absPos.Y);
+                OnSelected?.Invoke(c);
+            }
+
             return true;
         }
 
         public bool OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var absPos = mousePos + _offset;
-            if (!_world.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
-            {
-                OnSelected?.Invoke(null);
-                return true;
-            }
-
-            var c = _world.GetCreature(absPos.X, absPos.Y);
-
-            OnSelected?.Invoke(c);
-
             return true;
         }
 
