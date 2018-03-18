@@ -82,12 +82,12 @@ namespace HackConsole
 
         protected abstract void MakeLines();
 
-        public bool OnKeyPress(char keyCode, EventFlags flags)
+        public virtual bool OnKeyPress(char keyCode, EventFlags flags)
         {
             return true;
         }
 
-        public bool OnArrowPress(Vec move, EventFlags flags)
+        public virtual bool OnArrowPress(Vec move, EventFlags flags)
         {
             return true;
         }
