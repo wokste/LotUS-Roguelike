@@ -4,9 +4,8 @@ namespace HackConsole
 {
     public struct Vec
     {
-        public int X;
-        public int Y;
-        public static Vec Zero = new Vec(0,0);
+        public readonly int X, Y;
+        public static Vec Zero = new Vec(0, 0);
 
         /// <summary>Not a vector. Similar to NaN</summary>
         public static Vec NaV = new Vec(int.MinValue, int.MinValue);
@@ -27,12 +26,11 @@ namespace HackConsole
         public static bool operator !=(Vec l, Vec r) => (l.X != r.X || l.Y != r.Y);
 
         public int LengthSquared => X * X + Y * Y;
+        public int Area => X * Y;
         public double Length => Math.Sqrt(LengthSquared);
 
-        public float ManhattanLength
-        {
-            get
-            {
+        public float ManhattanLength {
+            get {
                 var aX = Math.Abs(X);
                 var aY = Math.Abs(Y);
                 return (aX < aY) ? aY + aX * 0.5f : aX + aY * 0.5f;
@@ -41,7 +39,7 @@ namespace HackConsole
 
         public override bool Equals(object obj)
         {
-            return (obj is Vec) && (this == (Vec) obj);
+            return (obj is Vec v) && (this == v);
         }
 
         public override int GetHashCode()
@@ -50,6 +48,11 @@ namespace HackConsole
             {
                 return (X * 397) ^ Y;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
         }
     }
 
@@ -60,6 +63,11 @@ namespace HackConsole
         public int Right => Left + Width;
         public int Bottom => Top + Height;
 
+        public Vec TopLeft => new Vec(Left, Top);
+        public Vec Size => new Vec(Width, Height);
+        public Vec BottomRight => new Vec(Left + Width, Top + Height);
+        public Vec Center => new Vec(Width / 2 + Left, Height / 2 + Top);
+
         public Rect(Vec pos, Vec size)
         {
             Left = pos.X;
@@ -67,7 +75,7 @@ namespace HackConsole
             Width = size.X;
             Height = size.Y;
         }
-        
+
         public bool Contains(int x, int y)
         {
             return (x >= Left) && (y >= Top) && (x < Right) && (y < Bottom);

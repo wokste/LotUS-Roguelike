@@ -47,7 +47,7 @@ namespace SurvivalHack.Ui
         private SfmlWindow InitGui()
         {
             var window = new SfmlWindow("Lands of the undead sorceress");
-            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new HackConsole.Rect { Height = 10 } };
+            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             Message.OnMessage += (m) =>
             {
                 if (_player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
@@ -56,7 +56,7 @@ namespace SurvivalHack.Ui
 
             window.Widgets.Add(consoleWidget);
 
-            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new HackConsole.Rect { Width = 16 } };
+            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
             window.Widgets.Add(infoWidget);
 
             var characterWidget = new CharacterWidget(_player)
@@ -73,7 +73,7 @@ namespace SurvivalHack.Ui
             window.Widgets.Add(worldWidget);
 
             window.Focus = worldWidget;
-            worldWidget.OnSelected += (IDescriptionProvider c) => { infoWidget.Item = c; };
+            worldWidget.OnSelected += c => { infoWidget.Item = c; };
             worldWidget.OnSpendTime += _game.GameTick;
 
             return window;

@@ -20,7 +20,7 @@ namespace HackConsole
         public Action OnUpdate;
 
         private bool _dirty;
-        private Vec lastMousePos = Vec.NaV;
+        private Vec _lastMousePos = Vec.NaV;
 
         public SfmlWindow(string name)
         {
@@ -103,7 +103,7 @@ namespace HackConsole
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
         {
-            EventFlags flags = MakeFlags(false, true);
+            var flags = MakeFlags(false, true);
             if (keyEventArgs.Alt) flags |= EventFlags.Alt;
             if (keyEventArgs.Control) flags |= EventFlags.Ctrl;
             if (keyEventArgs.Shift) flags |= EventFlags.Shift;
@@ -135,8 +135,8 @@ namespace HackConsole
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
-            var move = (lastMousePos == Vec.NaV) ? Vec.Zero : (mousePos - lastMousePos);
-            lastMousePos = mousePos;
+            var move = (_lastMousePos == Vec.NaV) ? Vec.Zero : (mousePos - _lastMousePos);
+            _lastMousePos = mousePos;
 
             if (move == Vec.Zero)
                 return;
@@ -157,7 +157,7 @@ namespace HackConsole
 
         private void OnMouseButton(MouseButtonEventArgs e, bool pressed)
         {
-            EventFlags flags = MakeFlags(true, false);
+            var flags = MakeFlags(true, false);
             flags |= pressed ? EventFlags.MouseEventPress : EventFlags.MouseEventRelease;
 
             switch (e.Button)

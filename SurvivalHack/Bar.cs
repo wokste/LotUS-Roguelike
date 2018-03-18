@@ -25,7 +25,7 @@ namespace SurvivalHack
             set {_max = value; _current = Math.Min(_current, _max);}
         }
 
-        public float Perc => (float) Current / (float) Max;
+        public float Perc => Current / (float) Max;
 
         public static Bar operator+ (Bar bar, int value)
         {

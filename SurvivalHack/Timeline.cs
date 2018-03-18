@@ -6,7 +6,7 @@ namespace SurvivalHack
 {
     public class Timeline<T>
     {
-        private SortedDictionary<long,List<T>> _queue = new SortedDictionary<long, List<T>>();
+        private readonly SortedDictionary<long,List<T>> _queue = new SortedDictionary<long, List<T>>();
         private int _index;
         private long _time = 0;//long.MinValue;
         private List<T> _list;
@@ -23,8 +23,7 @@ namespace SurvivalHack
             // If this is not the case, non-obvious bugs may arise.
             Debug.Assert(time > _time);
 
-            List<T> list;
-            if (!_queue.TryGetValue(time, out list))
+            if (!_queue.TryGetValue(time, out var list))
             {
                 list = new List<T>();
                 _queue.Add(time, list);

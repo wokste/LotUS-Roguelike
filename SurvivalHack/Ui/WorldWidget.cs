@@ -5,7 +5,7 @@ namespace SurvivalHack.Ui
 {
     class WorldWidget : Widget, IInputReader
     {
-        private World _world;
+        private readonly World _world;
         private readonly FieldOfView _view;
         private readonly Player _player;
 
@@ -20,8 +20,7 @@ namespace SurvivalHack.Ui
 
         public override void Render(bool forceUpdate)
         {
-            _offset.X = _player.Position.X - Size.Width / 2 - Size.Left;
-            _offset.Y = _player.Position.Y - Size.Height / 2 - Size.Top;
+            _offset = _player.Position - Size.Center;
             
             Clear();
             RenderGrid();
@@ -54,8 +53,8 @@ namespace SurvivalHack.Ui
         {
             var x0 = Math.Max(Size.Left, 0 - _offset.X);
             var y0 = Math.Max(Size.Top, 0 - _offset.Y);
-            var x1 = Math.Min(Size.Right, _world._map.Width - _offset.X);
-            var y1 = Math.Min(Size.Bottom, _world._map.Height - _offset.Y);
+            var x1 = Math.Min(Size.Right, _world.Map.Width - _offset.X);
+            var y1 = Math.Min(Size.Bottom, _world.Map.Height - _offset.Y);
 
             for (var y = y0; y < y1; y++)
             {

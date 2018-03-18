@@ -110,7 +110,7 @@ namespace SurvivalHack
             Position = position;
             Map = map;
 
-            FoV = new FieldOfView(map._map);
+            FoV = new FieldOfView(map.Map);
             FoV.Update(position);
         }
 
@@ -135,7 +135,7 @@ namespace SurvivalHack
 
             // Moving.
             LeftoverMove += Speed;
-            for (int i = 1; i < LeftoverMove; i++)
+            for (var i = 1; i < LeftoverMove; i++)
                 Ai.Move(this);
             LeftoverMove = LeftoverMove - (int) LeftoverMove;
 

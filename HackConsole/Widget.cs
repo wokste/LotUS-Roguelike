@@ -53,7 +53,7 @@ namespace HackConsole
             y += Size.Top;
             var length = Math.Min(msg.Length, Size.Right - x);
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 CellGrid.Cells[x + i, y] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
             }

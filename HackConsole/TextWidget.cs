@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HackConsole
 {
@@ -44,7 +41,7 @@ namespace HackConsole
 
         protected int WordWrap(string msg, string prefix, Color color)
         {
-            int count = 0;
+            var count = 0;
             var noPrefix = new string(' ', prefix.Length);
 
             var lineStart = 0;

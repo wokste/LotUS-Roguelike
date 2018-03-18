@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HackConsole;
 
 namespace SurvivalHack
 {
     public class World
     {
-        public TileGrid _map;
+        public TileGrid Map;
         public List<Creature> Creatures = new List<Creature>();
 
         public World()
         {
-            _map = new TileGrid(64, 64);
+            Map = new TileGrid(64, 64);
         }
         
         public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
@@ -19,9 +18,9 @@ namespace SurvivalHack
             int x, y;
             do
             {
-                x = Dicebag.UniformInt(_map.Width);
-                y = Dicebag.UniformInt(_map.Height);
-            } while (!_map.HasFlag(x, y, flag));
+                x = Dicebag.UniformInt(Map.Width);
+                y = Dicebag.UniformInt(Map.Height);
+            } while (!Map.HasFlag(x, y, flag));
 
             return new Vec(x, y);
         }
@@ -29,17 +28,17 @@ namespace SurvivalHack
         // Encaptulated functions
         public void DestroyWall(int x, int y)
         {
-            _map.DestroyWall(x,y);
+            Map.DestroyWall(x,y);
         }
 
         public bool InBoundary(int x, int y)
         {
-            return (x >= 0 && x < _map.Width && y >= 0 && y < _map.Height);
+            return (x >= 0 && x < Map.Width && y >= 0 && y < Map.Height);
         }
 
         public bool HasFlag(int x, int y, TerrainFlag flag)
         {
-            if (_map.HasFlag(x, y, flag))
+            if (Map.HasFlag(x, y, flag))
                 return true;
             /*
             foreach (var c in Creatures)
@@ -51,17 +50,17 @@ namespace SurvivalHack
 
         public TileType GetFloor(int x, int y)
         {
-            return _map.GetFloor(x, y);
+            return Map.GetFloor(x, y);
         }
 
         public TileType GetWall(int x, int y)
         {
-            return _map.GetWall(x,y);
+            return Map.GetWall(x,y);
         }
 
         public TileType GetTop(int x, int y)
         {
-            return _map.GetWall(x, y) ?? _map.GetFloor(x, y);
+            return Map.GetWall(x, y) ?? Map.GetFloor(x, y);
         }
 
         internal Creature GetCreature(int x, int y)
