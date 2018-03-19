@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace HackConsole
 {
-    class PopupStack
+    public class PopupStack
     {
         private readonly List<Widget> _widgets = new List<Widget>();
+        public Widget Top => (_widgets.Count > 0 ? _widgets[_widgets.Count - 1] : null);
 
         public void Render(bool forceUpdate)
         {
@@ -29,6 +30,21 @@ namespace HackConsole
         {
             _widgets.Remove(w);
         }
+
+        public Widget WidgetAt(Vec v)
+        {
+            for (int i = _widgets.Count - 1; i >= 0; i--)
+            {
+                var w = _widgets[i];
+                if (w.Size.Contains(v.X, v.Y))
+                    return w;
+            }
+
+
+            return null;
+        }
+
+        
     }
 
     public interface IPopupWidget

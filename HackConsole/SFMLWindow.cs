@@ -18,6 +18,7 @@ namespace HackConsole
 
         public IKeyEventSuscriber BaseKeyHandler;
         public Action OnUpdate;
+        public PopupStack PopupStack = new PopupStack();
 
         private bool _dirty;
         private Vec _lastMousePos = Vec.NaV;
@@ -75,18 +76,29 @@ namespace HackConsole
             return flags;
         }
 
-        Widget WidgetAtPosition(Vec mousePos, WidgetContainer container = null)
+        protected Widget WidgetAt(Vec pos)
         {
-            if (container == null)
-                container = Widgets;
+            var popup = PopupStack.WidgetAt(pos);
 
-            Widget top = null;
+            if (popup != null)
+                return popup;
 
-            foreach (var w in container.Widgets)
-                if (w.Size.Contains(mousePos.X, mousePos.Y))
-                    top = w;
+            return WidgetAt(pos, Widgets);
+        }
 
-            return top is WidgetContainer ? WidgetAtPosition(mousePos, top as WidgetContainer) : top;
+        private static Widget WidgetAt(Vec pos, WidgetContainer container)
+        {
+            while (true)
+            {
+                Widget top = null;
+                foreach (var w in container.Widgets)
+                    if (w.Size.Contains(pos.X, pos.Y))
+                        top = w;
+
+                container = top as WidgetContainer;
+                if (container == null)
+                    return top;
+            }
         }
 
         private void OnResized(object sender, SizeEventArgs e)
@@ -108,28 +120,41 @@ namespace HackConsole
             if (keyEventArgs.Control) flags |= EventFlags.Ctrl;
             if (keyEventArgs.Shift) flags |= EventFlags.Shift;
 
-            var handler = BaseKeyHandler;
+            var top = PopupStack.Top;
+            var handler = (top != null) ? (top as IKeyEventSuscriber) : BaseKeyHandler;
 
-            if (keyEventArgs.Code == Keyboard.Key.Up)
-                handler.OnArrowPress(new Vec(0, -1), flags);
-            else if (keyEventArgs.Code == Keyboard.Key.Down)
-                handler.OnArrowPress(new Vec(0, 1), flags);
-            else if (keyEventArgs.Code == Keyboard.Key.Left)
-                handler.OnArrowPress(new Vec(-1, 0), flags);
-            else if (keyEventArgs.Code == Keyboard.Key.Right)
-                handler.OnArrowPress(new Vec(1, 0), flags);
-            else if (keyEventArgs.Code >= Keyboard.Key.Numpad1 && keyEventArgs.Code <= Keyboard.Key.Numpad9)
-            {
-                // Arrow key movements.
-                var id = keyEventArgs.Code - Keyboard.Key.Numpad1;
-                var move = new Vec(id % 3 - 1, 1 - id / 3);
+            if (handler == null)
+                return;
 
-                handler.OnArrowPress(move, flags);
-            }
-            else
+            switch (keyEventArgs.Code)
             {
-                // Normal keys
-                handler.OnKeyPress((char)keyEventArgs.Code, flags);
+                case Keyboard.Key.Up:
+                    handler.OnArrowPress(new Vec(0, -1), flags);
+                    break;
+                case Keyboard.Key.Down:
+                    handler.OnArrowPress(new Vec(0, 1), flags);
+                    break;
+                case Keyboard.Key.Left:
+                    handler.OnArrowPress(new Vec(-1, 0), flags);
+                    break;
+                case Keyboard.Key.Right:
+                    handler.OnArrowPress(new Vec(1, 0), flags);
+                    break;
+                default:
+                    if (keyEventArgs.Code >= Keyboard.Key.Numpad1 && keyEventArgs.Code <= Keyboard.Key.Numpad9)
+                    {
+                        // Arrow key movements.
+                        var id = keyEventArgs.Code - Keyboard.Key.Numpad1;
+                        var move = new Vec(id % 3 - 1, 1 - id / 3);
+
+                        handler.OnArrowPress(move, flags);
+                    }
+                    else
+                    {
+                        // Normal keys
+                        handler.OnKeyPress((char)keyEventArgs.Code, flags);
+                    }
+                    break;
             }
         }
 
@@ -138,7 +163,7 @@ namespace HackConsole
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
             var delta = new Vec(0, e.Delta > 0 ? 1 : -1);
             
-            var widget = WidgetAtPosition(mousePos);
+            var widget = WidgetAt(mousePos);
             (widget as IMouseEventSuscriber)?.OnMouseWheel(delta, MakeFlags(true, true));
         }
 
@@ -151,7 +176,7 @@ namespace HackConsole
             if (move == Vec.Zero)
                 return;
 
-            var widget = WidgetAtPosition(mousePos);
+            var widget = WidgetAt(mousePos);
             (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
         }
 
@@ -184,7 +209,7 @@ namespace HackConsole
             }
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
 
-            var widget = WidgetAtPosition(mousePos);
+            var widget = WidgetAt(mousePos);
             (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
         }
 
@@ -216,7 +241,7 @@ namespace HackConsole
             _window.Display();
         }
 
-        private Sprite MakeSprite(string texName)
+        private static Sprite MakeSprite(string texName)
         {
             var image = new Image($"{texName}");
             var texture = new Texture(image);
