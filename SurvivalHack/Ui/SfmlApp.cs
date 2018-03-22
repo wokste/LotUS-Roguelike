@@ -6,7 +6,7 @@ namespace SurvivalHack.Ui
     public class SfmlApp : IKeyEventSuscriber
     {
         private Game _game;
-        private readonly SfmlWindow _window;
+        private readonly BaseWindow _window;
         private Player _player;
 
         private static void Main(string[] args)
@@ -45,7 +45,7 @@ namespace SurvivalHack.Ui
             _game.AddCreature(_player);
         }
 
-        private SfmlWindow InitGui()
+        private BaseWindow InitGui()
         {
             var window = new SfmlWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };

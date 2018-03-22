@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseWindow.cs" />
     <Compile Include="EventSuscriber.cs" />
     <Compile Include="InfoWidget.cs" />
     <Compile Include="MessageListWidget.cs" />

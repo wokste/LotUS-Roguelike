@@ -4,24 +4,10 @@ using SFML.Window;
 
 namespace HackConsole
 {
-    public class SfmlWindow
+    public class SfmlWindow : BaseWindow
     {
-        private uint _windowWidth = 1280;
-        private uint _windowHeight = 800;
-
-        private readonly uint _fontX = 16;
-        private readonly uint _fontY = 16;
-
-        public WidgetContainer Widgets = new WidgetContainer{Docking = Docking.Fill}; 
         private readonly RenderWindow _window;
         private readonly Sprite _fontSprite;
-
-        public IKeyEventSuscriber BaseKeyHandler;
-        public Action OnUpdate;
-        public PopupStack PopupStack = new PopupStack();
-
-        private bool _dirty;
-        private Vec _lastMousePos = Vec.NaV;
 
         public SfmlWindow(string name)
         {
@@ -77,41 +63,10 @@ namespace HackConsole
             return flags;
         }
 
-        protected Widget WidgetAt(Vec pos)
-        {
-            var popup = PopupStack.WidgetAt(pos);
-
-            if (popup != null)
-                return popup;
-
-            return WidgetAt(pos, Widgets);
-        }
-
-        private static Widget WidgetAt(Vec pos, WidgetContainer container)
-        {
-            while (true)
-            {
-                Widget top = null;
-                foreach (var w in container.Widgets)
-                    if (w.Size.Contains(pos.X, pos.Y))
-                        top = w;
-
-                container = top as WidgetContainer;
-                if (container == null)
-                    return top;
-            }
-        }
-
         private void OnResized(object sender, SizeEventArgs e)
         {
-            _windowWidth = e.Width;
-            _windowHeight = e.Height;
-            CellGrid.Resize(_windowWidth / _fontX, _windowHeight / _fontY);
-
+            ResizeScreen(e.Width, e.Height);
             _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
-
-            var r = new Rect{Width = (int)CellGrid.Width, Height = (int)CellGrid.Height};
-            Widgets.Resize(ref r);
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
@@ -149,13 +104,6 @@ namespace HackConsole
                         var move = new Vec(id % 3 - 1, 1 - id / 3);
 
                         handler.OnArrowPress(move, flags);
-                    }
-                    else if (keyEventArgs.Code >= Keyboard.Key.A && keyEventArgs.Code <= Keyboard.Key.Z )
-                    {
-                        return;
-                        int ascii = (int) (keyEventArgs.Code) - (int)(Keyboard.Key.A) + 'a';
-                        // Normal keys
-                        handler.OnKeyPress((char)ascii, flags);
                     }
                     break;
             }
@@ -233,7 +181,7 @@ namespace HackConsole
             _window.Close();
         }
 
-        public void Run()
+        public override void Run()
         {
             while (_window.IsOpen())
             {
@@ -250,6 +198,8 @@ namespace HackConsole
             _window.Clear();
 
             Widgets.Render(_dirty);
+            PopupStack.Render(true); // TODO: This has to be chosen more smartly.
+
             _dirty = false;
             DrawGrid(_window, new RenderStates());
 
