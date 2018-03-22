@@ -7,21 +7,35 @@ using System.Threading.Tasks;
 
 namespace HackConsole
 {
-    public class PopupStack
+    public class PopupStack : Widget
     {
+        public PopupStack()
+        {
+            Docking = Docking.Fill;
+        }
+
         private readonly List<Widget> _widgets = new List<Widget>();
         public Widget Top => (_widgets.Count > 0 ? _widgets[_widgets.Count - 1] : null);
 
-        public void Render(bool forceUpdate)
+        public override void Render(bool forceUpdate)
         {
             // TODO: Some widgets may be hidden below other widgets which allows optimalization.
 
             foreach (var w in _widgets)
                 w.Render(forceUpdate);
         }
-        
+
+        protected override void OnResized()
+        {
+            foreach (var w in _widgets)
+            {
+                w.CenterPopup(Size);
+            }
+        }
+
         public void Push(Widget w)
         {
+            w.CenterPopup(Size);
             (w as IPopupWidget).OnClose += () => { Pop(w); };
             _widgets.Add(w);
         }
@@ -40,11 +54,8 @@ namespace HackConsole
                     return w;
             }
 
-
             return null;
         }
-
-        
     }
 
     public interface IPopupWidget

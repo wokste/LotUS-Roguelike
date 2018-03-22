@@ -27,6 +27,9 @@ namespace HackConsole
             CellGrid.Resize(_windowWidth / _fontX, _windowHeight / _fontY);
 
             var r = new Rect { Width = (int)CellGrid.Width, Height = (int)CellGrid.Height };
+            PopupStack.Resize(ref r);
+
+            r = new Rect { Width = (int)CellGrid.Width, Height = (int)CellGrid.Height };
             Widgets.Resize(ref r);
         }
 

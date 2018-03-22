@@ -74,6 +74,20 @@ namespace HackConsole
             OnResized();
         }
 
+        public void CenterPopup(Rect screen)
+        {
+            var newSize = DesiredSize;
+            newSize.Left = screen.Left + (screen.Width - newSize.Width) / 2;
+            newSize.Top = screen.Top + (screen.Height - newSize.Height) / 2;
+
+            if (Size.Left == newSize.Left && Size.Width == newSize.Width && Size.Top == newSize.Top && Size.Height == newSize.Height)
+                return;
+
+            Size = newSize;
+
+            OnResized();
+        }
+
         private Rect MakeSize(ref Rect free)
         {
             if (Docking == Docking.Top || Docking == Docking.Bottom)
