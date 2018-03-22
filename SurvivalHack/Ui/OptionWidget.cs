@@ -7,7 +7,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class OptionWidget<T> : TextWidget, IKeyEventSuscriber, IPopupWidget
+    internal class OptionWidget<T> : TextWidget, IKeyEventSuscriber, IPopupWidget
     {
         public Action<T> OnSelect;
         public List<T> Set;
@@ -35,7 +35,9 @@ namespace SurvivalHack.Ui
         {
             if (keyCode == (char) 13) // Enter
             {
-                OnSelect?.Invoke(Set[_selectedIndex]);
+                if (Set.Count != 0)
+                    OnSelect?.Invoke(Set[_selectedIndex]);
+
                 OnClose?.Invoke();
             }
 
@@ -48,10 +50,10 @@ namespace SurvivalHack.Ui
         public void OnArrowPress(Vec move, EventFlags flags)
         {
             _selectedIndex += move.Y;
-            while (_selectedIndex < 0)
-                _selectedIndex += Set.Count;
-            while (_selectedIndex >= Set.Count)
-                _selectedIndex -= Set.Count;
+            if (_selectedIndex < 0)
+                _selectedIndex = Math.Max(Set.Count - 1, 0);
+            if (_selectedIndex >= Set.Count)
+                _selectedIndex = 0;
 
             MakeLines();
         }

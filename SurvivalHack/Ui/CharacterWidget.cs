@@ -3,7 +3,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class CharacterWidget : Widget
+    internal class CharacterWidget : Widget
     {
         private readonly Creature _creature;
 

@@ -38,6 +38,7 @@ namespace HackConsole
 
             _window.Closed += OnClosed;
             _window.KeyPressed += OnKeyPressed;
+            _window.TextEntered += OnTextEntered;
             _window.Resized += OnResized;
             _window.MouseButtonPressed += OnMouseButtonPressed;
             _window.MouseButtonReleased += OnMouseButtonReleased;
@@ -51,7 +52,7 @@ namespace HackConsole
             OnResized(null, new SizeEventArgs(new SizeEvent {Width = _windowWidth, Height = _windowHeight }));
         }
 
-        EventFlags MakeFlags(bool keys, bool mouse) {
+        private static EventFlags MakeFlags(bool keys, bool mouse) {
             var flags = EventFlags.None;
 
             if (keys)
@@ -149,13 +150,27 @@ namespace HackConsole
 
                         handler.OnArrowPress(move, flags);
                     }
-                    else
+                    else if (keyEventArgs.Code >= Keyboard.Key.A && keyEventArgs.Code <= Keyboard.Key.Z )
                     {
+                        return;
+                        int ascii = (int) (keyEventArgs.Code) - (int)(Keyboard.Key.A) + 'a';
                         // Normal keys
-                        handler.OnKeyPress((char)keyEventArgs.Code, flags);
+                        handler.OnKeyPress((char)ascii, flags);
                     }
                     break;
             }
+        }
+
+        private void OnTextEntered(object sender, TextEventArgs e)
+        {
+            var flags = MakeFlags(true, true);
+            var top = PopupStack.Top;
+            var handler = (top != null) ? (top as IKeyEventSuscriber) : BaseKeyHandler;
+
+            if (handler == null)
+                return;
+
+            handler.OnKeyPress(e.Unicode[0], flags);
         }
 
         private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)

@@ -87,14 +87,11 @@ namespace SurvivalHack
             return true;
         }
 
-        public bool Eat()
+        public bool Eat(Item food)
         {
-            var foodItems = Inventory._items.Where(i => i.Type.OnEat != null);
-            var food = foodItems.OrderBy(f => f.Type.OnEat.Quality).LastOrDefault();
-
-            if (food == null)
+            if (food.Type.OnEat == null)
             {
-                Message.Write("You have no food in your inventory.", Position, Color.Red);
+                Message.Write("You can't eat that, silly person.", Position, Color.Red);
                 return false;
             }
 

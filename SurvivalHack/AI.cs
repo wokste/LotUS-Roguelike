@@ -109,7 +109,7 @@ namespace SurvivalHack
         }
     }
 
-    enum EAttitude {
+    internal enum EAttitude {
         Ignore, // Ignores other character
         Follow, // Follow it
         Hate,   // Attacks it

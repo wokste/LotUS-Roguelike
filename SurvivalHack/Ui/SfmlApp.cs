@@ -1,24 +1,25 @@
-﻿using HackConsole;
+﻿using System;
+using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    public class SfmlApp
+    public class SfmlApp : IKeyEventSuscriber
     {
         private Game _game;
         private readonly SfmlWindow _window;
         private Player _player;
-        
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             var app = new SfmlApp();
             app.Run();
         }
-        
+
         public SfmlApp()
         {
             InitGame();
             _window = InitGui();
-            
+
             Message.Write("You wake up in an unknown world.", _player.Position, Color.White);
         }
 
@@ -72,20 +73,71 @@ namespace SurvivalHack.Ui
             };
             window.Widgets.Add(worldWidget);
 
-            window.BaseKeyHandler = worldWidget;
+            window.BaseKeyHandler = this;
             worldWidget.OnSelected += c => { infoWidget.Item = c; };
             worldWidget.OnSpendTime += _game.GameTick;
 
             return window;
         }
 
-        public void Run() {
+        public void Run()
+        {
             _window.OnUpdate = Update;
             _window.Run();
         }
 
-        private void Update() {
+        private void Update()
+        {
             _game.Update(5);
+        }
+
+        public void OnKeyPress(char keyCode, EventFlags flags)
+        {
+            switch (keyCode)
+            {
+                case 'e':
+                    {
+                        if (!_player.Alive)
+                            throw new Exception("WUT. I am dead");
+
+                        var o = new OptionWidget<Item>
+                        {
+                            DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
+                            OnSelect = i =>
+                            {
+                                if (_player.Eat(i))
+                                    _game.Update(1000);
+                            },
+                            Question = "Choose food",
+                            Set = _player.Inventory._items
+                        };
+                        _window.PopupStack.Push(o);
+                    }
+                    break;
+            }
+        }
+
+        public void OnArrowPress(Vec move, EventFlags flags)
+        {
+            if (!_player.Alive)
+            {
+                throw new Exception("WUT. I am dead");
+            }
+
+            var actPoint = _player.Position + move;
+            foreach (var c in _game.World.Creatures.ToArray())
+            {
+                if (c.Position == actPoint && c != _player)
+                {
+                    _player.Attack.Attack(_player, c);
+                    _game.Update(1000);
+                }
+            }
+
+            if (_player.Walk(move))
+            {
+                _game.Update((int)(800 * move.Length));
+            }
         }
     }
 }

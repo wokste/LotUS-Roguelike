@@ -4,7 +4,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    class WorldWidget : Widget, IMouseEventSuscriber, IKeyEventSuscriber
+    internal class WorldWidget : Widget, IMouseEventSuscriber
     {
         private readonly World _world;
         private readonly FieldOfView _view;
@@ -79,44 +79,6 @@ namespace SurvivalHack.Ui
                         CellGrid.Cells[x, y].BackgroundColor.Darken(visibility);
                     }
                 }
-            }
-        }
-
-        public void OnKeyPress(char keyCode, EventFlags flags)
-        {
-            switch (keyCode)
-            {
-                case 'e':
-                    if (!_player.Alive)
-                        throw new Exception("WUT. I am dead");
-
-                    if (_player.Eat())
-                        OnSpendTime.Invoke(1000);
-                    // TODO: Change this in a mechanic that the player can choose what to eat
-                    break;
-            }
-        }
-
-        public void OnArrowPress(Vec move, EventFlags flags)
-        {
-            if (!_player.Alive)
-            {
-                throw new Exception("WUT. I am dead");
-            }
-
-            var actPoint = _player.Position + move;
-            foreach (var c in _world.Creatures.ToArray())
-            {
-                if (c.Position == actPoint && c != _player)
-                {
-                    _player.Attack.Attack(_player, c);
-                    OnSpendTime.Invoke(1000);
-                }
-            }
-
-            if (_player.Walk(move))
-            {
-                OnSpendTime.Invoke((int)(800 * move.Length));
             }
         }
 
