@@ -106,7 +106,7 @@ namespace SurvivalHack.Ui
                             OnSelect = i =>
                             {
                                 if (_player.Eat(i))
-                                    _game.Update(1000);
+                                    _game.GameTick(1);
                             },
                             Question = "Choose food",
                             Set = _player.Inventory._items
@@ -130,13 +130,13 @@ namespace SurvivalHack.Ui
                 if (c.Position == actPoint && c != _player)
                 {
                     _player.Attack.Attack(_player, c);
-                    _game.Update(1000);
+                    _game.GameTick(1);
                 }
             }
 
             if (_player.Walk(move))
             {
-                _game.Update((int)(800 * move.Length));
+                _game.GameTick((int)(1 * move.Length));
             }
         }
     }
