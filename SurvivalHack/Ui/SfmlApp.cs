@@ -41,6 +41,10 @@ namespace SurvivalHack.Ui
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)
             };
+            _player.Inventory.Add(ItemTypeList.Get("mushroom").Make(2,2));
+            _player.Inventory.Add(ItemTypeList.Get("pumpkin").Make(1));
+            _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
+
 
             _game.AddCreature(_player);
         }

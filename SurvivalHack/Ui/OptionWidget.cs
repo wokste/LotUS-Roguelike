@@ -25,9 +25,10 @@ namespace SurvivalHack.Ui
 
             for (var i = 0; i < Set.Count; i++)
             {
-                var prefix = i.ToString().PadLeft(digits) + ":";
-                var color = i == _selectedIndex ? Color.White : Color.Gray;
-                WordWrap(Set[i].ToString(), prefix, Color.Gray);
+                var c = (i < 26) ? (i + 'a') : (i - 26 + 'A') ;
+                var prefix = $"{(char)c}:";
+                var color = (i == _selectedIndex) ? Color.White : Color.Gray;
+                WordWrap(Set[i].ToString(), prefix, color);
             }
         }
 
@@ -35,18 +36,35 @@ namespace SurvivalHack.Ui
         {
             if (keyCode == (char) 13) // Enter
             {
-                if (Set.Count != 0)
-                    OnSelect?.Invoke(Set[_selectedIndex]);
+                Use(_selectedIndex);
 
                 OnClose?.Invoke();
             }
-
-            if (keyCode == (char) 27) // Escape
+            else if (keyCode == (char) 27) // Escape
             {
                 OnClose?.Invoke();
             }
+            else if (keyCode >= 'a' && keyCode <= 'z')
+            {
+                if (Use(keyCode - 'a'))
+                    OnClose?.Invoke();
+            }
+            else if (keyCode >= 'A' && keyCode <= 'Z')
+            {
+                if (Use(keyCode - 'A' + 26))
+                    OnClose?.Invoke();
+            }
         }
-        
+
+        private bool Use(int index) {
+            if (index >= 0 && index < Set.Count)
+            {
+                OnSelect?.Invoke(Set[index]);
+                return true;
+            }
+            return false;
+        }
+
         public void OnArrowPress(Vec move, EventFlags flags)
         {
             _selectedIndex += move.Y;
@@ -55,6 +73,7 @@ namespace SurvivalHack.Ui
             if (_selectedIndex >= Set.Count)
                 _selectedIndex = 0;
 
+            Lines.Clear();
             MakeLines();
         }
     }
