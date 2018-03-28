@@ -45,6 +45,7 @@ namespace SurvivalHack.Ui
             _player.Inventory.Add(ItemTypeList.Get("pumpkin").Make(1));
             _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
 
+            _player.OnDestroy += PlayerDied;
 
             _game.AddCreature(_player);
         }
@@ -55,8 +56,10 @@ namespace SurvivalHack.Ui
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             Message.OnMessage += (m) =>
             {
-                if (_player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
+                if (_player == null || _player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
+                {
                     consoleWidget.AddMessage(m);
+                }
             };
 
             window.Widgets.Add(consoleWidget);
@@ -84,6 +87,16 @@ namespace SurvivalHack.Ui
             return window;
         }
 
+        private void PlayerDied(Creature obj)
+        {
+            var o = new GameOverWidget
+            {
+                DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+            };
+            _window.PopupStack.Push(o);
+            _player = null;
+        }
+
         public void Run()
         {
             _window.OnUpdate = Update;
@@ -101,9 +114,6 @@ namespace SurvivalHack.Ui
             {
                 case 'e':
                     {
-                        if (!_player.Alive)
-                            throw new Exception("WUT. I am dead");
-
                         var o = new OptionWidget<Item>
                         {
                             DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
@@ -123,11 +133,6 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
-            if (!_player.Alive)
-            {
-                throw new Exception("WUT. I am dead");
-            }
-
             var actPoint = _player.Position + move;
             foreach (var c in _game.World.Creatures.ToArray())
             {

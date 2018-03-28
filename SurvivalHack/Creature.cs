@@ -52,12 +52,14 @@ namespace SurvivalHack
             if (Health.Current == 0)
             {
                 Alive = false;
+                OnDestroy?.Invoke(this);
                 Map.Creatures.Remove(this);
-                // TODO: Stuff
                 
                 Message.Write($"{Name} died", Position, Color.Red);
             }
         }
+
+        public Action<Creature> OnDestroy;
 
         public bool Mine()
         {
@@ -132,7 +134,7 @@ namespace SurvivalHack
 
             // Moving.
             LeftoverMove += Speed;
-            for (var i = 1; i < LeftoverMove; i++)
+            for (var i = 1; i <= LeftoverMove; i++)
                 Ai.Move(this);
             LeftoverMove = LeftoverMove - (int) LeftoverMove;
 
