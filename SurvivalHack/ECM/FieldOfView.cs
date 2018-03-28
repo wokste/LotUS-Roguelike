@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using SurvivalHack.ECM;
 using System;
 
 namespace SurvivalHack
@@ -10,7 +11,7 @@ namespace SurvivalHack
 
         private Vec _playerPos;
 
-        public readonly TileGrid Map;
+        public TileGrid Map;
 
         private int _visualRange = 10;
 
@@ -27,16 +28,21 @@ namespace SurvivalHack
 
         public byte[,] Visibility;
 
-        public FieldOfView(TileGrid map)
+        public FieldOfView(MoveComponent move)
         {
-            Map = map;
-            Visibility = new byte[map.Width,map.Height]; // 0 initialized so everything is dark.
+            Update(move);
         }
         
-        public void Update(Vec playerPos)
+        public void Update(MoveComponent move)
         {
+            if (Map != move.World.Map)
+            {
+                Map = move.World.Map;
+                Visibility = new byte[Map.Width, Map.Height]; // 0 initialized so everything is dark.
+            }
+
             VisibleToDark();
-            _playerPos = playerPos;
+            _playerPos = move.Pos;
             ToVisible();
         }
 

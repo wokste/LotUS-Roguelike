@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using HackConsole;
 
 namespace SurvivalHack.ECM
@@ -10,40 +9,17 @@ namespace SurvivalHack.ECM
         public Bar Health;
         public Bar Hunger;
         public AttackComponent Attack;
+        public MoveComponent Move;
 
         public Symbol Symbol;
 
         public readonly Inventory Inventory = new Inventory();
         public bool Alive = true;
 
-        public Vec Position { get; set; }
-        public Vec Facing { get; set; }
-
         public string Description { get; set; }
 
         public float Speed = 1;
-        public TerrainFlag MovementType = TerrainFlag.Walk;
-
-        public World Map;
-
-        public virtual bool Walk(Vec direction)
-        {
-            Facing = direction;
-
-            var newPosition = Position;
-            newPosition += direction;
-
-            // You cannot walk of the edge of map
-            if (!Map.InBoundary(newPosition.X, newPosition.Y))
-                return false;
-
-            // Terrain collisions
-            if (!Map.HasFlag(newPosition.X, newPosition.Y, MovementType))
-                return false;
-
-            Position = newPosition;
-            return true;
-        }
+        public FieldOfView FoV;
 
         public void TakeDamage(int damage)
         {
@@ -53,47 +29,19 @@ namespace SurvivalHack.ECM
             {
                 Alive = false;
                 OnDestroy?.Invoke(this);
-                Map.Creatures.Remove(this);
+                Move.Remove(this);
                 
-                Message.Write($"{Name} died", Position, Color.Red);
+                Message.Write($"{Name} died", Move.Pos, Color.Red);
             }
         }
 
         public Action<Entity> OnDestroy;
 
-        public bool Mine()
-        {
-            var minePosition = Position;
-            minePosition += Facing;
-
-            var x = minePosition.X;
-            var y = minePosition.Y;
-
-            if (!Map.InBoundary(x, y))
-                return false;
-
-            var wall = Map.GetWall(x, y);
-
-            // Nothing to drop
-            if (wall == null)
-                return false;
-
-            Inventory.Add(new Item
-            {
-                Type = ItemTypeList.Get(wall.DropTag),
-                Count = Dicebag.Randomize(wall.DropCount),
-            });
-
-            Map.DestroyWall(x, y);
-
-            return true;
-        }
-
         public bool Eat(Item food)
         {
             if (food.Type.OnEat == null)
             {
-                Message.Write("You can't eat that, silly person.", Position, Color.Red);
+                Message.Write("You can't eat that, silly person.", Vec.NaV, Color.Red);
                 return false;
             }
 
@@ -103,21 +51,10 @@ namespace SurvivalHack.ECM
     }
 
     public class Player : Entity{
-        public FieldOfView FoV;
 
-        public Player(World map, Vec position) {
-            Position = position;
-            Map = map;
-
-            FoV = new FieldOfView(map.Map);
-            FoV.Update(position);
-        }
-
-        public override bool Walk(Vec direction)
-        {
-            var ret = base.Walk(direction);
-            FoV.Update(Position);
-            return ret;
+        public Player(MoveComponent position) {
+            Move = position;
+            FoV = new FieldOfView(position);
         }
     }
 

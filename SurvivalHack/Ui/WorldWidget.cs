@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -22,7 +21,7 @@ namespace SurvivalHack.Ui
 
         public override void Render(bool forceUpdate)
         {
-            _offset = _player.Position - Size.Center;
+            _offset = _player.Move.Pos - Size.Center;
             
             Clear();
             RenderGrid();
@@ -35,8 +34,8 @@ namespace SurvivalHack.Ui
         private void RenderCreatures()
         {
             foreach (var creature in _world.Creatures) {
-                var x = creature.Position.X;
-                var y = creature.Position.Y;
+                var x = creature.Move.Pos.X;
+                var y = creature.Move.Pos.Y;
                 
                 if (_view.Visibility[x,y] < 128)
                     continue;
@@ -94,7 +93,7 @@ namespace SurvivalHack.Ui
                     OnSelected?.Invoke(null);
                 }
 
-                var c = _world.GetCreature(absPos.X, absPos.Y);
+                var c = _world.GetEntity(absPos.X, absPos.Y);
                 OnSelected?.Invoke(c);
             }
         }

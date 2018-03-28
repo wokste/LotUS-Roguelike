@@ -1,5 +1,6 @@
 ﻿using Symbol = HackConsole.Symbol;
 using Color = HackConsole.Color;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
@@ -17,7 +18,6 @@ namespace SurvivalHack
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
-                monster.Map = map;
                 _game.AddCreature(monster);
             }
         }
@@ -40,7 +40,7 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(40),
-                    Position = _game.World.GetEmptyLocation(),
+                    Move = _game.World.GetEmptyLocation(),
                     Speed = 0.6f,
                     Symbol = new Symbol('z', Color.Red)
                 };
@@ -59,10 +59,9 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(10),
-                    Position = _game.World.GetEmptyLocation(TerrainFlag.Fly),
+                    Move = _game.World.GetEmptyLocation(TerrainFlag.Fly),
                     Speed = 1.5f,
                     Symbol = new Symbol('b', Color.Red),
-                    MovementType = TerrainFlag.Fly
                 };
             }
             else
@@ -79,10 +78,9 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(20),
-                    Position = _game.World.GetEmptyLocation(TerrainFlag.Swim),
+                    Move = _game.World.GetEmptyLocation(TerrainFlag.Swim),
                     Speed = 1f,
                     Symbol = new Symbol('f', Color.Red),
-                    MovementType = TerrainFlag.Swim
                 };
             }
         }

@@ -14,7 +14,7 @@ namespace SurvivalHack
             Map = new TileGrid(64, 64);
         }
         
-        public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
+        public MoveComponent GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
             int x, y;
             do
@@ -23,7 +23,12 @@ namespace SurvivalHack
                 y = Dicebag.UniformInt(Map.Height);
             } while (!Map.HasFlag(x, y, flag));
 
-            return new Vec(x, y);
+            return new MoveComponent
+            {
+                Pos = new Vec(x, y),
+                World = this,
+                MovementType = flag
+            };
         }
 
         // Encaptulated functions
@@ -64,10 +69,10 @@ namespace SurvivalHack
             return Map.GetWall(x, y) ?? Map.GetFloor(x, y);
         }
 
-        internal Entity GetCreature(int x, int y)
+        internal Entity GetEntity(int x, int y)
         {
             foreach (var c in Creatures)
-                if (c.Position.X == x && c.Position.Y == y)
+                if (c.Move.Pos.X == x && c.Move.Pos.Y == y)
                     return c;
 
             return null;

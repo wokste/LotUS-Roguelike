@@ -29,37 +29,37 @@ namespace SurvivalHack.ECM
             {
                 var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
                 
-                if (self.Walk(delta))
+                if (self.Move.Walk(self, delta))
                     return;
             }
         }
 
         private void ChaseEnemy(Monster self)
         {
-            var delta = self.Enemy.Position - self.Position;
+            var delta = self.Enemy.Move.Pos - self.Move.Pos;
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
 
             if (delta == deltaClamped)
                 return;
 
-            if (self.Walk(deltaClamped))
+            if (self.Move.Walk(self, deltaClamped))
                 return;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (self.Walk(new Vec(deltaClamped.X, 0)))
+                if (self.Move.Walk(self, new Vec(deltaClamped.X, 0)))
                     return;
 
-                if (self.Walk(new Vec(0, deltaClamped.Y)))
+                if (self.Move.Walk(self, new Vec(0, deltaClamped.Y)))
                     return;
             }
             else
             {
-                if (self.Walk(new Vec(0, deltaClamped.Y)))
+                if (self.Move.Walk(self, new Vec(0, deltaClamped.Y)))
                     return;
                 
-                if (self.Walk(new Vec(deltaClamped.X, 0)))
+                if (self.Move.Walk(self, new Vec(deltaClamped.X, 0)))
                     return;
             }
 
@@ -80,7 +80,7 @@ namespace SurvivalHack.ECM
 
         internal Entity FindEnemy(Monster self)
         {
-            foreach(var c in self.Map.Creatures)
+            foreach(var c in self.Move.World.Creatures)
             {
                 if (c == self)
                     continue;
@@ -88,7 +88,7 @@ namespace SurvivalHack.ECM
                 if (AttitudeSee(self, c) == EAttitude.Ignore)
                     continue;
 
-                var delta = self.Position - c.Position;
+                var delta = self.Move.Pos - c.Move.Pos;
 
                 if (delta.LengthSquared < 100) // Todo: Sight radius
                     return c;

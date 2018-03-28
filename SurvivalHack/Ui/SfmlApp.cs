@@ -1,5 +1,4 @@
-﻿using System;
-using HackConsole;
+﻿using HackConsole;
 
 namespace SurvivalHack.Ui
 {
@@ -20,7 +19,7 @@ namespace SurvivalHack.Ui
             InitGame();
             _window = InitGui();
 
-            Message.Write("You wake up in an unknown world.", _player.Position, Color.White);
+            Message.Write("You wake up in an unknown world.", _player.Move.Pos, Color.White);
         }
 
         private void InitGame()
@@ -28,7 +27,7 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new ECM.Player(_game.World, _game.World.GetEmptyLocation())
+            _player = new ECM.Player(_game.World.GetEmptyLocation())
             {
                 Name = "Player",
                 Description = "You, as a player",
@@ -133,17 +132,17 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
-            var actPoint = _player.Position + move;
+            var actPoint = _player.Move.Pos + move;
             foreach (var c in _game.World.Creatures.ToArray())
             {
-                if (c.Position == actPoint && c != _player)
+                if (c.Move.Pos == actPoint && c != _player)
                 {
                     _player.Attack.Attack(_player, c);
                     _game.GameTick(1);
                 }
             }
 
-            if (_player.Walk(move))
+            if (_player.Move.Walk(_player, move))
             {
                 _game.GameTick((int)(1 * move.Length));
             }
