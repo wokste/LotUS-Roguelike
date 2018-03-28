@@ -2,9 +2,9 @@
 using System.Linq;
 using HackConsole;
 
-namespace SurvivalHack
+namespace SurvivalHack.ECM
 {
-    public class Creature : IDescriptionProvider
+    public class Entity : IDescriptionProvider
     {
         public String Name { get; set; }
         public Bar Health;
@@ -59,7 +59,7 @@ namespace SurvivalHack
             }
         }
 
-        public Action<Creature> OnDestroy;
+        public Action<Entity> OnDestroy;
 
         public bool Mine()
         {
@@ -102,7 +102,7 @@ namespace SurvivalHack
         }
     }
 
-    public class Player : Creature{
+    public class Player : Entity{
         public FieldOfView FoV;
 
         public Player(World map, Vec position) {
@@ -121,10 +121,10 @@ namespace SurvivalHack
         }
     }
 
-    public class Monster : Creature{
+    public class Monster : Entity{
         public float LeftoverMove;
 
-        public Creature Enemy;
+        public Entity Enemy;
 
         public AiController Ai;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {

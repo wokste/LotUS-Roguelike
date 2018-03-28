@@ -1,13 +1,10 @@
-﻿using System.Linq;
+﻿using SurvivalHack.ECM;
+using System.Linq;
 
 namespace SurvivalHack
 {
     public class Game
     {
-        [System.Obsolete]
-        public Creature Player;
-        //public Timeline<Controller> Time = new Timeline<Controller>();
-
         public MonsterSpawner Spawner;
         public World World;
 
@@ -71,7 +68,7 @@ namespace SurvivalHack
             }
         }*/
 
-        public void AddCreature(Creature creature)
+        public void AddCreature(Entity creature)
         {
             //Time.AddRelative(controller, 1000);
             World.Creatures.Add(creature);

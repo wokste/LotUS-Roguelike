@@ -68,11 +68,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttackComponent.cs" />
+    <Compile Include="ECM\AttackComponent.cs" />
     <Compile Include="Bar.cs" />
-    <Compile Include="ConsumableComponent.cs" />
-    <Compile Include="AI.cs" />
-    <Compile Include="Creature.cs" />
+    <Compile Include="ECM\ConsumableComponent.cs" />
+    <Compile Include="ECM\AI.cs" />
+    <Compile Include="ECM\Entity.cs" />
     <Compile Include="Dicebag.cs" />
     <Compile Include="FieldOfView.cs" />
     <Compile Include="Game.cs" />

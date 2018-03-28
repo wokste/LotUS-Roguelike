@@ -1,15 +1,16 @@
 ﻿using System.Text;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {
     internal class CharacterWidget : Widget
     {
-        private readonly Creature _creature;
+        private readonly Entity _creature;
 
         private static readonly char[] Gradient = new[] {' ', (char) 0xB0, (char) 0xB1, (char) 0xB2};
 
-        public CharacterWidget(Creature creature)
+        public CharacterWidget(Entity creature)
         {
             _creature = creature;
         }

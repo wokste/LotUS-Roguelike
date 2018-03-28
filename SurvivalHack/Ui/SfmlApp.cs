@@ -7,7 +7,7 @@ namespace SurvivalHack.Ui
     {
         private Game _game;
         private readonly BaseWindow _window;
-        private Player _player;
+        private ECM.Player _player;
 
         private static void Main(string[] args)
         {
@@ -28,11 +28,11 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new Player(_game.World, _game.World.GetEmptyLocation())
+            _player = new ECM.Player(_game.World, _game.World.GetEmptyLocation())
             {
                 Name = "Player",
                 Description = "You, as a player",
-                Attack = new AttackComponent
+                Attack = new ECM.AttackComponent
                 {
                     Damage = 20,
                     HitChance = 75f
@@ -87,7 +87,7 @@ namespace SurvivalHack.Ui
             return window;
         }
 
-        private void PlayerDied(Creature obj)
+        private void PlayerDied(ECM.Entity obj)
         {
             var o = new GameOverWidget
             {

@@ -1,6 +1,6 @@
 ﻿using HackConsole;
 
-namespace SurvivalHack
+namespace SurvivalHack.ECM
 {
     public class AttackComponent
     {
@@ -8,7 +8,7 @@ namespace SurvivalHack
         public int Damage;
         public float Range;
 
-        public void Attack(Creature attacker, Creature defender)
+        public void Attack(Entity attacker, Entity defender)
         {
             if (Dicebag.UniformInt(100) <= HitChance)
             {
@@ -23,7 +23,7 @@ namespace SurvivalHack
             }
         }
 
-        public bool InRange(Creature attacker, Creature defender)
+        public bool InRange(Entity attacker, Entity defender)
         {
             var delta = attacker.Position - defender.Position;
             return (delta.X * delta.X + delta.Y * delta.Y <= Range * (Range + 1));

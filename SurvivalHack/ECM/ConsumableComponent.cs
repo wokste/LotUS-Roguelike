@@ -1,4 +1,4 @@
-﻿namespace SurvivalHack
+﻿namespace SurvivalHack.ECM
 {
     public class ConsumableComponent
     {
@@ -10,7 +10,7 @@
         public int FoodRestore;
         public int HealthRestore;
 
-        public bool Use(Item item, Creature user)
+        public bool Use(Item item, Entity user)
         {
             user.Inventory.Consume(item,1);
             user.Hunger.Current += FoodRestore;
@@ -23,7 +23,7 @@
         /// 
         /// </summary>
         /// <returns>True when the item has influence.</returns>
-        public bool UseEffect(Item item, Creature user)
+        public bool UseEffect(Item item, Entity user)
         {
             var change = false;
             change |= (HealthRestore > 0 && user.Health.Current < user.Health.Max);

@@ -1,7 +1,7 @@
 ﻿using System;
 using HackConsole;
 
-namespace SurvivalHack
+namespace SurvivalHack.ECM
 {
     public class AiController
     {
@@ -78,7 +78,7 @@ namespace SurvivalHack
             return false;
         }
 
-        internal Creature FindEnemy(Monster self)
+        internal Entity FindEnemy(Monster self)
         {
             foreach(var c in self.Map.Creatures)
             {
@@ -96,7 +96,7 @@ namespace SurvivalHack
             return null;
         }
 
-        private EAttitude AttitudeSee(Monster self, Creature other) {
+        private EAttitude AttitudeSee(Monster self, Entity other) {
             return (other is Player) ? EAttitude.Hate : EAttitude.Ignore;
         }
 

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
     public class World
     {
         public TileGrid Map;
-        public List<Creature> Creatures = new List<Creature>();
+        public List<Entity> Creatures = new List<Entity>();
 
         public World()
         {
@@ -63,7 +64,7 @@ namespace SurvivalHack
             return Map.GetWall(x, y) ?? Map.GetFloor(x, y);
         }
 
-        internal Creature GetCreature(int x, int y)
+        internal Entity GetCreature(int x, int y)
         {
             foreach (var c in Creatures)
                 if (c.Position.X == x && c.Position.Y == y)
