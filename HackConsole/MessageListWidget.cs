@@ -25,17 +25,17 @@ namespace HackConsole
     public struct Message
     {
         public string Text;
-        public Vec Pos; // Where the message comes from
+        public Vec? Pos; // Where the message comes from
         public Color Color;
 
-        private Message(string text, Vec pos, Color color)
+        private Message(string text, Vec? pos, Color color)
         {
             Text = text;
             Pos = pos;
             Color = color;
         }
 
-        public static void Write(string text, Vec pos, Color color)
+        public static void Write(string text, Vec? pos, Color color)
         {
             OnMessage?.Invoke(new Message(text, pos, color));
         }

@@ -27,7 +27,7 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new ECM.Player(_game.World.GetEmptyLocation())
+            _player = new ECM.Player()
             {
                 Name = "Player",
                 Description = "You, as a player",
@@ -45,9 +45,9 @@ namespace SurvivalHack.Ui
             _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
 
             _player.OnDestroy += PlayerDied;
-
-            //_game.AddCreature(_player);
-            _player.Move.AddToMap(_game.World, _player);
+            
+            ECM.MoveComponent.Bind(_player, _game.World);
+            _player.FoV = new FieldOfView(_player.Move);
         }
 
         private BaseWindow InitGui()
@@ -56,7 +56,8 @@ namespace SurvivalHack.Ui
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             Message.OnMessage += (m) =>
             {
-                if (_player == null || m.Pos == Vec.NaV || _player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
+                var pos2 = m.Pos ?? Vec.Zero;
+                if (_player == null || m.Pos == null || _player.FoV.Visibility[pos2.X, pos2.Y] > 128)
                 {
                     consoleWidget.AddMessage(m);
                 }

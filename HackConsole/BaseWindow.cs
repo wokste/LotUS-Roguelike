@@ -18,7 +18,7 @@ namespace HackConsole
         public PopupStack PopupStack = new PopupStack();
 
         protected bool _dirty;
-        protected Vec _lastMousePos = Vec.NaV;
+        protected Vec? _lastMousePos;
 
         protected void ResizeScreen(uint x, uint y)
         {

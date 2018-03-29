@@ -7,7 +7,30 @@ namespace SurvivalHack.ECM
     {
         public Vec Pos { get; set; }
         public World World;
-        public TerrainFlag Flags;
+
+        private MoveComponent()
+        {
+        }
+
+        public static void Bind(Entity self, World world, Vec? pos = null)
+        {
+            var pos2 = pos ?? world.GetEmptyLocation(self.Flags);
+
+            var c = world.GetChunck(pos2);
+            c.Add(self);
+
+            self.Move = new MoveComponent
+            {
+                World = world,
+                Pos = pos2
+            };
+        }
+
+        internal void Unbind(Entity self)
+        {
+            World.GetChunck(Pos).Remove(self);
+            self.Move = null;
+        }
 
         public virtual bool Walk(Entity self, Vec direction)
         {
@@ -19,7 +42,7 @@ namespace SurvivalHack.ECM
                 return false;
 
             // Terrain collisions
-            if (!World.HasFlag(newPosition.X, newPosition.Y, Flags))
+            if (!World.HasFlag(newPosition.X, newPosition.Y, self.Flags))
                 return false;
 
             var oldChunk = World.GetChunck(Pos);
@@ -35,19 +58,6 @@ namespace SurvivalHack.ECM
             self.FoV?.Update(this);
 
             return true;
-        }
-
-        internal void Remove(Entity self)
-        {
-            World.GetChunck(Pos).Remove(self);
-        }
-
-        
-        public void AddToMap(World map, Entity self)
-        {
-            World = map;
-            //Time.AddRelative(controller, 1000);
-            World.GetChunck(Pos).Add(self);
         }
     }
 }

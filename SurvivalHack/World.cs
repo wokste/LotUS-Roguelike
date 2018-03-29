@@ -22,7 +22,7 @@ namespace SurvivalHack
                     EntityChunks[x, y] = new List<Entity>();
         }
         
-        public MoveComponent GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
+        public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
             int x, y;
             do
@@ -31,12 +31,7 @@ namespace SurvivalHack
                 y = Dicebag.UniformInt(Map.Height);
             } while (!Map.HasFlag(x, y, flag));
 
-            return new MoveComponent
-            {
-                Pos = new Vec(x, y),
-                World = this,
-                Flags = flag
-            };
+            return new Vec(x, y);
         }
 
         // Encaptulated functions

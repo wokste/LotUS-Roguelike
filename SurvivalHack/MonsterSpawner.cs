@@ -18,8 +18,10 @@ namespace SurvivalHack
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
-                monster.Move.AddToMap(map, monster);
+                //monster.Move.AddToMap(map, monster);
 
+                MoveComponent.Bind(monster, map);
+                
                 //_game.AddCreature(monster);
             }
         }
@@ -42,7 +44,7 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(40),
-                    Move = _game.World.GetEmptyLocation(),
+                    Flags = TerrainFlag.Walk,
                     Speed = 0.6f,
                     Symbol = new Symbol('z', Color.Red)
                 };
@@ -61,7 +63,7 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(10),
-                    Move = _game.World.GetEmptyLocation(TerrainFlag.Fly),
+                    Flags = TerrainFlag.Fly,
                     Speed = 1.5f,
                     Symbol = new Symbol('b', Color.Red),
                 };
@@ -80,7 +82,7 @@ namespace SurvivalHack
                     },
                     Ai = new AiController(),
                     Health = new Bar(20),
-                    Move = _game.World.GetEmptyLocation(TerrainFlag.Swim),
+                    Flags = TerrainFlag.Swim,
                     Speed = 1f,
                     Symbol = new Symbol('f', Color.Red),
                 };

@@ -10,6 +10,7 @@ namespace SurvivalHack.ECM
         public Bar Hunger;
         public AttackComponent Attack;
         public MoveComponent Move;
+        public TerrainFlag Flags;
 
         public Symbol Symbol;
 
@@ -29,7 +30,7 @@ namespace SurvivalHack.ECM
             {
                 Alive = false;
                 OnDestroy?.Invoke(this);
-                Move.Remove(this);
+                Move.Unbind(this);
                 
                 Message.Write($"{Name} died", Move.Pos, Color.Red);
             }
@@ -41,7 +42,7 @@ namespace SurvivalHack.ECM
         {
             if (food.Type.OnEat == null)
             {
-                Message.Write("You can't eat that, silly person.", Vec.NaV, Color.Red);
+                Message.Write("You can't eat that, silly person.", null, Color.Red);
                 return false;
             }
 
@@ -51,11 +52,6 @@ namespace SurvivalHack.ECM
     }
 
     public class Player : Entity{
-
-        public Player(MoveComponent position) {
-            Move = position;
-            FoV = new FieldOfView(position);
-        }
     }
 
     public class Monster : Entity{
