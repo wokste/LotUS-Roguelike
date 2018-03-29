@@ -67,7 +67,7 @@ namespace SurvivalHack.Ui
             var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
             window.Widgets.Add(infoWidget);
 
-            var characterWidget = new CharacterWidget(_player)
+            var characterWidget = new EntityDetailWidget(_player)
             {
                 DesiredSize = { Width = 16 },
                 Docking = Docking.Right

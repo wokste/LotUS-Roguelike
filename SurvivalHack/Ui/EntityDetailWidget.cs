@@ -4,19 +4,23 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {
-    internal class CharacterWidget : Widget
+    internal class EntityDetailWidget : Widget
     {
-        private readonly Entity _creature;
+        private readonly Entity _entity;
 
         private static readonly char[] Gradient = new[] {' ', (char) 0xB0, (char) 0xB1, (char) 0xB2};
 
-        public CharacterWidget(Entity creature)
+        public EntityDetailWidget(Entity entity)
         {
-            _creature = creature;
+            _entity = entity;
         }
 
         private void PrintBar(string name, int y, Bar bar, Color fgColor, Color bgColor = default(Color))
         {
+            var str = $"{name} ({bar.Current}/{bar.Max})";
+
+            Print(0, y, str, fgColor);
+            /*
             Print(0, y, name, Color.White, Color.Transparent);
 
             var totalLen = Size.Width - name.Length;
@@ -30,7 +34,7 @@ namespace SurvivalHack.Ui
                 sb.Append(lastChar);
             sb.Append(' ', totalLen - sb.Length);
 
-            Print(name.Length, y, sb.ToString(), fgColor, bgColor);
+            Print(name.Length, y, sb.ToString(), fgColor, bgColor);*/
         }
 
         public override void Render(bool forceUpdate)
@@ -39,12 +43,12 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
-            PrintBar("HP:", y++, _creature.Health, Color.Green, Color.Red);
-            PrintBar("NU:", y++, _creature.Hunger, Color.Yellow, Color.Red);
+            PrintBar("HP:", y++, _entity.Health, Color.Green, Color.Red);
+            PrintBar("NU:", y++, _entity.Hunger, Color.Yellow, Color.Red);
             y++;
             Print(0, y++, "Inventory", Color.White);
 
-            foreach (var inv in _creature.Inventory._items)
+            foreach (var inv in _entity.Inventory._items)
             {
                 Print(0, y++, $"- {inv}", Color.Gray);
             }

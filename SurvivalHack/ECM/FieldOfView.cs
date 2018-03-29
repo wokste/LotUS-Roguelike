@@ -9,7 +9,7 @@ namespace SurvivalHack
         public const byte BRIGHTNESS_LIGHT = 255;
         public const byte BRIGHTNESS_DARK = 100;
 
-        private Vec _playerPos;
+        private Vec _entityPos;
 
         public TileGrid Map;
 
@@ -42,17 +42,17 @@ namespace SurvivalHack
             }
 
             VisibleToDark();
-            _playerPos = move.Pos;
+            _entityPos = move.Pos;
             ToVisible();
         }
 
         private void VisibleToDark()
         {
-            var x0 = Math.Max(_playerPos.X - _visualRange, 0);
-            var x1 = Math.Min(_playerPos.X + _visualRange + 1, Map.Width);
+            var x0 = Math.Max(_entityPos.X - _visualRange, 0);
+            var x1 = Math.Min(_entityPos.X + _visualRange + 1, Map.Width);
 
-            var y0 = Math.Max(_playerPos.Y - _visualRange, 0);
-            var y1 = Math.Min(_playerPos.Y + _visualRange + 1, Map.Height);
+            var y0 = Math.Max(_entityPos.Y - _visualRange, 0);
+            var y1 = Math.Min(_entityPos.Y + _visualRange + 1, Map.Height);
 
             for (var x = x0; x < x1; x++)
                 for (var y = y0; y < y1; y++)
@@ -65,7 +65,7 @@ namespace SurvivalHack
         /// </summary>
         private void ToVisible()
         {
-            Visibility[_playerPos.X, _playerPos.Y] = BRIGHTNESS_LIGHT;
+            Visibility[_entityPos.X, _entityPos.Y] = BRIGHTNESS_LIGHT;
             
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
@@ -86,13 +86,13 @@ namespace SurvivalHack
             if (depth > VisualRange)
                 return;
 
-            var x = direction == 'W' ? _playerPos.X - depth : _playerPos.X + depth;
+            var x = direction == 'W' ? _entityPos.X - depth : _entityPos.X + depth;
 
             if (x < 0 || x >= Map.Width)
                 return;
 
-            var yMin = (int)Math.Floor(Clamp(_playerPos.Y + minSlope * depth + 0.49, 0, Map.Height - 1));
-            var yMax = (int)Math.Ceiling(Clamp(_playerPos.Y + maxSlope * depth - 0.49, 0, Map.Height - 1));
+            var yMin = (int)Math.Floor(Clamp(_entityPos.Y + minSlope * depth + 0.49, 0, Map.Height - 1));
+            var yMax = (int)Math.Ceiling(Clamp(_entityPos.Y + maxSlope * depth - 0.49, 0, Map.Height - 1));
 
             for (var y = yMin; y <= yMax; y++)
             {
@@ -102,13 +102,13 @@ namespace SurvivalHack
                 {
                     if (y > yMin && Map.HasFlag(x, y-1, TerrainFlag.Sight))
                     {
-                        ScanQuatrantH(depth + 1, direction, minSlope, GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction));
+                        ScanQuatrantH(depth + 1, direction, minSlope, GetSlope(x, y - 0.5, _entityPos.X, _entityPos.Y, direction));
                     }
                 }
                 else
                 {
                     if (y > yMin && !Map.HasFlag(x, y - 1, TerrainFlag.Sight))
-                        minSlope = GetSlope(x, y - 0.5, _playerPos.X, _playerPos.Y, direction);
+                        minSlope = GetSlope(x, y - 0.5, _entityPos.X, _entityPos.Y, direction);
                 }
             }
 
@@ -128,13 +128,13 @@ namespace SurvivalHack
             if (depth > VisualRange)
                 return;
 
-            var y = direction == 'N' ? _playerPos.Y - depth : _playerPos.Y + depth;
+            var y = direction == 'N' ? _entityPos.Y - depth : _entityPos.Y + depth;
 
             if (y < 0 || y >= Map.Width)
                 return;
             
-            var xMin = (int)Math.Floor(Clamp(_playerPos.X + minSlope * depth + 0.49, 0, Map.Width - 1));
-            var xMax = (int)Math.Ceiling(Clamp(_playerPos.X + maxSlope * depth - 0.49, 0, Map.Width - 1));
+            var xMin = (int)Math.Floor(Clamp(_entityPos.X + minSlope * depth + 0.49, 0, Map.Width - 1));
+            var xMax = (int)Math.Ceiling(Clamp(_entityPos.X + maxSlope * depth - 0.49, 0, Map.Width - 1));
 
             for (var x = xMin; x <= xMax; x++)
             {
@@ -144,13 +144,13 @@ namespace SurvivalHack
                 {
                     if (x > xMin && Map.HasFlag(x-1, y, TerrainFlag.Sight))
                     {
-                        ScanQuatrantV(depth + 1, direction, minSlope, GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction));
+                        ScanQuatrantV(depth + 1, direction, minSlope, GetSlope(x - 0.5, y, _entityPos.X, _entityPos.Y, direction));
                     }
                 }
                 else
                 {
                     if (x > xMin && !Map.HasFlag(x - 1, y, TerrainFlag.Sight))
-                        minSlope = GetSlope(x - 0.5, y, _playerPos.X, _playerPos.Y, direction);
+                        minSlope = GetSlope(x - 0.5, y, _entityPos.X, _entityPos.Y, direction);
                 }
             }
 
@@ -190,8 +190,8 @@ namespace SurvivalHack
         /// </summary>
         private void UpdateVisibility(int x, int y)
         {
-            var dx = x - _playerPos.X;
-            var dy = y - _playerPos.Y;
+            var dx = x - _entityPos.X;
+            var dy = y - _entityPos.Y;
 
             var dist = Math.Sqrt(dx * dx + dy * dy);
             //var antiAliasRadius = 2f;

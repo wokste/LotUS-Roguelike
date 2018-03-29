@@ -81,7 +81,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="MonsterSpawner.cs" />
     <Compile Include="PerlinNoise.cs" />
-    <Compile Include="Ui\CharacterWidget.cs" />
+    <Compile Include="Ui\EntityDetailWidget.cs" />
     <Compile Include="Ui\GameOverWidget.cs" />
     <Compile Include="Ui\OptionWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />

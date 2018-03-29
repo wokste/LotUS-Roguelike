@@ -8,7 +8,6 @@ namespace SurvivalHack
     public class World
     {
         public TileGrid Map;
-        //public Dictionary<Vec, Entity> Creatures = new Dictionary<Vec,Entity>();
         private List<Entity>[,] EntityChunks;
         private const int CHUNK_SIZE = 16;
 
