@@ -68,6 +68,9 @@ namespace HackConsole
         public Vec BottomRight => new Vec(Left + Width, Top + Height);
         public Vec Center => new Vec(Width / 2 + Left, Height / 2 + Top);
 
+        public static Rect operator +(Rect l, Vec r) => new Rect(l.TopLeft + r, l.Size);
+        public static Rect operator -(Rect l, Vec r) => new Rect(l.TopLeft - r, l.Size);
+
         public Rect(Vec pos, Vec size)
         {
             Left = pos.X;
@@ -76,9 +79,9 @@ namespace HackConsole
             Height = size.Y;
         }
 
-        public bool Contains(int x, int y)
+        public bool Contains(Vec v)
         {
-            return (x >= Left) && (y >= Top) && (x < Right) && (y < Bottom);
+            return (v.X >= Left) && (v.Y >= Top) && (v.X < Right) && (v.Y < Bottom);
         }
     }
 }

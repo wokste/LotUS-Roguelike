@@ -33,20 +33,19 @@ namespace SurvivalHack.Ui
 
         private void RenderCreatures()
         {
-            foreach (var creature in _world.Creatures) {
-                var x = creature.Move.Pos.X;
-                var y = creature.Move.Pos.Y;
+            var area = Size + _offset;
+            foreach (var creature in _world.GetEntities(area)) {
+                var p = creature.Move.Pos;
                 
-                if (_view.Visibility[x,y] < 128)
+                if (_view.Visibility[p.X,p.Y] < 128)
                     continue;
 
-                x -= _offset.X;
-                y -= _offset.Y;
+                p -= _offset;
 
-                if (!Size.Contains(x,y))
+                if (!Size.Contains(p))
                     continue;
 
-                CellGrid.Cells[x, y] = creature.Symbol;
+                CellGrid.Cells[p.X, p.Y] = creature.Symbol;
             }
         }
 
@@ -93,8 +92,10 @@ namespace SurvivalHack.Ui
                     OnSelected?.Invoke(null);
                 }
 
-                var c = _world.GetEntity(absPos.X, absPos.Y);
-                OnSelected?.Invoke(c);
+                var list = _world.GetEntity(absPos);
+
+                foreach(var e in list)
+                    OnSelected?.Invoke(e);
             }
         }
 

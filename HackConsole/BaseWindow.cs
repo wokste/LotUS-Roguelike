@@ -50,7 +50,7 @@ namespace HackConsole
             {
                 Widget top = null;
                 foreach (var w in container.Widgets)
-                    if (w.Size.Contains(pos.X, pos.Y))
+                    if (w.Size.Contains(pos))
                         top = w;
 
                 container = top as WidgetContainer;

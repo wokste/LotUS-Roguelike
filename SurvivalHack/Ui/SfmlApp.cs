@@ -46,7 +46,8 @@ namespace SurvivalHack.Ui
 
             _player.OnDestroy += PlayerDied;
 
-            _game.AddCreature(_player);
+            //_game.AddCreature(_player);
+            _player.Move.AddToMap(_game.World, _player);
         }
 
         private BaseWindow InitGui()
@@ -55,7 +56,7 @@ namespace SurvivalHack.Ui
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             Message.OnMessage += (m) =>
             {
-                if (_player == null || _player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
+                if (_player == null || m.Pos == Vec.NaV || _player.FoV.Visibility[m.Pos.X, m.Pos.Y] > 128)
                 {
                     consoleWidget.AddMessage(m);
                 }
@@ -133,12 +134,14 @@ namespace SurvivalHack.Ui
         public void OnArrowPress(Vec move, EventFlags flags)
         {
             var actPoint = _player.Move.Pos + move;
-            foreach (var c in _game.World.Creatures.ToArray())
+
+            foreach (var e in _game.World.GetEntity(actPoint))
             {
-                if (c.Move.Pos == actPoint && c != _player)
+                if (e != _player)
                 {
-                    _player.Attack.Attack(_player, c);
+                    _player.Attack.Attack(_player, e);
                     _game.GameTick(1);
+                    return;
                 }
             }
 

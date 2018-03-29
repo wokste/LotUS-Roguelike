@@ -80,18 +80,23 @@ namespace SurvivalHack.ECM
 
         internal Entity FindEnemy(Monster self)
         {
-            foreach(var c in self.Move.World.Creatures)
+            var pos = self.Move.Pos;
+
+            // Todo: Sight radius
+            var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
+
+            foreach(var e in self.Move.World.GetEntities(area))
             {
-                if (c == self)
+                if (e == self)
                     continue;
 
-                if (AttitudeSee(self, c) == EAttitude.Ignore)
+                if (AttitudeSee(self, e) == EAttitude.Ignore)
                     continue;
 
-                var delta = self.Move.Pos - c.Move.Pos;
+                var delta = self.Move.Pos - e.Move.Pos;
 
                 if (delta.LengthSquared < 100) // Todo: Sight radius
-                    return c;
+                    return e;
             }
             return null;
         }

@@ -18,7 +18,9 @@ namespace SurvivalHack
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
-                _game.AddCreature(monster);
+                monster.Move.AddToMap(map, monster);
+
+                //_game.AddCreature(monster);
             }
         }
 
