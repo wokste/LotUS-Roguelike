@@ -17,8 +17,8 @@ namespace SurvivalHack
             Map = new TileGrid(size.X, size.Y);
             EntityChunks = new List<Entity>[(int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)];
 
-            for (int y = 0; y < size.Y / EntityChunks.GetLength(1); ++y)
-                for (int x = 0; x < size.X / EntityChunks.GetLength(0); ++x)
+            for (int y = 0; y < EntityChunks.GetLength(1); ++y)
+                for (int x = 0; x < EntityChunks.GetLength(0); ++x)
                     EntityChunks[x, y] = new List<Entity>();
         }
         

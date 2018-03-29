@@ -19,7 +19,7 @@ namespace SurvivalHack.Ui
         {
             var str = $"{name} ({bar.Current}/{bar.Max})";
 
-            Print(0, y, str, fgColor);
+            Print(0, y, str, fgColor, Color.Transparent);
             /*
             Print(0, y, name, Color.White, Color.Transparent);
 
