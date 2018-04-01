@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -24,6 +25,8 @@ namespace SurvivalHack
         
         public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
+            Debug.Assert(flag != TerrainFlag.None);
+
             int x, y;
             do
             {

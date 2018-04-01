@@ -13,12 +13,12 @@ namespace SurvivalHack.ECM
             if (Dicebag.UniformInt(100) <= HitChance)
             {
                 var damage = Dicebag.Randomize(Damage);
-                Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker?.Move.Pos ?? Vec.NaV, Color.Yellow);
+                Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker?.Move?.Pos, Color.Yellow);
                 defender.TakeDamage(damage);
             }
             else
             {
-                Message.Write($"{attacker.Name} attacks {defender.Name} but misses.", attacker?.Move.Pos ?? Vec.NaV, Color.Cyan);
+                Message.Write($"{attacker.Name} attacks {defender.Name} but misses.", attacker?.Move?.Pos, Color.Cyan);
 
             }
         }

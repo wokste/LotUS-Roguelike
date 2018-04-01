@@ -36,6 +36,7 @@ namespace SurvivalHack.Ui
                     Damage = 20,
                     HitChance = 75f
                 },
+                Flags = TerrainFlag.Walk,
                 Health = new Bar(100),
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)

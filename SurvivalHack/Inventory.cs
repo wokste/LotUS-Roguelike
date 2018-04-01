@@ -17,12 +17,12 @@ namespace SurvivalHack
                 {
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     existing.Count += item.Count;
-                    Message.Write($"You aquired {item} making a total of {existing}", Vec.NaV, Color.Green);
+                    Message.Write($"You aquired {item} making a total of {existing}", null, Color.Green);
                     return;
                 }
             }
             
-            Message.Write($"You aquired first {item}", Vec.NaV, Color.Green);
+            Message.Write($"You aquired first {item}", null, Color.Green);
             _items.Add(item);
         }
 
