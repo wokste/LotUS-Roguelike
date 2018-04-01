@@ -35,9 +35,9 @@ namespace SurvivalHack
         
         public void Update(MoveComponent move)
         {
-            if (Map != move.World.Map)
+            if (Map != move.Level.Map)
             {
-                Map = move.World.Map;
+                Map = move.Level.Map;
                 Visibility = new byte[Map.Width, Map.Height]; // 0 initialized so everything is dark.
             }
 

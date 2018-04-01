@@ -6,29 +6,29 @@ namespace SurvivalHack.ECM
     public class MoveComponent
     {
         public Vec Pos { get; set; }
-        public World World;
+        public Level Level;
 
         private MoveComponent()
         {
         }
 
-        public static void Bind(Entity self, World world, Vec? pos = null)
+        public static void Bind(Entity self, Level level, Vec? pos = null)
         {
-            var pos2 = pos ?? world.GetEmptyLocation(self.Flags);
+            var pos2 = pos ?? level.GetEmptyLocation(self.Flags);
 
-            var c = world.GetChunck(pos2);
+            var c = level.GetChunck(pos2);
             c.Add(self);
 
             self.Move = new MoveComponent
             {
-                World = world,
+                Level = level,
                 Pos = pos2
             };
         }
 
         internal void Unbind(Entity self)
         {
-            World.GetChunck(Pos).Remove(self);
+            Level.GetChunck(Pos).Remove(self);
             self.Move = null;
         }
 
@@ -38,16 +38,16 @@ namespace SurvivalHack.ECM
             newPosition += direction;
 
             // You cannot walk of the edge of map
-            if (!World.InBoundary(newPosition.X, newPosition.Y))
+            if (!Level.InBoundary(newPosition.X, newPosition.Y))
                 return false;
 
             // Terrain collisions
-            if (!World.HasFlag(newPosition.X, newPosition.Y, self.Flags))
+            if (!Level.HasFlag(newPosition.X, newPosition.Y, self.Flags))
                 return false;
 
-            var oldChunk = World.GetChunck(Pos);
+            var oldChunk = Level.GetChunck(Pos);
             Pos = newPosition;
-            var newChunk = World.GetChunck(Pos);
+            var newChunk = Level.GetChunck(Pos);
 
             if (oldChunk != newChunk)
             {

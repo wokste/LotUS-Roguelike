@@ -6,13 +6,13 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class World
+    public class Level
     {
         public TileGrid Map;
         private List<Entity>[,] EntityChunks;
         private const int CHUNK_SIZE = 16;
 
-        public World()
+        public Level()
         {
             Vec size = new Vec(64, 64);
             Map = new TileGrid(size.X, size.Y);
@@ -100,8 +100,8 @@ namespace SurvivalHack
 
         public IList<Entity> GetChunck(Vec Pos)
         {
-            var cx = Pos.X / World.CHUNK_SIZE;
-            var cy = Pos.Y / World.CHUNK_SIZE;
+            var cx = Pos.X / Level.CHUNK_SIZE;
+            var cy = Pos.Y / Level.CHUNK_SIZE;
             return EntityChunks[cx, cy];
         }
     }

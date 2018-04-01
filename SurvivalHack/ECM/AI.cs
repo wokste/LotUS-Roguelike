@@ -85,7 +85,7 @@ namespace SurvivalHack.ECM
             // Todo: Sight radius
             var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
 
-            foreach(var e in self.Move.World.GetEntities(area))
+            foreach(var e in self.Move.Level.GetEntities(area))
             {
                 if (e == self)
                     continue;

@@ -6,17 +6,17 @@ namespace SurvivalHack
     public class Game
     {
         public MonsterSpawner Spawner;
-        public World World;
+        public Level Level;
 
         public void Init()
         {
             ItemTypeList.InitTypes();
             TileTypeList.InitTypes();
 
-            World = new World();
+            Level = new Level();
 
             Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(World, 16);
+            Spawner.Spawn(Level, 16);
         }
 
         public void GameTick(int ticks)

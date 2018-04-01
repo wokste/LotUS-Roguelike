@@ -13,14 +13,14 @@ namespace SurvivalHack
             _game = game;
         }
 
-        public void Spawn(World map, int count)
+        public void Spawn(Level level, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
                 //monster.Move.AddToMap(map, monster);
 
-                MoveComponent.Bind(monster, map);
+                MoveComponent.Bind(monster, level);
                 
                 //_game.AddCreature(monster);
             }

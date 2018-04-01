@@ -47,7 +47,7 @@ namespace SurvivalHack.Ui
 
             _player.OnDestroy += PlayerDied;
             
-            ECM.MoveComponent.Bind(_player, _game.World);
+            ECM.MoveComponent.Bind(_player, _game.Level);
             _player.FoV = new FieldOfView(_player.Move);
         }
 
@@ -76,7 +76,7 @@ namespace SurvivalHack.Ui
             };
             window.Widgets.Add(characterWidget);
 
-            var worldWidget = new WorldWidget(_game.World, _player.FoV, _player)
+            var worldWidget = new MapWidget(_game.Level, _player.FoV, _player)
             {
                 Docking = Docking.Fill
             };
@@ -137,7 +137,7 @@ namespace SurvivalHack.Ui
         {
             var actPoint = _player.Move.Pos + move;
 
-            foreach (var e in _game.World.GetEntity(actPoint))
+            foreach (var e in _game.Level.GetEntity(actPoint))
             {
                 if (e != _player)
                 {
