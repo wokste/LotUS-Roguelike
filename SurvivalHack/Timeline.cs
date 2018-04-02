@@ -4,58 +4,48 @@ using System.Linq;
 
 namespace SurvivalHack
 {
-    public class Timeline<T>
+    public interface IEvent {
+        void Run();
+
+        int RepeatTurns { get; }
+    }
+
+    public class Timeline : IEvent
     {
-        private readonly SortedDictionary<long,List<T>> _queue = new SortedDictionary<long, List<T>>();
-        private int _index;
+        private readonly SortedDictionary<long,List<IEvent>> _sporadicListQueue = new SortedDictionary<long, List<IEvent>>();
         private long _time = 0;//long.MinValue;
-        private List<T> _list;
+        //private List<IEvent> _repeatList;
 
-        public long Time => _time;
+        //public long Time => _time;
+        public int RepeatTurns => 1;
 
-        public void AddRelative(T toInsert, long time)
+        public void Insert(IEvent evt)
         {
-            Add(toInsert, _time + time);
-        }
+            if (evt.RepeatTurns <= 0)
+                return;
 
-        public void Add(T toInsert, long time)
-        {
-            // If this is not the case, non-obvious bugs may arise.
-            Debug.Assert(time > _time);
+            var absoluteTime = _time + evt.RepeatTurns;
 
-            if (!_queue.TryGetValue(time, out var list))
+            if (!_sporadicListQueue.TryGetValue(absoluteTime, out var list))
             {
-                list = new List<T>();
-                _queue.Add(time, list);
+                list = new List<IEvent>();
+                _sporadicListQueue.Add(absoluteTime, list);
             }
 
-            list.Add(toInsert);
+            list.Add(evt);
         }
 
-        public T Dequeue()
+        public void Run()
         {
-            var ret = Peek();
-
-            _list[_index] = default(T); // Helps the GC.
-            _index++;
-            if (_index >= _list.Count)
+            // Run repeat list
+            if (_sporadicListQueue.TryGetValue(++_time, out var sporadicList))
             {
-                _list = null;
-            }
-            return ret;
-        }
+                foreach (var e in sporadicList)
+                    e.Run();
 
-        public T Peek()
-        {
-            if (_list == null)
-            {
-                var pair = _queue.First();
-                _queue.Remove(pair.Key);
-                _index = 0;
-                _time = pair.Key;
-                _list = pair.Value;
+                foreach (var e in sporadicList)
+                    Insert(e);
             }
-            return _list[_index];
         }
     }
 }

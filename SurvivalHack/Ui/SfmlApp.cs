@@ -84,7 +84,7 @@ namespace SurvivalHack.Ui
 
             window.BaseKeyHandler = this;
             worldWidget.OnSelected += c => { infoWidget.Item = c; };
-            worldWidget.OnSpendTime += _game.GameTick;
+            worldWidget.OnSpendTime += _game.ActorAct;
 
             return window;
         }
@@ -122,7 +122,7 @@ namespace SurvivalHack.Ui
                             OnSelect = i =>
                             {
                                 if (_player.Eat(i))
-                                    _game.GameTick(1);
+                                    _game.ActorAct(1);
                             },
                             Question = "Choose food",
                             Set = _player.Inventory._items
@@ -142,14 +142,14 @@ namespace SurvivalHack.Ui
                 if (e != _player)
                 {
                     _player.Attack.Attack(_player, e);
-                    _game.GameTick(1);
+                    _game.ActorAct(1);
                     return;
                 }
             }
 
             if (_player.Move.Walk(_player, move))
             {
-                _game.GameTick((int)(1 * move.Length));
+                _game.ActorAct((int)(1 * move.Length));
             }
         }
     }

@@ -32,7 +32,7 @@ namespace SurvivalHack.ECM
                 OnDestroy?.Invoke(this);
                 Move.Unbind(this);
                 
-                Message.Write($"{Name} died", Move.Pos, Color.Red);
+                Message.Write($"{Name} died", Move?.Pos, Color.Red);
             }
         }
 

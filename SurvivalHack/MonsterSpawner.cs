@@ -18,11 +18,8 @@ namespace SurvivalHack
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
-                //monster.Move.AddToMap(map, monster);
-
                 MoveComponent.Bind(monster, level);
-                
-                //_game.AddCreature(monster);
+                _game.Timeline.Insert(new AiEvent(monster));
             }
         }
 

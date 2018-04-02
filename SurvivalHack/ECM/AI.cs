@@ -120,4 +120,20 @@ namespace SurvivalHack.ECM
         Hate,   // Attacks it
         Fear,   // Run away
     }
+
+    public class AiEvent : IEvent {
+        Monster _entity;
+
+        public AiEvent(Monster entity)
+        {
+            _entity = entity;
+        }
+
+        public int RepeatTurns => _entity.Alive ? 1 : -1;
+
+        public void Run()
+        {
+            _entity.Act();
+        }
+    }
 }

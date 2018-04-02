@@ -1,12 +1,14 @@
 ﻿using SurvivalHack.ECM;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SurvivalHack
 {
     public class Game
     {
-        public MonsterSpawner Spawner;
         public Level Level;
+        public Timeline Timeline = new Timeline();
 
         public void Init()
         {
@@ -15,21 +17,13 @@ namespace SurvivalHack
 
             Level = new Level();
 
-            Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(Level, 16);
+            var spawner = new MonsterSpawner(this);
+            spawner.Spawn(Level, 16);
         }
 
-        public void GameTick(int ticks)
+        public void ActorAct(int ticks)
         {
-            /*
-            foreach (var c in World.GetEntities())
-            {
-                if (!(c is Monster m))
-                    continue;
-
-                m.Act();
-            }
-            */
+            Timeline.Run();
         }
 
         public void Update(int ticks)
