@@ -14,7 +14,7 @@ namespace SurvivalHack
         public void Init()
         {
             ItemTypeList.InitTypes();
-            TileTypeList.InitTypes();
+            TileList.InitTypes();
 
             World = new World();
 

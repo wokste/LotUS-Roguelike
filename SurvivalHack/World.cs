@@ -24,13 +24,7 @@ namespace SurvivalHack
 
             return new Vec(x, y);
         }
-
-        // Encaptulated functions
-        public void DestroyWall(int x, int y)
-        {
-            Map.DestroyWall(x,y);
-        }
-
+        
         public bool InBoundary(int x, int y)
         {
             return (x >= 0 && x < Map.Width && y >= 0 && y < Map.Height);
@@ -48,19 +42,9 @@ namespace SurvivalHack
             return false;
         }
 
-        public TileType GetFloor(int x, int y)
+        public Tile GetTile(int x, int y)
         {
-            return Map.GetFloor(x, y);
-        }
-
-        public TileType GetWall(int x, int y)
-        {
-            return Map.GetWall(x,y);
-        }
-
-        public TileType GetTop(int x, int y)
-        {
-            return Map.GetWall(x, y) ?? Map.GetFloor(x, y);
+            return Map.Get(x, y);
         }
 
         internal Creature GetCreature(int x, int y)

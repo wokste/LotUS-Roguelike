@@ -37,22 +37,21 @@ namespace SurvivalHack
                     
                     if (height > 0.4)
                     {
-                        _grid[x, y].Floor = TileTypeList.Get("gravel");
-                        _grid[x, y].Wall = Dicebag.UniformInt(75) == 1 ? TileTypeList.Get("ore") : TileTypeList.Get("rock");
+                        _grid[x, y] = Dicebag.UniformInt(75) == 1 ? TileList.Get("ore") : TileList.Get("rock");
                     }
                     else if (height > -0.4)
                     {
-                        _grid[x, y].Floor = TileTypeList.Get("grass");
+                        _grid[x, y] = TileList.Get("grass");
                         if (Dicebag.UniformInt(10) == 1)
-                            _grid[x, y].Wall = TileTypeList.Get("tree");
+                            _grid[x, y] = TileList.Get("tree");
                         else if (Dicebag.UniformInt(2500) == 1)
-                            _grid[x, y].Wall = TileTypeList.Get("pumpkin");
+                            _grid[x, y] = TileList.Get("pumpkin");
                         else if (Dicebag.UniformInt(500) == 1)
-                            _grid[x, y].Wall = TileTypeList.Get("mushroom");
+                            _grid[x, y] = TileList.Get("mushroom");
                     }
                     else
                     {
-                        _grid[x, y].Floor = TileTypeList.Get("water");
+                        _grid[x, y] = TileList.Get("water");
                     }
                 }
             }
@@ -60,35 +59,15 @@ namespace SurvivalHack
 
         public bool HasFlag(int x, int y, TerrainFlag testFlag)
         {
-            var flags = _grid[x, y].Floor.Flags;
-            if (_grid[x, y].Wall != null)
-                flags &= _grid[x, y].Wall.Flags;
+            var flags = _grid[x, y].Flags;
 
             return (testFlag & flags) != 0;
         }
 
-        public TileType GetFloor(int x, int y)
+        public Tile Get(int x, int y)
         {
-            return _grid[x,y].Floor;
+            return _grid[x,y];
         }
-
-        public TileType GetWall(int x, int y)
-        {
-            return _grid[x,y].Wall;
-        }
-
-        public void DestroyWall(int x, int y)
-        {
-            _grid[x, y].Wall = null;
-        }
-    }
-    
-    public struct Tile
-    {
-        public TileType Floor;
-        public TileType Wall;
-
-        public bool BlocksSights => (Wall != null && (Wall.Flags & TerrainFlag.Sight) != 0);
     }
 
     [Flags]
@@ -103,7 +82,7 @@ namespace SurvivalHack
         All = 0x7fffffff,
     }
 
-    public class TileType
+    public class Tile
     {
         public string Tag;
 
@@ -115,15 +94,15 @@ namespace SurvivalHack
         public Symbol Char;
     }
 
-    public static class TileTypeList
+    public static class TileList
     {
-        private static readonly List<TileType> Types = new List<TileType>();
+        private static readonly List<Tile> Types = new List<Tile>();
 
         public static void InitTypes()
         {
             Debug.Assert(Types.Count == 0);
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "grass",
                 DropTag = "",
@@ -132,7 +111,7 @@ namespace SurvivalHack
                 Char = new Symbol('.', Color.Green)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "water",
                 DropTag = "",
@@ -141,7 +120,7 @@ namespace SurvivalHack
                 Char = new Symbol('~', Color.Cyan)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "gravel",
                 DropTag = "",
@@ -150,7 +129,7 @@ namespace SurvivalHack
                 Char = new Symbol(',', Color.Gray)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "tree",
                 DropTag = "wood",
@@ -159,7 +138,7 @@ namespace SurvivalHack
                 Char = new Symbol((char)6, Color.Green)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "rock",
                 DropTag = "stone",
@@ -168,7 +147,7 @@ namespace SurvivalHack
                 Char = new Symbol('#', Color.Gray)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "stone",
                 DropTag = "stone",
@@ -177,7 +156,7 @@ namespace SurvivalHack
                 Char = new Symbol((char)30, Color.Gray)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "ore",
                 DropTag = "ore",
@@ -186,7 +165,7 @@ namespace SurvivalHack
                 Char = new Symbol('~', Color.Red)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "pumpkin",
                 DropTag = "pumpkin",
@@ -195,7 +174,7 @@ namespace SurvivalHack
                 Char = new Symbol('p', Color.Orange)
             });
 
-            Types.Add(new TileType
+            Types.Add(new Tile
             {
                 Tag = "mushroom",
                 DropTag = "mushroom",
@@ -205,7 +184,7 @@ namespace SurvivalHack
             });
         }
 
-        public static TileType Get(string tag)
+        public static Tile Get(string tag)
         {
             var tileId = Types.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileId != -1);

@@ -72,7 +72,7 @@ namespace SurvivalHack.Ui
                     if (visibility == 0)
                         continue;
 
-                    CellGrid.Cells[x, y] = _world.GetTop(x + _offset.X, y + _offset.Y).Char;
+                    CellGrid.Cells[x, y] = _world.GetTile(x + _offset.X, y + _offset.Y).Char;
                     if (visibility < 255)
                     {
                         CellGrid.Cells[x, y].TextColor.Darken(visibility);

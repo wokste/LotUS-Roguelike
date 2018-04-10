@@ -59,34 +59,6 @@ namespace SurvivalHack
             }
         }
 
-        public bool Mine()
-        {
-            var minePosition = Position;
-            minePosition += Facing;
-
-            var x = minePosition.X;
-            var y = minePosition.Y;
-
-            if (!Map.InBoundary(x, y))
-                return false;
-
-            var wall = Map.GetWall(x, y);
-
-            // Nothing to drop
-            if (wall == null)
-                return false;
-
-            Inventory.Add(new Item
-            {
-                Type = ItemTypeList.Get(wall.DropTag),
-                Count = Dicebag.Randomize(wall.DropCount),
-            });
-
-            Map.DestroyWall(x, y);
-
-            return true;
-        }
-
         public bool Eat(Item food)
         {
             if (food.Type.OnEat == null)
