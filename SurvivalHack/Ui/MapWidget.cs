@@ -8,11 +8,11 @@ namespace SurvivalHack.Ui
     {
         private readonly Level _level;
         private readonly FieldOfView _view;
-        private readonly Player _player;
+        private readonly Entity _player;
 
         private Vec _offset;
 
-        public MapWidget(Level level, FieldOfView view, Player following)
+        public MapWidget(Level level, FieldOfView view, Entity following)
         {
             _level = level;
             _view = view;

@@ -20,17 +20,17 @@ namespace SurvivalHack.Mapgen
             {
                 var monster = CreateMonster();
                 MoveComponent.Bind(monster, level);
-                _game.Timeline.Insert(new AiEvent(monster));
+                _game.Timeline.Insert(new ActEvent(monster));
             }
         }
 
-        private Monster CreateMonster()
+        private Entity CreateMonster()
         {
             var rnd = Dicebag.UniformInt(100);
 
             if (rnd < 60)
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Zombie",
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
@@ -40,7 +40,8 @@ namespace SurvivalHack.Mapgen
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(40),
                     Flags = TerrainFlag.Walk,
                     Speed = 0.6f,
@@ -49,7 +50,7 @@ namespace SurvivalHack.Mapgen
             }
             else if (rnd < 98)
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Giant Bat",
                     Description = "A flying monster that is a nuisance to any adventurer.",
@@ -59,7 +60,8 @@ namespace SurvivalHack.Mapgen
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(10),
                     Flags = TerrainFlag.Fly,
                     Speed = 1.5f,
@@ -68,7 +70,7 @@ namespace SurvivalHack.Mapgen
             }
             else
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Giant Fish",
                     Description = "A swimming monster that can't reach you on land.",
@@ -78,7 +80,8 @@ namespace SurvivalHack.Mapgen
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(20),
                     Flags = TerrainFlag.Swim,
                     Speed = 1f,

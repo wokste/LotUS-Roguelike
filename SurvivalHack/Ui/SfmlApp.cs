@@ -6,7 +6,7 @@ namespace SurvivalHack.Ui
     {
         private Game _game;
         private readonly BaseWindow _window;
-        private ECM.Player _player;
+        private ECM.Entity _player;
 
         private static void Main(string[] args)
         {
@@ -27,7 +27,7 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new ECM.Player()
+            _player = new ECM.Entity()
             {
                 Name = "Player",
                 Description = "You, as a player",
@@ -147,7 +147,7 @@ namespace SurvivalHack.Ui
                 }
             }
 
-            if (_player.Move.Walk(_player, move))
+            if (_player.Move.Move(_player, move))
             {
                 _game.ActorAct((int)(1 * move.Length));
             }

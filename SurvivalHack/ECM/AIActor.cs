@@ -3,16 +3,16 @@ using HackConsole;
 
 namespace SurvivalHack.ECM
 {
-    public class AiController
+    public class AiActor
     {
         // TODO: Move sspeed
         // TODO: Attack speed
         // TODO: Split movement and attack
 
-        public void Act(Monster self)
+        public void Act(Entity self)
         {
             if (self.Enemy == null || !self.Enemy.Alive)
-                self.Enemy = FindEnemy(self);
+                self.Enemy = self.Attitude.FindEnemy(self);
 
             if (self.Enemy == null)
             {
@@ -23,18 +23,18 @@ namespace SurvivalHack.ECM
             AttackEnemy(self);
         }
 
-        private void Wander(Monster self)
+        private void Wander(Entity self)
         {
             for (var i = 0; i < 10; i++)
             {
                 var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
                 
-                if (self.Move.Walk(self, delta))
+                if (self.Move.Move(self, delta))
                     return;
             }
         }
 
-        private void ChaseEnemy(Monster self)
+        private void ChaseEnemy(Entity self)
         {
             var delta = self.Enemy.Move.Pos - self.Move.Pos;
 
@@ -43,23 +43,23 @@ namespace SurvivalHack.ECM
             if (delta == deltaClamped)
                 return;
 
-            if (self.Move.Walk(self, deltaClamped))
+            if (self.Move.Move(self, deltaClamped))
                 return;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (self.Move.Walk(self, new Vec(deltaClamped.X, 0)))
+                if (self.Move.Move(self, new Vec(deltaClamped.X, 0)))
                     return;
 
-                if (self.Move.Walk(self, new Vec(0, deltaClamped.Y)))
+                if (self.Move.Move(self, new Vec(0, deltaClamped.Y)))
                     return;
             }
             else
             {
-                if (self.Move.Walk(self, new Vec(0, deltaClamped.Y)))
+                if (self.Move.Move(self, new Vec(0, deltaClamped.Y)))
                     return;
                 
-                if (self.Move.Walk(self, new Vec(deltaClamped.X, 0)))
+                if (self.Move.Move(self, new Vec(deltaClamped.X, 0)))
                     return;
             }
 
@@ -68,7 +68,7 @@ namespace SurvivalHack.ECM
             Wander(self);
         }
 
-        private bool AttackEnemy(Monster self)
+        private bool AttackEnemy(Entity self)
         {
             if (self.Enemy != null && self.Attack != null && self.Attack.InRange(self, self.Enemy))
             {
@@ -78,34 +78,7 @@ namespace SurvivalHack.ECM
             return false;
         }
 
-        internal Entity FindEnemy(Monster self)
-        {
-            var pos = self.Move.Pos;
-
-            // Todo: Sight radius
-            var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
-
-            foreach(var e in self.Move.Level.GetEntities(area))
-            {
-                if (e == self)
-                    continue;
-
-                if (AttitudeSee(self, e) == EAttitude.Ignore)
-                    continue;
-
-                var delta = self.Move.Pos - e.Move.Pos;
-
-                if (delta.LengthSquared < 100) // Todo: Sight radius
-                    return e;
-            }
-            return null;
-        }
-
-        private EAttitude AttitudeSee(Monster self, Entity other) {
-            return (other is Player) ? EAttitude.Hate : EAttitude.Ignore;
-        }
-
-        internal void Move(Monster self)
+        internal void Move(Entity self)
         {
             if (self.Enemy != null)
                 ChaseEnemy(self);
@@ -114,17 +87,10 @@ namespace SurvivalHack.ECM
         }
     }
 
-    internal enum EAttitude {
-        Ignore, // Ignores other character
-        Follow, // Follow it
-        Hate,   // Attacks it
-        Fear,   // Run away
-    }
+    public class ActEvent : IEvent {
+        Entity _entity;
 
-    public class AiEvent : IEvent {
-        Monster _entity;
-
-        public AiEvent(Monster entity)
+        public ActEvent(Entity entity)
         {
             _entity = entity;
         }
@@ -133,7 +99,19 @@ namespace SurvivalHack.ECM
 
         public void Run()
         {
-            _entity.Act();
+            if (!_entity.Alive)
+                return;
+
+            _entity.Attitude.FindEnemy(_entity);
+
+            // Moving.
+            _entity.LeftoverMove += _entity.Speed;
+            for (var i = 1; i <= _entity.LeftoverMove; i++)
+                _entity.Ai.Move(_entity);
+            _entity.LeftoverMove = _entity.LeftoverMove - (int)_entity.LeftoverMove;
+
+            // Acting
+            _entity.Ai.Act(_entity);
         }
     }
 }

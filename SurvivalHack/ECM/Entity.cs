@@ -21,6 +21,12 @@ namespace SurvivalHack.ECM
 
         public float Speed = 1;
         public FieldOfView FoV;
+        public AiActor Ai;
+        public AiAttitude Attitude;
+
+        public float LeftoverMove;
+
+        public Entity Enemy;
 
         public void TakeDamage(int damage)
         {
@@ -48,31 +54,6 @@ namespace SurvivalHack.ECM
 
             food.Type.OnEat.Use(food, this);
             return true;
-        }
-    }
-
-    public class Player : Entity{
-    }
-
-    public class Monster : Entity{
-        public float LeftoverMove;
-
-        public Entity Enemy;
-
-        public AiController Ai;
-
-        public void Act()
-        {
-            Ai.FindEnemy(this);
-
-            // Moving.
-            LeftoverMove += Speed;
-            for (var i = 1; i <= LeftoverMove; i++)
-                Ai.Move(this);
-            LeftoverMove = LeftoverMove - (int) LeftoverMove;
-
-            // Acting
-            Ai.Act(this);
         }
     }
 }

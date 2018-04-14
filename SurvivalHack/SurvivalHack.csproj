@@ -70,8 +70,9 @@
   <ItemGroup>
     <Compile Include="ECM\AttackComponent.cs" />
     <Compile Include="Bar.cs" />
+    <Compile Include="ECM\AiAttitude.cs" />
     <Compile Include="ECM\ConsumableComponent.cs" />
-    <Compile Include="ECM\AI.cs" />
+    <Compile Include="ECM\AiActor.cs" />
     <Compile Include="ECM\Entity.cs" />
     <Compile Include="Dicebag.cs" />
     <Compile Include="ECM\FieldOfView.cs" />

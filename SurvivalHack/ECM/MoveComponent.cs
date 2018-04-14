@@ -32,7 +32,7 @@ namespace SurvivalHack.ECM
             self.Move = null;
         }
 
-        public virtual bool Walk(Entity self, Vec direction)
+        public virtual bool Move(Entity self, Vec direction)
         {
             var newPosition = Pos;
             newPosition += direction;
