@@ -26,8 +26,6 @@ namespace SurvivalHack.ECM
 
         public float LeftoverMove;
 
-        public Entity Enemy;
-
         public void TakeDamage(int damage)
         {
             Health.Current -= damage;

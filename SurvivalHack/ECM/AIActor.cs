@@ -5,25 +5,33 @@ namespace SurvivalHack.ECM
 {
     public class AiActor
     {
-        // TODO: Move sspeed
-        // TODO: Attack speed
-        // TODO: Split movement and attack
-
-        public void Act(Entity self)
+        internal void Move(Entity self)
         {
-            if (self.Enemy == null || !self.Enemy.Alive)
-                self.Enemy = self.Attitude.FindEnemy(self);
-
-            if (self.Enemy == null)
+            switch (self.Attitude.TargetAction)
             {
-                Wander(self);
-                return;
+                case EAttitude.Ignore:
+                    break;
+                case EAttitude.Chase:
+                    MoveTo(self, self.Attitude.Target);
+                    break;
+                case EAttitude.Fear:
+                    // TODO: Run away
+                    break;
+                case EAttitude.Follow:
+                    MoveTo(self, self.Attitude.Target);
+                    break;
+                case EAttitude.Hate:
+                    MoveTo(self, self.Attitude.Target);
+                    break;
             }
 
-            AttackEnemy(self);
+            if (self.Attitude.Target != null)
+                MoveTo(self, self.Attitude.Target);
+            else
+                MoveRandom(self);
         }
 
-        private void Wander(Entity self)
+        private void MoveRandom(Entity self)
         {
             for (var i = 0; i < 10; i++)
             {
@@ -34,9 +42,9 @@ namespace SurvivalHack.ECM
             }
         }
 
-        private void ChaseEnemy(Entity self)
+        private void MoveTo(Entity self, Entity other)
         {
-            var delta = self.Enemy.Move.Pos - self.Move.Pos;
+            var delta = other.Move.Pos - self.Move.Pos;
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
 
@@ -64,26 +72,32 @@ namespace SurvivalHack.ECM
             }
 
             // Fallback. self.Enemy could not be reached.
-            self.Enemy = null;
-            Wander(self);
+            MoveRandom(self);
         }
 
-        private bool AttackEnemy(Entity self)
+        public void StandardAction(Entity self)
         {
-            if (self.Enemy != null && self.Attack != null && self.Attack.InRange(self, self.Enemy))
+            switch (self.Attitude.TargetAction)
             {
-                self.Attack.Attack(self, self.Enemy);
+                case EAttitude.Ignore:
+                case EAttitude.Chase:
+                case EAttitude.Fear:
+                case EAttitude.Follow:
+                    break;
+                case EAttitude.Hate:
+                    ActionAttackEnemy(self, self.Attitude.Target);
+                    break;
+            }
+        }
+
+        private bool ActionAttackEnemy(Entity self, Entity enemy)
+        {
+            if (enemy != null && self.Attack != null && self.Attack.InRange(self, enemy))
+            {
+                self.Attack.Attack(self, enemy);
                 return true;
             }
             return false;
-        }
-
-        internal void Move(Entity self)
-        {
-            if (self.Enemy != null)
-                ChaseEnemy(self);
-            else
-                Wander(self);
         }
     }
 
@@ -102,7 +116,7 @@ namespace SurvivalHack.ECM
             if (!_entity.Alive)
                 return;
 
-            _entity.Attitude.FindEnemy(_entity);
+            _entity.Attitude.UpdateTarget(_entity);
 
             // Moving.
             _entity.LeftoverMove += _entity.Speed;
@@ -111,7 +125,7 @@ namespace SurvivalHack.ECM
             _entity.LeftoverMove = _entity.LeftoverMove - (int)_entity.LeftoverMove;
 
             // Acting
-            _entity.Ai.Act(_entity);
+            _entity.Ai.StandardAction(_entity);
         }
     }
 }

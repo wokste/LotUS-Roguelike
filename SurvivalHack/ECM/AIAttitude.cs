@@ -9,8 +9,20 @@ namespace SurvivalHack.ECM
 {
     public class AiAttitude
     {
-        public Entity FindEnemy(Entity self)
+        public Entity Target;
+        public EAttitude TargetAction;
+
+        public int Team;
+        public EAttitude AttitudeOtherTeams = EAttitude.Hate;
+        public EAttitude AttitudeAnimals = EAttitude.Hate;
+        public EAttitude AttitudeDamage = EAttitude.Hate;
+        public bool HelpAllies;
+
+        public void UpdateTarget(Entity self)
         {
+            if (!Target.Alive)
+                Target = null;
+
             var pos = self.Move.Pos;
 
             // Todo: Sight radius
@@ -21,27 +33,76 @@ namespace SurvivalHack.ECM
                 if (e == self)
                     continue;
 
-                if (AttitudeSee(self, e) == EAttitude.Ignore)
-                    continue;
-
                 var delta = self.Move.Pos - e.Move.Pos;
 
                 if (delta.LengthSquared < 100) // Todo: Sight radius
-                    return e;
+                    OnSee(self,e);
             }
-            return null;
         }
 
-        private EAttitude AttitudeSee(Entity self, Entity other)
+        private void OnSee(Entity self, Entity other)
         {
-            return (other is Player) ? EAttitude.Hate : EAttitude.Ignore;
+            var otherAttitude = other.Attitude;
+
+            if (otherAttitude == null)
+                return;
+
+            if (Team != 0 && Team == otherAttitude.Team)
+                return; // Being friendly to creatures of the same team.
+
+            SetTarget(other, otherAttitude.Team == 0 ? AttitudeAnimals : AttitudeOtherTeams);
+        }
+        
+        public void TakeDamage(Entity self, Entity other)
+        {
+            var pos = self.Move.Pos;
+
+            OnTakeDamage(self, other);
+
+            // Todo: Sight radius
+            var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
+
+            foreach (var ally in self.Move.Level.GetEntities(area))
+            {
+                if (ally == self)
+                    continue;
+                var allyAttitude = ally.Attitude;
+
+                if (allyAttitude != null && allyAttitude.HelpAllies)
+                {
+                    var delta = self.Move.Pos - ally.Move.Pos;
+
+                    if (delta.LengthSquared < 100) // Todo: Sight radius
+                        allyAttitude.OnTakeDamage(ally, other);
+                }
+            }
+        }
+
+        private void OnTakeDamage(Entity self, Entity other)
+        {
+            var otherAttitude = other.Attitude;
+
+            if (Team != 0 && Team == otherAttitude.Team)
+                return; // Being friendly to creatures of the same team.
+
+            SetTarget(other, AttitudeDamage);
+        }
+
+        private bool SetTarget(Entity newTarget, EAttitude newAttitude) {
+
+            // TODO: Check priority.
+
+            Target = newTarget;
+            TargetAction = newAttitude;
+            return true;
         }
     }
 
     public enum EAttitude
     {
-        Ignore, // Ignores other character
+        Ignore, // Do nothing
         Follow, // Follow it
+        Chase,  // Chase afer enemy
         Hate,   // Attacks it
         Fear,   // Run away
     }
