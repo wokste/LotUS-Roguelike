@@ -1,14 +1,15 @@
-﻿using Symbol = HackConsole.Symbol;
-using Color = HackConsole.Color;
+﻿using HackConsole;
 using SurvivalHack.ECM;
+using System.Collections.Generic;
 
-namespace SurvivalHack
+namespace SurvivalHack.Mapgen
 {
-    public class MonsterSpawner
+    public class DungeonPopulator
     {
         private readonly Game _game;
+        private Dictionary<int, RandomTable<string>> randomTables = new Dictionary<int, RandomTable<string>>();
 
-        public MonsterSpawner(Game game)
+        public DungeonPopulator(Game game)
         {
             _game = game;
         }

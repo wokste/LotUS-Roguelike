@@ -17,7 +17,7 @@ namespace SurvivalHack
 
             Level = new Level();
 
-            var spawner = new MonsterSpawner(this);
+            var spawner = new Mapgen.DungeonPopulator(this);
             spawner.Spawn(Level, 16);
         }
 

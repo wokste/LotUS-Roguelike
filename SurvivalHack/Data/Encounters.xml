@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <level>
+    <encounter odds="10">
+      <entity tag="zombie" count="1-2" />
+    </encounter>
+    <encounter odds="7">
+      <entity tag="bat" count="1-2" />
+    </encounter>
+    <encounter odds="1">
+      <entity tag="fish" count="1" />
+    </encounter>
+  </level>
+</root>
