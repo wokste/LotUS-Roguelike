@@ -58,7 +58,7 @@ namespace HackConsole
         {
             for (var y = 0; y < Y; ++y)
                 for (var x = 0; x < X; ++x)
-                    yield return new Vec(x,y);
+                    yield return new Vec(x, y);
         }
     }
 
@@ -94,7 +94,7 @@ namespace HackConsole
         {
             for (var y = Top; y < Bottom; ++y)
                 for (var x = Left; x < Right; ++x)
-                    yield return new Vec(x,y);
+                    yield return new Vec(x, y);
         }
 
         public Rect Intersect(Rect other)

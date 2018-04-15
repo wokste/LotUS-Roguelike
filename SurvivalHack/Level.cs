@@ -57,7 +57,7 @@ namespace SurvivalHack
 
         public Tile GetTile(Vec v)
         {
-            return Map.Get(v);
+            return Map.GetTile(v);
         }
 
         public IEnumerable<Entity> GetEntity(Vec v)
