@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HackConsole
 {
@@ -6,9 +7,7 @@ namespace HackConsole
     {
         public readonly int X, Y;
         public static Vec Zero = new Vec(0, 0);
-
-        /// <summary>Not a vector. Similar to NaN</summary>
-        //public static const Vec NaV = new Vec(int.MinValue, int.MinValue);
+        public static Vec One = new Vec(1, 1);
 
         public Vec(int x, int y)
         {
@@ -54,6 +53,13 @@ namespace HackConsole
         {
             return $"({X},{Y})";
         }
+
+        public IEnumerable<Vec> Iterator()
+        {
+            for (var y = 0; y < Y; ++y)
+                for (var x = 0; x < X; ++x)
+                    yield return new Vec(x,y);
+        }
     }
 
     public struct Rect
@@ -82,6 +88,35 @@ namespace HackConsole
         public bool Contains(Vec v)
         {
             return (v.X >= Left) && (v.Y >= Top) && (v.X < Right) && (v.Y < Bottom);
+        }
+
+        public IEnumerable<Vec> Iterator()
+        {
+            for (var y = Top; y < Bottom; ++y)
+                for (var x = Left; x < Right; ++x)
+                    yield return new Vec(x,y);
+        }
+
+        public Rect Intersect(Rect other)
+        {
+            return new Rect
+            {
+                Left = Math.Max(Left, other.Left),
+                Top = Math.Max(Top, other.Top),
+                Width = Math.Min(Right, other.Right) - Math.Max(Left, other.Left),
+                Height = Math.Min(Bottom, other.Bottom) - Math.Max(Top, other.Top),
+            };
+        }
+
+        public Rect Grow(int count)
+        {
+            return new Rect
+            {
+                Left = Left - count,
+                Top = Top - count,
+                Width = Width + 2 * count,
+                Height = Height + 2 * count,
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HackConsole
 {
@@ -30,32 +31,27 @@ namespace HackConsole
         /// </summary>
         protected void Clear()
         {
-            for (var y = Size.Top; y < Size.Bottom; y++)
+            foreach (var v in Size.Iterator())
             {
-                for (var x = Size.Left; x < Size.Right; x++)
-                {
-                    CellGrid.Cells[x, y] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
-                }
+                CellGrid.Cells[v.X, v.Y] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
             }
         }
 
         /// <summary>
         /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
         /// </summary>
-        /// <param name="x">Relative X position to left of widget</param>
-        /// <param name="y">Relative Y position to left of widget</param>
+        /// <param name="v">Relative position to topleft of widget</param>
         /// <param name="msg">The text.</param>
         /// <param name="fgColor">Foreground color</param>
         /// <param name="bgColor">Background color</param>
-        protected void Print(int x, int y, string msg, Color fgColor, Color bgColor = default(Color))
+        protected void Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
         {
-            x += Size.Left;
-            y += Size.Top;
-            var length = Math.Min(msg.Length, Size.Right - x);
+            v += Size.TopLeft;
+            var length = Math.Min(msg.Length, Size.Right - v.X);
 
             for (var i = 0; i < length; i++)
             {
-                CellGrid.Cells[x + i, y] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
+                CellGrid.Cells[v.X + i, v.Y] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
             }
         }
 
@@ -90,40 +86,45 @@ namespace HackConsole
 
         private Rect MakeSize(ref Rect free)
         {
-            if (Docking == Docking.Top || Docking == Docking.Bottom)
+            switch (Docking)
             {
-                var newSize = new Rect
+                case Docking.Top:
+                case Docking.Bottom:
                 {
-                    Left = free.Left,
-                    Width = free.Width,
-                    Top = Docking == Docking.Top ? free.Top : free.Bottom - DesiredSize.Height,
-                    Height = DesiredSize.Height
-                };
+                    var newSize = new Rect
+                    {
+                        Left = free.Left,
+                        Width = free.Width,
+                        Top = Docking == Docking.Top ? free.Top : free.Bottom - DesiredSize.Height,
+                        Height = DesiredSize.Height
+                    };
                 
-                free.Height -= newSize.Height;
-                if (Docking == Docking.Top)
-                    free.Top += newSize.Height;
+                    free.Height -= newSize.Height;
+                    if (Docking == Docking.Top)
+                        free.Top += newSize.Height;
 
-                return newSize;
-            }
-            if (Docking == Docking.Left || Docking == Docking.Right)
-            {
-                var newSize = new Rect
+                    return newSize;
+                }
+                case Docking.Left:
+                case Docking.Right:
                 {
-                    Left = (Docking == Docking.Left) ? free.Left : free.Right - DesiredSize.Width,
-                    Width = DesiredSize.Width,
-                    Top = free.Top,
-                    Height = free.Height
-                };
+                    var newSize = new Rect
+                    {
+                        Left = (Docking == Docking.Left) ? free.Left : free.Right - DesiredSize.Width,
+                        Width = DesiredSize.Width,
+                        Top = free.Top,
+                        Height = free.Height
+                    };
 
-                free.Width -= newSize.Width;
-                if (Docking == Docking.Left)
-                    free.Left += newSize.Width;
+                    free.Width -= newSize.Width;
+                    if (Docking == Docking.Left)
+                        free.Left += newSize.Width;
 
-                return newSize;
+                    return newSize;
+                }
+                case Docking.Fill:
+                    return free;
             }
-            if (Docking == Docking.Fill)
-                return free;
 
             return DesiredSize;
         }

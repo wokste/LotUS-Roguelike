@@ -4,7 +4,6 @@ namespace HackConsole
 {
     public abstract class BaseWindow
     {
-
         protected uint _windowWidth = 1280;
         protected uint _windowHeight = 800;
 
@@ -24,12 +23,12 @@ namespace HackConsole
         {
             _windowWidth = x;
             _windowHeight = y;
-            CellGrid.Resize(_windowWidth / _fontX, _windowHeight / _fontY);
+            CellGrid.Resize(new Vec((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
 
-            var r = new Rect { Width = (int)CellGrid.Width, Height = (int)CellGrid.Height };
+            var r = new Rect(Vec.Zero, CellGrid.Size);
             PopupStack.Resize(ref r);
 
-            r = new Rect { Width = (int)CellGrid.Width, Height = (int)CellGrid.Height };
+            r = new Rect(Vec.Zero, CellGrid.Size);
             Widgets.Resize(ref r);
         }
 

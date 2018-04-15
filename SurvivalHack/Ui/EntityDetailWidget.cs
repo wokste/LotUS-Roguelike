@@ -19,11 +19,11 @@ namespace SurvivalHack.Ui
         {
             var str = $"{name} ({bar.Current}/{bar.Max})";
 
-            Print(0, y, str, fgColor, Color.Transparent);
+            Print(new Vec(0, y), str, fgColor, Color.Transparent);
             /*
             Print(0, y, name, Color.White, Color.Transparent);
 
-            var totalLen = Size.Width - name.Length;
+            var totalLen = Area.Width - name.Length;
             var fillLen = totalLen * bar.Perc;
             var fillLenInt = (int) fillLen;
             var lastChar = Gradient[(int)((fillLen - fillLenInt) * Gradient.Length)];
@@ -46,11 +46,11 @@ namespace SurvivalHack.Ui
             PrintBar("HP:", y++, _entity.Health, Color.Green, Color.Red);
             PrintBar("NU:", y++, _entity.Hunger, Color.Yellow, Color.Red);
             y++;
-            Print(0, y++, "Inventory", Color.White);
+            Print(new Vec(0, y++), "Inventory", Color.White);
 
             foreach (var inv in _entity.Inventory._items)
             {
-                Print(0, y++, $"- {inv}", Color.Gray);
+                Print(new Vec(0, y++), $"- {inv}", Color.Gray);
             }
 
         }

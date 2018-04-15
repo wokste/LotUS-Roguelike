@@ -2,16 +2,14 @@
 {
     public static class CellGrid
     {
-        public static uint Width { get; private set; }
-        public static uint Height { get; private set; }
+        public static Vec Size { get; private set; }
         public static Symbol[,] Cells { get; private set; }
 
-        public static void Resize(uint width, uint height)
+        public static void Resize(Vec size)
         {
-            Width = width;
-            Height = height;
+            Size = size;
 
-            Cells = new Symbol[width, height];
+            Cells = new Symbol[Size.X, Size.Y];
         }
     }
 }

@@ -38,11 +38,11 @@ namespace SurvivalHack.ECM
             newPosition += direction;
 
             // You cannot walk of the edge of map
-            if (!Level.InBoundary(newPosition.X, newPosition.Y))
+            if (!Level.InBoundary(newPosition))
                 return false;
 
             // Terrain collisions
-            if (!Level.HasFlag(newPosition.X, newPosition.Y, self.Flags))
+            if (!Level.HasFlag(newPosition, self.Flags))
                 return false;
 
             var oldChunk = Level.GetChunck(Pos);

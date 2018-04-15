@@ -51,32 +51,23 @@ namespace SurvivalHack.Ui
 
         private void RenderGrid()
         {
-            var x0 = Math.Max(Size.Left, 0 - _offset.X);
-            var y0 = Math.Max(Size.Top, 0 - _offset.Y);
-            var x1 = Math.Min(Size.Right, _level.Map.Width - _offset.X);
-            var y1 = Math.Min(Size.Bottom, _level.Map.Height - _offset.Y);
+            var area = Size.Intersect(new Rect(Vec.Zero - _offset, _level.Map.Size));
 
-            for (var y = y0; y < y1; y++)
+            foreach (var v in area.Iterator())
             {
-                if (!_level.InBoundary(0, y + _offset.Y))
+                if (!_level.InBoundary(v + _offset))
                     continue;
 
-                for (var x = x0; x < x1; x++)
+                var visibility = _view.Visibility[v.X + _offset.X, v.Y + _offset.Y];
+
+                if (visibility == 0)
+                    continue;
+
+                CellGrid.Cells[v.X, v.Y] = _level.GetTile(v + _offset).Char;
+                if (visibility < 255)
                 {
-                    if (!_level.InBoundary(x + _offset.X, y + _offset.Y))
-                        continue;
-
-                    var visibility = _view.Visibility[x + _offset.X, y + _offset.Y];
-
-                    if (visibility == 0)
-                        continue;
-
-                    CellGrid.Cells[x, y] = _level.GetTile(x + _offset.X, y + _offset.Y).Char;
-                    if (visibility < 255)
-                    {
-                        CellGrid.Cells[x, y].TextColor.Darken(visibility);
-                        CellGrid.Cells[x, y].BackgroundColor.Darken(visibility);
-                    }
+                    CellGrid.Cells[v.X, v.Y].TextColor.Darken(visibility);
+                    CellGrid.Cells[v.X, v.Y].BackgroundColor.Darken(visibility);
                 }
             }
         }
@@ -87,7 +78,7 @@ namespace SurvivalHack.Ui
             if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
             {
                 var absPos = mousePos + _offset;
-                if (!_level.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
+                if (!_level.InBoundary(absPos) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
                 {
                     OnSelected?.Invoke(null);
                 }

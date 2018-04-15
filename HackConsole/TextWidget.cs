@@ -34,7 +34,7 @@ namespace HackConsole
             var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
             {
-                Print(0, y, Lines[i].Item1, Lines[i].Item2);
+                Print(new Vec(0, y), Lines[i].Item1, Lines[i].Item2);
                 y++;
             }
         }

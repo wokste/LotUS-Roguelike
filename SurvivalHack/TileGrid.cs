@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Symbol = HackConsole.Symbol;
-using Color = HackConsole.Color;
+using HackConsole;
 
 namespace SurvivalHack
 {
     public class TileGrid
     {
         private readonly Tile[,] _grid;
-        public readonly int Width;
-        public readonly int Height;
+        public readonly Vec Size;
 
-        public TileGrid(int width, int height)
+        public TileGrid(Vec size)
         {
-            _grid = new Tile[width,height];
-            Width = width;
-            Height = height;
+            Size = size;
+            _grid = new Tile[size.X,size.Y];
             Generate();
         }
 
@@ -29,44 +26,42 @@ namespace SurvivalHack
                 Scale = 6f,
                 Seed = Dicebag.UniformInt()
             };
-            for (var y = 0; y < Height; y++)
+            
+            foreach (var v in Size.Iterator())
             {
-                for (var x = 0; x < Width; x++)
+                var height = heightMap.Get(v.X, v.Y);
+
+                if (height > 0.4)
                 {
-                    var height = heightMap.Get(x, y);
-                    
-                    if (height > 0.4)
-                    {
-                        _grid[x, y] = Dicebag.UniformInt(75) == 1 ? TileList.Get("ore") : TileList.Get("rock");
-                    }
-                    else if (height > -0.4)
-                    {
-                        _grid[x, y] = TileList.Get("grass");
-                        if (Dicebag.UniformInt(10) == 1)
-                            _grid[x, y] = TileList.Get("tree");
-                        else if (Dicebag.UniformInt(2500) == 1)
-                            _grid[x, y] = TileList.Get("pumpkin");
-                        else if (Dicebag.UniformInt(500) == 1)
-                            _grid[x, y] = TileList.Get("mushroom");
-                    }
-                    else
-                    {
-                        _grid[x, y] = TileList.Get("water");
-                    }
+                    _grid[v.X, v.Y] = Dicebag.UniformInt(75) == 1 ? TileList.Get("ore") : TileList.Get("rock");
+                }
+                else if (height > -0.4)
+                {
+                    _grid[v.X, v.Y] = TileList.Get("grass");
+                    if (Dicebag.UniformInt(10) == 1)
+                        _grid[v.X, v.Y] = TileList.Get("tree");
+                    else if (Dicebag.UniformInt(2500) == 1)
+                        _grid[v.X, v.Y] = TileList.Get("pumpkin");
+                    else if (Dicebag.UniformInt(500) == 1)
+                        _grid[v.X, v.Y] = TileList.Get("mushroom");
+                }
+                else
+                {
+                    _grid[v.X, v.Y] = TileList.Get("water");
                 }
             }
         }
 
-        public bool HasFlag(int x, int y, TerrainFlag testFlag)
+        public bool HasFlag(Vec v, TerrainFlag testFlag)
         {
-            var flags = _grid[x, y].Flags;
+            var flags = _grid[v.X, v.Y].Flags;
 
             return (testFlag & flags) != 0;
         }
 
-        public Tile Get(int x, int y)
+        public Tile Get(Vec v)
         {
-            return _grid[x,y];
+            return _grid[v.X,v.Y];
         }
     }
 

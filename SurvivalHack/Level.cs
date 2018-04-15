@@ -9,42 +9,43 @@ namespace SurvivalHack
     public class Level
     {
         public TileGrid Map;
-        private readonly List<Entity>[,] EntityChunks;
+        private readonly List<Entity>[,] _entityChunks;
         private const int CHUNK_SIZE = 16;
 
         public Level()
         {
-            Vec size = new Vec(64, 64);
-            Map = new TileGrid(size.X, size.Y);
-            EntityChunks = new List<Entity>[(int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)];
+            var size = new Vec(64, 64);
+            Map = new TileGrid(size);
+            _entityChunks = new List<Entity>[(int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)];
 
-            for (int y = 0; y < EntityChunks.GetLength(1); ++y)
-                for (int x = 0; x < EntityChunks.GetLength(0); ++x)
-                    EntityChunks[x, y] = new List<Entity>();
+            for (var y = 0; y < _entityChunks.GetLength(1); ++y)
+                for (var x = 0; x < _entityChunks.GetLength(0); ++x)
+                    _entityChunks[x, y] = new List<Entity>();
         }
         
         public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
             Debug.Assert(flag != TerrainFlag.None);
 
-            int x, y;
+            Vec v;
             do
             {
-                x = Dicebag.UniformInt(Map.Width);
-                y = Dicebag.UniformInt(Map.Height);
-            } while (!Map.HasFlag(x, y, flag));
+                v = new Vec (
+                    Dicebag.UniformInt(Map.Size.X),
+                    Dicebag.UniformInt(Map.Size.Y));
+            } while (!Map.HasFlag(v, flag));
 
-            return new Vec(x, y);
+            return v;
         }
 
-        public bool InBoundary(int x, int y)
+        public bool InBoundary(Vec v)
         {
-            return (x >= 0 && x < Map.Width && y >= 0 && y < Map.Height);
+            return (v.X >= 0 && v.X < Map.Size.X && v.Y >= 0 && v.Y < Map.Size.Y);
         }
 
-        public bool HasFlag(int x, int y, TerrainFlag flag)
+        public bool HasFlag(Vec v, TerrainFlag flag)
         {
-            if (Map.HasFlag(x, y, flag))
+            if (Map.HasFlag(v, flag))
                 return true;
             /*
             foreach (var c in Creatures)
@@ -54,9 +55,9 @@ namespace SurvivalHack
             return false;
         }
 
-        public Tile GetTile(int x, int y)
+        public Tile GetTile(Vec v)
         {
-            return Map.Get(x, y);
+            return Map.Get(v);
         }
 
         public IEnumerable<Entity> GetEntity(Vec v)
@@ -68,14 +69,14 @@ namespace SurvivalHack
         {
             var x0 = Math.Max(r.Left / CHUNK_SIZE,0);
             var y0 = Math.Max(r.Top / CHUNK_SIZE, 0);
-            var x1 = Math.Min(r.Right / CHUNK_SIZE, EntityChunks.GetLength(0) - 1);
-            var y1 = Math.Min(r.Bottom / CHUNK_SIZE, EntityChunks.GetLength(1) - 1);
+            var x1 = Math.Min(r.Right / CHUNK_SIZE, _entityChunks.GetLength(0) - 1);
+            var y1 = Math.Min(r.Bottom / CHUNK_SIZE, _entityChunks.GetLength(1) - 1);
 
             List<Entity> ret = new List<Entity>();
 
             for (var y = y0; y <= y1; ++y)
                 for (var x = x0; x <= x1; ++x)
-                    foreach (var e in EntityChunks[x, y])
+                    foreach (var e in _entityChunks[x, y])
                         if (r.Contains(e.Move.Pos))
                             ret.Add(e);
 
@@ -86,7 +87,7 @@ namespace SurvivalHack
         {
             var cx = Pos.X / CHUNK_SIZE;
             var cy = Pos.Y / CHUNK_SIZE;
-            return EntityChunks[cx, cy];
+            return _entityChunks[cx, cy];
         }
     }
 }
