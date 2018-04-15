@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <entity tag="zombie" name="Zombie" description="An undead with a nasty attack. Luckily they are easy to outrun." health="40">
+    <attack damage="20" hit_chance="60" range="1" />
+    <attitude>
+      <rule attitude="hostile" if="enemy hp below 40%" />
+      <rule attitude="indifferent" />
+    </attitude>
+    <move flags="walk" speed="0.6" />
+    <symbol char="z" color="#ff0000" />
+  </entity>
+  <entity tag="bat" name="Giant Bat" description="A flying monster that is a nuisance to any adventurer." health="10">
+    <attack damage="2" hit_chance="60" range="1" />
+    <attitude>
+      <rule attitude="hostile" />
+    </attitude>
+    <move flags="fly" speed="1.5" />
+    <symbol char="b" color="#ff0000" />
+  </entity>
+  <entity tag="fish" name="Giant Fish" description="A swimming monster that can't reach you on land." health="20">
+    <attack damage="8" hit_chance="60" range="1" />
+    <attitude>
+      <rule attitude="hostile" />
+    </attitude>
+    <move flags="swim" speed="1" />
+    <symbol char="f" color="#ff0000" />
+  </entity>
+</root>

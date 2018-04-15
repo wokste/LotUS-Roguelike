@@ -18,7 +18,7 @@ namespace HackConsole
         public PopupStack PopupStack = new PopupStack();
 
         protected bool _dirty;
-        protected Vec _lastMousePos = Vec.NaV;
+        protected Vec? _lastMousePos;
 
         protected void ResizeScreen(uint x, uint y)
         {
@@ -50,7 +50,7 @@ namespace HackConsole
             {
                 Widget top = null;
                 foreach (var w in container.Widgets)
-                    if (w.Size.Contains(pos.X, pos.Y))
+                    if (w.Size.Contains(pos))
                         top = w;
 
                 container = top as WidgetContainer;

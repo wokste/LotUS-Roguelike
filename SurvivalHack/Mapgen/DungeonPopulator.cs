@@ -1,34 +1,36 @@
-﻿using Symbol = HackConsole.Symbol;
-using Color = HackConsole.Color;
+﻿using HackConsole;
+using SurvivalHack.ECM;
+using System.Collections.Generic;
 
-namespace SurvivalHack
+namespace SurvivalHack.Mapgen
 {
-    public class MonsterSpawner
+    public class DungeonPopulator
     {
         private readonly Game _game;
+        private Dictionary<int, RandomTable<string>> randomTables = new Dictionary<int, RandomTable<string>>();
 
-        public MonsterSpawner(Game game)
+        public DungeonPopulator(Game game)
         {
             _game = game;
         }
 
-        public void Spawn(World map, int count)
+        public void Spawn(Level level, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 var monster = CreateMonster();
-                monster.Map = map;
-                _game.AddCreature(monster);
+                MoveComponent.Bind(monster, level);
+                _game.Timeline.Insert(new ActEvent(monster));
             }
         }
 
-        private Monster CreateMonster()
+        private Entity CreateMonster()
         {
             var rnd = Dicebag.UniformInt(100);
 
             if (rnd < 60)
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Zombie",
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
@@ -38,16 +40,17 @@ namespace SurvivalHack
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(40),
-                    Position = _game.World.GetEmptyLocation(),
+                    Flags = TerrainFlag.Walk,
                     Speed = 0.6f,
                     Symbol = new Symbol('z', Color.Red)
                 };
             }
             else if (rnd < 98)
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Giant Bat",
                     Description = "A flying monster that is a nuisance to any adventurer.",
@@ -57,17 +60,17 @@ namespace SurvivalHack
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(10),
-                    Position = _game.World.GetEmptyLocation(TerrainFlag.Fly),
+                    Flags = TerrainFlag.Fly,
                     Speed = 1.5f,
                     Symbol = new Symbol('b', Color.Red),
-                    MovementType = TerrainFlag.Fly
                 };
             }
             else
             {
-                return new Monster
+                return new Entity
                 {
                     Name = "Giant Fish",
                     Description = "A swimming monster that can't reach you on land.",
@@ -77,12 +80,12 @@ namespace SurvivalHack
                         HitChance = 60,
                         Range = 1,
                     },
-                    Ai = new AiController(),
+                    Ai = new AiActor(),
+                    Attitude = new AiAttitude(),
                     Health = new Bar(20),
-                    Position = _game.World.GetEmptyLocation(TerrainFlag.Swim),
+                    Flags = TerrainFlag.Swim,
                     Speed = 1f,
                     Symbol = new Symbol('f', Color.Red),
-                    MovementType = TerrainFlag.Swim
                 };
             }
         }

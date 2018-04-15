@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Diagnostics;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {
-    internal class WorldWidget : Widget, IMouseEventSuscriber
+    internal class MapWidget : Widget, IMouseEventSuscriber
     {
-        private readonly World _world;
+        private readonly Level _level;
         private readonly FieldOfView _view;
-        private readonly Player _player;
+        private readonly Entity _player;
 
         private Vec _offset;
 
-        public WorldWidget(World world, FieldOfView view, Player following)
+        public MapWidget(Level level, FieldOfView view, Entity following)
         {
-            _world = world;
+            _level = level;
             _view = view;
             _player = following;
         }
 
         public override void Render(bool forceUpdate)
         {
-            _offset = _player.Position - Size.Center;
+            _offset = _player.Move.Pos - Size.Center;
             
             Clear();
             RenderGrid();
@@ -33,20 +33,19 @@ namespace SurvivalHack.Ui
 
         private void RenderCreatures()
         {
-            foreach (var creature in _world.Creatures) {
-                var x = creature.Position.X;
-                var y = creature.Position.Y;
+            var area = Size + _offset;
+            foreach (var creature in _level.GetEntities(area)) {
+                var p = creature.Move.Pos;
                 
-                if (_view.Visibility[x,y] < 128)
+                if (_view.Visibility[p.X,p.Y] < 128)
                     continue;
 
-                x -= _offset.X;
-                y -= _offset.Y;
+                p -= _offset;
 
-                if (!Size.Contains(x,y))
+                if (!Size.Contains(p))
                     continue;
 
-                CellGrid.Cells[x, y] = creature.Symbol;
+                CellGrid.Cells[p.X, p.Y] = creature.Symbol;
             }
         }
 
@@ -54,17 +53,17 @@ namespace SurvivalHack.Ui
         {
             var x0 = Math.Max(Size.Left, 0 - _offset.X);
             var y0 = Math.Max(Size.Top, 0 - _offset.Y);
-            var x1 = Math.Min(Size.Right, _world.Map.Width - _offset.X);
-            var y1 = Math.Min(Size.Bottom, _world.Map.Height - _offset.Y);
+            var x1 = Math.Min(Size.Right, _level.Map.Width - _offset.X);
+            var y1 = Math.Min(Size.Bottom, _level.Map.Height - _offset.Y);
 
             for (var y = y0; y < y1; y++)
             {
-                if (!_world.InBoundary(0, y + _offset.Y))
+                if (!_level.InBoundary(0, y + _offset.Y))
                     continue;
 
                 for (var x = x0; x < x1; x++)
                 {
-                    if (!_world.InBoundary(x + _offset.X, y + _offset.Y))
+                    if (!_level.InBoundary(x + _offset.X, y + _offset.Y))
                         continue;
 
                     var visibility = _view.Visibility[x + _offset.X, y + _offset.Y];
@@ -72,7 +71,7 @@ namespace SurvivalHack.Ui
                     if (visibility == 0)
                         continue;
 
-                    CellGrid.Cells[x, y] = _world.GetTile(x + _offset.X, y + _offset.Y).Char;
+                    CellGrid.Cells[x, y] = _level.GetTile(x + _offset.X, y + _offset.Y).Char;
                     if (visibility < 255)
                     {
                         CellGrid.Cells[x, y].TextColor.Darken(visibility);
@@ -88,13 +87,15 @@ namespace SurvivalHack.Ui
             if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
             {
                 var absPos = mousePos + _offset;
-                if (!_world.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
+                if (!_level.InBoundary(absPos.X, absPos.Y) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
                 {
                     OnSelected?.Invoke(null);
                 }
 
-                var c = _world.GetCreature(absPos.X, absPos.Y);
-                OnSelected?.Invoke(c);
+                var list = _level.GetEntity(absPos);
+
+                foreach(var e in list)
+                    OnSelected?.Invoke(e);
             }
         }
 

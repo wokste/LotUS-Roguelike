@@ -9,78 +9,60 @@ namespace HackLibTests
     [TestClass]
     public class TimelineTest
     {
-        [TestMethod]
-        public void TestOrder()
+        private class MockEvent : IEvent
         {
-            var timeline = new Timeline<object>();
+            private readonly string v;
+            public int RepeatTurns { get; set; } = 1;
+            public int Hits { get; private set; } = 0;
+            public Action<MockEvent> OnHit;
 
-            var o1 = new StringBuilder("o1");
-            var o2 = new StringBuilder("o2");
-            var o3 = new StringBuilder("o3");
-
-            timeline.Add(o1, 100);
-            timeline.Add(o2, 120);
-            timeline.Add(o3, 100);
-
-            Assert.AreEqual(o1, timeline.Dequeue());
-            Assert.AreEqual(o3, timeline.Dequeue());
-            Assert.AreEqual(o2, timeline.Dequeue());
-            try
+            public MockEvent(string v)
             {
-                timeline.Dequeue();
-                Assert.Fail();
-            }
-            catch (InvalidOperationException)
-            {
+                this.v = v;
             }
 
+            public override string ToString()
+            {
+                return $"{v} ({Hits})";
+            }
+
+            public void Run()
+            {
+                Hits++;
+                OnHit?.Invoke(this);
+            }
         }
 
         [TestMethod]
-        public void TestLoopDiff()
+        public void TestLoop()
         {
-            var timeline = new Timeline<object>();
-            var ls = new List<object>{new StringBuilder("O1"), new StringBuilder("O2"), new StringBuilder("O3") };
+            var timeline = new Timeline();
+            var fixedEvents = new List<MockEvent>{new MockEvent("F0"), new MockEvent("F1"), new MockEvent("F2") };
+            var evenEvent = new MockEvent("even") { RepeatTurns = 2 };
+            var turn3Event = new MockEvent("turn3") { RepeatTurns = 3, OnHit = m => m.RepeatTurns = -1 };
 
-            for (var l = 0; l < ls.Count; l++)
+            var sporadicEvents = new List<(MockEvent,int)> { (new MockEvent("S0-3"), 3), (new MockEvent("S0-7"),7), (new MockEvent("S0-5"),5) };
+
+            // Change initial time point;
+            for (int i = 0; i < 12; ++i)
+                timeline.Run();
+
+            // Add events
+            foreach (var l in fixedEvents)
+                timeline.Insert(l);
+            timeline.Insert(evenEvent);
+            timeline.Insert(turn3Event);
+
+            // Check for event hits per type of event.
+            for (var i = 0; i < 10; i++)
             {
-                timeline.Add(ls[l], l + 10);
-            }
+                foreach (var l in fixedEvents)
+                    Assert.AreEqual(i, l.Hits);
 
-            for (var i = 1; i < 10; i++)
-            {
-                for (var l = 0; l < ls.Count; l++)
-                {
-                    var e = timeline.Dequeue();
-                    Assert.AreEqual(ls[l], e);
+                Assert.AreEqual(i / 2, evenEvent.Hits);
+                Assert.AreEqual(i < 3 ? 0 : 1, turn3Event.Hits);
 
-                    timeline.Add(ls[l], l + i * 100 + 10);
-
-                }
-            }
-        }
-
-
-        [TestMethod]
-        public void TestLoopSame()
-        {
-            var timeline = new Timeline<object>();
-            var ls = new List<object> { new StringBuilder("O1"), new StringBuilder("O2"), new StringBuilder("O3") };
-
-            foreach (var t in ls)
-            {
-                timeline.Add(t, 10);
-            }
-
-            for (var i = 1; i < 10; i++)
-            {
-                foreach (var t in ls)
-                {
-                    var e = timeline.Dequeue();
-                    Assert.AreEqual(t, e);
-
-                    timeline.Add(t, i * 100 + 10);
-                }
+                timeline.Run();
             }
         }
     }

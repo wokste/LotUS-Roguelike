@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HackConsole
 {
@@ -50,7 +46,7 @@ namespace HackConsole
             for (int i = _widgets.Count - 1; i >= 0; i--)
             {
                 var w = _widgets[i];
-                if (w.Size.Contains(v.X, v.Y))
+                if (w.Size.Contains(v))
                     return w;
             }
 

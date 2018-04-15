@@ -1,80 +1,33 @@
-﻿using System.Linq;
+﻿using SurvivalHack.ECM;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SurvivalHack
 {
     public class Game
     {
-        [System.Obsolete]
-        public Creature Player;
-        //public Timeline<Controller> Time = new Timeline<Controller>();
-
-        public MonsterSpawner Spawner;
-        public World World;
+        public Level Level;
+        public Timeline Timeline = new Timeline();
 
         public void Init()
         {
             ItemTypeList.InitTypes();
             TileList.InitTypes();
 
-            World = new World();
+            Level = new Level();
 
-            Spawner = new MonsterSpawner(this);
-            Spawner.Spawn(World, 16);
+            var spawner = new Mapgen.DungeonPopulator(this);
+            spawner.Spawn(Level, 16);
         }
 
-        public void GameTick(int ticks)
+        public void ActorAct(int ticks)
         {
-            foreach (var c in World.Creatures.ToList())
-            {
-                if (!(c is Monster m))
-                    continue;
-
-                m.Act();
-            }
+            Timeline.Run();
         }
 
         public void Update(int ticks)
         {
-            /*while (true)
-            {
-                var gameEvent = Time.Peek();
-                if (gameEvent.ShouldDelete)
-                {
-                    Time.Dequeue();
-                    continue;
-                }
-
-                var steps = gameEvent.Do();
-
-                if (steps <= 0)
-                    return;
-                
-                Time.Dequeue();
-                var ticks = (int)Math.Ceiling(1000 * steps / gameEvent.Self.Speed);
-                Time.AddRelative(gameEvent, ticks);
-            }*/
-        }
-
-        /*
-        private void TimeAdvance(int ticks)
-        {
-            _ticksTillHungerLoss -= ticks;
-
-            while (_ticksTillHungerLoss <= 0)
-            {
-                _ticksTillHungerLoss += HUNGER_TICKS;
-                Player.Hunger.Current--;
-                if (Player.Hunger.Current == 0)
-                    Player.Alive = false;
-
-                Player.DisplayStats();
-            }
-        }*/
-
-        public void AddCreature(Creature creature)
-        {
-            //Time.AddRelative(controller, 1000);
-            World.Creatures.Add(creature);
         }
     }
 }

@@ -133,7 +133,7 @@ namespace HackConsole
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
             var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
-            var move = (_lastMousePos == Vec.NaV) ? Vec.Zero : (mousePos - _lastMousePos);
+            var move = (mousePos - _lastMousePos) ?? Vec.Zero;
             _lastMousePos = mousePos;
 
             if (move == Vec.Zero)
