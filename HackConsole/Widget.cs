@@ -33,7 +33,7 @@ namespace HackConsole
         {
             foreach (var v in Size.Iterator())
             {
-                CellGrid.Cells[v.X, v.Y] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
+                WindowData.Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
             }
         }
 
@@ -51,7 +51,7 @@ namespace HackConsole
 
             for (var i = 0; i < length; i++)
             {
-                CellGrid.Cells[v.X + i, v.Y] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
+                WindowData.Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
             }
         }
 

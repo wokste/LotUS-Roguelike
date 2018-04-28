@@ -23,12 +23,12 @@ namespace HackConsole
         {
             _windowWidth = x;
             _windowHeight = y;
-            CellGrid.Resize(new Vec((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
+            WindowData.Data = new Grid<Symbol>(new Vec((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
 
-            var r = new Rect(Vec.Zero, CellGrid.Size);
+            var r = new Rect(Vec.Zero, WindowData.Data.Size);
             PopupStack.Resize(ref r);
 
-            r = new Rect(Vec.Zero, CellGrid.Size);
+            r = new Rect(Vec.Zero, WindowData.Data.Size);
             Widgets.Resize(ref r);
         }
 
@@ -59,5 +59,10 @@ namespace HackConsole
         }
 
         public abstract void Run();
+    }
+
+    public static class WindowData
+    {
+        public static Grid<Symbol> Data;
     }
 }

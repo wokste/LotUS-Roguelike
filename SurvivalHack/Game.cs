@@ -17,6 +17,11 @@ namespace SurvivalHack
 
             Level = new Level();
 
+            foreach (var v in Level.TileMap.Iterator())
+            {
+                Level.TileMap[v] = TileList.Get("grass");
+            }
+
             var spawner = new Mapgen.DungeonPopulator(this);
             spawner.Spawn(Level, 16);
         }

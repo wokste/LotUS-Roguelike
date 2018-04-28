@@ -11,7 +11,7 @@ namespace SurvivalHack
 
         private Vec _entityPos;
 
-        public TileGrid Map;
+        public Level Map;
 
         private int _visualRange = 10;
 
@@ -26,7 +26,7 @@ namespace SurvivalHack
             }
         }
 
-        public byte[,] Visibility;
+        public Grid<byte> Visibility;
 
         public FieldOfView(MoveComponent move)
         {
@@ -35,10 +35,10 @@ namespace SurvivalHack
         
         public void Update(MoveComponent move)
         {
-            if (Map != move.Level.Map)
+            if (Map != move.Level)
             {
-                Map = move.Level.Map;
-                Visibility = new byte[Map.Size.X, Map.Size.Y]; // 0 initialized so everything is dark.
+                Map = move.Level;
+                Visibility = new Grid<byte>(Map.TileMap.Size); // 0 initialized so everything is dark.
             }
 
             VisibleToDark();
@@ -49,11 +49,11 @@ namespace SurvivalHack
         private void VisibleToDark()
         {
             var r = new Rect(_entityPos, Vec.One).Grow(_visualRange);
-            r = r.Intersect(new Rect(Vec.Zero, Map.Size));
+            r = r.Intersect(new Rect(Vec.Zero, Visibility.Size));
 
             foreach (var v in r.Iterator())
             {
-                Visibility[v.X, v.Y] = Math.Min(Visibility[v.X, v.Y], BRIGHTNESS_DARK);
+                Visibility[v] = Math.Min(Visibility[v], BRIGHTNESS_DARK);
             }
         }
         
@@ -63,7 +63,7 @@ namespace SurvivalHack
         /// </summary>
         private void ToVisible()
         {
-            Visibility[_entityPos.X, _entityPos.Y] = BRIGHTNESS_LIGHT;
+            Visibility[_entityPos] = BRIGHTNESS_LIGHT;
             
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
@@ -86,11 +86,11 @@ namespace SurvivalHack
 
             var x = direction == 'W' ? _entityPos.X - depth : _entityPos.X + depth;
 
-            if (x < 0 || x >= Map.Size.X)
+            if (x < 0 || x >= Visibility.Size.X)
                 return;
 
-            var yMin = (int)Math.Floor(Clamp(_entityPos.Y + minSlope * depth + 0.49, 0, Map.Size.Y - 1));
-            var yMax = (int)Math.Ceiling(Clamp(_entityPos.Y + maxSlope * depth - 0.49, 0, Map.Size.Y - 1));
+            var yMin = (int)Math.Floor(Clamp(_entityPos.Y + minSlope * depth + 0.49, 0, Visibility.Size.Y - 1));
+            var yMax = (int)Math.Ceiling(Clamp(_entityPos.Y + maxSlope * depth - 0.49, 0, Visibility.Size.Y - 1));
 
             for (var y = yMin; y <= yMax; y++)
             {
@@ -128,11 +128,11 @@ namespace SurvivalHack
 
             var y = direction == 'N' ? _entityPos.Y - depth : _entityPos.Y + depth;
 
-            if (y < 0 || y >= Map.Size.Y)
+            if (y < 0 || y >= Visibility.Size.Y)
                 return;
             
-            var xMin = (int)Math.Floor(Clamp(_entityPos.X + minSlope * depth + 0.49, 0, Map.Size.X - 1));
-            var xMax = (int)Math.Ceiling(Clamp(_entityPos.X + maxSlope * depth - 0.49, 0, Map.Size.X - 1));
+            var xMin = (int)Math.Floor(Clamp(_entityPos.X + minSlope * depth + 0.49, 0, Visibility.Size.X - 1));
+            var xMax = (int)Math.Ceiling(Clamp(_entityPos.X + maxSlope * depth - 0.49, 0, Visibility.Size.X - 1));
 
             for (var x = xMin; x <= xMax; x++)
             {
@@ -192,7 +192,7 @@ namespace SurvivalHack
             
             var distanceVisibility = dist < VisualRange ? 1f : 0f;
             
-            Visibility[v.X, v.Y] = (byte)Math.Max(Visibility[v.X, v.Y], BRIGHTNESS_LIGHT * distanceVisibility);
+            Visibility[v] = (byte)Math.Max(Visibility[v], BRIGHTNESS_LIGHT * distanceVisibility);
         }
     }
 }

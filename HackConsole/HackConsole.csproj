@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="BaseWindow.cs" />
     <Compile Include="EventSuscriber.cs" />
+    <Compile Include="Grid.cs" />
     <Compile Include="InfoWidget.cs" />
     <Compile Include="MessageListWidget.cs" />
     <Compile Include="MyMath.cs" />
@@ -66,7 +67,6 @@
     <Compile Include="Vec.cs" />
     <Compile Include="Widget.cs" />
     <Compile Include="WidgetContainer.cs" />
-    <Compile Include="CellGrid.cs" />
     <Compile Include="SFMLWindow.cs" />
   </ItemGroup>
   <ItemGroup>

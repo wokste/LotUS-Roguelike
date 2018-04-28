@@ -20,8 +20,11 @@ namespace SurvivalHack.ECM
 
         public void UpdateTarget(Entity self)
         {
-            if (!Target.Alive)
+            if (Target == null || !Target.Alive)
+            {
                 Target = null;
+                TargetAction = EAttitude.Ignore;
+            }
 
             var pos = self.Move.Pos;
 

@@ -58,7 +58,7 @@ namespace SurvivalHack.Ui
             Message.OnMessage += (m) =>
             {
                 var pos2 = m.Pos ?? Vec.Zero;
-                if (_player == null || m.Pos == null || _player.FoV.Visibility[pos2.X, pos2.Y] > 128)
+                if (_player == null || m.Pos == null || _player.FoV.Visibility[pos2] > 128)
                 {
                     consoleWidget.AddMessage(m);
                 }

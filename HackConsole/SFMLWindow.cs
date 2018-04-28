@@ -220,13 +220,13 @@ namespace HackConsole
         {
             _fontSprite.Scale = new Vector2f(1, 1);
 
-            foreach (var v in CellGrid.Size.Iterator())
+            foreach (var v in WindowData.Data.Ids())
             { 
                 var vecScreen = new Vector2f(v.X * _fontX, v.Y * _fontY);
 
                 _fontSprite.Position = vecScreen;
                     
-                var Char = CellGrid.Cells[v.X,v.Y];
+                var Char = WindowData.Data[v];
                     
                 _fontSprite.Color = new SFML.Graphics.Color(Char.TextColor.R, Char.TextColor.G, Char.TextColor.B);
                 _fontSprite.TextureRect = new IntRect((int)((Char.Ascii % 16) * _fontX), (int)((Char.Ascii / 16) * _fontY), (int)_fontX, (int)_fontY);

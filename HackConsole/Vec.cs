@@ -53,13 +53,6 @@ namespace HackConsole
         {
             return $"({X},{Y})";
         }
-
-        public IEnumerable<Vec> Iterator()
-        {
-            for (var y = 0; y < Y; ++y)
-                for (var x = 0; x < X; ++x)
-                    yield return new Vec(x, y);
-        }
     }
 
     public struct Rect

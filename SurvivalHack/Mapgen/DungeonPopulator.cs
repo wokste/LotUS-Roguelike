@@ -7,7 +7,7 @@ namespace SurvivalHack.Mapgen
     public class DungeonPopulator
     {
         private readonly Game _game;
-        private Dictionary<int, RandomTable<string>> randomTables = new Dictionary<int, RandomTable<string>>();
+        private Dictionary<int, RandomTable<string>> _randomTables = new Dictionary<int, RandomTable<string>>();
 
         public DungeonPopulator(Game game)
         {
@@ -48,7 +48,7 @@ namespace SurvivalHack.Mapgen
                     Symbol = new Symbol('z', Color.Red)
                 };
             }
-            else if (rnd < 98)
+            else
             {
                 return new Entity
                 {
@@ -66,26 +66,6 @@ namespace SurvivalHack.Mapgen
                     Flags = TerrainFlag.Fly,
                     Speed = 1.5f,
                     Symbol = new Symbol('b', Color.Red),
-                };
-            }
-            else
-            {
-                return new Entity
-                {
-                    Name = "Giant Fish",
-                    Description = "A swimming monster that can't reach you on land.",
-                    Attack = new AttackComponent
-                    {
-                        Damage = 8,
-                        HitChance = 60,
-                        Range = 1,
-                    },
-                    Ai = new AiActor(),
-                    Attitude = new AiAttitude(),
-                    Health = new Bar(20),
-                    Flags = TerrainFlag.Swim,
-                    Speed = 1f,
-                    Symbol = new Symbol('f', Color.Red),
                 };
             }
         }

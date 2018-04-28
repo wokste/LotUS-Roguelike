@@ -37,7 +37,7 @@ namespace SurvivalHack.Ui
             foreach (var creature in _level.GetEntities(area)) {
                 var p = creature.Move.Pos;
                 
-                if (_view.Visibility[p.X,p.Y] < 128)
+                if (_view.Visibility[p] < 128)
                     continue;
 
                 p -= _offset;
@@ -45,29 +45,29 @@ namespace SurvivalHack.Ui
                 if (!Size.Contains(p))
                     continue;
 
-                CellGrid.Cells[p.X, p.Y] = creature.Symbol;
+                WindowData.Data[p] = creature.Symbol;
             }
         }
 
         private void RenderGrid()
         {
-            var area = Size.Intersect(new Rect(Vec.Zero - _offset, _level.Map.Size));
+            var area = Size.Intersect(new Rect(Vec.Zero - _offset, _level.TileMap.Size));
 
             foreach (var v in area.Iterator())
             {
                 if (!_level.InBoundary(v + _offset))
                     continue;
 
-                var visibility = _view.Visibility[v.X + _offset.X, v.Y + _offset.Y];
+                var visibility = _view.Visibility[v + _offset];
 
                 if (visibility == 0)
                     continue;
 
-                CellGrid.Cells[v.X, v.Y] = _level.GetTile(v + _offset).Char;
+                WindowData.Data[v] = _level.GetTile(v + _offset).Char;
                 if (visibility < 255)
                 {
-                    CellGrid.Cells[v.X, v.Y].TextColor.Darken(visibility);
-                    CellGrid.Cells[v.X, v.Y].BackgroundColor.Darken(visibility);
+                    WindowData.Data[v].TextColor.Darken(visibility);
+                    WindowData.Data[v].BackgroundColor.Darken(visibility);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace SurvivalHack.Ui
             if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
             {
                 var absPos = mousePos + _offset;
-                if (!_level.InBoundary(absPos) || _player.FoV.Visibility[absPos.X, absPos.Y] == 0)
+                if (!_level.InBoundary(absPos) || _player.FoV.Visibility[absPos] == 0)
                 {
                     OnSelected?.Invoke(null);
                 }
