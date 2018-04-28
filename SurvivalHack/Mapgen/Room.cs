@@ -6,7 +6,7 @@ namespace SurvivalHack.Mapgen
 {
     public class Room
     {
-        internal AbstractMap Map = null;
+        internal Level Level = null;
 
         internal Transform Transform;
         internal Vec Size => Tiles.Size;
@@ -20,13 +20,13 @@ namespace SurvivalHack.Mapgen
             Tiles = new Grid<Tile>(size);
         }
 
-        internal void Render()
+        internal void Render(Grid<int> maskMap)
         {
             foreach(var v in Tiles.Ids())
             { 
                 var dest = Transform.Convert(v);
 
-                if (Tiles[v] == null || Map.MaskMap[dest] == AbstractMap.MASKID_KEEP)
+                if (Tiles[v] == null || maskMap[dest] == DungeonGenerator.MASKID_KEEP)
                     continue;
 
                 int mask;
@@ -36,20 +36,21 @@ namespace SurvivalHack.Mapgen
                 }
                 else if (Tiles[v] == TileList.Get("rock"))
                 {
-                    mask = AbstractMap.MASKID_NOFLOOR;
+                    mask = DungeonGenerator.MASKID_NOFLOOR;
                 }
                 else
                 {
-                    mask = AbstractMap.MASKID_KEEP;
+                    mask = DungeonGenerator.MASKID_KEEP;
                 }
 
-                Map.Set(dest, Tiles[v], mask);
+                Level.TileMap[dest] = Tiles[v];
+                maskMap[dest] = mask;
             }
         }
 
-        internal bool TryPlaceOnMap(AbstractMap map)
+        internal bool TryPlaceOnMap(Level level, Grid<int> maskMap)
         {
-            var mapRect = new Rect(Vec.Zero, map.Size);
+            var mapRect = new Rect(Vec.Zero, level.Size);
 
             if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size - new Vec(1,1))))
                 return false;
@@ -59,8 +60,8 @@ namespace SurvivalHack.Mapgen
                 var newTile = Tiles[source];
                 var dest = Transform.Convert(source);
 
-                var oldTile = map.TileMap[dest];
-                var oldMask = map.MaskMap[dest];
+                var oldTile = level.TileMap[dest];
+                var oldMask = maskMap[dest];
 
                 if (newTile == null)
                     continue;
@@ -70,13 +71,13 @@ namespace SurvivalHack.Mapgen
 
                 switch (oldMask)
                 {
-                    case AbstractMap.MASKID_NOFLOOR:
+                    case DungeonGenerator.MASKID_NOFLOOR:
                         if (newTile.Flags.HasFlag(TerrainFlag.Walk))
                             return false;
                         break;
-                    case AbstractMap.MASKID_VOID:
+                    case DungeonGenerator.MASKID_VOID:
                         break;
-                    case AbstractMap.MASKID_KEEP:
+                    case DungeonGenerator.MASKID_KEEP:
                         if (oldTile != newTile && newTile != TileList.Get("rock"))
                             return false;
                         break;
@@ -85,9 +86,8 @@ namespace SurvivalHack.Mapgen
                 }
             }
 
-            Map = map;
-            Render();
-            map.Rooms.Add(this);
+            Level = level;
+            Render(maskMap);
             return true;
         }
     }

@@ -79,7 +79,6 @@
     <Compile Include="Game.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="Mapgen\AbstractMap.cs" />
     <Compile Include="Mapgen\DungeonConnector.cs" />
     <Compile Include="Mapgen\DungeonGenerator.cs" />
     <Compile Include="Mapgen\DungeonPopulator.cs" />

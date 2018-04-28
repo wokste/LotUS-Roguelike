@@ -15,33 +15,40 @@ namespace SurvivalHack.Mapgen
 
         internal List<RoomFactory> RoomFactories = new List<RoomFactory>();
 
+        public const int MASKID_VOID = -3;
+        public const int MASKID_NOFLOOR = -2;
+        public const int MASKID_KEEP = -1;
+
         internal DungeonGenerator()
         {
             RoomFactories.Add(new RectRoomFactory());
             RoomFactories.Add(new BlobRoomFactory());
         }
 
-        internal (AbstractMap, int) GenerateNew(int seed, Vec size)
+        internal Level Generate(int seed, Vec size)
         {
             Seed = seed;
             _rnd = new Random(seed);
 
             // Add rooms
-            var map = new AbstractMap(size);
-            var rooms = 0;
-            GenerateRoom(map);
+            var map = new Level(size);
+            var maskMap = new Grid<int>(size, MASKID_VOID);
+
+            var rooms = new List<Room>();
+            GenerateRoom(map, maskMap);
             for (var i = 0; i < 500; i++)
             {
-                if (GenerateRoom(map))
-                    rooms++;
+                var room = GenerateRoom(map, maskMap);
+                if (room != null)
+                    rooms.Add(room);
             }
 
             // Create MST
-            var Connector = new DungeonConnector(map);
+            var Connector = new DungeonConnector(map, rooms);
             Connector.Prim();
             Connector.EliminateDeadEnds(_rnd, 1);
 
-            return (map, rooms);
+            return map;
         }
 
         private RoomFactory GetFactory()
@@ -58,7 +65,7 @@ namespace SurvivalHack.Mapgen
             throw new ArithmeticException("Divide by zero exception");
         }
 
-        private bool GenerateRoom(AbstractMap map)
+        private Room GenerateRoom(Level map, Grid<int> maskMap)
         {
             var room = GetFactory().Make(_rnd);
 
@@ -76,10 +83,10 @@ namespace SurvivalHack.Mapgen
                     Offset = new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd))
                 };
 
-                if (room.TryPlaceOnMap(map))
-                    return true;
+                if (room.TryPlaceOnMap(map, maskMap))
+                    return room;
             }
-            return false;
+            return null;
         }
     }
 }

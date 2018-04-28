@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HackConsole;
 
 namespace SurvivalHack
 {
@@ -17,12 +18,10 @@ namespace SurvivalHack
             ItemTypeList.InitTypes();
             TileList.InitTypes();
 
-            Level = new Level();
+            var generator = new Mapgen.DungeonGenerator();
 
-            foreach (var v in Level.TileMap.Ids())
-            {
-                Level.TileMap[v] = TileList.Get("grass");
-            }
+            Level = generator.Generate(Rnd.Next(), new Vec(128,64));
+            
 
             var spawner = new Mapgen.DungeonPopulator(this);
             spawner.Spawn(Level, 16);

@@ -7,16 +7,18 @@ namespace SurvivalHack.Mapgen
 {
     public class DungeonConnector
     {
-        AbstractMap _map;
+        Level _map;
         double[,] Weights; // Adjacency matrix. 0 means the rooms are connected.
-        int RoomCount;
+        Room[] _rooms;
+
+        int RoomCount => _rooms.Length;
         RoomStatFlag[] Flags;
 
-        public DungeonConnector(AbstractMap map)
+        public DungeonConnector(Level map, List<Room> rooms)
         {
             _map = map;
+            _rooms = rooms.ToArray();
 
-            RoomCount = _map.Rooms.Count;
             Weights = new double[RoomCount, RoomCount];
 
             for (int i = 0; i < RoomCount; i++)
@@ -245,14 +247,14 @@ namespace SurvivalHack.Mapgen
 
         double Weight(int i, int j)
         {
-            var c1 = _map.Rooms[i].Center;
-            var c2 = _map.Rooms[j].Center;
+            var c1 = _rooms[i].Center;
+            var c2 = _rooms[j].Center;
             return (c1 - c2).Length;
         }
 
         void Connect(int i, int j) {
-            var c1 = _map.Rooms[i].Center;
-            var c2 = _map.Rooms[j].Center;
+            var c1 = _rooms[i].Center;
+            var c2 = _rooms[j].Center;
 
             var floor = TileList.Get("floor");
 

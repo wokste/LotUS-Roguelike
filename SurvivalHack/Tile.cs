@@ -17,7 +17,7 @@ namespace SurvivalHack
         Sight = 8,
 
         None = 0,
-        All = 0x7fffffff,
+        All = ~0,
     }
 
     public class Tile
@@ -47,11 +47,11 @@ namespace SurvivalHack
 
             Types.Add(new Tile
             {
-                Tag = "grass",
+                Tag = "floor",
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('.', Color.Green)
+                Symbol = new Symbol('.', new Color(235, 231, 203))
             });
 
             Types.Add(new Tile
@@ -60,25 +60,16 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Walk,
-                Symbol = new Symbol('~', Color.Cyan)
+                Symbol = new Symbol('~', new Color(136, 205, 247))
             });
 
             Types.Add(new Tile
             {
-                Tag = "gravel",
+                Tag = "door",
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol(',', Color.Gray)
-            });
-
-            Types.Add(new Tile
-            {
-                Tag = "tree",
-                DropTag = "wood",
-                DropCount = 3,
-                Flags = TerrainFlag.Sight,
-                Symbol = new Symbol((char)6, Color.Green)
+                Symbol = new Symbol(',', Color.Green)
             });
 
             Types.Add(new Tile
@@ -92,38 +83,20 @@ namespace SurvivalHack
 
             Types.Add(new Tile
             {
-                Tag = "stone",
+                Tag = "wall",
                 DropTag = "stone",
-                DropCount = 1,
-                Flags = TerrainFlag.Fly,
-                Symbol = new Symbol((char)30, Color.Gray)
-            });
-
-            Types.Add(new Tile
-            {
-                Tag = "ore",
-                DropTag = "ore",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Symbol = new Symbol('~', Color.Red)
+                Symbol = new Symbol('#', new Color(164, 87, 40))
             });
 
             Types.Add(new Tile
             {
-                Tag = "pumpkin",
-                DropTag = "pumpkin",
-                DropCount = 1,
-                Flags = TerrainFlag.Fly | TerrainFlag.Sight,
-                Symbol = new Symbol('p', Color.Orange)
-            });
-
-            Types.Add(new Tile
-            {
-                Tag = "mushroom",
-                DropTag = "mushroom",
-                DropCount = 1,
-                Flags = TerrainFlag.Fly | TerrainFlag.Sight,
-                Symbol = new Symbol('m', Color.Pink)
+                Tag = "void",
+                DropTag = "",
+                DropCount = 0,
+                Flags = TerrainFlag.None,
+                Symbol = new Symbol(' ', Color.Black)
             });
         }
 

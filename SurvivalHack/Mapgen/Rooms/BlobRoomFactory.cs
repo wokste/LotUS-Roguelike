@@ -6,14 +6,13 @@ namespace SurvivalHack.Mapgen.Rooms
 {
     class BlobRoomFactory : RoomFactory
     {
-        public Range MaxRadius { get; set; } = new Range("4-8");
-        public Range MinRadius { get; set; } = new Range("1");
-        public Range Spikes { get; set; } = new Range("4-6");
+        public Range MaxRadius = new Range("4-8");
+        public Range MinRadius = new Range("1");
+        public Range Spikes = new Range("4-6");
 
-        public Tile FloorTile { get; set; }
-        public Tile WallTile { get; set; }
-        public double Roughness { get; set; } = 1;
-        public int MaxDoorCount { get; set; } = 10;
+        public Tile FloorTile;
+        public Tile WallTile;
+        public double Roughness = 1;
         
         public BlobRoomFactory()
         {

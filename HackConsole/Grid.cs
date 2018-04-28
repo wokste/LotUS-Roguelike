@@ -7,10 +7,14 @@ namespace HackConsole
         private readonly T[,] _grid;
         public readonly Vec Size;
 
-        public Grid(Vec size)
+        public Grid(Vec size, T defaultValue = default(T))
         {
             Size = size;
             _grid = new T[size.X, size.Y];
+
+            for (var y = 0; y < Size.Y; ++y)
+                for (var x = 0; x < Size.X; ++x)
+                    _grid[x, y] = defaultValue;
         }
 
         public T this[Vec v] {

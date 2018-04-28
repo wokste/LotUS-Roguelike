@@ -12,10 +12,11 @@ namespace SurvivalHack
         private readonly Grid<List<Entity>> _entityChunks;
         private const int CHUNK_SIZE = 16;
 
-        public Level()
+        public Vec Size => TileMap.Size;
+
+        public Level(Vec size)
         {
-            var size = new Vec(64, 64);
-            TileMap = new Grid<Tile>(size);
+            TileMap = new Grid<Tile>(size, TileList.Get("rock"));
             _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 
             foreach (var v in _entityChunks.Ids())

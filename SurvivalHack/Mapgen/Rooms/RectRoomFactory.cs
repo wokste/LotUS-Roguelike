@@ -5,11 +5,10 @@ namespace SurvivalHack.Mapgen.Rooms
 {
     internal class RectRoomFactory : RoomFactory
     {
-        public Range RangeX { get; set; } = new Range("4-10");
-        public Range RangeY { get; set; } = new Range("4-10");
-        public Tile FloorTile { get; set; }
-        public Tile WallTile { get; set; }
-        public int Exits { get; set; } = 6;
+        public Range RangeX = new Range("4-10");
+        public Range RangeY = new Range("4-10");
+        public Tile FloorTile;
+        public Tile WallTile;
 
         public RectRoomFactory()
         {
