@@ -80,8 +80,15 @@
     <Compile Include="Game.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Mapgen\AbstractMap.cs" />
+    <Compile Include="Mapgen\DungeonConnector.cs" />
+    <Compile Include="Mapgen\DungeonGenerator.cs" />
     <Compile Include="Mapgen\DungeonPopulator.cs" />
     <Compile Include="Mapgen\Prototypes.cs" />
+    <Compile Include="Mapgen\Room.cs" />
+    <Compile Include="Mapgen\Rooms\BlobRoomFactory.cs" />
+    <Compile Include="Mapgen\Rooms\RectRoomFactory.cs" />
+    <Compile Include="Mapgen\Rooms\RoomFactory.cs" />
     <Compile Include="PerlinNoise.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Ui\EntityDetailWidget.cs" />

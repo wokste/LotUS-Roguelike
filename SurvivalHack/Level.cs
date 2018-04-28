@@ -18,7 +18,7 @@ namespace SurvivalHack
             TileMap = new Grid<Tile>(size);
             _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 
-            foreach (var v in _entityChunks.Iterator())
+            foreach (var v in _entityChunks.Ids())
             {
                 _entityChunks[v] = new List<Entity>();
             }

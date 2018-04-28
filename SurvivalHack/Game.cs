@@ -17,7 +17,7 @@ namespace SurvivalHack
 
             Level = new Level();
 
-            foreach (var v in Level.TileMap.Iterator())
+            foreach (var v in Level.TileMap.Ids())
             {
                 Level.TileMap[v] = TileList.Get("grass");
             }

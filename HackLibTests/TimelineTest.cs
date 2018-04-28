@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 
-namespace HackLibTests
+namespace HackConsoleTests
 {
     [TestClass]
     public class TimelineTest
