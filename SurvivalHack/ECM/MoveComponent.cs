@@ -12,17 +12,15 @@ namespace SurvivalHack.ECM
         {
         }
 
-        public static void Bind(Entity self, Level level, Vec? pos = null)
+        public static void Bind(Entity self, Level level, Vec pos)
         {
-            var pos2 = pos ?? level.GetEmptyLocation(self.Flags);
-
-            var c = level.GetChunck(pos2);
+            var c = level.GetChunck(pos);
             c.Add(self);
 
             self.Move = new MoveComponent
             {
                 Level = level,
-                Pos = pos2
+                Pos = pos
             };
         }
 

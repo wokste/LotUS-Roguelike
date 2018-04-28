@@ -15,6 +15,8 @@ namespace SurvivalHack.Mapgen
 
         internal List<RoomFactory> RoomFactories = new List<RoomFactory>();
 
+        internal Action<IEvent> OnNewEvent;
+
         public const int MASKID_VOID = -3;
         public const int MASKID_NOFLOOR = -2;
         public const int MASKID_KEEP = -1;
@@ -47,6 +49,11 @@ namespace SurvivalHack.Mapgen
             var Connector = new DungeonConnector(map, rooms);
             Connector.Prim();
             Connector.EliminateDeadEnds(_rnd, 1);
+
+            // Populate map
+
+            var spawner = new DungeonPopulator(this, map, _rnd);
+            spawner.Spawn(rooms, 1);
 
             return map;
         }

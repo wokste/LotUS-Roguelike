@@ -19,12 +19,9 @@ namespace SurvivalHack
             TileList.InitTypes();
 
             var generator = new Mapgen.DungeonGenerator();
+            generator.OnNewEvent += (e)=>{ Timeline.Insert(e); };
 
             Level = generator.Generate(Rnd.Next(), new Vec(128,64));
-            
-
-            var spawner = new Mapgen.DungeonPopulator(this);
-            spawner.Spawn(Level, 16);
         }
 
         public void ActorAct(int ticks)

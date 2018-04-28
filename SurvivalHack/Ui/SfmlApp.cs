@@ -46,8 +46,10 @@ namespace SurvivalHack.Ui
             _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
 
             _player.OnDestroy += PlayerDied;
-            
-            ECM.MoveComponent.Bind(_player, _game.Level);
+
+
+            var pos = _game.Level.GetEmptyLocation();
+            ECM.MoveComponent.Bind(_player, _game.Level, pos);
             _player.FoV = new FieldOfView(_player.Move);
         }
 

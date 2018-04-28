@@ -18,8 +18,10 @@ namespace HackConsole
 
         public Range(int min, int max)
         {
-            Min = min;
-            Max = max;
+            if (min <= max)
+                (Min, Max) = (min, max);
+            else
+                (Min, Max) = (max, min);
         }
 
         public override string ToString()
