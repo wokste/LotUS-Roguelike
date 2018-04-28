@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SurvivalHack
+namespace SurvivalHack.Mapgen
 {
     internal class PerlinNoise
     {

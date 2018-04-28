@@ -23,7 +23,8 @@ namespace SurvivalHack
                 _entityChunks[v] = new List<Entity>();
             }
         }
-        
+
+        [Obsolete]
         public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
         {
             Debug.Assert(flag != TerrainFlag.None);
@@ -31,9 +32,9 @@ namespace SurvivalHack
             Vec v;
             do
             {
-                v = new Vec (
-                    Dicebag.UniformInt(TileMap.Size.X),
-                    Dicebag.UniformInt(TileMap.Size.Y));
+                v = new Vec(
+                    new Range(0, TileMap.Size.X - 1).Rand(Game.Rnd),
+                    new Range(0, TileMap.Size.Y - 1).Rand(Game.Rnd));
             } while (!TileMap[v].Flags.HasFlag(flag));
 
             return v;
@@ -48,11 +49,10 @@ namespace SurvivalHack
         {
             if (TileMap[v].Flags.HasFlag(flag))
                 return true;
-            /*
-            foreach (var c in Creatures)
-                if (c.Position.X == x && c.Position.Y == y)
-                    return true;
-            */
+            
+            foreach (var c in GetEntity(v))
+                return true;
+            
             return false;
         }
 

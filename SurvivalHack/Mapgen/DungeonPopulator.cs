@@ -26,7 +26,8 @@ namespace SurvivalHack.Mapgen
 
         private Entity CreateMonster()
         {
-            var rnd = Dicebag.UniformInt(100);
+            var d100 = new Range(1, 100);
+            var rnd = d100.Rand(Game.Rnd);
 
             if (rnd < 60)
             {
@@ -36,7 +37,7 @@ namespace SurvivalHack.Mapgen
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
                     Attack = new AttackComponent
                     {
-                        Damage = 20,
+                        Damage = new Range("10-14"),
                         HitChance = 60,
                         Range = 1,
                     },
@@ -56,7 +57,7 @@ namespace SurvivalHack.Mapgen
                     Description = "A flying monster that is a nuisance to any adventurer.",
                     Attack = new AttackComponent
                     {
-                        Damage = 2,
+                        Damage = new Range("1-3"),
                         HitChance = 60,
                         Range = 1,
                     },

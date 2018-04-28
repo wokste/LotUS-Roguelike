@@ -33,7 +33,7 @@ namespace SurvivalHack.Ui
                 Description = "You, as a player",
                 Attack = new ECM.AttackComponent
                 {
-                    Damage = 20,
+                    Damage = new Range("2-4"),
                     HitChance = 75f
                 },
                 Flags = TerrainFlag.Walk,
@@ -41,7 +41,7 @@ namespace SurvivalHack.Ui
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)
             };
-            _player.Inventory.Add(ItemTypeList.Get("mushroom").Make(2,2));
+            _player.Inventory.Add(ItemTypeList.Get("mushroom").Make(2));
             _player.Inventory.Add(ItemTypeList.Get("pumpkin").Make(1));
             _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
 

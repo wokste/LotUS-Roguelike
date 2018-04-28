@@ -7,6 +7,8 @@ namespace SurvivalHack
 {
     public class Game
     {
+        public static readonly Random Rnd = new Random();
+
         public Level Level;
         public Timeline Timeline = new Timeline();
 

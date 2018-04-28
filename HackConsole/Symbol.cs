@@ -16,7 +16,14 @@ namespace HackConsole
             TextColor = textColor;
             BackgroundColor = backgroundColor;
         }
-        
+
+        public Symbol Darken(byte mult)
+        {
+            if (mult == 255)
+                return this;
+
+            return new Symbol(Ascii, TextColor.Darken(mult), BackgroundColor.Darken(mult));
+        }
     }
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct Color
@@ -46,11 +53,13 @@ namespace HackConsole
             A = a;
         }
         
-        public void Darken(byte mult)
+        public Color Darken(byte mult)
         {
-            R = (byte)(R * mult / 255);
-            G = (byte)(G * mult / 255);
-            B = (byte)(B * mult / 255);
+            return new Color(
+                (byte)(R * mult / 255),
+                (byte)(G * mult / 255),
+                (byte)(B * mult / 255),
+                A);
         }
 
         public static Color? TryParse(string text) {

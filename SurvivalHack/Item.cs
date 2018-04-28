@@ -1,6 +1,7 @@
 ﻿using SurvivalHack.ECM;
 using System.Collections.Generic;
 using System.Diagnostics;
+using HackConsole;
 
 namespace SurvivalHack
 {
@@ -17,14 +18,11 @@ namespace SurvivalHack
             return Name;
         }
 
-        public Item Make(int min = 1, int max = -1)
+        public Item Make(int count)
         {
-            if (max == -1)
-                max = min;
-
             return new Item
             {
-                Count = Dicebag.UniformInt(min,max + 1),
+                Count = count,
                 Type = this
             };
         }
@@ -120,7 +118,7 @@ namespace SurvivalHack
                 Stacking = false,
                 OnMelee = new AttackComponent
                 {
-                    Damage = 6,
+                    Damage = new Range("4-8"),
                     HitChance = 70,
                 }
             });
@@ -132,7 +130,7 @@ namespace SurvivalHack
                 Stacking = false,
                 OnMelee = new AttackComponent
                 {
-                    Damage = 8,
+                    Damage = new Range("6-10"),
                     HitChance = 70,
                 }
             });

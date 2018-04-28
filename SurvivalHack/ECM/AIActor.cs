@@ -33,9 +33,10 @@ namespace SurvivalHack.ECM
 
         private void MoveRandom(Entity self)
         {
+            var move = new Range(-1, 1);
             for (var i = 0; i < 10; i++)
             {
-                var delta = new Vec(Dicebag.UniformInt(-1,2), Dicebag.UniformInt(-1, 2));
+                var delta = new Vec(move.Rand(Game.Rnd), move.Rand(Game.Rnd));
                 
                 if (self.Move.Move(self, delta))
                     return;

@@ -63,12 +63,7 @@ namespace SurvivalHack.Ui
                 if (visibility == 0)
                     continue;
 
-                WindowData.Data[v] = _level.GetTile(v + _offset).Char;
-                if (visibility < 255)
-                {
-                    WindowData.Data[v].TextColor.Darken(visibility);
-                    WindowData.Data[v].BackgroundColor.Darken(visibility);
-                }
+                WindowData.Data[v] = _level.GetTile(v + _offset).Symbol.Darken(visibility);
             }
         }
 

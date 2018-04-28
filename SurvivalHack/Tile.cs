@@ -29,7 +29,7 @@ namespace SurvivalHack
 
         public TerrainFlag Flags;
 
-        public Symbol Char;
+        public Symbol Symbol;
 
         public override string ToString()
         {
@@ -51,7 +51,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Char = new Symbol('.', Color.Green)
+                Symbol = new Symbol('.', Color.Green)
             });
 
             Types.Add(new Tile
@@ -60,7 +60,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Walk,
-                Char = new Symbol('~', Color.Cyan)
+                Symbol = new Symbol('~', Color.Cyan)
             });
 
             Types.Add(new Tile
@@ -69,7 +69,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Char = new Symbol(',', Color.Gray)
+                Symbol = new Symbol(',', Color.Gray)
             });
 
             Types.Add(new Tile
@@ -78,7 +78,7 @@ namespace SurvivalHack
                 DropTag = "wood",
                 DropCount = 3,
                 Flags = TerrainFlag.Sight,
-                Char = new Symbol((char)6, Color.Green)
+                Symbol = new Symbol((char)6, Color.Green)
             });
 
             Types.Add(new Tile
@@ -87,7 +87,7 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Char = new Symbol('#', Color.Gray)
+                Symbol = new Symbol('#', Color.Gray)
             });
 
             Types.Add(new Tile
@@ -96,7 +96,7 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 1,
                 Flags = TerrainFlag.Fly,
-                Char = new Symbol((char)30, Color.Gray)
+                Symbol = new Symbol((char)30, Color.Gray)
             });
 
             Types.Add(new Tile
@@ -105,7 +105,7 @@ namespace SurvivalHack
                 DropTag = "ore",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Char = new Symbol('~', Color.Red)
+                Symbol = new Symbol('~', Color.Red)
             });
 
             Types.Add(new Tile
@@ -114,7 +114,7 @@ namespace SurvivalHack
                 DropTag = "pumpkin",
                 DropCount = 1,
                 Flags = TerrainFlag.Fly | TerrainFlag.Sight,
-                Char = new Symbol('p', Color.Orange)
+                Symbol = new Symbol('p', Color.Orange)
             });
 
             Types.Add(new Tile
@@ -123,7 +123,7 @@ namespace SurvivalHack
                 DropTag = "mushroom",
                 DropCount = 1,
                 Flags = TerrainFlag.Fly | TerrainFlag.Sight,
-                Char = new Symbol('m', Color.Pink)
+                Symbol = new Symbol('m', Color.Pink)
             });
         }
 

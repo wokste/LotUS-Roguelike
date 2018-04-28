@@ -5,14 +5,16 @@ namespace SurvivalHack.ECM
     public class AttackComponent
     {
         public float HitChance;
-        public int Damage;
+        public Range Damage;
         public float Range;
 
         public void Attack(Entity attacker, Entity defender)
         {
-            if (Dicebag.UniformInt(100) <= HitChance)
+            var d100 = new Range(1,100);
+
+            if (d100.Rand(Game.Rnd) <= HitChance)
             {
-                var damage = Dicebag.Randomize(Damage);
+                var damage = Damage.Rand(Game.Rnd);
                 Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker?.Move?.Pos, Color.Yellow);
                 defender.TakeDamage(damage);
             }
