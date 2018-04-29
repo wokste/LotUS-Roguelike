@@ -21,7 +21,8 @@ namespace SurvivalHack.Ui
 
         public override void Render(bool forceUpdate)
         {
-            _offset = _player.Move.Pos - Size.Center;
+            if (_player.Alive)
+                _offset = _player.Move.Pos - Size.Center;
             
             Clear();
             RenderGrid();
