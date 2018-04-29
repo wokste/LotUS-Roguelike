@@ -36,6 +36,7 @@ namespace SurvivalHack.Ui
                     Damage = new Range("2-4"),
                     HitChance = 75f
                 },
+                Attitude = new ECM.Attitude(ECM.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
                 Health = new Bar(100),
                 Hunger = new Bar(100),

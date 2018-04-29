@@ -22,7 +22,7 @@ namespace SurvivalHack.ECM
         public float Speed = 1;
         public FieldOfView FoV;
         public AiActor Ai;
-        public AiAttitude Attitude;
+        public Attitude Attitude;
 
         public float LeftoverMove;
 

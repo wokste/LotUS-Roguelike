@@ -5,30 +5,26 @@ namespace SurvivalHack.ECM
 {
     public class AiActor
     {
-        internal void Move(Entity self)
+        internal void Move(Entity self, Goal goal)
         {
-            switch (self.Attitude.TargetAction)
+            switch (goal.TargetAction)
             {
-                case EAttitude.Ignore:
+                case ETargetAction.Ignore:
+                    MoveRandom(self);
                     break;
-                case EAttitude.Chase:
-                    MoveTo(self, self.Attitude.Target);
+                case ETargetAction.Chase:
+                    MoveTo(self, goal.Target);
                     break;
-                case EAttitude.Fear:
+                case ETargetAction.Fear:
                     // TODO: Run away
                     break;
-                case EAttitude.Follow:
-                    MoveTo(self, self.Attitude.Target);
+                case ETargetAction.Follow:
+                    MoveTo(self, goal.Target);
                     break;
-                case EAttitude.Hate:
-                    MoveTo(self, self.Attitude.Target);
+                case ETargetAction.Hate:
+                    MoveTo(self, goal.Target);
                     break;
             }
-
-            if (self.Attitude.Target != null)
-                MoveTo(self, self.Attitude.Target);
-            else
-                MoveRandom(self);
         }
 
         private void MoveRandom(Entity self)
@@ -76,17 +72,17 @@ namespace SurvivalHack.ECM
             MoveRandom(self);
         }
 
-        public void StandardAction(Entity self)
+        public void StandardAction(Entity self, Goal goal)
         {
-            switch (self.Attitude.TargetAction)
+            switch (goal.TargetAction)
             {
-                case EAttitude.Ignore:
-                case EAttitude.Chase:
-                case EAttitude.Fear:
-                case EAttitude.Follow:
+                case ETargetAction.Ignore:
+                case ETargetAction.Chase:
+                case ETargetAction.Fear:
+                case ETargetAction.Follow:
                     break;
-                case EAttitude.Hate:
-                    ActionAttackEnemy(self, self.Attitude.Target);
+                case ETargetAction.Hate:
+                    ActionAttackEnemy(self, goal.Target);
                     break;
             }
         }
@@ -117,16 +113,16 @@ namespace SurvivalHack.ECM
             if (!_entity.Alive)
                 return;
 
-            _entity.Attitude.UpdateTarget(_entity);
+            var goal = _entity.Attitude.GetGoal(_entity);
 
             // Moving.
             _entity.LeftoverMove += _entity.Speed;
             for (var i = 1; i <= _entity.LeftoverMove; i++)
-                _entity.Ai.Move(_entity);
+                _entity.Ai.Move(_entity, goal);
             _entity.LeftoverMove = _entity.LeftoverMove - (int)_entity.LeftoverMove;
 
             // Acting
-            _entity.Ai.StandardAction(_entity);
+            _entity.Ai.StandardAction(_entity, goal);
         }
     }
 }
