@@ -34,38 +34,41 @@ namespace SurvivalHack
         {
             switch (tag)
             {
-                case "pumpkin":
+                case "potion1":
                     return new Entity
                     {
-                        Name = "Pumpkin",
+                        Name = "Red Potion",
                         StackComponent = new StackComponent(1, 0),
                         Consume = new ConsumableComponent
                         {
                             FoodRestore = 5,
                             HealthRestore = 2,
                             Quality = 7
-                        }
+                        },
+                        Symbol = new Symbol('?', Color.Parse("#f30")),
                     };
-                case "mushroom":
+                case "potion2":
                     return new Entity
                     {
-                        Name = "Mushroom",
+                        Name = "Blue potion",
                         StackComponent = new StackComponent(1, 1),
                         Consume = new ConsumableComponent
                         {
                             FoodRestore = 2,
                             Quality = 3
-                        }
+                        },
+                        Symbol = new Symbol('?', Color.Parse("#06f")),
                     };
                 case "sword1":
                     return new Entity
                     {
-                        Name = "Wooden Sword",
+                        Name = "Copper Sword",
                         Attack = new AttackComponent
                         {
                             Damage = new Range("4-8"),
                             HitChance = 70,
-                        }
+                        },
+                        Symbol = new Symbol('|', Color.Parse("#b47d6b")),
                     };
                 case "sword2":
                     return new Entity
@@ -75,22 +78,12 @@ namespace SurvivalHack
                         {
                             Damage = new Range("6-10"),
                             HitChance = 70,
-                        }
+                        },
+                        Symbol = new Symbol('|', Color.Parse("#859a9a")),
                     };
                 default:
                     throw new ArgumentException("unknown tag " + tag);
             }
         }
     }
-    /*
-    public class Item : Entity
-    {
-        public int Count;
-
-        public override string ToString()
-        {
-            return Type.Stacking ? $"{Type.Name} ({Count})" : $"{Type.Name}";
-        }
-    }
-    */
 }

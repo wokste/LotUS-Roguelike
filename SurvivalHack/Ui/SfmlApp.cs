@@ -42,8 +42,8 @@ namespace SurvivalHack.Ui
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)
             };
-            _player.Inventory.Add(ItemTypeList.Get("mushroom"));
-            _player.Inventory.Add(ItemTypeList.Get("pumpkin"));
+            _player.Inventory.Add(ItemTypeList.Get("potion1"));
+            _player.Inventory.Add(ItemTypeList.Get("potion2"));
             _player.Inventory.Add(ItemTypeList.Get("sword1"));
 
             _player.OnDestroy += PlayerDied;
@@ -127,7 +127,7 @@ namespace SurvivalHack.Ui
                                 if (_player.UseItem(i))
                                     _game.ActorAct(1);
                             },
-                            Question = "Choose food",
+                            Question = "Choose item",
                             Set = _player.Inventory._items
                         };
                         _window.PopupStack.Push(o);

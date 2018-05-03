@@ -73,11 +73,22 @@ namespace SurvivalHack.Mapgen
 
         private void PlaceTreasure(Room room, int difficulty)
         {
-            /*
-            var treasure = CreateTreasure();
-            var pos = GetFreeTile(level, room, rnd);
-            MoveComponent.Bind(treasure, level, pos);
-            */
+            var item = CreateTreasure();
+            var pos = GetFreeTile(room);
+            MoveComponent.Bind(item, _level, pos);
+        }
+
+        private Entity CreateTreasure()
+        {
+            var d100 = new Range(1, 100);
+            var rnd = d100.Rand(Game.Rnd);
+
+            if (rnd < 45)
+                return ItemTypeList.Get("potion1");
+            if (rnd < 90)
+                return ItemTypeList.Get("potion2");
+
+            return ItemTypeList.Get("sword1");
         }
 
         private Entity CreateMonster()
