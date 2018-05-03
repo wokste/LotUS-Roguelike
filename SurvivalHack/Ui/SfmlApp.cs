@@ -42,9 +42,9 @@ namespace SurvivalHack.Ui
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)
             };
-            _player.Inventory.Add(ItemTypeList.Get("mushroom").Make(2));
-            _player.Inventory.Add(ItemTypeList.Get("pumpkin").Make(1));
-            _player.Inventory.Add(ItemTypeList.Get("sword1").Make(1));
+            _player.Inventory.Add(ItemTypeList.Get("mushroom"));
+            _player.Inventory.Add(ItemTypeList.Get("pumpkin"));
+            _player.Inventory.Add(ItemTypeList.Get("sword1"));
 
             _player.OnDestroy += PlayerDied;
 
@@ -119,12 +119,12 @@ namespace SurvivalHack.Ui
             {
                 case 'e':
                     {
-                        var o = new OptionWidget<Item>
+                        var o = new OptionWidget<ECM.Entity>
                         {
                             DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
                             OnSelect = i =>
                             {
-                                if (_player.Eat(i))
+                                if (_player.UseItem(i))
                                     _game.ActorAct(1);
                             },
                             Question = "Choose food",

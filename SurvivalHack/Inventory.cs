@@ -1,50 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
     public class Inventory
     {
-        public readonly List<Item> _items = new List<Item>();
+        public readonly List<Entity> _items = new List<Entity>();
 
-        public void Add(Item item)
+        public void Add(Entity entity)
         {
-            if (item.Type.Stacking)
+            var stackComponent = entity.StackComponent;
+            if (stackComponent != null)
             {
-                var existing = _items.Find(i => i.Type == item.Type);
+                var existing = _items.Find(i => i.StackComponent.MergeId == stackComponent.MergeId);
                 if (existing != null)
                 {
                     // Stacking items shouldn't create a new stack if you already have a stack.
-                    existing.Count += item.Count;
-                    Message.Write($"You aquired {item} making a total of {existing}", null, Color.Green);
+                    existing.StackComponent.Count += stackComponent.Count;
+                    Message.Write($"You aquired {entity} making a total of {existing}", null, Color.Green);
                     return;
                 }
             }
             
-            Message.Write($"You aquired first {item}", null, Color.Green);
-            _items.Add(item);
+            Message.Write($"You aquired {entity}", null, Color.Green);
+            _items.Add(entity);
         }
 
-        public Item Find(ItemType type)
-        {
-            return _items.Find(i => i.Type == type);
-        }
-
-        public void Add(string itemTag, int count)
-        {
-            var type = ItemTypeList.Get(itemTag);
-            Add(type.Make(count));
-        }
-
-        public void Consume(Item item, int count = 1)
-        {
-            item.Count -= count;
-            
-            Debug.Assert(item.Count >= 0);
-
-            if (item.Count == 0)
-                _items.Remove(item);
+        public void Remove(Entity entity) {
+            _items.Remove(entity);
         }
     }
 }

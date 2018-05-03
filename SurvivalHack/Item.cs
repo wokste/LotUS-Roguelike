@@ -2,93 +2,89 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using HackConsole;
+using System;
 
 namespace SurvivalHack
 {
-    public class ItemType : Entity
+    public class StackComponent
     {
-        public bool Stacking;
-        public ConsumableComponent OnEat;
+        public int Count;
+        public int MergeId;
 
-        public override string ToString()
+        public StackComponent(int count, int mergeId)
         {
-            return Name;
+            Count = count;
+            MergeId = mergeId;
         }
 
-        public Item Make(int count)
+        private static int MergeIdAutoIncrement;
+
+        int GenMergeId() => MergeIdAutoIncrement++;
+
+        internal bool Consume()
         {
-            return new Item
-            {
-                Count = count,
-                Type = this
-            };
+            Count--;
+            return (Count == 0);
         }
     }
 
     public static class ItemTypeList {
-        private static readonly Dictionary<string, ItemType> Types = new Dictionary<string, ItemType>();
 
-        public static void InitTypes()
+        public static Entity Get(string tag)
         {
-            Debug.Assert(Types.Count == 0);
-
-            Types.Add("pumpkin", new ItemType
+            switch (tag)
             {
-                Name = "Pumpkin",
-                Stacking = true,
-                OnEat = new ConsumableComponent
-                {
-                    FoodRestore = 5,
-                    HealthRestore = 2,
-                    Quality = 7
-                }
-            });
-
-            Types.Add("mushroom", new ItemType
-            {
-                Name = "Mushroom",
-                Stacking = true,
-                OnEat = new ConsumableComponent
-                {
-                    FoodRestore = 2,
-                    Quality = 3
-                }
-            });
-
-            Types.Add("sword1", new ItemType
-            {
-                Name = "Wooden Sword",
-                Stacking = false,
-                Attack = new AttackComponent
-                {
-                    Damage = new Range("4-8"),
-                    HitChance = 70,
-                }
-            });
-
-            Types.Add("sword2", new ItemType
-            {
-                Name = "Iron Sword",
-                Stacking = false,
-                Attack = new AttackComponent
-                {
-                    Damage = new Range("6-10"),
-                    HitChance = 70,
-                }
-            });
-        }
-
-        public static ItemType Get(string tag)
-        {
-            var itemType = Types[tag];
-            Debug.Assert(itemType != null);
-            return itemType;
+                case "pumpkin":
+                    return new Entity
+                    {
+                        Name = "Pumpkin",
+                        StackComponent = new StackComponent(1, 0),
+                        Consume = new ConsumableComponent
+                        {
+                            FoodRestore = 5,
+                            HealthRestore = 2,
+                            Quality = 7
+                        }
+                    };
+                case "mushroom":
+                    return new Entity
+                    {
+                        Name = "Mushroom",
+                        StackComponent = new StackComponent(1, 1),
+                        Consume = new ConsumableComponent
+                        {
+                            FoodRestore = 2,
+                            Quality = 3
+                        }
+                    };
+                case "sword1":
+                    return new Entity
+                    {
+                        Name = "Wooden Sword",
+                        Attack = new AttackComponent
+                        {
+                            Damage = new Range("4-8"),
+                            HitChance = 70,
+                        }
+                    };
+                case "sword2":
+                    return new Entity
+                    {
+                        Name = "Iron Sword",
+                        Attack = new AttackComponent
+                        {
+                            Damage = new Range("6-10"),
+                            HitChance = 70,
+                        }
+                    };
+                default:
+                    throw new ArgumentException("unknown tag " + tag);
+            }
         }
     }
-
+    /*
     public class Item : Entity
     {
-        public ItemType Type;
         public int Count;
 
         public override string ToString()
@@ -96,4 +92,5 @@ namespace SurvivalHack
             return Type.Stacking ? $"{Type.Name} ({Count})" : $"{Type.Name}";
         }
     }
+    */
 }

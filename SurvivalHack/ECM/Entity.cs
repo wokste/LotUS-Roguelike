@@ -6,12 +6,16 @@ namespace SurvivalHack.ECM
     public class Entity : IDescriptionProvider
     {
         public String Name { get; set; }
+        public override string ToString() => Name;
+
         public Bar Health;
         public Bar Hunger;
         public AttackComponent Attack;
         public MoveComponent Move;
-        public TerrainFlag Flags;
+        public ConsumableComponent Consume;
+        public StackComponent StackComponent;
 
+        public TerrainFlag Flags;
         public Symbol Symbol;
 
         public readonly Inventory Inventory = new Inventory();
@@ -42,15 +46,19 @@ namespace SurvivalHack.ECM
 
         public Action<Entity> OnDestroy;
 
-        public bool Eat(Item food)
+        public bool UseItem(Entity item)
         {
-            if (food.Type.OnEat == null)
+            if (item.Consume == null)
             {
-                Message.Write("You can't eat that, silly person.", null, Color.Red);
+                Message.Write("You can't use that, silly person.", null, Color.Red);
                 return false;
             }
 
-            food.Type.OnEat.Use(food, this);
+            item.Consume.Use(item, this);
+
+            if (item.StackComponent.Consume())
+                Inventory.Remove(item);
+
             return true;
         }
     }

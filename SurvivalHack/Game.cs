@@ -15,7 +15,6 @@ namespace SurvivalHack
 
         public void Init()
         {
-            ItemTypeList.InitTypes();
             TileList.InitTypes();
 
             var generator = new Mapgen.DungeonGenerator();
