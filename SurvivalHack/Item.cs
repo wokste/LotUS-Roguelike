@@ -5,13 +5,10 @@ using HackConsole;
 
 namespace SurvivalHack
 {
-    public class ItemType
+    public class ItemType : Entity
     {
-        public string Tag;
-        public string Name;
         public bool Stacking;
         public ConsumableComponent OnEat;
-        public AttackComponent OnMelee;
 
         public override string ToString()
         {
@@ -29,36 +26,14 @@ namespace SurvivalHack
     }
 
     public static class ItemTypeList {
-        private static readonly List<ItemType> Types = new List<ItemType>();
+        private static readonly Dictionary<string, ItemType> Types = new Dictionary<string, ItemType>();
 
         public static void InitTypes()
         {
             Debug.Assert(Types.Count == 0);
 
-            Types.Add(new ItemType
+            Types.Add("pumpkin", new ItemType
             {
-                Tag = "wood",
-                Name = "Wood",
-                Stacking = true
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "stone",
-                Name = "Stone",
-                Stacking = true
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "ore",
-                Name = "Iron Ore",
-                Stacking = true
-            });
-            
-            Types.Add(new ItemType
-            {
-                Tag = "pumpkin",
                 Name = "Pumpkin",
                 Stacking = true,
                 OnEat = new ConsumableComponent
@@ -69,10 +44,8 @@ namespace SurvivalHack
                 }
             });
 
-
-            Types.Add(new ItemType
+            Types.Add("mushroom", new ItemType
             {
-                Tag = "mushroom",
                 Name = "Mushroom",
                 Stacking = true,
                 OnEat = new ConsumableComponent
@@ -82,53 +55,22 @@ namespace SurvivalHack
                 }
             });
 
-            Types.Add(new ItemType
+            Types.Add("sword1", new ItemType
             {
-                Tag = "axe1",
-                Name = "Stone Axe",
-                Stacking = false
-
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "axe2",
-                Name = "Iron Axe",
-                Stacking = false
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "pick1",
-                Name = "Stone Pickaxe",
-                Stacking = false
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "pick2",
-                Name = "Iron Pickaxe",
-                Stacking = false
-            });
-
-            Types.Add(new ItemType
-            {
-                Tag = "sword1",
                 Name = "Wooden Sword",
                 Stacking = false,
-                OnMelee = new AttackComponent
+                Attack = new AttackComponent
                 {
                     Damage = new Range("4-8"),
                     HitChance = 70,
                 }
             });
 
-            Types.Add(new ItemType
+            Types.Add("sword2", new ItemType
             {
-                Tag = "sword2",
                 Name = "Iron Sword",
                 Stacking = false,
-                OnMelee = new AttackComponent
+                Attack = new AttackComponent
                 {
                     Damage = new Range("6-10"),
                     HitChance = 70,
@@ -138,13 +80,13 @@ namespace SurvivalHack
 
         public static ItemType Get(string tag)
         {
-            var itemType = Types.Find(t => t.Tag == tag);
+            var itemType = Types[tag];
             Debug.Assert(itemType != null);
             return itemType;
         }
     }
 
-    public class Item
+    public class Item : Entity
     {
         public ItemType Type;
         public int Count;
@@ -153,6 +95,5 @@ namespace SurvivalHack
         {
             return Type.Stacking ? $"{Type.Name} ({Count})" : $"{Type.Name}";
         }
-
     }
 }
