@@ -24,7 +24,8 @@
             if (_item != null)
             {
                 WordWrap(_item.Name, "", Color.White);
-                WordWrap(_item.Description, "", Color.Gray);
+                if (_item.Description != null)
+                    WordWrap(_item.Description, "", Color.Gray);
             }
         }
     }

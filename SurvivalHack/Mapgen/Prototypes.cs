@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System;
 using System.Xml;
-using System.Diagnostics;
 using HackConsole;
 
 namespace SurvivalHack.Mapgen

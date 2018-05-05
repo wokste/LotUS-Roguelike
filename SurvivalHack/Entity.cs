@@ -14,7 +14,7 @@ namespace SurvivalHack
         public Bar Health;
         public Bar Hunger;
 
-        public List<IComponent> Components;
+        public List<IComponent> Components = new List<IComponent>();
         public MoveComponent Move;
 
         public TerrainFlag Flags;
@@ -31,7 +31,7 @@ namespace SurvivalHack
 
         public float LeftoverMove;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, EDamageType damageType)
         {
             Health.Current -= damage;
 

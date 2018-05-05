@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using System;
 
 namespace SurvivalHack.ECM
 {
@@ -10,9 +11,16 @@ namespace SurvivalHack.ECM
 
     public class AttackComponent : IAttackComponent
     {
-        public float HitChance;
-        public Range Damage;
-        public float Range;
+        public float HitChance = 0.7f;
+        public float Damage;
+        public float Range = 1;
+        public EDamageType DamageType;
+
+        public AttackComponent(float damage, EDamageType damageType)
+        {
+            Damage = damage;
+            DamageType = damageType;
+        }
 
         public void Attack(Entity attacker, Entity defender)
         {
@@ -20,9 +28,9 @@ namespace SurvivalHack.ECM
 
             if (d100.Rand(Game.Rnd) <= HitChance)
             {
-                var damage = Damage.Rand(Game.Rnd);
+                var damage = (int)(Damage * (0.5 + Game.Rnd.NextDouble()));
                 Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker?.Move?.Pos, Color.Yellow);
-                defender.TakeDamage(damage);
+                defender.TakeDamage(damage, DamageType);
             }
             else
             {
@@ -38,5 +46,19 @@ namespace SurvivalHack.ECM
 
             //TODO: Line of sight algorithm
         }
+    }
+}
+namespace SurvivalHack
+{
+    [Flags]
+    public enum EDamageType
+    {
+        Bludgeoing = 1,
+        Piercing = 2,
+        Slashing = 4,
+
+        Fire = 0x10,
+        Ice = 0x20,
+        Thunder = 0x20,
     }
 }

@@ -36,11 +36,7 @@ namespace SurvivalHack.Ui
 
                 Components = new List<ECM.IComponent>()
                 {
-                    new ECM.AttackComponent
-                    {
-                        Damage = new Range("2-4"),
-                        HitChance = 75f
-                    },
+                    new ECM.AttackComponent(2, EDamageType.Bludgeoing),
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
@@ -49,13 +45,13 @@ namespace SurvivalHack.Ui
                 Symbol = new Symbol((char)2, Color.White)
             };
             var inventory = new Inventory();
-            inventory.Add(ItemTypeList.Get("potion1"));
-            inventory.Add(ItemTypeList.Get("potion2"));
-            inventory.Add(ItemTypeList.Get("sword1"));
+            //inventory.Add(ItemFactory.Get("potion1"));
+            //inventory.Add(ItemFactory.Get("potion2"));
+
+
+            inventory.Add(new Factory.WeaponFactory().Gen(new Factory.EntityGenerationInfo { Rnd = Game.Rnd, Level=0}));
             _player.Add(inventory);
-
             _player.OnDestroy += PlayerDied;
-
 
             var pos = _game.Level.GetEmptyLocation();
             ECM.MoveComponent.Bind(_player, _game.Level, pos);
@@ -153,7 +149,7 @@ namespace SurvivalHack.Ui
                             foreach (var e in _game.Level.GetEntities(new Rect(Vec.Zero, _game.Level.Size)))
                             {
                                 if (e.Ai != null)
-                                    e.TakeDamage(9001);
+                                    e.TakeDamage(9001, EDamageType.Piercing);
                             }
                         });
 

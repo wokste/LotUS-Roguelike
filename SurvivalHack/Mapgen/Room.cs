@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HackConsole;
+﻿using HackConsole;
 
 namespace SurvivalHack.Mapgen
 {

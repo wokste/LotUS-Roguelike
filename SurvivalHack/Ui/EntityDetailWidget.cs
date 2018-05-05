@@ -1,6 +1,4 @@
-﻿using System.Text;
-using HackConsole;
-using SurvivalHack.ECM;
+﻿using HackConsole;
 
 namespace SurvivalHack.Ui
 {

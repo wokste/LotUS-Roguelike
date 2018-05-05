@@ -3,48 +3,52 @@ using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System;
 using System.Collections.Generic;
+using SurvivalHack.Factory;
 
 namespace SurvivalHack.Mapgen
 {
     public class DungeonPopulator
     {
         //private Dictionary<int, RandomTable<string>> _randomTables = new Dictionary<int, RandomTable<string>>();
-        private Random _rnd;
         private DungeonGenerator _gen;
+        private EntityGenerationInfo _info;
         private Level _level;
 
+        private IEntityFactory _monsterFactory = new MonsterFactory();
+        private IEntityFactory _itemFactory = new ItemFactory();
 
         public DungeonPopulator(DungeonGenerator gen, Level level, Random rnd)
         {
             _gen = gen;
             _level = level;
-            _rnd = rnd;
+            _info = new EntityGenerationInfo
+            {
+                Rnd = rnd,
+                Level = 1
+            };
         }
 
         public void Spawn(List<Room> rooms, int difficulty)
         {
-            var d100 = new Range(1, 100);
-
             foreach (var room in rooms)
             {
-                var roll = d100.Rand(_rnd);
+                var roll = _info.Rnd.Next(100);
 
-                if (roll <= 50)
+                if (roll < 50)
                     continue;
 
                 FillRoom(room, difficulty);
 
-                if (roll > 95)
+                if (roll >= 95)
                     FillRoom(room, difficulty);
             }
         }
 
         private void FillRoom(Room room, int difficulty)
         {
-            var d100 = new Range(1, 100);
             PlaceMonsters(room, difficulty);
 
-            if (d100.Rand(_rnd) <= 40)
+            if (_info.Rnd.Next(100) < 40)
                 PlaceTreasure(room, difficulty);
         }
 
@@ -66,7 +70,7 @@ namespace SurvivalHack.Mapgen
 
         void PlaceMonsters(Room room, int difficulty)
         {
-            var monster = CreateMonster();
+            var monster = _monsterFactory.Gen(_info);
             var pos = GetFreeTile(room);
             MoveComponent.Bind(monster, _level, pos);
             _gen?.OnNewEvent(new ActEvent(monster));
@@ -74,75 +78,9 @@ namespace SurvivalHack.Mapgen
 
         private void PlaceTreasure(Room room, int difficulty)
         {
-            var item = CreateTreasure();
+            var item = _itemFactory.Gen(_info);
             var pos = GetFreeTile(room);
             MoveComponent.Bind(item, _level, pos);
-        }
-
-        private Entity CreateTreasure()
-        {
-            var d100 = new Range(1, 100);
-            var rnd = d100.Rand(Game.Rnd);
-
-            if (rnd < 45)
-                return ItemTypeList.Get("potion1");
-            if (rnd < 90)
-                return ItemTypeList.Get("potion2");
-
-            return ItemTypeList.Get("sword1");
-        }
-
-        private Entity CreateMonster()
-        {
-            var d100 = new Range(1, 100);
-            var rnd = d100.Rand(Game.Rnd);
-
-            if (rnd < 60)
-            {
-                return new Entity
-                {
-                    Name = "Zombie",
-                    Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
-                    Components = new List<IComponent>()
-                    {
-                        new AttackComponent
-                        {
-                            Damage = new Range("10-14"),
-                            HitChance = 60,
-                            Range = 1,
-                        },
-                    },
-                    Ai = new AiActor(),
-                    Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                    Health = new Bar(40),
-                    Flags = TerrainFlag.Walk,
-                    Speed = 0.6f,
-                    Symbol = new Symbol('z', Color.Red)
-                };
-            }
-            else
-            {
-                return new Entity
-                {
-                    Name = "Giant Bat",
-                    Description = "A flying monster that is a nuisance to any adventurer.",
-                    Components = new List<IComponent>()
-                    {
-                        new AttackComponent
-                        {
-                            Damage = new Range("1-3"),
-                            HitChance = 60,
-                            Range = 1,
-                        },
-                    },
-                    Ai = new AiActor(),
-                    Attitude = new Attitude(ETeam.None, new [] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                    Health = new Bar(10),
-                    Flags = TerrainFlag.Fly,
-                    Speed = 1.5f,
-                    Symbol = new Symbol('b', Color.Red),
-                };
-            }
         }
     }
 }
