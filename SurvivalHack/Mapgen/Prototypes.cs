@@ -40,17 +40,16 @@ namespace SurvivalHack.Mapgen
             {
                 switch (child.Name) {
                     case "attack":
-                        Debug.Assert(entity.Attack == null);
-                        entity.Attack = LoadAttack(child);
+                        entity.Components.Add(LoadAttack(child));
                         break;
-                    case "attitude":
+                    /*case "attitude":
                         Debug.Assert(entity.Attack == null);
                         throw new NotImplementedException();
                         break;
                     case "move":
                         throw new NotImplementedException();
                         //entity.Move = LoadMove(child);
-                        break;
+                        break;*/
                     case "symbol":
                         entity.Symbol = LoadSymbol(child);
                         break;

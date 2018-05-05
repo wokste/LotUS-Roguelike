@@ -71,13 +71,14 @@
     <Compile Include="ECM\AttackComponent.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="AI\Attitude.cs" />
-    <Compile Include="ECM\HealComponent.cs" />
     <Compile Include="AI\AiActor.cs" />
+    <Compile Include="ECM\IComponent.cs" />
     <Compile Include="ECM\StackComponent.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ECM\FieldOfView.cs" />
     <Compile Include="ECM\MoveComponent.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="ECM\ConsumeComponent.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Mapgen\DungeonConnector.cs" />

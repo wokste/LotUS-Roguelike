@@ -2,6 +2,7 @@
 using HackConsole;
 using SurvivalHack.ECM;
 using SurvivalHack.Ai;
+using System.Collections.Generic;
 
 namespace SurvivalHack
 {
@@ -12,21 +13,19 @@ namespace SurvivalHack
 
         public Bar Health;
         public Bar Hunger;
-        public AttackComponent Attack;
+
+        public List<IComponent> Components;
         public MoveComponent Move;
-        public HealComponent Consume;
-        public StackComponent StackComponent;
 
         public TerrainFlag Flags;
         public Symbol Symbol;
 
-        public readonly Inventory Inventory = new Inventory();
         public bool Alive = true;
 
         public string Description { get; set; }
 
         public float Speed = 1;
-        public FieldOfView FoV;
+
         public AiActor Ai;
         public Attitude Attitude;
 
@@ -41,27 +40,70 @@ namespace SurvivalHack
                 Alive = false;
                 OnDestroy?.Invoke(this);
                 Move.Unbind(this);
-                
+
                 Message.Write($"{Name} died", Move?.Pos, Color.Red);
             }
         }
 
         public Action<Entity> OnDestroy;
 
+        public IEnumerable<T> Get<T>() where T : class, IComponent
+        {
+            foreach (var c in Components)
+            {
+                var c2 = c as T;
+
+                if (c2 != null)
+                    yield return c2;
+            }
+        }
+
+        public T GetOne<T>() where T : class, IComponent
+        {
+            foreach (var c in Components)
+            {
+                var c2 = c as T;
+
+                if (c2 != null)
+                    return c2;
+            }
+            return null;
+        }
+
+        internal void Add(IComponent component)
+        {
+            Components.Add(component);
+        }
+
         public bool UseItem(Entity item)
         {
-            if (item.Consume == null)
+            var ls = item.Get<IConsumeComponent>();
+            bool any = false;
+
+            foreach (var c in ls)
+            {
+                any = true;
+                c.Use(item, this);
+            }
+
+            if (any == false)
             {
                 Message.Write("You can't use that, silly person.", null, Color.Red);
                 return false;
             }
 
-            item.Consume.Use(item, this);
-
-            if (item.StackComponent.Consume())
-                Inventory.Remove(item);
+            if (item.GetOne<StackComponent>()?.Consume() ?? false)
+                GetOne<Inventory>()?.Remove(item);
 
             return true;
+        }
+
+        internal void Attack(Entity enemy, Entity weapon)
+        {
+            foreach ( var attack in weapon.Get<ECM.IAttackComponent>())
+            {
+                attack.Attack(this, enemy);
+            }
         }
     }
 }

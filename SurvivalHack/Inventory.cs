@@ -5,23 +5,28 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class Inventory
+    public class Inventory : IComponent
     {
         public readonly List<Entity> _items = new List<Entity>();
 
         public void Add(Entity entity)
         {
-            var stackComponent = entity.StackComponent;
-            if (stackComponent != null)
+            var stack1 = entity.GetOne<StackComponent>();
+            if (stack1 != null)
             {
-                var existing = _items.Find(i => i.StackComponent.MergeId == stackComponent.MergeId);
-                if (existing != null)
+                foreach (var i in _items)
                 {
+                    var stack2 = i.GetOne<StackComponent>();
+
+                    if (stack2 == null)
+                        continue;
+
                     // Stacking items shouldn't create a new stack if you already have a stack.
-                    existing.StackComponent.Count += stackComponent.Count;
-                    Message.Write($"You aquired {entity} making a total of {existing}", null, Color.Green);
+                    stack2.Count += stack1.Count;
+                    Message.Write($"You aquired {entity} making a total of {stack2.Count}", null, Color.Green);
+
                     return;
-                }
+                };
             }
             
             Message.Write($"You aquired {entity}", null, Color.Green);

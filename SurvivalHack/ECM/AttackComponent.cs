@@ -2,7 +2,13 @@
 
 namespace SurvivalHack.ECM
 {
-    public class AttackComponent
+    public interface IAttackComponent : IComponent
+    {
+        void Attack(Entity attacker, Entity defender);
+        bool InRange(Entity attacker, Entity defender);
+    }
+
+    public class AttackComponent : IAttackComponent
     {
         public float HitChance;
         public Range Damage;

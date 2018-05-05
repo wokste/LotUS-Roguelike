@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using HackConsole;
 using System;
-using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
@@ -17,12 +16,14 @@ namespace SurvivalHack
                     return new Entity
                     {
                         Name = "Red Potion",
-                        StackComponent = new StackComponent(1, 0),
-                        Consume = new HealComponent
+                        Components = new List<IComponent>
                         {
-                            FoodRestore = 5,
-                            HealthRestore = 2,
-                            Quality = 7
+                            new StackComponent(1, 0),
+                            new HealComponent
+                            {
+                                FoodRestore = 5,
+                                HealthRestore = 2,
+                            },
                         },
                         Symbol = new Symbol('?', Color.Parse("#f30")),
                     };
@@ -30,11 +31,13 @@ namespace SurvivalHack
                     return new Entity
                     {
                         Name = "Blue potion",
-                        StackComponent = new StackComponent(1, 1),
-                        Consume = new HealComponent
+                        Components = new List<IComponent>
                         {
-                            FoodRestore = 2,
-                            Quality = 3
+                            new StackComponent(1, 1),
+                            new HealComponent
+                            {
+                                FoodRestore = 2,
+                            },
                         },
                         Symbol = new Symbol('?', Color.Parse("#06f")),
                     };
@@ -42,21 +45,28 @@ namespace SurvivalHack
                     return new Entity
                     {
                         Name = "Copper Sword",
-                        Attack = new AttackComponent
+                        Components = new List<IComponent>
                         {
-                            Damage = new Range("4-8"),
-                            HitChance = 70,
+                            new AttackComponent
+                            {
+                                Damage = new Range("4-8"),
+                                HitChance = 70,
+                            },
                         },
+                        
                         Symbol = new Symbol('|', Color.Parse("#b47d6b")),
                     };
                 case "sword2":
                     return new Entity
                     {
                         Name = "Iron Sword",
-                        Attack = new AttackComponent
+                        Components = new List<IComponent>
                         {
-                            Damage = new Range("6-10"),
-                            HitChance = 70,
+                            new AttackComponent
+                            {
+                                Damage = new Range("6-10"),
+                                HitChance = 70,
+                            },
                         },
                         Symbol = new Symbol('|', Color.Parse("#859a9a")),
                     };

@@ -8,7 +8,12 @@ namespace SurvivalHack.Mapgen
         public float Persistence = 0.5f;
         public float Scale = 10f;
 
-        public int Seed;
+        public readonly int Seed;
+
+        public PerlinNoise(int seed)
+        {
+            Seed = seed;
+        }
 
         private float Noise(int x, int y)
         {

@@ -53,7 +53,7 @@ namespace SurvivalHack.ECM
                 newChunk.Add(self);
             }
 
-            self.FoV?.Update(this);
+            self.GetOne<FieldOfView>()?.Update(this);
 
             return true;
         }

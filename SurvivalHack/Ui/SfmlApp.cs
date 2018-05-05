@@ -33,10 +33,14 @@ namespace SurvivalHack.Ui
             {
                 Name = "Player",
                 Description = "You, as a player",
-                Attack = new ECM.AttackComponent
+
+                Components = new List<ECM.IComponent>()
                 {
-                    Damage = new Range("2-4"),
-                    HitChance = 75f
+                    new ECM.AttackComponent
+                    {
+                        Damage = new Range("2-4"),
+                        HitChance = 75f
+                    },
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
@@ -44,16 +48,18 @@ namespace SurvivalHack.Ui
                 Hunger = new Bar(100),
                 Symbol = new Symbol((char)2, Color.White)
             };
-            _player.Inventory.Add(ItemTypeList.Get("potion1"));
-            _player.Inventory.Add(ItemTypeList.Get("potion2"));
-            _player.Inventory.Add(ItemTypeList.Get("sword1"));
+            var inventory = new Inventory();
+            inventory.Add(ItemTypeList.Get("potion1"));
+            inventory.Add(ItemTypeList.Get("potion2"));
+            inventory.Add(ItemTypeList.Get("sword1"));
+            _player.Add(inventory);
 
             _player.OnDestroy += PlayerDied;
 
 
             var pos = _game.Level.GetEmptyLocation();
             ECM.MoveComponent.Bind(_player, _game.Level, pos);
-            _player.FoV = new FieldOfView(_player.Move);
+            _player.Add(new FieldOfView(_player.Move));
         }
 
         private BaseWindow InitGui()
@@ -63,7 +69,7 @@ namespace SurvivalHack.Ui
             Message.OnMessage += (m) =>
             {
                 var pos2 = m.Pos ?? Vec.Zero;
-                if (_player == null || m.Pos == null || _player.FoV.Visibility[pos2] > 128)
+                if (_player == null || m.Pos == null || _player.GetOne<FieldOfView>().Is(pos2, FieldOfView.FLAG_VISIBLE))
                 {
                     consoleWidget.AddMessage(m);
                 }
@@ -81,7 +87,7 @@ namespace SurvivalHack.Ui
             };
             window.Widgets.Add(characterWidget);
 
-            var worldWidget = new MapWidget(_game.Level, _player.FoV, _player)
+            var worldWidget = new MapWidget(_game.Level, _player.GetOne<FieldOfView>(), _player)
             {
                 Docking = Docking.Fill
             };
@@ -130,7 +136,7 @@ namespace SurvivalHack.Ui
                                     _game.ActorAct(1);
                             },
                             Question = "Choose item",
-                            Set = _player.Inventory._items
+                            Set = _player.GetOne<Inventory>()._items
                         };
                         _window.PopupStack.Push(o);
                     }
@@ -140,7 +146,7 @@ namespace SurvivalHack.Ui
                     {
                         var ls = new List<Action>();
                         ls.Add(() => {
-                            _player.FoV?.ShowAll(FieldOfView.SET_ALWAYSVISIBLE);
+                            _player.GetOne<FieldOfView>()?.ShowAll(FieldOfView.SET_ALWAYSVISIBLE);
                         });
 
                         ls.Add(() => {
@@ -178,7 +184,10 @@ namespace SurvivalHack.Ui
             {
                 if (e != _player)
                 {
-                    _player.Attack.Attack(_player, e);
+                    var weapon = _player; // TODO: Look in equipment for a weapon, before trying punches ets.
+
+                    _player.Attack(e, weapon);
+
                     _game.ActorAct(1);
                     return;
                 }

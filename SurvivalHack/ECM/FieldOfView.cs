@@ -4,7 +4,7 @@ using System;
 
 namespace SurvivalHack
 {
-    public class FieldOfView
+    public class FieldOfView : IComponent
     {
         public const byte FLAG_DISCOVERED = 0x1;
         public const byte FLAG_VISIBLE = 0x2;
@@ -77,6 +77,11 @@ namespace SurvivalHack
             
             ScanQuatrantH(1, 'W', -1.0, 1.0);
             ScanQuatrantH(1, 'E', -1.0, 1.0);
+        }
+
+        public bool Is(Vec pos, byte flag)
+        {
+            return (Visibility[pos] | flag) == flag;
         }
 
         /// <summary>

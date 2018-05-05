@@ -89,9 +89,10 @@ namespace SurvivalHack.Ai
 
         private bool ActionAttackEnemy(Entity self, Entity enemy)
         {
-            if (enemy != null && self.Attack != null && self.Attack.InRange(self, enemy))
+            if (enemy != null)
             {
-                self.Attack.Attack(self, enemy);
+                var weapon = self; // TODO: Add options for monsters to carry weapons
+                self.Attack(enemy, weapon);
                 return true;
             }
             return false;

@@ -77,7 +77,7 @@ namespace SurvivalHack.Ui
             if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
             {
                 var absPos = mousePos + _offset;
-                if (!_level.InBoundary(absPos) || _player.FoV.Visibility[absPos] == 0)
+                if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0)
                 {
                     OnSelected?.Invoke(null);
                 }

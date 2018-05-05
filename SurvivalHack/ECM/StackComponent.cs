@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.ECM
 {
-    public class StackComponent
+    public class StackComponent : IComponent
     {
         public int Count;
         public int MergeId;

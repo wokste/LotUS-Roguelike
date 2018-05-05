@@ -103,11 +103,14 @@ namespace SurvivalHack.Mapgen
                 {
                     Name = "Zombie",
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
-                    Attack = new AttackComponent
+                    Components = new List<IComponent>()
                     {
-                        Damage = new Range("10-14"),
-                        HitChance = 60,
-                        Range = 1,
+                        new AttackComponent
+                        {
+                            Damage = new Range("10-14"),
+                            HitChance = 60,
+                            Range = 1,
+                        },
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -123,11 +126,14 @@ namespace SurvivalHack.Mapgen
                 {
                     Name = "Giant Bat",
                     Description = "A flying monster that is a nuisance to any adventurer.",
-                    Attack = new AttackComponent
+                    Components = new List<IComponent>()
                     {
-                        Damage = new Range("1-3"),
-                        HitChance = 60,
-                        Range = 1,
+                        new AttackComponent
+                        {
+                            Damage = new Range("1-3"),
+                            HitChance = 60,
+                            Range = 1,
+                        },
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.None, new [] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),

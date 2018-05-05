@@ -1,12 +1,13 @@
 ﻿namespace SurvivalHack.ECM
 {
-    public class HealComponent
+    public interface IConsumeComponent : IComponent
     {
-        /// <summary>
-        /// AI based value to sort items based on quality. The programmer writes these down.
-        /// </summary>
-        public int Quality;
+        bool Use(Entity item, Entity user);
+        bool UseEffect(Entity item, Entity user);
+    }
 
+    public class HealComponent : IConsumeComponent
+    {
         public int FoodRestore;
         public int HealthRestore;
 

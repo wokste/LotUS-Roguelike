@@ -48,7 +48,7 @@ namespace SurvivalHack.Ui
             y++;
             Print(new Vec(0, y++), "Inventory", Color.White);
 
-            foreach (var inv in _entity.Inventory._items)
+            foreach (var inv in _entity.GetOne<Inventory>()._items)
             {
                 Print(new Vec(0, y++), $"- {inv}", Color.Gray);
             }
