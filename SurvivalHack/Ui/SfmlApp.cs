@@ -8,7 +8,7 @@ namespace SurvivalHack.Ui
     {
         private Game _game;
         private readonly BaseWindow _window;
-        private ECM.Entity _player;
+        private Entity _player;
 
         private static void Main(string[] args)
         {
@@ -29,7 +29,7 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new ECM.Entity()
+            _player = new Entity()
             {
                 Name = "Player",
                 Description = "You, as a player",
@@ -38,7 +38,7 @@ namespace SurvivalHack.Ui
                     Damage = new Range("2-4"),
                     HitChance = 75f
                 },
-                Attitude = new ECM.Attitude(ECM.ETeam.Player, null),
+                Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
                 Health = new Bar(100),
                 Hunger = new Bar(100),
@@ -94,7 +94,7 @@ namespace SurvivalHack.Ui
             return window;
         }
 
-        private void PlayerDied(ECM.Entity obj)
+        private void PlayerDied(Entity obj)
         {
             var o = new GameOverWidget
             {
@@ -121,7 +121,7 @@ namespace SurvivalHack.Ui
             {
                 case 'd':
                     {
-                        var o = new OptionWidget<ECM.Entity>
+                        var o = new OptionWidget<Entity>
                         {
                             DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
                             OnSelect = i =>

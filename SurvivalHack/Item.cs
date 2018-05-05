@@ -3,31 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using HackConsole;
 using System;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class StackComponent
-    {
-        public int Count;
-        public int MergeId;
-
-        public StackComponent(int count, int mergeId)
-        {
-            Count = count;
-            MergeId = mergeId;
-        }
-
-        private static int MergeIdAutoIncrement;
-
-        int GenMergeId() => MergeIdAutoIncrement++;
-
-        internal bool Consume()
-        {
-            Count--;
-            return (Count == 0);
-        }
-    }
-
     public static class ItemTypeList {
 
         public static Entity Get(string tag)
@@ -39,7 +18,7 @@ namespace SurvivalHack
                     {
                         Name = "Red Potion",
                         StackComponent = new StackComponent(1, 0),
-                        Consume = new ConsumableComponent
+                        Consume = new HealComponent
                         {
                             FoodRestore = 5,
                             HealthRestore = 2,
@@ -52,7 +31,7 @@ namespace SurvivalHack
                     {
                         Name = "Blue potion",
                         StackComponent = new StackComponent(1, 1),
-                        Consume = new ConsumableComponent
+                        Consume = new HealComponent
                         {
                             FoodRestore = 2,
                             Quality = 3

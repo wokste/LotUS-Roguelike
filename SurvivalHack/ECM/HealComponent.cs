@@ -1,6 +1,6 @@
 ﻿namespace SurvivalHack.ECM
 {
-    public class ConsumableComponent
+    public class HealComponent
     {
         /// <summary>
         /// AI based value to sort items based on quality. The programmer writes these down.

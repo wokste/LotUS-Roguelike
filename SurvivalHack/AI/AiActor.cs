@@ -1,7 +1,7 @@
 ﻿using System;
 using HackConsole;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Ai
 {
     public class AiActor
     {

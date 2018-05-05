@@ -70,10 +70,11 @@
   <ItemGroup>
     <Compile Include="ECM\AttackComponent.cs" />
     <Compile Include="Bar.cs" />
-    <Compile Include="ECM\Attitude.cs" />
-    <Compile Include="ECM\ConsumableComponent.cs" />
-    <Compile Include="ECM\AiActor.cs" />
-    <Compile Include="ECM\Entity.cs" />
+    <Compile Include="AI\Attitude.cs" />
+    <Compile Include="ECM\HealComponent.cs" />
+    <Compile Include="AI\AiActor.cs" />
+    <Compile Include="ECM\StackComponent.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="ECM\FieldOfView.cs" />
     <Compile Include="ECM\MoveComponent.cs" />
     <Compile Include="Game.cs" />

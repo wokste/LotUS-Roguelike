@@ -1,7 +1,9 @@
 ﻿using System;
 using HackConsole;
+using SurvivalHack.ECM;
+using SurvivalHack.Ai;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack
 {
     public class Entity : IDescriptionProvider
     {
@@ -12,7 +14,7 @@ namespace SurvivalHack.ECM
         public Bar Hunger;
         public AttackComponent Attack;
         public MoveComponent Move;
-        public ConsumableComponent Consume;
+        public HealComponent Consume;
         public StackComponent StackComponent;
 
         public TerrainFlag Flags;
