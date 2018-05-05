@@ -6,8 +6,12 @@ namespace SurvivalHack
 {
     public class FieldOfView
     {
-        public const byte BRIGHTNESS_LIGHT = 255;
-        public const byte BRIGHTNESS_DARK = 100;
+        public const byte FLAG_DISCOVERED = 0x1;
+        public const byte FLAG_VISIBLE = 0x2;
+        public const byte FLAG_ALWAYSVISIBLE = 0x4;
+
+        public const byte SET_VISIBLE = FLAG_DISCOVERED | FLAG_VISIBLE;
+        public const byte SET_ALWAYSVISIBLE = SET_VISIBLE | FLAG_ALWAYSVISIBLE;
 
         private Vec _entityPos;
 
@@ -53,7 +57,10 @@ namespace SurvivalHack
 
             foreach (var v in r.Iterator())
             {
-                Visibility[v] = Math.Min(Visibility[v], BRIGHTNESS_DARK);
+                bool alwaysVisible = (Visibility[v] & FLAG_ALWAYSVISIBLE) == FLAG_ALWAYSVISIBLE;
+
+                if (!alwaysVisible)
+                    Visibility[v] = (byte)(Visibility[v] & ~FLAG_VISIBLE);
             }
         }
         
@@ -63,8 +70,8 @@ namespace SurvivalHack
         /// </summary>
         private void ToVisible()
         {
-            Visibility[_entityPos] = BRIGHTNESS_LIGHT;
-            
+            Visibility[_entityPos] |= FLAG_DISCOVERED | FLAG_VISIBLE;
+
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
             
@@ -156,6 +163,25 @@ namespace SurvivalHack
                 ScanQuatrantV(depth + 1, direction, minSlope, maxSlope);
         }
 
+        internal void ShowAll(byte flags)
+        {
+            // This function returns true if it can be seen from any direction.
+            bool Reachable(Vec v) {
+                for (int y = Math.Max(v.Y - 1, 0); y <= Math.Min(v.Y + 1, Map.Size.Y - 1); y++)
+                    for (int x = Math.Max(v.X - 1, 0); x <= Math.Min(v.X + 1, Map.Size.X - 1); x++)
+                        if (Map.HasFlag(new Vec(x, y), TerrainFlag.Sight))
+                            return true;
+                return false;
+            }
+
+            // Now update all tiles such that things become visible
+            foreach (var v in Visibility.Ids())
+            {
+                if (Reachable(v))
+                    Visibility[v] |= flags;
+            }
+        }
+
         private double Clamp(double cur, double min, double max)
         {
             if (cur < min)
@@ -191,8 +217,8 @@ namespace SurvivalHack
             var dist = (_entityPos - v).Length;
             
             var distanceVisibility = dist < VisualRange ? 1f : 0f;
-            
-            Visibility[v] = (byte)Math.Max(Visibility[v], BRIGHTNESS_LIGHT * distanceVisibility);
+
+            Visibility[v] |= SET_VISIBLE;
         }
     }
 }

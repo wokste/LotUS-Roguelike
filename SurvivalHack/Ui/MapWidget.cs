@@ -38,7 +38,7 @@ namespace SurvivalHack.Ui
             foreach (var creature in _level.GetEntities(area)) {
                 var p = creature.Move.Pos;
                 
-                if (_view.Visibility[p] < 128)
+                if ((_view.Visibility[p] & FieldOfView.FLAG_VISIBLE) == 0)
                     continue;
 
                 p -= _offset;
@@ -64,7 +64,10 @@ namespace SurvivalHack.Ui
                 if (visibility == 0)
                     continue;
 
-                WindowData.Data[v] = _level.GetTile(v + _offset).Symbol.Darken(visibility);
+                WindowData.Data[v] = _level.GetTile(v + _offset).Symbol;
+
+                if ((visibility & FieldOfView.FLAG_VISIBLE) != FieldOfView.FLAG_VISIBLE)
+                    WindowData.Data[v] = WindowData.Data[v].Darken(128);
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using HackConsole;
+using System;
+using System.Collections.Generic;
 
 namespace SurvivalHack.Ui
 {
@@ -117,7 +119,7 @@ namespace SurvivalHack.Ui
         {
             switch (keyCode)
             {
-                case 'e':
+                case 'd':
                     {
                         var o = new OptionWidget<ECM.Entity>
                         {
@@ -132,6 +134,38 @@ namespace SurvivalHack.Ui
                         };
                         _window.PopupStack.Push(o);
                     }
+                    break;
+#if WIZTOOLS
+                case '\\': // Well 'w' will be used for wield/wear and I have 
+                    {
+                        var ls = new List<Action>();
+                        ls.Add(() => {
+                            _player.FoV?.ShowAll(FieldOfView.SET_ALWAYSVISIBLE);
+                        });
+
+                        ls.Add(() => {
+                            foreach (var e in _game.Level.GetEntities(new Rect(Vec.Zero, _game.Level.Size)))
+                            {
+                                if (e.Ai != null)
+                                    e.TakeDamage(9001);
+                            }
+                        });
+
+                        var o = new OptionWidget<Action>
+                        {
+                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                            OnSelect = i =>
+                            {
+                                i();
+                            },
+                            Question = "Wizard tools",
+                            Set = ls
+                        };
+                        _window.PopupStack.Push(o);
+                    }
+                    break;
+#endif
+                default:
                     break;
             }
         }
