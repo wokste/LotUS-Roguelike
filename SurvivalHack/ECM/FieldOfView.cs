@@ -70,7 +70,7 @@ namespace SurvivalHack
         /// </summary>
         private void ToVisible()
         {
-            Visibility[_entityPos] |= FLAG_DISCOVERED | FLAG_VISIBLE;
+            Visibility[_entityPos] |= SET_VISIBLE;
 
             ScanQuatrantV(1, 'N', -1.0, 1.0);
             ScanQuatrantV(1, 'S', -1.0, 1.0);
