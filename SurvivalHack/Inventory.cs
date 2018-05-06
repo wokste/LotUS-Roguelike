@@ -18,10 +18,8 @@ namespace SurvivalHack
             (ESlotType.Gloves, "Gloves"),
             (ESlotType.Feet, "Feet"),
             (ESlotType.Neck, "Neck"),
-            (ESlotType.Back, "Back"),
             (ESlotType.Ring, "Ring 1"),
             (ESlotType.Ring, "Ring 2"),
-            (ESlotType.Ranged, "Ranged"),
         };
 
         public readonly Entity[] Equipped = new Entity[SlotNames.Length];
@@ -60,7 +58,7 @@ namespace SurvivalHack
             }
         }
 
-        public bool Equip(Entity self, int slot, Entity item)
+        public bool Equip(Entity self, Entity item, int slot)
         {
             if (item != null)
             {
@@ -100,6 +98,6 @@ namespace SurvivalHack
 
     public enum ESlotType
     {
-        Hand, Head, Chest, Legs, Gloves, Feet, Neck, Back, Ring, Ranged
+        Hand, Head, Chest, Legs, Gloves, Feet, Neck, Ring
     }
 }

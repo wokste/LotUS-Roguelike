@@ -95,7 +95,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity(')', "Shortbow", EEntityFlag.Pickable);
                         e.Add(new ECM.AttackComponent(5, EDamageType.Piercing) { Range = 20 });
-                        e.Add(new EquippableComponent(ESlotType.Ranged));
+                        e.Add(new EquippableComponent(ESlotType.Hand));
                         //TODO: require ammo
                         return e;
                     }
@@ -103,7 +103,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity(')', "Longbow", EEntityFlag.Pickable);
                         e.Add(new ECM.AttackComponent(6, EDamageType.Piercing) { Range = 50 });
-                        e.Add(new EquippableComponent(ESlotType.Ranged));
+                        e.Add(new EquippableComponent(ESlotType.Hand));
                         //TODO: require ammo
                         return e;
                     }
