@@ -128,15 +128,47 @@ namespace SurvivalHack.Ui
                             DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
                             OnSelect = i =>
                             {
-                                if (_player.UseItem(i))
+                                if (_player.UseItem(i, ECM.EUseMessage.Drink))
                                     _game.ActorAct(1);
                             },
-                            Question = "Choose item",
+                            Question = "Drink item",
                             Set = _player.GetOne<Inventory>()._items
                         };
                         _window.PopupStack.Push(o);
                     }
                     break;
+                case 'r':
+                    {
+                        var o = new OptionWidget<Entity>
+                        {
+                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                            OnSelect = i =>
+                            {
+                                if (_player.UseItem(i, ECM.EUseMessage.Read))
+                                    _game.ActorAct(1);
+                            },
+                            Question = "Read item",
+                            Set = _player.GetOne<Inventory>()._items
+                        };
+                        _window.PopupStack.Push(o);
+                    }
+                    break;
+                case 'w':
+                    {
+                        var o = new OptionWidget<Entity>
+                        {
+                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                            OnSelect = i =>
+                            {
+                                throw new NotImplementedException();
+                            },
+                            Question = "Wield item",
+                            Set = _player.GetOne<Inventory>()._items
+                        };
+                        _window.PopupStack.Push(o);
+                    }
+                    break;
+
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear and I have 
                     {

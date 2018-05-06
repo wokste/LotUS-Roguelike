@@ -75,15 +75,15 @@ namespace SurvivalHack
             Components.Add(component);
         }
 
-        public bool UseItem(Entity item)
+        public bool UseItem(Entity item, EUseMessage message)
         {
-            var ls = item.Get<IConsumeComponent>();
+            var ls = item.Get<IUsableComponent>();
             bool any = false;
 
             foreach (var c in ls)
             {
                 any = true;
-                c.Use(item, this);
+                c.Use(item, this, message);
             }
 
             if (any == false)

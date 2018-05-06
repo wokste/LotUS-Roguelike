@@ -48,32 +48,52 @@ namespace SurvivalHack.Factory
                 case 1:
                     e.Name = "Dagger";
                     e.Add(new ECM.AttackComponent(5, EDamageType.Piercing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '|';
                     return;
                 case 2:
                     e.Name = "Shortsword";
                     e.Add(new ECM.AttackComponent(6, EDamageType.Slashing | EDamageType.Piercing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '|';
                     return;
                 case 3:
                     e.Name = "Longsword";
                     e.Add(new ECM.AttackComponent(7, EDamageType.Slashing | EDamageType.Piercing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '|';
                     return;
                 case 4:
                     e.Name = "Handaxe";
                     e.Add(new ECM.AttackComponent(6, EDamageType.Slashing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '|';
                     return;
                 case 5:
                     e.Name = "Spear";
                     e.Add(new ECM.AttackComponent(7, EDamageType.Piercing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '/';
                     return;
                 case 6:
                     e.Name = "Mace";
                     e.Add(new ECM.AttackComponent(6, EDamageType.Bludgeoing));
+                    e.Add(new EquippableComponent(ESlotType.Hand));
                     e.Symbol.Ascii = '\\';
+                    return;
+                case 7:
+                    e.Name = "Shortbow";
+                    e.Add(new ECM.AttackComponent(5, EDamageType.Piercing) { Range = 20 });
+                    e.Add(new EquippableComponent(ESlotType.Ranged));
+                    //TODO: require ammo
+                    e.Symbol.Ascii = ')';
+                    return;
+                case 8:
+                    e.Name = "Longbow";
+                    e.Add(new ECM.AttackComponent(6, EDamageType.Piercing) {Range = 50 });
+                    e.Add(new EquippableComponent(ESlotType.Ranged));
+                    //TODO: require ammo
+                    e.Symbol.Ascii = ')';
                     return;
             }
         }

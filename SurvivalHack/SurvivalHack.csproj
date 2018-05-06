@@ -82,7 +82,7 @@
     <Compile Include="Factory\PotionFactory.cs" />
     <Compile Include="Factory\WeaponFactory.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="ECM\ConsumeComponent.cs" />
+    <Compile Include="ECM\UsableComponent.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Factory\ItemFactory.cs" />
     <Compile Include="Mapgen\DungeonConnector.cs" />

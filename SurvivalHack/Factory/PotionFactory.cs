@@ -27,10 +27,7 @@ namespace SurvivalHack.Factory
             e.Add(new StackComponent(1, colorId));
 
             //TODO: Add randomized effects to the potion.
-            e.Add(new HealComponent
-            {
-                HealthRestore = 5,
-            });
+            e.Add(new HealComponent(5, 0, EUseMessage.Drink));
 
             //TODO: Work on identitying potions
             e.Name = $"{colorName} potion | Health potion";
