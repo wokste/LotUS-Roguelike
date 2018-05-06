@@ -38,7 +38,7 @@ namespace SurvivalHack
 
         public Entity(char ascii, string name, EEntityFlag entityFlags)
         {
-            Symbol.Ascii = ascii;
+            Symbol = new Symbol(ascii, Color.White);
             Name = name;
             EntityFlags = entityFlags;
         }
@@ -111,9 +111,8 @@ namespace SurvivalHack
         internal void Attack(Entity enemy, Entity weapon)
         {
             foreach ( var attack in weapon.Get<ECM.IAttackComponent>())
-            {
-                attack.Attack(this, enemy);
-            }
+                if (attack.InRange(this, enemy))
+                    attack.Attack(this, enemy);
         }
     }
 

@@ -51,7 +51,8 @@ namespace SurvivalHack
                 return true;
             
             foreach (var c in GetEntity(v))
-                return true;
+                if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                    return true;
             
             return false;
         }

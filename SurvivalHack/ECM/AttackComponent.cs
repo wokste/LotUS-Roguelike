@@ -24,9 +24,7 @@ namespace SurvivalHack.ECM
 
         public void Attack(Entity attacker, Entity defender)
         {
-            var d100 = new Range(1,100);
-
-            if (d100.Rand(Game.Rnd) <= HitChance)
+            if (Game.Rnd.NextDouble() <= HitChance)
             {
                 var damage = (int)(Damage * (0.5 + Game.Rnd.NextDouble()));
                 Message.Write($"{attacker.Name} attacks {defender.Name} and hits for {damage} damage.", attacker?.Move?.Pos, Color.Yellow);
@@ -35,7 +33,6 @@ namespace SurvivalHack.ECM
             else
             {
                 Message.Write($"{attacker.Name} attacks {defender.Name} but misses.", attacker?.Move?.Pos, Color.Cyan);
-
             }
         }
 

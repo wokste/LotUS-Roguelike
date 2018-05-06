@@ -206,7 +206,7 @@ namespace SurvivalHack.Ui
 
             foreach (var e in _game.Level.GetEntity(actPoint))
             {
-                if (e != _player)
+                if (e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
                     var weapon = _player; // TODO: Look in equipment for a weapon, before trying punches ets.
 
