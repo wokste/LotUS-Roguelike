@@ -52,6 +52,12 @@ namespace SurvivalHack
 
         public void Remove(Entity entity) {
             _items.Remove(entity);
+
+            for (int i = 0; i < Equipped.Length; ++i)
+            {
+                if (Equipped[i] == entity)
+                    Equipped[i] = null;
+            }
         }
 
         public bool Equip(Entity self, int slot, Entity item)
