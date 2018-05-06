@@ -156,7 +156,8 @@ namespace SurvivalHack.Ui
                             DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
                             OnSelect = i =>
                             {
-                                throw new NotImplementedException();
+                                if (_player.GetOne<Inventory>().Equip(_player,i,0))
+                                    _game.ActorAct(1);
                             },
                             Question = "Wield item",
                             Set = _player.GetOne<Inventory>()._items
@@ -164,6 +165,24 @@ namespace SurvivalHack.Ui
                         _window.PopupStack.Push(o);
                     }
                     break;
+                case 'g':
+                    {
+                        var pos = _player.Move.Pos;
+                        bool didTurn = false;
+                        foreach (var i in _game.Level.GetEntities(new Rect(pos, Vec.One)))
+                        {
+                            if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
+                            {
+                                i.Move.Unbind(i);
+                                _player.GetOne<Inventory>().Add(i);
+                            }
+                        }
+
+                        if (didTurn)
+                            _game.ActorAct(1);
+                    }
+                    break;
+
 
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear and I have 
