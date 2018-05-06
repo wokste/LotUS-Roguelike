@@ -29,9 +29,8 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new Entity()
+            _player = new Entity((char)2, "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
-                Name = "Player",
                 Description = "You, as a player",
 
                 Components = new List<ECM.IComponent>()
@@ -42,14 +41,11 @@ namespace SurvivalHack.Ui
                 Flags = TerrainFlag.Walk,
                 Health = new Bar(100),
                 Hunger = new Bar(100),
-                Symbol = new Symbol((char)2, Color.White)
             };
             var inventory = new Inventory();
-            //inventory.Add(ItemFactory.Get("potion1"));
-            //inventory.Add(ItemFactory.Get("potion2"));
 
+            inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));
 
-            inventory.Add(new Factory.WeaponFactory().Gen(new Factory.EntityGenerationInfo { Rnd = Game.Rnd, Level=0}));
             _player.Add(inventory);
             _player.OnDestroy += PlayerDied;
 

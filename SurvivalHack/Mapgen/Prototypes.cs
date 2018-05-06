@@ -6,6 +6,7 @@ using HackConsole;
 
 namespace SurvivalHack.Mapgen
 {
+#if TODO
     class Prototypes
     {
         private readonly Dictionary<string, Entity> _prototypes = new Dictionary<string, Entity>();
@@ -72,4 +73,5 @@ namespace SurvivalHack.Mapgen
             };
         }
     }
+#endif
 }

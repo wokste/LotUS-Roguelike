@@ -14,9 +14,8 @@ namespace SurvivalHack.Factory
 
             if (rnd < 60)
             {
-                return new Entity
+                return new Entity('z', "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                 {
-                    Name = "Zombie",
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
                     Components = new List<IComponent>()
                     {
@@ -32,9 +31,8 @@ namespace SurvivalHack.Factory
             }
             else
             {
-                return new Entity
+                return new Entity('b', "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                 {
-                    Name = "Giant Bat",
                     Description = "A flying monster that is a nuisance to any adventurer.",
                     Components = new List<IComponent>()
                     {

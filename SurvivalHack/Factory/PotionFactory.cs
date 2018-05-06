@@ -18,7 +18,7 @@ namespace SurvivalHack.Factory
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            Entity e = new Entity();
+            Entity e = new Entity('?', "Potion", EEntityFlag.Pickable);
 
             var colorId = info.Rnd.Next(types.Length);
 
@@ -33,43 +33,6 @@ namespace SurvivalHack.Factory
             e.Name = $"{colorName} potion | Health potion";
 
             return e;
-        }
-        /*
-            case "potion1":
-                    return new Entity
-                    {
-                        Name = "Red Potion",
-                        Components = new List<IComponent>
-                        {
-                            new StackComponent(1, 0),
-                            new HealComponent
-                            {
-                                FoodRestore = 5,
-                                HealthRestore = 2,
-                            },
-                        },
-                        Symbol = new Symbol('?', Color.Parse("#f30")),
-                    };
-                case "potion2":
-                    return new Entity
-                    {
-                        Name = "Blue potion",
-                        Components = new List<IComponent>
-                        {
-                            new StackComponent(1, 1),
-                            new HealComponent
-                            {
-                                FoodRestore = 2,
-                            },
-                        },
-                        Symbol = new Symbol('?', Color.Parse("#06f")),
-                    };
-        }*/
-
-        struct PotionColorInfo
-        {
-            Color color;
-
         }
     }
 }

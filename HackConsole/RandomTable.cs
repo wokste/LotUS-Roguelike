@@ -14,6 +14,11 @@ namespace HackConsole
         {
         }
 
+        static public RandomTable<string> FromString(string line)
+        {
+            return RandomTable<string>.FromString(line, s => s);
+        }
+
         static public RandomTable<T> FromString(string line, Func<string, T> func)
         {
             var ret = new RandomTable<T>();
@@ -49,7 +54,7 @@ namespace HackConsole
             return ret;
         }
 
-        internal T GetRand(Random rnd)
+        public T GetRand(Random rnd)
         {
             int odd = rnd.Next(_totalOdds);
 
