@@ -6,7 +6,6 @@ namespace HackConsole
     public abstract class TextWidget : Widget , IMouseEventSuscriber
     {
         protected readonly List<(string,Color)> Lines = new List<(string, Color)>();
-        protected bool Dirty = true;
 
         private int _posY;
 
@@ -20,13 +19,8 @@ namespace HackConsole
             }
         }
 
-        public override void Render(bool forceUpdate)
+        protected override void RenderImpl()
         {
-            if (!forceUpdate && !Dirty)
-                return;
-
-            Dirty = false;
-
             Clear();
 
             var y = 0;

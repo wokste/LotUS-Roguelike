@@ -8,7 +8,7 @@ namespace HackConsoleTests
     [TestClass]
     public class TimelineTest
     {
-        private class MockEvent : IEvent
+        private class MockEvent : ITimeEvent
         {
             private readonly string v;
             public int RepeatTurns { get; set; } = 1;

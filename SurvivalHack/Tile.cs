@@ -48,7 +48,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('.', new Color(235, 231, 203))
+                Symbol = new Symbol('.', new Color(64,64,64))
             });
 
             Types.Add(new Tile
@@ -86,15 +86,7 @@ namespace SurvivalHack
                 Flags = TerrainFlag.None,
                 Symbol = new Symbol('#', new Color(164, 87, 40))
             });
-
-            Types.Add(new Tile
-            {
-                Tag = "void",
-                DropTag = "",
-                DropCount = 0,
-                Flags = TerrainFlag.None,
-                Symbol = new Symbol(' ', Color.Black)
-            });
+            
         }
 
         public static Tile Get(string tag)

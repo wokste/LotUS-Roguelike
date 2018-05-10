@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HackConsole
 {
@@ -6,13 +7,16 @@ namespace HackConsole
     {
         public List<Widget> Widgets = new List<Widget>();
 
-        public override void Render(bool forceUpdate)
+        public override bool Render(bool forceUpdate)
         {
+            var rendered = false;
             foreach (var w in Widgets)
-            {
-                w.Render(forceUpdate);
-            }
+                rendered |= w.Render(forceUpdate);
+
+            return rendered;
         }
+
+        protected override void RenderImpl() { throw new Exception("Function should never be called"); }
 
         public void Add(Widget w)
         {
@@ -27,6 +31,15 @@ namespace HackConsole
             {
                 w.Resize(ref free);
             }
+        }
+
+        public override Widget WidgetAt(Vec pos)
+        {
+            foreach (var w in Widgets)
+                if (w.Size.Contains(pos))
+                    return w.WidgetAt(pos);
+
+            return null;
         }
     }
 }

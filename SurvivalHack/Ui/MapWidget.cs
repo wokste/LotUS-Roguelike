@@ -18,7 +18,7 @@ namespace SurvivalHack.Ui
             _player = following;
         }
 
-        public override void Render(bool forceUpdate)
+        protected override void RenderImpl()
         {
             if (_player.Alive)
                 _offset = _player.Move.Pos - Size.Center;
@@ -29,7 +29,6 @@ namespace SurvivalHack.Ui
         }
 
         public Action<IDescriptionProvider> OnSelected;
-        public Action<int> OnSpendTime;
 
         private void RenderCreatures()
         {

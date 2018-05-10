@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HackConsole
 {
@@ -7,6 +8,7 @@ namespace HackConsole
         public Rect Size;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
+        public bool Dirty = true;
 
         //public abstract bool CanHasFocus { get; }
 
@@ -14,7 +16,18 @@ namespace HackConsole
         /// Renders the widget on the CellGrid.
         /// </summary>
         /// <param name="forceUpdate">If this is false, the widget may assume that the previous content is still on the same location.</param>
-        public abstract void Render(bool forceUpdate);
+        /// <returns>True if something updated. False otherwise.</returns>
+        public virtual bool Render(bool forceUpdate)
+        {
+            if (!Dirty && !forceUpdate)
+                return false;
+
+            Dirty = false;
+            RenderImpl();
+            return true;
+        }
+
+        protected abstract void RenderImpl();
 
         /// <summary>
         /// This will automatically be called when the widget is resized.
@@ -67,6 +80,7 @@ namespace HackConsole
             Size = newSize;
 
             OnResized();
+            Dirty = true;
         }
 
         public void CenterPopup(Rect screen)
@@ -126,6 +140,11 @@ namespace HackConsole
             }
 
             return DesiredSize;
+        }
+
+        public virtual Widget WidgetAt(Vec pos)
+        {
+            return this;
         }
     }
 

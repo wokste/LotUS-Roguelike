@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HackConsole
 {
@@ -32,33 +33,26 @@ namespace HackConsole
             Widgets.Resize(ref r);
         }
 
-
         protected Widget WidgetAt(Vec pos)
         {
-            var popup = PopupStack.WidgetAt(pos);
-
-            if (popup != null)
-                return popup;
-
-            return WidgetAt(pos, Widgets);
+            return PopupStack.WidgetAt(pos) ?? Widgets.WidgetAt(pos);
         }
 
-        private static Widget WidgetAt(Vec pos, WidgetContainer container)
+        protected bool RenderWidgets()
         {
-            while (true)
-            {
-                Widget top = null;
-                foreach (var w in container.Widgets)
-                    if (w.Size.Contains(pos))
-                        top = w;
+            var rendered = Widgets.Render(_dirty);
+            rendered |= PopupStack.Render(_dirty || rendered);
+            _dirty = false;
 
-                container = top as WidgetContainer;
-                if (container == null)
-                    return top;
-            }
+            return rendered;
         }
 
         public abstract void Run();
+
+        public void SetDirty()
+        {
+            _dirty = true;
+        }
     }
 
     public static class WindowData

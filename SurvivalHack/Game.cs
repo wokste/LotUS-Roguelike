@@ -20,7 +20,7 @@ namespace SurvivalHack
             Level = generator.Generate(Rnd.Next(), new Vec(128,64));
         }
 
-        public void ActorAct(int ticks)
+        public void MonsterTurn()
         {
             Timeline.Run();
         }

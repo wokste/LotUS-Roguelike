@@ -99,7 +99,7 @@ namespace SurvivalHack.Ai
         }
     }
 
-    public class ActEvent : IEvent {
+    public class ActEvent : ITimeEvent {
         readonly Entity _entity;
 
         public ActEvent(Entity entity)

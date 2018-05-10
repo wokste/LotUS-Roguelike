@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -190,20 +191,18 @@ namespace HackConsole
 
                 OnUpdate?.Invoke();
                 Render();
+                Thread.Sleep(5);
             }
         }
 
         private void Render()
         {
-            _window.Clear();
-
-            Widgets.Render(_dirty);
-            PopupStack.Render(true); // TODO: This has to be chosen more smartly.
-
-            _dirty = false;
-            DrawGrid(_window, new RenderStates());
-
-            _window.Display();
+            if (RenderWidgets())
+            {
+                _window.Clear();
+                DrawGrid(_window, new RenderStates());
+                _window.Display();
+            }
         }
 
         private static Sprite MakeSprite(string texName)

@@ -11,6 +11,7 @@ namespace SurvivalHack.Ui
 
         protected override void MakeLines()
         {
+            Lines.Clear();
             WordWrap("Game Over", "", Color.White);
         }
 

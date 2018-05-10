@@ -15,7 +15,7 @@ namespace SurvivalHack.Mapgen
 
         internal List<RoomFactory> RoomFactories = new List<RoomFactory>();
 
-        internal Action<IEvent> OnNewEvent;
+        internal Action<ITimeEvent> OnNewEvent;
 
         public const int MASKID_VOID = -3;
         public const int MASKID_NOFLOOR = -2;

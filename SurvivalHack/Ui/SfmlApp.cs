@@ -87,7 +87,6 @@ namespace SurvivalHack.Ui
 
             window.BaseKeyHandler = this;
             worldWidget.OnSelected += c => { infoWidget.Item = c; };
-            worldWidget.OnSpendTime += _game.ActorAct;
 
             return window;
         }
@@ -100,6 +99,14 @@ namespace SurvivalHack.Ui
             };
             _window.PopupStack.Push(o);
             _player = null;
+        }
+
+        private void NextTurn()
+        {
+            _game.MonsterTurn();
+
+            // TODO: Update only part of the UI
+            _window.SetDirty();
         }
 
         public void Run()
@@ -125,7 +132,7 @@ namespace SurvivalHack.Ui
                             OnSelect = i =>
                             {
                                 if (_player.UseItem(i, ECM.EUseMessage.Drink))
-                                    _game.ActorAct(1);
+                                    NextTurn();
                             },
                             Question = "Drink item",
                             Set = _player.GetOne<Inventory>()._items
@@ -141,7 +148,7 @@ namespace SurvivalHack.Ui
                             OnSelect = i =>
                             {
                                 if (_player.UseItem(i, ECM.EUseMessage.Read))
-                                    _game.ActorAct(1);
+                                    NextTurn();
                             },
                             Question = "Read item",
                             Set = _player.GetOne<Inventory>()._items
@@ -157,7 +164,7 @@ namespace SurvivalHack.Ui
                             OnSelect = i =>
                             {
                                 if (_player.GetOne<Inventory>().Equip(_player,i,0))
-                                    _game.ActorAct(1);
+                                    NextTurn();
                             },
                             Question = "Wield item",
                             Set = _player.GetOne<Inventory>()._items
@@ -179,7 +186,7 @@ namespace SurvivalHack.Ui
                         }
 
                         if (didTurn)
-                            _game.ActorAct(1);
+                            NextTurn();
                     }
                     break;
 
@@ -231,14 +238,14 @@ namespace SurvivalHack.Ui
 
                     _player.Attack(e, weapon);
 
-                    _game.ActorAct(1);
+                    NextTurn();
                     return;
                 }
             }
 
             if (_player.Move.Move(_player, move))
             {
-                _game.ActorAct((int)(1 * move.Length));
+                NextTurn();
             }
         }
     }

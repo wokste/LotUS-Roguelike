@@ -2,22 +2,22 @@
 
 namespace SurvivalHack
 {
-    public interface IEvent {
+    public interface ITimeEvent {
         void Run();
 
         int RepeatTurns { get; }
     }
 
-    public class Timeline : IEvent
+    public class Timeline : ITimeEvent
     {
-        private readonly SortedDictionary<long,List<IEvent>> _sporadicListQueue = new SortedDictionary<long, List<IEvent>>();
+        private readonly SortedDictionary<long,List<ITimeEvent>> _sporadicListQueue = new SortedDictionary<long, List<ITimeEvent>>();
         private long _time = 0;//long.MinValue;
         //private List<IEvent> _repeatList;
 
         //public long Time => _time;
         public int RepeatTurns => 1;
 
-        public void Insert(IEvent evt)
+        public void Insert(ITimeEvent evt)
         {
             if (evt.RepeatTurns <= 0)
                 return;
@@ -26,7 +26,7 @@ namespace SurvivalHack
 
             if (!_sporadicListQueue.TryGetValue(absoluteTime, out var list))
             {
-                list = new List<IEvent>();
+                list = new List<ITimeEvent>();
                 _sporadicListQueue.Add(absoluteTime, list);
             }
 
