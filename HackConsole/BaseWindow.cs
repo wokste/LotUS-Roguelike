@@ -17,7 +17,6 @@ namespace HackConsole
         public Action OnUpdate;
         public PopupStack PopupStack = new PopupStack();
 
-        protected bool _dirty;
         protected Vec? _lastMousePos;
 
         protected void ResizeScreen(uint x, uint y)
@@ -40,23 +39,21 @@ namespace HackConsole
 
         protected bool RenderWidgets()
         {
-            var rendered = Widgets.Render(_dirty);
-            rendered |= PopupStack.Render(_dirty || rendered);
-            _dirty = false;
+            var dirty = WindowData.ForceUpdate;
+            WindowData.ForceUpdate = false;
+
+            var rendered = Widgets.Render(dirty);
+            rendered |= PopupStack.Render(dirty || rendered);
 
             return rendered;
         }
 
         public abstract void Run();
-
-        public void SetDirty()
-        {
-            _dirty = true;
-        }
     }
 
     public static class WindowData
     {
         public static Grid<Symbol> Data;
+        public static bool ForceUpdate = true;
     }
 }

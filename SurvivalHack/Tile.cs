@@ -48,7 +48,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('.', new Color(64,64,64))
+                Symbol = new Symbol('.', new Color(64,64,64), new Color(16, 16, 16))
             });
 
             Types.Add(new Tile

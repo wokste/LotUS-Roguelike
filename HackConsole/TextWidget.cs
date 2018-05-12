@@ -63,6 +63,7 @@ namespace HackConsole
                 Lines.Add((txt, color));
                 count++;
             }
+            Dirty = true;
             return count;
         }
 

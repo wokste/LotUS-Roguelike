@@ -45,7 +45,7 @@ namespace HackConsole
         private void Pop(Widget w)
         {
             _widgets.Remove(w);
-
+            WindowData.ForceUpdate = true;
         }
 
         public override Widget WidgetAt(Vec v)

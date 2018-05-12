@@ -106,7 +106,7 @@ namespace SurvivalHack.Ui
             _game.MonsterTurn();
 
             // TODO: Update only part of the UI
-            _window.SetDirty();
+            WindowData.ForceUpdate = true;
         }
 
         public void Run()
