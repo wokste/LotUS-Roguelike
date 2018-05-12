@@ -64,13 +64,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomTable.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="VBOWindow.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="TextWidget.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="Vec.cs" />
     <Compile Include="Widget.cs" />
     <Compile Include="WidgetContainer.cs" />
-    <Compile Include="SFMLWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

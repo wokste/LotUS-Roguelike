@@ -75,7 +75,7 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Symbol = new Symbol('#', Color.Gray)
+                Symbol = new Symbol('#', Color.Black, Color.Gray)
             });
 
             Types.Add(new Tile
@@ -84,7 +84,7 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Symbol = new Symbol('#', new Color(164, 87, 40))
+                Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40))
             });
             
         }

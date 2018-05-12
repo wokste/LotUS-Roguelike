@@ -56,7 +56,7 @@ namespace SurvivalHack.Ui
 
         private BaseWindow InitGui()
         {
-            var window = new SfmlWindow("Lands of the undead sorceress");
+            var window = new VBOWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             Message.OnMessage += (m) =>
             {
