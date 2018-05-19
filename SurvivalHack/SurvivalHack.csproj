@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ECM\Armor.cs" />
     <Compile Include="ECM\Weapons.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="AI\Attitude.cs" />

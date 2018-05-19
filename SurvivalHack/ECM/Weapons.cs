@@ -102,4 +102,23 @@ namespace SurvivalHack
         Ice = 0x20,
         Thunder = 0x20,
     }
+
+    public enum EAttackMove
+    {
+        Projectile = 1,
+        Piercing = 2,
+        Slashing = 4,
+
+        Fire = 0x10,
+        Ice = 0x20,
+        Thunder = 0x20,
+    }
+
+    public enum EDamageLocation
+    {
+        Head,
+        Body,
+        Arms,
+        Legs,
+    }
 }
