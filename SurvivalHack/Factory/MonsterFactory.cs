@@ -20,10 +20,10 @@ namespace SurvivalHack.Factory
                     Components = new List<IComponent>()
                     {
                         new MeleeWeapon(9, EDamageType.Bludgeoing),
+                        new Damagable(6),
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                    Health = new Bar(9),
                     Flags = TerrainFlag.Walk,
                     Speed = 0.6f,
                     Symbol = new Symbol('z', Color.Red)
@@ -37,10 +37,10 @@ namespace SurvivalHack.Factory
                     Components = new List<IComponent>()
                     {
                         new MeleeWeapon(3, EDamageType.Piercing),
+                        new Damagable(3),
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                    Health = new Bar(3),
                     Flags = TerrainFlag.Fly,
                     Speed = 1.5f,
                     Symbol = new Symbol('b', Color.Red),

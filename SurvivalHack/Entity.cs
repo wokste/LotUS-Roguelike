@@ -14,16 +14,11 @@ namespace SurvivalHack
 
         public override string ToString() => Name;
 
-        public Bar Health;
-        public Bar Hunger;
-
         public List<IComponent> Components = new List<IComponent>();
         public MoveComponent Move;
 
         public TerrainFlag Flags;
         public Symbol Symbol;
-
-        public bool Alive = true;
 
         public string Description { get; set; }
 
@@ -41,20 +36,6 @@ namespace SurvivalHack
             Symbol = new Symbol(ascii, Color.White);
             Name = name;
             EntityFlags = entityFlags;
-        }
-
-        public void TakeDamage(int damage, EDamageType damageType)
-        {
-            Health.Current -= damage;
-
-            if (Health.Current == 0)
-            {
-                Alive = false;
-                OnDestroy?.Invoke(this);
-                Move.Unbind(this);
-
-                Message.Write($"{Name} died", Move?.Pos, Color.Red);
-            }
         }
 
         public IEnumerable<T> Get<T>() where T : class, IComponent
@@ -98,6 +79,13 @@ namespace SurvivalHack
 
             return change;
         }
+
+        public void Destroy()
+        {
+            EntityFlags |= EEntityFlag.Destroyed;
+            OnDestroy?.Invoke(this);
+            Move.Unbind(this);
+        }
     }
 
     [Flags]
@@ -108,9 +96,11 @@ namespace SurvivalHack
         FixedPos = 0x4, // Nothing should be able to move this entity. E.g. Doors, fountains and stairs down shouldn't be affected by push-effects.
         Identified = 0x8, // Set on true if item/monster is identified.
         IsPlayer = 0x10, // Only the player actor is a player. This is useful for confusion-like debuffs that effect either AI or UI.
+        Destroyed = 0x20,
 
         // Teams are for AI. 
         TeamPlayer = 0x100, // Players, summons, etc
         TeamMonster = 0x200, // Most monsters aggressive to the player
+
     }
 }

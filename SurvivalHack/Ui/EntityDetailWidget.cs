@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {
@@ -29,8 +30,8 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
-            PrintBar("HP:", y++, _entity.Health);
-            PrintBar("Food:", y++, _entity.Hunger);
+            PrintBar("HP:", y++, _entity.GetOne<Damagable>().Health);
+
             y++;
             Print(new Vec(0, y++), "Inventory", Color.White);
 

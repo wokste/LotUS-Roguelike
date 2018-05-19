@@ -112,11 +112,11 @@ namespace SurvivalHack.Ai
             _entity = entity;
         }
 
-        public int RepeatTurns => _entity.Alive ? 1 : -1;
+        public int RepeatTurns => _entity.EntityFlags.HasFlag(EEntityFlag.Destroyed) ? -1 : 1;
 
         public void Run()
         {
-            if (!_entity.Alive)
+            if (_entity.EntityFlags.HasFlag(EEntityFlag.Destroyed))
                 return;
 
             var goal = _entity.Attitude.GetGoal(_entity);

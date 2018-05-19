@@ -15,6 +15,10 @@ namespace SurvivalHack
             entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, EUseMessage.Cast));
             Tools.Add(entity);
 
+            entity = new Entity('\\', "Discover Map - scroll?", EEntityFlag.Pickable);
+            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, EUseMessage.Cast));
+            Tools.Add(entity);
+
             entity = new Entity('\\', "Genocide", EEntityFlag.Pickable);
             entity.Add(new AreaAttack(9001, EDamageType.Piercing, EUseMessage.Cast));
             Tools.Add(entity);

@@ -13,8 +13,8 @@ namespace SurvivalHack.ECM
 
     class Blockable : IDamageMutator
     {
-        float BlockChance;
-        int DamageReduction;
+        public float BlockChance = 0.3f;
+        public int DamageReduction = 3;
 
         public bool Mutate(Attack attack)
         {
@@ -33,8 +33,8 @@ namespace SurvivalHack.ECM
 
     class Armour : IDamageMutator
     {
-        float CritChance;
-        int DamageReduction;
+        public float CritChance = 0.02f;
+        public int DamageReduction = 1;
 
         public bool Mutate(Attack attack)
         {

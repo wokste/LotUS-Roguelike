@@ -20,7 +20,7 @@ namespace SurvivalHack.Ui
 
         protected override void RenderImpl()
         {
-            if (_player.Alive)
+            if (!_player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
                 _offset = _player.Move.Pos - Size.Center;
             
             Clear();

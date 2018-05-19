@@ -13,7 +13,9 @@ namespace SurvivalHack
         public void Init()
         {
             TileList.InitTypes();
-
+#if WIZTOOLS
+            WizTools.Init();
+#endif
             var generator = new Mapgen.DungeonGenerator();
             generator.OnNewEvent += (e)=>{ Timeline.Insert(e); };
 

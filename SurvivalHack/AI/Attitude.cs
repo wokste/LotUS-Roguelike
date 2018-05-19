@@ -35,7 +35,7 @@ namespace SurvivalHack.Ai
 
         public Goal GetGoal(Entity self)
         {
-            if (_goal.IsNull || !_goal.Target.Alive)
+            if (_goal.IsNull || _goal.Target.EntityFlags.HasFlag(EEntityFlag.Destroyed))
             {
                 _goal = Goal.NullGoal;
             }

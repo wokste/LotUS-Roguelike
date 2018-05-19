@@ -38,15 +38,7 @@ namespace SurvivalHack.ECM
             if (Filter != msg)
                 return false;
 
-            switch (StatID)
-            {
-                case 0:
-                    user.Health.Current += Restore;
-                    break;
-                case 1:
-                    user.Hunger.Current += Restore;
-                    break;
-            }
+            user.GetOne<Damagable>().Heal(Restore, StatID);
 
             return true;
         }

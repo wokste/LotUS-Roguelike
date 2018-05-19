@@ -35,11 +35,10 @@ namespace SurvivalHack.Ui
                 Components = new List<ECM.IComponent>()
                 {
                     new ECM.MeleeWeapon(2, EDamageType.Bludgeoing),
+                    new ECM.Damagable(100)
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
-                Health = new Bar(100),
-                Hunger = new Bar(100),
             };
             var inventory = new Inventory();
 

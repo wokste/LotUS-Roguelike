@@ -15,8 +15,9 @@ namespace SurvivalHack.ECM
             // TODO: Blocking
             // TODO: Armour
 
+
             Message.Write($"{attacker.Name} attacks {defender.Name} for {Damage} damage.", attacker?.Move?.Pos, Color.Yellow);
-            defender.TakeDamage(Damage, DamageType);
+            defender.GetOne<Damagable>().TakeDamage(defender, this);
             
             // TODO: Post-Effects (poison, hooking, petrification, etc)
 
