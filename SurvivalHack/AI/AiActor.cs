@@ -92,7 +92,7 @@ namespace SurvivalHack.Ai
             if (enemy != null)
             {
                 var heldItem = self.GetOne<Inventory>()?.Equipped[0];
-                var weaponComponent = heldItem?.GetOne<ECM.IWeapon>();
+                var weaponComponent = heldItem?.GetOne<Combat.IWeapon>();
 
                 if (weaponComponent?.InRange(self, enemy) ?? false)
                 {

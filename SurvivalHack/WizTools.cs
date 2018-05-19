@@ -20,7 +20,7 @@ namespace SurvivalHack
             Tools.Add(entity);
 
             entity = new Entity('\\', "Genocide", EEntityFlag.Pickable);
-            entity.Add(new AreaAttack(9001, EDamageType.Piercing, EUseMessage.Cast));
+            entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, EUseMessage.Cast));
             Tools.Add(entity);
 
             entity = new Entity('\\', "Heal", EEntityFlag.Pickable);
@@ -31,10 +31,10 @@ namespace SurvivalHack
         public class AreaAttack : IComponent
         {
             public float Damage;
-            public EDamageType DamageType;
+            public Combat.EDamageType DamageType;
             public EUseMessage Filter;
 
-            public AreaAttack(float damage, EDamageType damageType, EUseMessage filter)
+            public AreaAttack(float damage, Combat.EDamageType damageType, EUseMessage filter)
             {
                 Damage = damage;
                 DamageType = damageType;
@@ -52,7 +52,7 @@ namespace SurvivalHack
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
 
-                    var Attack = new Attack
+                    var Attack = new Combat.Attack
                     {
                         Damage = (int)Damage,
                         DamageType = DamageType

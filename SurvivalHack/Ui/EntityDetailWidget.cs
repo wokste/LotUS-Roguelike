@@ -30,7 +30,7 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
-            PrintBar("HP:", y++, _entity.GetOne<Damagable>().Health);
+            PrintBar("HP:", y++, _entity.GetOne<Combat.Damagable>().Health);
 
             y++;
             Print(new Vec(0, y++), "Inventory", Color.White);

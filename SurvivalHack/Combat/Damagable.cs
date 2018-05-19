@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Combat
 {
-    class Damagable : IComponent
+    class Damagable : ECM.IComponent
     {
         public Bar Health;
 
@@ -32,6 +32,6 @@ namespace SurvivalHack.ECM
         }
 
         public string Describe() => null;
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
     }
 }

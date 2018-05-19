@@ -68,9 +68,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ECM\Armor.cs" />
-    <Compile Include="ECM\Damagable.cs" />
-    <Compile Include="ECM\Weapons.cs" />
+    <Compile Include="Combat\Attack.cs" />
+    <Compile Include="Combat\Armor.cs" />
+    <Compile Include="Combat\Damagable.cs" />
+    <Compile Include="Combat\Weapons.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="AI\Attitude.cs" />
     <Compile Include="AI\AiActor.cs" />

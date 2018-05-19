@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Combat
 {
-    interface IDamageMutator : IComponent
+    interface IDamageMutator : ECM.IComponent
     {
+        int Priority { get; }
         bool Mutate(Attack attack);
     }
 
     class Blockable : IDamageMutator
     {
+        public int Priority { get; set; } = 100;
+
         public float BlockChance = 0.3f;
 
         public bool Mutate(Attack attack)
@@ -34,11 +37,13 @@ namespace SurvivalHack.ECM
             return $"Has a {BlockChance:%} to block incoming attacks";
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
     }
 
     class Armour : IDamageMutator
     {
+        public int Priority { get; set; } = 50;
+
         public float CritChance = 0.02f;
         public int DamageReduction = 1;
 
@@ -62,6 +67,6 @@ namespace SurvivalHack.ECM
             return $"Reduces damage by {DamageReduction}.";
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
     }
 }

@@ -55,49 +55,49 @@ namespace SurvivalHack.Factory
                 case "dagger":
                     {
                         var e = new Entity('|', "Dagger", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(5, EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(5, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "ssword":
                     {
                         var e = new Entity('|', "Shortsword", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(6, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "lsword":
                     {
                         var e = new Entity('|', "Longsword", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(7, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "axe":
                     {
                         var e = new Entity('\\', "Handaxe", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(6, EDamageType.Slashing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "spear":
                     {
                         var e = new Entity('/', "Spear", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(7, EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "mace":
                     {
                         var e = new Entity('\\', "Mace", EEntityFlag.Pickable);
-                        e.Add(new ECM.MeleeWeapon(6, EDamageType.Bludgeoing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Bludgeoing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "sbow":
                     {
                         var e = new Entity(')', "Shortbow", EEntityFlag.Pickable);
-                        e.Add(new ECM.RangedWeapon(5, EDamageType.Piercing, 20));
+                        e.Add(new Combat.RangedWeapon(5, Combat.EDamageType.Piercing, 20));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         //TODO: require ammo
                         return e;
@@ -105,7 +105,7 @@ namespace SurvivalHack.Factory
                 case "lbow":
                     {
                         var e = new Entity(')', "Longbow", EEntityFlag.Pickable);
-                        e.Add(new ECM.RangedWeapon(6, EDamageType.Piercing, 50 ));
+                        e.Add(new Combat.RangedWeapon(6, Combat.EDamageType.Piercing, 50 ));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         //TODO: require ammo
                         return e;

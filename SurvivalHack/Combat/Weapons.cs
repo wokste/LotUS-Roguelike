@@ -1,31 +1,9 @@
 ﻿using HackConsole;
 using System;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Combat
 {
-    public class Attack {
-        public int Damage;
-        public EDamageType DamageType;
-
-        public void Fight(Entity attacker, Entity weapon, Entity defender)
-        {
-            // TODO: Choose attack location
-
-            // TODO: parrying
-            // TODO: Blocking
-            // TODO: Armour
-
-
-            Message.Write($"{attacker.Name} attacks {defender.Name} for {Damage} damage.", attacker?.Move?.Pos, Color.Yellow);
-            defender.GetOne<Damagable>().TakeDamage(defender, this);
-            
-            // TODO: Post-Effects (poison, hooking, petrification, etc)
-
-            // TODO: Post-attack logging
-        }
-    }
-
-    interface IWeapon : IComponent
+    interface IWeapon : ECM.IComponent
     {
         void Attack(Entity attacker, Entity weapon, Entity defender);
         bool InRange(Entity attacker, Entity defender);
@@ -59,7 +37,7 @@ namespace SurvivalHack.ECM
         }
 
         public string Describe() => $"Melee attack deals {Damage} damage";
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
     }
 
     public class RangedWeapon : IWeapon
@@ -93,39 +71,6 @@ namespace SurvivalHack.ECM
         }
 
         public string Describe() => $"Ranged attack deals {Damage} damage";
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
-    }
-}
-namespace SurvivalHack
-{
-    [Flags]
-    public enum EDamageType
-    {
-        Bludgeoing = 1,
-        Piercing = 2,
-        Slashing = 4,
-
-        Fire = 0x10,
-        Ice = 0x20,
-        Thunder = 0x20,
-    }
-
-    public enum EAttackMove
-    {
-        Projectile = 1,
-        Piercing = 2,
-        Slashing = 4,
-
-        Fire = 0x10,
-        Ice = 0x20,
-        Thunder = 0x20,
-    }
-
-    public enum EDamageLocation
-    {
-        Head,
-        Body,
-        Arms,
-        Legs,
+        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
     }
 }

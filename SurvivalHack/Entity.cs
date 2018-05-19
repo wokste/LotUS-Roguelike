@@ -49,14 +49,26 @@ namespace SurvivalHack
 
         public T GetOne<T>() where T : class, IComponent
         {
-            foreach (var c in Components)
+            foreach (var comp in Components)
             {
-                var c2 = c as T;
-
-                if (c2 != null)
-                    return c2;
+                if (comp is T compTypeT)
+                    return compTypeT;
             }
             return null;
+        }
+
+        public IEnumerable<Entity> ListSubEntities()
+        {
+            yield return this;
+
+            // == Inventory ==
+            var inv = GetOne<Inventory>();
+            if (inv != null)
+                foreach (var item in inv.Equipped)
+                    yield return item;
+
+            // == Status effects ==
+            // TODO: Add status effects.
         }
 
         internal void Add(IComponent component)

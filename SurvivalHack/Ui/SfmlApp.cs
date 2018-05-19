@@ -32,8 +32,8 @@ namespace SurvivalHack.Ui
             {
                 Components = new List<ECM.IComponent>()
                 {
-                    new ECM.MeleeWeapon(2, EDamageType.Bludgeoing),
-                    new ECM.Damagable(100)
+                    new Combat.MeleeWeapon(2, Combat.EDamageType.Bludgeoing),
+                    new Combat.Damagable(100)
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
@@ -222,7 +222,7 @@ namespace SurvivalHack.Ui
                     // TODO: Different options for attacks
 
                     var heldItem = _player.GetOne<Inventory>()?.Equipped[0];
-                    var weaponComponent = heldItem?.GetOne<ECM.IWeapon>();
+                    var weaponComponent = heldItem?.GetOne<Combat.IWeapon>();
 
                     if (weaponComponent?.InRange(_player, enemy) ?? false)
                     {

@@ -22,7 +22,7 @@ namespace SurvivalHack.ECM
             if (Filter != msg)
                 return false;
 
-            user.GetOne<Damagable>().Heal(Restore, StatID);
+            user.GetOne<Combat.Damagable>().Heal(Restore, StatID);
 
             return true;
         }
