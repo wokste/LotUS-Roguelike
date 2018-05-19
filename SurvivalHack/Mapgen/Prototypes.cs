@@ -1,10 +1,4 @@
-﻿using SurvivalHack.ECM;
-using System.Collections.Generic;
-using System;
-using System.Xml;
-using HackConsole;
-
-namespace SurvivalHack.Mapgen
+﻿namespace SurvivalHack.Mapgen
 {
 #if TODO
     class Prototypes

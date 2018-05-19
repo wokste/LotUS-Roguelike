@@ -91,9 +91,14 @@ namespace SurvivalHack.Ai
         {
             if (enemy != null)
             {
-                var weapon = self; // TODO: Add options for monsters to carry weapons
-                self.Attack(enemy, weapon);
-                return true;
+                var heldItem = self.GetOne<Inventory>()?.Equipped[0];
+                var weaponComponent = heldItem?.GetOne<ECM.IWeapon>();
+
+                if (weaponComponent?.InRange(self, enemy) ?? false)
+                {
+                    weaponComponent.Attack(self, heldItem, enemy);
+                    return true;
+                }
             }
             return false;
         }

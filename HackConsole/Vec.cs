@@ -32,7 +32,7 @@ namespace HackConsole
             get {
                 var aX = Math.Abs(X);
                 var aY = Math.Abs(Y);
-                return (aX < aY) ? aY + aX * 0.5f : aX + aY * 0.5f;
+                return Math.Max(aX, aY);
             }
         }
 

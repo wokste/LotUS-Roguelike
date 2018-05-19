@@ -19,7 +19,7 @@ namespace SurvivalHack.Factory
                     Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
                     Components = new List<IComponent>()
                     {
-                        new AttackComponent(9, EDamageType.Bludgeoing),
+                        new MeleeWeapon(9, EDamageType.Bludgeoing),
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -36,7 +36,7 @@ namespace SurvivalHack.Factory
                     Description = "A flying monster that is a nuisance to any adventurer.",
                     Components = new List<IComponent>()
                     {
-                        new AttackComponent(3, EDamageType.Piercing),
+                        new MeleeWeapon(3, EDamageType.Piercing),
                     },
                     Ai = new AiActor(),
                     Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),

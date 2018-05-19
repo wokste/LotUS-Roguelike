@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ECM\AttackComponent.cs" />
+    <Compile Include="ECM\Weapons.cs" />
     <Compile Include="Bar.cs" />
     <Compile Include="AI\Attitude.cs" />
     <Compile Include="AI\AiActor.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Timeline.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Ui\MapWidget.cs" />
+    <Compile Include="WizTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

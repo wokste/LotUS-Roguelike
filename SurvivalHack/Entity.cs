@@ -85,34 +85,18 @@ namespace SurvivalHack
             Components.Add(component);
         }
 
-        public bool UseItem(Entity item, EUseMessage message)
+        public bool Event(Entity item, Entity target, EUseMessage message)
         {
-            var ls = item.Get<IUsableComponent>();
-            bool any = false;
+            bool change = false;
 
-            foreach (var c in ls)
-            {
-                any = true;
-                c.Use(item, this, message);
-            }
+            foreach (var c in item.Get<ECM.IUsableComponent>())
+                change |= c.Use(this, item, target, message);
 
-            if (any == false)
-            {
-                Message.Write("You can't use that, silly person.", null, Color.Red);
-                return false;
-            }
+            if (change)
+                if (item.GetOne<StackComponent>()?.Consume() ?? false)
+                    GetOne<Inventory>()?.Remove(item);
 
-            if (item.GetOne<StackComponent>()?.Consume() ?? false)
-                GetOne<Inventory>()?.Remove(item);
-
-            return true;
-        }
-
-        internal void Attack(Entity enemy, Entity weapon)
-        {
-            foreach ( var attack in weapon.Get<ECM.IAttackComponent>())
-                if (attack.InRange(this, enemy))
-                    attack.Attack(this, enemy);
+            return change;
         }
     }
 

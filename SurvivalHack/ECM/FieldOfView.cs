@@ -199,26 +199,6 @@ namespace SurvivalHack
             }
         }
 
-        [Obsolete("This function shouldn't be in this place and is only used in wizard tools. Make a new component out of it.")]
-        internal void ShowAll(byte flags)
-        {
-            // This function returns true if it can be seen from any direction.
-            bool Reachable(Vec v) {
-                for (int y = Math.Max(v.Y - 1, 0); y <= Math.Min(v.Y + 1, Map.Size.Y - 1); y++)
-                    for (int x = Math.Max(v.X - 1, 0); x <= Math.Min(v.X + 1, Map.Size.X - 1); x++)
-                        if (Map.HasFlag(new Vec(x, y), TerrainFlag.Sight))
-                            return true;
-                return false;
-            }
-
-            // Now update all tiles such that things become visible
-            foreach (var v in Visibility.Ids())
-            {
-                if (Reachable(v))
-                    Visibility[v] |= flags;
-            }
-        }
-
         private double Clamp(double cur, double min, double max)
         {
             if (cur < min)

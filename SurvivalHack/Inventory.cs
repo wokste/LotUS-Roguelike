@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -13,8 +12,7 @@ namespace SurvivalHack
             (ESlotType.Hand, "Main Hand"),
             (ESlotType.Hand, "Offhand"),
             (ESlotType.Head, "Head"),
-            (ESlotType.Chest, "Chest"),
-            (ESlotType.Legs, "Legs"),
+            (ESlotType.Body, "Body"),
             (ESlotType.Gloves, "Gloves"),
             (ESlotType.Feet, "Feet"),
             (ESlotType.Neck, "Neck"),
@@ -98,6 +96,6 @@ namespace SurvivalHack
 
     public enum ESlotType
     {
-        Hand, Head, Chest, Legs, Gloves, Feet, Neck, Ring
+        Hand, Head, Body, Gloves, Feet, Neck, Ring
     }
 }

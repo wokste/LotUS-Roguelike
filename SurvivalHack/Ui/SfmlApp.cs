@@ -1,5 +1,4 @@
 ﻿using HackConsole;
-using System;
 using System.Collections.Generic;
 
 namespace SurvivalHack.Ui
@@ -35,7 +34,7 @@ namespace SurvivalHack.Ui
 
                 Components = new List<ECM.IComponent>()
                 {
-                    new ECM.AttackComponent(2, EDamageType.Bludgeoing),
+                    new ECM.MeleeWeapon(2, EDamageType.Bludgeoing),
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
                 Flags = TerrainFlag.Walk,
@@ -45,6 +44,7 @@ namespace SurvivalHack.Ui
             var inventory = new Inventory();
 
             inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));
+            inventory.Equip(_player, inventory._items[0], 0);
 
             _player.Add(inventory);
             _player.OnDestroy += PlayerDied;
@@ -131,7 +131,7 @@ namespace SurvivalHack.Ui
                             DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
                             OnSelect = i =>
                             {
-                                if (_player.UseItem(i, ECM.EUseMessage.Drink))
+                                if (_player.Event(i, _player, ECM.EUseMessage.Drink))
                                     NextTurn();
                             },
                             Question = "Drink item",
@@ -147,7 +147,7 @@ namespace SurvivalHack.Ui
                             DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
                             OnSelect = i =>
                             {
-                                if (_player.UseItem(i, ECM.EUseMessage.Read))
+                                if (_player.Event(i, _player, ECM.EUseMessage.Cast))
                                     NextTurn();
                             },
                             Question = "Read item",
@@ -192,30 +192,18 @@ namespace SurvivalHack.Ui
 
 
 #if WIZTOOLS
-                case '\\': // Well 'w' will be used for wield/wear and I have 
+                case '\\': // Well 'w' will be used for wield/wear
                     {
-                        var ls = new List<Action>();
-                        ls.Add(() => {
-                            _player.GetOne<FieldOfView>()?.ShowAll(FieldOfView.SET_ALWAYSVISIBLE);
-                        });
-
-                        ls.Add(() => {
-                            foreach (var e in _game.Level.GetEntities(new Rect(Vec.Zero, _game.Level.Size)))
-                            {
-                                if (e.Ai != null)
-                                    e.TakeDamage(9001, EDamageType.Piercing);
-                            }
-                        });
-
-                        var o = new OptionWidget<Action>
+                        var o = new OptionWidget<Entity>
                         {
                             DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
                             OnSelect = i =>
                             {
-                                i();
+                                if (_player.Event(i, _player, ECM.EUseMessage.Cast))
+                                    NextTurn();
                             },
-                            Question = "Wizard tools",
-                            Set = ls
+                            Question = "Wizard Tools",
+                            Set = WizTools.Tools._items
                         };
                         _window.PopupStack.Push(o);
                     }
@@ -230,15 +218,20 @@ namespace SurvivalHack.Ui
         {
             var actPoint = _player.Move.Pos + move;
 
-            foreach (var e in _game.Level.GetEntity(actPoint))
+            foreach (var enemy in _game.Level.GetEntity(actPoint))
             {
-                if (e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
+                if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
-                    var weapon = _player; // TODO: Look in equipment for a weapon, before trying punches ets.
+                    // TODO: Different options for attacks
 
-                    _player.Attack(e, weapon);
+                    var heldItem = _player.GetOne<Inventory>()?.Equipped[0];
+                    var weaponComponent = heldItem?.GetOne<ECM.IWeapon>();
 
-                    NextTurn();
+                    if (weaponComponent?.InRange(_player, enemy) ?? false)
+                    {
+                        weaponComponent.Attack(_player, heldItem, enemy);
+                        NextTurn();
+                    }
                     return;
                 }
             }
