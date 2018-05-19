@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HackConsole;
 
 namespace SurvivalHack.ECM
@@ -28,5 +30,8 @@ namespace SurvivalHack.ECM
         {
             Health.Current += restore;
         }
+
+        public string Describe() => null;
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
     }
 }

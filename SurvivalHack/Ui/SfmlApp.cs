@@ -30,8 +30,6 @@ namespace SurvivalHack.Ui
 
             _player = new Entity((char)2, "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
-                Description = "You, as a player",
-
                 Components = new List<ECM.IComponent>()
                 {
                     new ECM.MeleeWeapon(2, EDamageType.Bludgeoing),

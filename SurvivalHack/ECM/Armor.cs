@@ -14,7 +14,6 @@ namespace SurvivalHack.ECM
     class Blockable : IDamageMutator
     {
         public float BlockChance = 0.3f;
-        public int DamageReduction = 3;
 
         public bool Mutate(Attack attack)
         {
@@ -23,12 +22,19 @@ namespace SurvivalHack.ECM
             if (Game.Rnd.NextDouble() > BlockChance)
                 return false;
 
-            attack.Damage -= DamageReduction;
+            attack.Damage = 0;
 
             // TODO: I need to send 
 
             return true;
         }
+
+        public string Describe()
+        {
+            return $"Has a {BlockChance:%} to block incoming attacks";
+        }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
     }
 
     class Armour : IDamageMutator
@@ -50,5 +56,12 @@ namespace SurvivalHack.ECM
 
             return true;
         }
+
+        public string Describe()
+        {
+            return $"Reduces damage by {DamageReduction}.";
+        }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
     }
 }

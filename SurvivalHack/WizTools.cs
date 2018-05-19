@@ -28,7 +28,7 @@ namespace SurvivalHack
             Tools.Add(entity);
         }
 
-        public class AreaAttack : IUsableComponent
+        public class AreaAttack : IComponent
         {
             public float Damage;
             public EDamageType DamageType;
@@ -63,6 +63,8 @@ namespace SurvivalHack
 
                 return true;
             }
+
+            public string Describe() => $"Area Attack deals {Damage} damage";
         }
     }
 }

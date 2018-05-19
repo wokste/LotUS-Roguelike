@@ -16,7 +16,6 @@ namespace SurvivalHack.Factory
             {
                 return new Entity('z', "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                 {
-                    Description = "An undead with a nasty attack. Luckily they are easy to outrun.",
                     Components = new List<IComponent>()
                     {
                         new MeleeWeapon(9, EDamageType.Bludgeoing),
@@ -33,7 +32,6 @@ namespace SurvivalHack.Factory
             {
                 return new Entity('b', "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                 {
-                    Description = "A flying monster that is a nuisance to any adventurer.",
                     Components = new List<IComponent>()
                     {
                         new MeleeWeapon(3, EDamageType.Piercing),

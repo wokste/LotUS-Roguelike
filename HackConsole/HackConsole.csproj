@@ -57,7 +57,6 @@
     <Compile Include="Dir.cs" />
     <Compile Include="EventSuscriber.cs" />
     <Compile Include="Grid.cs" />
-    <Compile Include="InfoWidget.cs" />
     <Compile Include="MessageListWidget.cs" />
     <Compile Include="MyMath.cs" />
     <Compile Include="PopupStack.cs" />

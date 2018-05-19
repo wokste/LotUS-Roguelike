@@ -20,5 +20,8 @@
             Count--;
             return (Count == 0);
         }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public string Describe() => $"Stack consists of {Count} items";
     }
 }

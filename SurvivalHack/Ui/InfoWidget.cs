@@ -1,10 +1,12 @@
-﻿namespace HackConsole
+﻿using HackConsole;
+
+namespace SurvivalHack.Ui
 {
     public class InfoWidget : TextWidget
     {
-        private IDescriptionProvider _item;
+        private Entity _item;
 
-        public IDescriptionProvider Item {
+        public Entity Item {
             get => _item;
             set {
                 if (_item == value)
@@ -24,15 +26,16 @@
             if (_item != null)
             {
                 WordWrap(_item.Name, "", Color.White);
-                if (_item.Description != null)
-                    WordWrap(_item.Description, "", Color.Gray);
+                //if (_item.EntityFlags.HasFlag(EEntityFlag.Identified))
+                {
+                    foreach (var c in _item.Components)
+                    {
+                        var s = c.Describe();
+                        if (s != null)
+                            WordWrap(s, " -", Color.Gray);
+                    }
+                }
             }
         }
-    }
-
-    public interface IDescriptionProvider
-    {
-        string Name { get; }
-        string Description { get; }
     }
 }

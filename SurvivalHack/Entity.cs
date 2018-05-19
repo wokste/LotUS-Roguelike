@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SurvivalHack
 {
-    public class Entity : IDescriptionProvider
+    public class Entity
     {
         public String Name { get; set; }
 
@@ -19,8 +19,6 @@ namespace SurvivalHack
 
         public TerrainFlag Flags;
         public Symbol Symbol;
-
-        public string Description { get; set; }
 
         public float Speed = 1;
 
@@ -70,12 +68,12 @@ namespace SurvivalHack
         {
             bool change = false;
 
-            foreach (var c in item.Get<ECM.IUsableComponent>())
+            foreach (var c in item.Components)
                 change |= c.Use(this, item, target, message);
 
             if (change)
                 if (item.GetOne<StackComponent>()?.Consume() ?? false)
-                    GetOne<Inventory>()?.Remove(item);
+                    item.Destroy();
 
             return change;
         }
@@ -84,7 +82,9 @@ namespace SurvivalHack
         {
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
-            Move.Unbind(this);
+
+            GetOne<Inventory>()?.Remove(this);
+            Move?.Unbind(this);
         }
     }
 

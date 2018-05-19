@@ -238,5 +238,8 @@ namespace SurvivalHack
 
             Visibility[v] |= SET_VISIBLE;
         }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public string Describe() => null;
     }
 }

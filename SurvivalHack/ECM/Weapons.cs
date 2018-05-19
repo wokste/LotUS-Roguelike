@@ -57,6 +57,9 @@ namespace SurvivalHack.ECM
         {
             return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 2;
         }
+
+        public string Describe() => $"Melee attack deals {Damage} damage";
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
     }
 
     public class RangedWeapon : IWeapon
@@ -88,6 +91,9 @@ namespace SurvivalHack.ECM
             return true;
             throw new NotImplementedException();
         }
+
+        public string Describe() => $"Ranged attack deals {Damage} damage";
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
     }
 }
 namespace SurvivalHack

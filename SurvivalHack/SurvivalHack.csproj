@@ -99,6 +99,7 @@
     <Compile Include="Tile.cs" />
     <Compile Include="Ui\EntityDetailWidget.cs" />
     <Compile Include="Ui\GameOverWidget.cs" />
+    <Compile Include="Ui\InfoWidget.cs" />
     <Compile Include="Ui\OptionWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -82,6 +82,9 @@ namespace SurvivalHack
 
             return true;
         }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public string Describe() => null;
     }
 
     public class EquippableComponent : IComponent
@@ -92,6 +95,9 @@ namespace SurvivalHack
         {
             SlotType = slotType;
         }
+
+        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public string Describe() => $"Can be equipped in {SlotType}";
     }
 
     public enum ESlotType

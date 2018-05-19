@@ -28,7 +28,7 @@ namespace SurvivalHack.Ui
             RenderCreatures();
         }
 
-        public Action<IDescriptionProvider> OnSelected;
+        public Action<Entity> OnSelected;
 
         private void RenderCreatures()
         {
