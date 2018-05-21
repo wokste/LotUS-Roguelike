@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algo\AStar.cs" />
     <Compile Include="BaseWindow.cs" />
     <Compile Include="Dir.cs" />
     <Compile Include="EventSuscriber.cs" />
