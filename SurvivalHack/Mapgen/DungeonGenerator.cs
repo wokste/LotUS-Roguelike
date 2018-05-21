@@ -38,7 +38,7 @@ namespace SurvivalHack.Mapgen
 
             var rooms = new List<Room>();
             GenerateRoom(map, maskMap);
-            for (var i = 0; i < 500; i++)
+            for (var i = 0; i < 50; i++)
             {
                 var room = GenerateRoom(map, maskMap);
                 if (room != null)

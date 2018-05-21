@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
+using HackConsole.Algo;
 
 namespace SurvivalHack.Mapgen
 {
@@ -256,14 +257,16 @@ namespace SurvivalHack.Mapgen
             var c1 = _rooms[i].Center;
             var c2 = _rooms[j].Center;
 
+            var aStar = new AStar<Tile>(_map.TileMap, (Tile t) => (t.Tag == "wall") ? 20 : (t.Tag == "stone") ? 3 : 1, false);
+            var path = aStar.Run(c1, c2);
+
             var floor = TileList.Get("floor");
 
-            for (var x = Math.Min(c1.X, c2.X); x <= Math.Max(c1.X, c2.X); x++)
-                _map.TileMap[new Vec(x, c1.Y)] = floor;
-
-            for (var y = Math.Min(c1.Y, c2.Y); y <= Math.Max(c1.Y, c2.Y); y++)
-                _map.TileMap[new Vec(c2.X, y)] = floor;
-
+            foreach (var v in path)
+            {
+                _map.TileMap[v] = floor;
+            }
+            
             Weights[i, j] = 0;
         }
     }
