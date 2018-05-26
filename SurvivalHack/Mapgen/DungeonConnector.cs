@@ -213,17 +213,17 @@ namespace SurvivalHack.Mapgen
 
                 // Already for the eliminateDeadEnds algorithm
                 if (edgeCount != 0)
-                    Flags[x] &= ~RoomStatFlag.DeadEnd;
+                    Flags[x] |= RoomStatFlag.Path;
             }
         }
 
         public void EliminateDeadEnds(Random rnd, double p) {
             for (int i = 0; i < RoomCount; i++)
             {
-                if (Flags[i].HasFlag(RoomStatFlag.DeadEnd))
+                //if (!Flags[i].HasFlag(RoomStatFlag.Path))
                 {
-                    if (rnd.NextDouble() > p)
-                        continue;
+                    //if (rnd.NextDouble() > p)
+                    //    continue;
 
                     double min = double.MaxValue;
                     int y = 0;
@@ -241,7 +241,7 @@ namespace SurvivalHack.Mapgen
                     }
 
                     Connect(i, y);
-                    Flags[i] &= ~RoomStatFlag.DeadEnd;
+                    Flags[i] |= RoomStatFlag.Path;
                 }
             }
         }
@@ -257,7 +257,8 @@ namespace SurvivalHack.Mapgen
             var c1 = _rooms[i].Center;
             var c2 = _rooms[j].Center;
 
-            var aStar = new AStar<Tile>(_map.TileMap, (Tile t) => (t.Tag == "wall") ? 20 : (t.Tag == "stone") ? 3 : 1, false);
+            var pn = new PerlinNoise(1337);
+            var aStar = new AStar<Tile>(_map.TileMap, (Vec v, Tile t) => (t.Tag == "wall") ? 20 : (t.Tag == "stone") ? 3 : 1, false);
             var path = aStar.Run(c1, c2);
 
             var floor = TileList.Get("floor");
@@ -275,6 +276,6 @@ namespace SurvivalHack.Mapgen
     enum RoomStatFlag {
         None = 0,
         Connected = 1,
-        DeadEnd = 2,
+        Path = 2,
     }
 }

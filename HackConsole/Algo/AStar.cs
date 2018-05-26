@@ -15,7 +15,7 @@ namespace HackConsole.Algo
         readonly List<Vec> _neighbors;
 
         readonly Grid<T> _grid;
-        readonly Func<T, float> _costFunc;
+        readonly Func<Vec, T, float> _costFunc;
 
         /// <summary>
         /// Creates an AStar grid.
@@ -23,7 +23,7 @@ namespace HackConsole.Algo
         /// <param name="grid">The map</param>
         /// <param name="costFunc">Can determine the cost of a grid square. The lambda should return values in [1,inf], where 1 and inf are the most ideal for fast execution.</param>
         /// <param name="acceptDiagonals">true if you should be able to move diagonally. False otherwise. Diagonals cost x1.4 if allowed. </param>
-        public AStar(Grid<T> grid, Func<T, float> costFunc, bool acceptDiagonals) {
+        public AStar(Grid<T> grid, Func<Vec, T, float> costFunc, bool acceptDiagonals) {
             _grid = grid;
             _costFunc = costFunc;
 
@@ -81,7 +81,7 @@ namespace HackConsole.Algo
                     if (_closedList.ContainsKey(nbr))
                         continue;
 
-                    var cost = _costFunc(_grid[nbr]);
+                    var cost = _costFunc(nbr, _grid[nbr]);
                     if (float.IsInfinity(cost))
                         continue;
 

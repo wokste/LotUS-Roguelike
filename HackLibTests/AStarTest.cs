@@ -16,7 +16,7 @@ namespace HackLibTests
         public void AStar_NoDiagonal()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (bool b) => b ? 1 : float.PositiveInfinity, false);
+            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 1 : float.PositiveInfinity, false);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 10);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 17);
@@ -27,7 +27,7 @@ namespace HackLibTests
         public void AStar_Diagonally()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (bool b) => b ? 1 : float.PositiveInfinity, true);
+            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 1 : float.PositiveInfinity, true);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 7);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 10);
@@ -39,10 +39,11 @@ namespace HackLibTests
         public void AStar_HigherCost()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (bool b) => b ? 2.5f : 100, true);
+            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 2.5f : 100, true);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 7);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 10);
+            RunPath(aStar, new Vec(8, 4), new Vec(8, 1), 3);
         }
 
         Grid<bool> MakeGrid() {
@@ -74,8 +75,8 @@ namespace HackLibTests
             }
             else
             {
-                Assert.IsTrue(path.Contains(start));
-                Assert.IsTrue(path.Contains(end));
+                Assert.IsTrue(path.First() == start);
+                Assert.IsTrue(path.Last() == end);
                 Assert.AreEqual(steps, path.Count - 1);
 
                 for (int i = 0; i < steps; ++i)
