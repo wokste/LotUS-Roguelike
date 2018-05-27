@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using System.Collections.Generic;
 
 namespace SurvivalHack.Mapgen
 {
@@ -18,7 +19,7 @@ namespace SurvivalHack.Mapgen
             Tiles = new Grid<Tile>(size);
         }
 
-        internal void Render(Grid<int> maskMap)
+        internal void Render(Grid<int> maskMap, int roomID)
         {
             foreach(var v in Tiles.Ids())
             { 
@@ -30,7 +31,7 @@ namespace SurvivalHack.Mapgen
                 int mask;
                 if (Tiles[v].Flags.HasFlag(TerrainFlag.Walk))
                 {
-                    mask = 0; // TODO: room id.
+                    mask = roomID;
                 }
                 else if (Tiles[v] == TileList.Get("rock"))
                 {
@@ -46,7 +47,7 @@ namespace SurvivalHack.Mapgen
             }
         }
 
-        internal bool TryPlaceOnMap(Level level, Grid<int> maskMap)
+        internal bool TryPlaceOnMap(Level level, Grid<int> maskMap, List<Room> rooms)
         {
             var mapRect = new Rect(Vec.Zero, level.Size);
 
@@ -85,7 +86,8 @@ namespace SurvivalHack.Mapgen
             }
 
             Level = level;
-            Render(maskMap);
+            Render(maskMap, rooms.Count);
+            rooms.Add(this);
             return true;
         }
     }

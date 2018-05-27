@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using HackConsole;
 using HackConsole.Algo;
@@ -218,15 +219,17 @@ namespace SurvivalHack.Mapgen
         }
 
         public void EliminateDeadEnds(Random rnd, double p) {
+            Debug.WriteLine("EliminateDeadEnds");
+
             for (int i = 0; i < RoomCount; i++)
             {
-                //if (!Flags[i].HasFlag(RoomStatFlag.Path))
+                if (!Flags[i].HasFlag(RoomStatFlag.Path))
                 {
-                    //if (rnd.NextDouble() > p)
-                    //    continue;
+                    if (rnd.NextDouble() > p)
+                        continue;
 
                     double min = double.MaxValue;
-                    int y = 0;
+                    int y = -1;
 
                     for (int j = 0; j < RoomCount; j++)
                     {
@@ -254,21 +257,29 @@ namespace SurvivalHack.Mapgen
         }
 
         void Connect(int i, int j) {
+
+            Debug.WriteLine($"Connected room {i} with {j} weight {Weights[i,j]}");
+
             var c1 = _rooms[i].Center;
             var c2 = _rooms[j].Center;
 
             var pn = new PerlinNoise(1337);
-            var aStar = new AStar<Tile>(_map.TileMap, (Vec v, Tile t) => (t.Tag == "wall") ? 20 : (t.Tag == "stone") ? 3 : 1, false);
+            var aStar = new AStar<Tile>(_map.TileMap, (Vec v, Tile t) => t.MineCost, false);
             var path = aStar.Run(c1, c2);
 
             var floor = TileList.Get("floor");
-
+            var wall = TileList.Get("wall");
+            var door = TileList.Get("door");
             foreach (var v in path)
             {
-                _map.TileMap[v] = floor;
+                if (_map.TileMap[v] == wall || _map.TileMap[v] == door)
+                    _map.TileMap[v] = door;
+                else
+                    _map.TileMap[v] = floor;
             }
             
             Weights[i, j] = 0;
+            Weights[j, i] = 0;
         }
     }
 

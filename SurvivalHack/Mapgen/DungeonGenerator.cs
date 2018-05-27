@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SurvivalHack.Mapgen.Rooms;
 using HackConsole;
+using System.Diagnostics;
 
 namespace SurvivalHack.Mapgen
 {
@@ -37,12 +38,9 @@ namespace SurvivalHack.Mapgen
             var maskMap = new Grid<int>(size, MASKID_VOID);
 
             var rooms = new List<Room>();
-            GenerateRoom(map, maskMap);
             for (var i = 0; i < 50; i++)
             {
-                var room = GenerateRoom(map, maskMap);
-                if (room != null)
-                    rooms.Add(room);
+                var room = GenerateRoom(map, maskMap, rooms);
             }
 
             // Create MST
@@ -72,7 +70,7 @@ namespace SurvivalHack.Mapgen
             throw new ArithmeticException("Divide by zero exception");
         }
 
-        private Room GenerateRoom(Level map, Grid<int> maskMap)
+        private Room GenerateRoom(Level map, Grid<int> maskMap, List<Room> rooms)
         {
             var room = GetFactory().Make(_rnd);
 
@@ -90,8 +88,11 @@ namespace SurvivalHack.Mapgen
                     Offset = new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd))
                 };
 
-                if (room.TryPlaceOnMap(map, maskMap))
+                if (room.TryPlaceOnMap(map, maskMap, rooms))
+                {
+                    Debug.WriteLine($"Placed room {rooms.Count - 1} on {room.Transform.Offset}");
                     return room;
+                }
             }
             return null;
         }

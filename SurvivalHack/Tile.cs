@@ -27,6 +27,7 @@ namespace SurvivalHack
         public TerrainFlag Flags;
 
         public Symbol Symbol;
+        public float MineCost = 1;
 
         public override string ToString()
         {
@@ -66,7 +67,7 @@ namespace SurvivalHack
                 DropTag = "",
                 DropCount = 0,
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('+', Color.Green)
+                Symbol = new Symbol('+', new Color(164, 87, 40), new Color(210, 167, 140)),
             });
 
             Types.Add(new Tile
@@ -75,7 +76,8 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Symbol = new Symbol('#', Color.Black, Color.Gray)
+                Symbol = new Symbol('#', Color.Black, Color.Gray),
+                MineCost = 2,
             });
 
             Types.Add(new Tile
@@ -84,9 +86,10 @@ namespace SurvivalHack
                 DropTag = "stone",
                 DropCount = 3,
                 Flags = TerrainFlag.None,
-                Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40))
+                Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
+                MineCost = 10
             });
-            
+
         }
 
         public static Tile Get(string tag)
