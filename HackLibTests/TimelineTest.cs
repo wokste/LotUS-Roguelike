@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 
-namespace HackConsoleTests
+namespace HackLibTests
 {
     [TestClass]
     public class TimelineTest

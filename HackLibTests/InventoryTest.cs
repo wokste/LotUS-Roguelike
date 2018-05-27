@@ -3,7 +3,7 @@ using SurvivalHack;
 using SurvivalHack.ECM;
 using System.Collections.Generic;
 
-namespace HackConsoleTests
+namespace HackLibTests
 {
     [TestClass]
     public class InventoryTest
@@ -19,7 +19,7 @@ namespace HackConsoleTests
         }
 
         [TestMethod]
-        public void InventoryStackSize()
+        public void Inventory_StackSize()
         {
             const int STACK_TYPE_A = 1;
             const int STACK_TYPE_B = 2;

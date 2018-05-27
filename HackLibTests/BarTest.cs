@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 
-namespace HackConsoleTests
+namespace HackLibTests
 {
     [TestClass]
     public class BarTest

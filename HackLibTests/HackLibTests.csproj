@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AStarTest.cs" />
     <Compile Include="BarTest.cs" />
+    <Compile Include="BresenhamTest.cs" />
     <Compile Include="InventoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimelineTest.cs" />

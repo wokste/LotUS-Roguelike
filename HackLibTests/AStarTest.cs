@@ -75,8 +75,8 @@ namespace HackLibTests
             }
             else
             {
-                Assert.IsTrue(path.First() == start);
-                Assert.IsTrue(path.Last() == end);
+                Assert.AreEqual(path.First(), start);
+                Assert.AreEqual(path.Last(), end);
                 Assert.AreEqual(steps, path.Count - 1);
 
                 for (int i = 0; i < steps; ++i)
