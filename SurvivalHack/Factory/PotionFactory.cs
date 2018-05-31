@@ -10,7 +10,7 @@ namespace SurvivalHack.Factory
         static int BaseId;
 
         (string, Color)[] types = new(string, Color)[]{
-            ("Red", Color.Parse("#f00")),
+            ("Red", Color.Parse("#f33")),
             ("blue", Color.Parse("#36f")),
             ("aqua", Color.Parse("#0fc")),
             ("yellow", Color.Parse("#cf0")),
@@ -20,7 +20,7 @@ namespace SurvivalHack.Factory
             ("orange", Color.Parse("#f90")),
         };
 
-        void Init(Random rnd)
+        public PotionFactory(Random rnd)
         {
             types = types.OrderBy(p => rnd.Next()).ToArray();
             BaseId = StackComponent.GenMergeId(types.Length);

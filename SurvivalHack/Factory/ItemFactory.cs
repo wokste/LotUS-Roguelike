@@ -6,7 +6,11 @@ namespace SurvivalHack.Factory
     public class ItemFactory : IEntityFactory
     {
         private IEntityFactory _weaponFactory = new WeaponFactory();
-        private IEntityFactory _potionFactory = new PotionFactory();
+        private IEntityFactory _potionFactory;
+
+        public ItemFactory(Random rnd) {
+            _potionFactory = new PotionFactory(rnd);
+        }
 
         public Entity Gen(EntityGenerationInfo info)
         {

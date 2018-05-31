@@ -15,7 +15,7 @@ namespace SurvivalHack.Mapgen
         private Level _level;
 
         private IEntityFactory _monsterFactory = new MonsterFactory();
-        private IEntityFactory _itemFactory = new ItemFactory();
+        private IEntityFactory _itemFactory;
 
         public DungeonPopulator(DungeonGenerator gen, Level level, Random rnd)
         {
@@ -26,6 +26,7 @@ namespace SurvivalHack.Mapgen
                 Rnd = rnd,
                 Level = 1
             };
+            _itemFactory = new ItemFactory(rnd);
         }
 
         public void Spawn(List<Room> rooms, int difficulty)
