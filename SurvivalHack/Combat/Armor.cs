@@ -27,7 +27,7 @@ namespace SurvivalHack.Combat
 
             attack.Damage = 0;
 
-            // TODO: I need to send 
+            // TODO: I need to send information on how it is blocked to the log system
 
             return true;
         }
