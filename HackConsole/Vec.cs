@@ -78,6 +78,14 @@ namespace HackConsole
             Height = size.Y;
         }
 
+        public Rect(int x, int y, int w, int h)
+        {
+            Left = x;
+            Top = y;
+            Width = w;
+            Height = h;
+        }
+
         public bool Contains(Vec v)
         {
             return (v.X >= Left) && (v.Y >= Top) && (v.X < Right) && (v.Y < Bottom);

@@ -138,7 +138,7 @@ namespace HackConsole
                     return free;
             }
 
-            return DesiredSize;
+            return new Rect(free.TopLeft, DesiredSize.Size);
         }
 
         public virtual Widget WidgetAt(Vec pos)

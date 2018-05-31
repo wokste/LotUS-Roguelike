@@ -56,7 +56,7 @@ namespace SurvivalHack.Ai
 
         private void CheckSee(Entity self, Entity other)
         {
-            if (e == self)
+            if (other == self)
                 return;
 
             if ((self.Move.Pos - other.Move.Pos).LengthSquared >= 100) // Todo: Sight radius

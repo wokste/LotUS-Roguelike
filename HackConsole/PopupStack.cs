@@ -35,11 +35,13 @@ namespace HackConsole
             }
         }
 
-        public void Push(Widget w)
+        public void Push(Widget innerWidget)
         {
-            w.CenterPopup(Size);
-            (w as IPopupWidget).OnClose += () => { Pop(w); };
-            _widgets.Add(w);
+            var outerWidget = new BorderedWidget(innerWidget);
+
+            outerWidget.CenterPopup(Size);
+            (innerWidget as IPopupWidget).OnClose += () => { Pop(outerWidget); };
+            _widgets.Add(outerWidget);
         }
 
         private void Pop(Widget w)
