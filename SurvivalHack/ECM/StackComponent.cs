@@ -13,7 +13,12 @@
 
         private static int MergeIdAutoIncrement;
 
-        int GenMergeId() => MergeIdAutoIncrement++;
+        public static int GenMergeId(int count)
+        {
+            var ret = MergeIdAutoIncrement;
+            ret += count;
+            return ret;
+        }
 
         internal bool Consume()
         {

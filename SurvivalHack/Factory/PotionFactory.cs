@@ -1,10 +1,14 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using System;
+using System.Linq;
 
 namespace SurvivalHack.Factory
 {
     class PotionFactory : IEntityFactory
     {
+        static int BaseId;
+
         (string, Color)[] types = new(string, Color)[]{
             ("Red", Color.Parse("#f00")),
             ("blue", Color.Parse("#36f")),
@@ -16,21 +20,36 @@ namespace SurvivalHack.Factory
             ("orange", Color.Parse("#f90")),
         };
 
+        void Init(Random rnd)
+        {
+            types = types.OrderBy(p => rnd.Next()).ToArray();
+            BaseId = StackComponent.GenMergeId(types.Length);
+        }
+
         public Entity Gen(EntityGenerationInfo info)
         {
             Entity e = new Entity('?', "Potion", EEntityFlag.Pickable);
 
-            var colorId = info.Rnd.Next(types.Length);
+            var potionId = info.Rnd.Next(2);
 
-            (var colorName, var color) = types[colorId];
+            (var colorName, var color) = types[potionId];
             e.Symbol = new Symbol('?', color);
-            e.Add(new StackComponent(1, colorId));
 
+            e.Add(new StackComponent(1, potionId + BaseId));
+
+            switch (potionId)
+            {
+                case 0: // Lesser healing potion
+                    e.Add(new HealComponent(20, 0, EUseMessage.Drink));
+                    break;
+                case 1: // Greater healing potion
+                    e.Add(new HealComponent(40, 0, EUseMessage.Drink));
+                    break;
+            }
             //TODO: Add randomized effects to the potion.
-            e.Add(new HealComponent(5, 0, EUseMessage.Drink));
 
             //TODO: Work on identitying potions
-            e.Name = $"{colorName} potion | Health potion";
+            e.Name = $"{colorName} potion";
 
             return e;
         }
