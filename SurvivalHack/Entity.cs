@@ -3,6 +3,8 @@ using HackConsole;
 using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System.Collections.Generic;
+using System.Linq;
+using SurvivalHack.Combat;
 
 namespace SurvivalHack
 {
@@ -65,7 +67,8 @@ namespace SurvivalHack
             var inv = GetOne<Inventory>();
             if (inv != null)
                 foreach (var item in inv.Equipped)
-                    yield return item;
+                    if (item != null)
+                        yield return item;
 
             // == Status effects ==
             // TODO: Add status effects.
@@ -97,6 +100,17 @@ namespace SurvivalHack
 
             GetOne<Inventory>()?.Remove(this);
             Move?.Unbind(this);
+        }
+
+        internal (Entity Item, IWeapon IWeapon) GetWeapon(Entity target)
+        {
+            IEnumerable<(Entity Item, IWeapon IWeapon)> WeaponFilter(Entity e) {
+                foreach (var w in e.Get<IWeapon>())
+                    if (w.InRange(this, target))
+                        yield return (e, w);
+            }
+            var pairList = ListSubEntities().SelectMany(WeaponFilter).OrderByDescending(p => p.IWeapon.WeaponPriority + Game.Rnd.NextDouble());
+            return pairList.FirstOrDefault();
         }
     }
 

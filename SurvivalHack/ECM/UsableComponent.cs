@@ -22,11 +22,16 @@ namespace SurvivalHack.ECM
             if (Filter != msg)
                 return false;
 
-            user.GetOne<Combat.Damagable>().Heal(Restore, StatID);
+            bool healed = user.GetOne<Combat.Damagable>().Heal(Restore, StatID);
+
+            if (user.EntityFlags.HasFlag(EEntityFlag.IsPlayer) && healed)
+            {
+                Message.Write($"You heal {Restore} HP", null, Color.Green);
+                // TODO: Item identification
+            }
 
             return true;
         }
-
 
         public string Describe() => $"Heals {Restore} when {Filter}.";
     }

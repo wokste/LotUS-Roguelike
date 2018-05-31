@@ -186,7 +186,11 @@ namespace SurvivalHack.Ui
                             NextTurn();
                     }
                     break;
-
+                case 'f':
+                    {
+                        // TODO: Fight, especially useful for ranged attacks.
+                    }
+                    break;
 
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear
@@ -219,14 +223,11 @@ namespace SurvivalHack.Ui
             {
                 if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
-                    // TODO: Different options for attacks
+                    (var weapon, var weaponComponent) = _player.GetWeapon(enemy);
 
-                    var heldItem = _player.GetOne<Inventory>()?.Equipped[0];
-                    var weaponComponent = heldItem?.GetOne<Combat.IWeapon>();
-
-                    if (weaponComponent?.InRange(_player, enemy) ?? false)
+                    if (weaponComponent != null)
                     {
-                        weaponComponent.Attack(_player, heldItem, enemy);
+                        weaponComponent.Attack(_player, weapon, enemy);
                         NextTurn();
                     }
                     return;

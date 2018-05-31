@@ -8,12 +8,15 @@ namespace SurvivalHack.Combat
     {
         void Attack(Entity attacker, Entity weapon, Entity defender);
         bool InRange(Entity attacker, Entity defender);
+        float WeaponPriority { get; }
     }
 
     public class MeleeWeapon : IWeapon
     {
         public float Damage;
         public EDamageType DamageType;
+
+        public float WeaponPriority { get; set; }
 
         public MeleeWeapon(float damage, EDamageType damageType)
         {
@@ -46,6 +49,7 @@ namespace SurvivalHack.Combat
         public float Damage;
         public EDamageType DamageType;
         public float Range;
+        public float WeaponPriority { get; set; }
 
         public RangedWeapon(float damage, EDamageType damageType, float range)
         {

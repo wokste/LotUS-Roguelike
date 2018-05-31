@@ -26,9 +26,13 @@ namespace SurvivalHack.Combat
             }
         }
 
-        internal void Heal(int restore, int statID)
+        internal bool Heal(int restore, int statID)
         {
+            if (Health.Current == Health.Max)
+                return false;
+
             Health.Current += restore;
+            return true;
         }
 
         public string Describe() => null;

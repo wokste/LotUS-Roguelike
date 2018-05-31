@@ -91,12 +91,11 @@ namespace SurvivalHack.Ai
         {
             if (enemy != null)
             {
-                var heldItem = self.GetOne<Inventory>()?.Equipped[0];
-                var weaponComponent = heldItem?.GetOne<Combat.IWeapon>();
+                (var weapon, var weaponComponent) = self.GetWeapon(enemy);
 
-                if (weaponComponent?.InRange(self, enemy) ?? false)
+                if (weaponComponent != null)
                 {
-                    weaponComponent.Attack(self, heldItem, enemy);
+                    weaponComponent.Attack(self, weapon, enemy);
                     return true;
                 }
             }
