@@ -121,8 +121,6 @@ namespace SurvivalHack.Mapgen.Rooms
 
             private static double Lerp(double a, double b, double f)
             {
-                // TODO: SIN lerp
-                // TODO: Gradients
                 return (a * (1 - f)) + (b * f);
             }
         }

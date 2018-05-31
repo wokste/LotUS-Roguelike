@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using HackConsole.Algo;
 using System;
 
 namespace SurvivalHack.Combat
@@ -66,8 +67,13 @@ namespace SurvivalHack.Combat
 
         public bool InRange(Entity attacker, Entity defender)
         {
+            var level = attacker.Move.Level;
+            var path = Bresenham.Run(attacker.Move.Pos, defender.Move.Pos);
+            foreach (var v in path)
+                if (!level.HasFlag(v, TerrainFlag.Sight))
+                    return false;
+
             return true;
-            throw new NotImplementedException();
         }
 
         public string Describe() => $"Ranged attack deals {Damage} damage";

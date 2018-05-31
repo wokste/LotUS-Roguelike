@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using HackConsole.Algo;
 using System;
 
 namespace SurvivalHack.Ai
@@ -47,21 +48,26 @@ namespace SurvivalHack.Ai
 
             foreach (var e in self.Move.Level.GetEntities(area))
             {
-                if (e == self)
-                    continue;
-
-                var delta = self.Move.Pos - e.Move.Pos;
-                if (delta.LengthSquared >= 100) // Todo: Sight radius
-                    continue;
-
-                OnSee(self, e);
+                CheckSee(self, e);
             }
 
             return _goal;
         }
 
-        private void OnSee(Entity self, Entity other)
+        private void CheckSee(Entity self, Entity other)
         {
+            if (e == self)
+                return;
+
+            if ((self.Move.Pos - other.Move.Pos).LengthSquared >= 100) // Todo: Sight radius
+                return;
+
+            var level = self.Move.Level;
+            var path = Bresenham.Run(self.Move.Pos, other.Move.Pos);
+            foreach (var v in path)
+                if (!level.HasFlag(v, TerrainFlag.Sight))
+                    return;
+
             foreach (var rule in _rules)
                 rule.On(self, other, ref _goal, ERisk.None);
         }
