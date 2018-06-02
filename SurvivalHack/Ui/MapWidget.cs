@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HackConsole;
+using HackConsole.Algo;
 
 namespace SurvivalHack.Ui
 {
@@ -8,14 +11,18 @@ namespace SurvivalHack.Ui
         private readonly Level _level;
         private readonly FieldOfView _view;
         private readonly Entity _player;
+        private readonly Color _pathColor = new Color(0, 128, 255, 128);
 
         private Vec _offset;
+        private IEnumerable<Vec> _path = null;
+        private AStar<Tile> _aStar;
 
         public MapWidget(Level level, FieldOfView view, Entity following)
         {
             _level = level;
             _view = view;
             _player = following;
+            _aStar = new AStar<Tile>(level.TileMap, (v, t) => ((t.Tag == "floor" || t.Tag == "door") ? 1f : float.PositiveInfinity), true);
         }
 
         protected override void RenderImpl()
@@ -26,6 +33,7 @@ namespace SurvivalHack.Ui
             Clear();
             RenderGrid();
             RenderCreatures();
+            RenderPath();
         }
 
         public Action<Entity> OnSelected;
@@ -45,6 +53,24 @@ namespace SurvivalHack.Ui
                     continue;
 
                 WindowData.Data[p] = creature.Symbol;
+            }
+        }
+
+        private void RenderPath()
+        {
+            if (_path == null)
+                return;
+
+            foreach (var absPos in _path)
+            {
+                var relPos = absPos - _offset;
+                if (!Size.Contains(relPos))
+                    continue;
+
+                var s = WindowData.Data[relPos];
+                s.TextColor.Add(_pathColor);
+                s.BackgroundColor.Add(_pathColor);
+                WindowData.Data[relPos] = s;
             }
         }
 
@@ -71,24 +97,24 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            // Select creatures, etc
-            if (flags.HasFlag(EventFlags.LeftButton | EventFlags.MouseEventPress))
-            {
-                var absPos = mousePos + _offset;
-                if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0)
-                {
-                    OnSelected?.Invoke(null);
-                }
 
-                var list = _level.GetEntity(absPos);
-
-                foreach(var e in list)
-                    OnSelected?.Invoke(e);
-            }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
+            var absPos = mousePos + _offset;
+            if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0)
+            {
+                OnSelected?.Invoke(null);
+            }
+
+            var list = _level.GetEntity(absPos);
+
+            foreach (var e in list)
+                OnSelected?.Invoke(e);
+
+            _path = _aStar.Run(_player.Move.Pos, absPos);
+            Dirty = true;
         }
 
         public void OnMouseWheel(Vec delta, EventFlags flags)

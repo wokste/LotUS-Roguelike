@@ -62,6 +62,15 @@ namespace HackConsole
                 A);
         }
 
+        public void Add(Color other)
+        {
+            var f = other.A;
+            R = (byte)((R * (255 - f) + other.R * f) / 256);
+            G = (byte)((G * (255 - f) + other.G * f) / 256);
+            B = (byte)((B * (255 - f) + other.B * f) / 256);
+            A = 255;
+        }
+
         public static Color? TryParse(string text) {
             if (text == null)
                 return null;
