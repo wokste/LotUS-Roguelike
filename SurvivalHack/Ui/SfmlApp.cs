@@ -155,17 +155,7 @@ namespace SurvivalHack.Ui
                     break;
                 case 'w':
                     {
-                        var o = new OptionWidget<Entity>
-                        {
-                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
-                            OnSelect = i =>
-                            {
-                                if (_player.GetOne<Inventory>().Equip(_player,i,0))
-                                    NextTurn();
-                            },
-                            Question = "Wield item",
-                            Set = _player.GetOne<Inventory>()._items
-                        };
+                        var o = new InventoryWidget(_player, _window);
                         _window.PopupStack.Push(o);
                     }
                     break;

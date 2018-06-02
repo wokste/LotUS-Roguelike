@@ -66,6 +66,13 @@ namespace HackConsole
             }
         }
 
+
+        protected void Print(Vec v, Symbol s)
+        {
+            v += Size.TopLeft;
+            WindowData.Data[v] = s;
+        }
+
         #endregion
 
 

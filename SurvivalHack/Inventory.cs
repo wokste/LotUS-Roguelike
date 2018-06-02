@@ -10,15 +10,17 @@ namespace SurvivalHack
         public readonly List<Entity> _items = new List<Entity>();
 
         public static readonly (ESlotType type, string name)[] SlotNames = new(ESlotType type, string name)[] {
-            (ESlotType.Hand, "Main Hand"),
-            (ESlotType.Hand, "Offhand"),
-            (ESlotType.Head, "Head"),
-            (ESlotType.Body, "Body"),
-            (ESlotType.Gloves, "Gloves"),
-            (ESlotType.Feet, "Feet"),
-            (ESlotType.Neck, "Neck"),
-            (ESlotType.Ring, "Ring 1"),
-            (ESlotType.Ring, "Ring 2"),
+            (ESlotType.Hand,    "Main Hand"),
+            (ESlotType.Offhand, "Offhand"),
+            (ESlotType.Ranged,  "Ranged"),
+            (ESlotType.Head,    "Head"),
+            (ESlotType.Body,    "Body"),
+            (ESlotType.Legs,    "Legs"),
+            (ESlotType.Gloves,  "Gloves"),
+            (ESlotType.Feet,    "Feet"),
+            (ESlotType.Neck,    "Neck"),
+            (ESlotType.Ring,    "1st Ring"),
+            (ESlotType.Ring,    "2nd Ring"),
         };
 
         public readonly Entity[] Equipped = new Entity[SlotNames.Length];
@@ -61,9 +63,9 @@ namespace SurvivalHack
         {
             if (item != null)
             {
-                var ec = item.GetOne<EquippableComponent>();
+                var ecs = item.Get<EquippableComponent>();
 
-                if (ec == null || ec.SlotType != SlotNames[slot].type)
+                if (!ecs.Any(ec => ec.SlotType != SlotNames[slot].type))
                     return false; // Can't equip said item in said slot
             }
 
@@ -103,6 +105,6 @@ namespace SurvivalHack
 
     public enum ESlotType
     {
-        Hand, Head, Body, Gloves, Feet, Neck, Ring
+        Hand, Offhand, Ranged, Head, Body, Legs, Gloves, Feet, Neck, Ring
     }
 }
