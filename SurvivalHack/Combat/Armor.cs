@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SurvivalHack.ECM;
+using HackConsole;
 
 namespace SurvivalHack.Combat
 {
@@ -21,14 +22,14 @@ namespace SurvivalHack.Combat
 
         public bool Mutate(Attack attack)
         {
-            // TODO: Parrying should not be possible against ranged weapons.
-
             if (Game.Rnd.NextDouble() > BlockChance)
                 return false;
 
             attack.Damage = 0;
 
             // TODO: I need to send information on how it is blocked to the log system
+
+            Message.Write($"{attack.Defender} blocks {attack.Attacker}s attack", attack.Defender.Move.Pos, Color.Cyan);
 
             return true;
         }
@@ -64,7 +65,9 @@ namespace SurvivalHack.Combat
                 return false;
             }
 
-            attack.Damage -= DamageReduction;
+            var newDamage = Math.Max(attack.Damage - DamageReduction, 0);
+            Message.Write($"{attack.Defender}'s armour reduces the damage of the incoming attack from {attack.Damage} to {newDamage}", attack.Defender.Move.Pos, Color.Cyan);
+            attack.Damage = newDamage;
 
             return true;
         }

@@ -87,7 +87,7 @@ namespace SurvivalHack
 
         public bool Is(Vec pos, byte flag)
         {
-            return (Visibility[pos] | flag) == flag;
+            return (Visibility[pos] & flag) == flag;
         }
 
         /// <summary>
