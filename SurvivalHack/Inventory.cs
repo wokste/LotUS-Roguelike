@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -83,7 +84,7 @@ namespace SurvivalHack
             return true;
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
         public string Describe() => null;
     }
 
@@ -96,7 +97,7 @@ namespace SurvivalHack
             SlotType = slotType;
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
         public string Describe() => $"Can be equipped in {SlotType}";
     }
 

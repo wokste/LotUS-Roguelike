@@ -1,11 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SurvivalHack.ECM
 {
     public interface IComponent
     {
-        bool Use(Entity user, Entity item, Entity target, EUseMessage filter);
         string Describe();
+
+        //bool Use(Entity user, Entity item, Entity target, EUseMessage filter);
+
+        IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source);
+    }
+
+    public struct UseFunc {
+        public EUseOrder Order;
+        public Action<Entity, Entity, Entity> Action;
+
+        public UseFunc(Action<Entity, Entity, Entity> action, EUseOrder order = EUseOrder.Event)
+        {
+            Action = action;
+            Order = order;
+        }
+    }
+
+    public enum EUseOrder
+    {
+        Interrupt,
+        PreEvent,
+        Event,
+        PostEvent,
+    }
+
+    public enum EUseSource
+    {
+        User,
+        This,
+        Target,
+        Timer,
     }
 
     public enum EUseMessage

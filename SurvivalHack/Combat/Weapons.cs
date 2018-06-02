@@ -1,6 +1,9 @@
 ﻿using HackConsole;
 using HackConsole.Algo;
+using SurvivalHack.ECM;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SurvivalHack.Combat
 {
@@ -41,7 +44,7 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => $"Melee attack deals {Damage} damage";
-        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public class RangedWeapon : IWeapon
@@ -81,6 +84,6 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => $"Ranged attack deals {Damage} damage";
-        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

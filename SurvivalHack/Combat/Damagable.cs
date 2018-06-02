@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
@@ -20,7 +21,7 @@ namespace SurvivalHack.Combat
 
             if (Health.Current == 0)
             {
-                self.Destroy(null);
+                self.Destroy();
 
                 Message.Write($"{self.Name} died", self.Move?.Pos, Color.Red);
             }
@@ -36,6 +37,6 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => null;
-        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

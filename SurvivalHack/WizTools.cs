@@ -1,4 +1,5 @@
-﻿using HackConsole;
+﻿using System.Collections.Generic;
+using HackConsole;
 using SurvivalHack.ECM;
 
 #if WIZTOOLS
@@ -39,6 +40,11 @@ namespace SurvivalHack
                 Damage = damage;
                 DamageType = damageType;
                 Filter = filter;
+            }
+
+            public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+            {
+                throw new System.NotImplementedException();
             }
 
             public bool Use(Entity user, Entity item, Entity target, EUseMessage filter)

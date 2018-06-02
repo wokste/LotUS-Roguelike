@@ -17,20 +17,21 @@ namespace SurvivalHack.ECM
             Filter = filter;
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage msg)
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
         {
-            if (Filter != msg)
-                return false;
+            if (filter == Filter && source == EUseSource.This)
+                yield return new UseFunc(Heal);
+        }
 
+        public void Heal(Entity user, Entity item, Entity target)
+        {
             bool healed = user.GetOne<Combat.Damagable>().Heal(Restore, StatID);
 
-            if (user.EntityFlags.HasFlag(EEntityFlag.IsPlayer) && healed)
+            if (healed && user.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
             {
                 Message.Write($"You heal {Restore} HP", null, Color.Green);
                 // TODO: Item identification
             }
-
-            return true;
         }
 
         public string Describe() => $"Heals {Restore} when {Filter}.";
@@ -47,11 +48,14 @@ namespace SurvivalHack.ECM
             Flags = flags;
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage msg)
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
         {
-            if (Filter != msg)
-                return false;
+            if (filter == Filter && source == EUseSource.This)
+                yield return new UseFunc(Reveal);
+        }
 
+        public void Reveal(Entity user, Entity item, Entity target)
+        {
             var FoV = user.GetOne<FieldOfView>();
             var Map = FoV.Map;
 
@@ -71,8 +75,6 @@ namespace SurvivalHack.ECM
                 if (Reachable(v))
                     FoV.Visibility[v] |= Flags;
             }
-
-            return true;
         }
 
         public string Describe() => $"Reveals the map";

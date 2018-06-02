@@ -1,4 +1,7 @@
-﻿namespace SurvivalHack.ECM
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace SurvivalHack.ECM
 {
     public class StackComponent : IComponent
     {
@@ -20,13 +23,26 @@
             return ret;
         }
 
-        internal bool Consume()
+        private void Consume(Entity user, Entity item, Entity target)
         {
             Count--;
-            return (Count <= 0);
+            if (Count <= 0)
+            {
+                user?.GetOne<Inventory>()?.Remove(item);
+                item.Destroy();
+            }
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) {
+            if (source == EUseSource.This)
+            {
+                if (filter == EUseMessage.Drink) // TODO, others
+                {
+                    yield return new UseFunc(Consume, EUseOrder.PostEvent);
+                }
+            }
+        }
+
         public string Describe() => $"Stack consists of {Count} items";
     }
 }

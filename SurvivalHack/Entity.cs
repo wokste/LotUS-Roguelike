@@ -79,24 +79,34 @@ namespace SurvivalHack
 
         public bool Event(Entity item, Entity target, EUseMessage message)
         {
-            bool change = false;
+            var funcs = new List<UseFunc>();
+            funcs.AddRange(item.Components.SelectMany(c => c.GetActions(message, EUseSource.This)));
 
-            foreach (var c in item.Components)
-                change |= c.Use(this, item, target, message);
+            // TODO: Add things to funcs from EUseSource.Target and especially EUseSource.User
 
-            if (change)
-                if (item.GetOne<StackComponent>()?.Consume() ?? false)
-                    item.Destroy(this);
+            if (!funcs.Any(f => f.Order == EUseOrder.Event))
+            {
+                return false;
+            }
 
-            return change;
+            if (funcs.Any(f => f.Order == EUseOrder.Interrupt))
+            {
+                return false;
+            }
+
+            foreach (var f in funcs.OrderBy(f => f.Order))
+            {
+                f.Action?.Invoke(this, item, target);
+            }
+
+            return true;
         }
 
-        public void Destroy(Entity owner)
+        public void Destroy()
         {
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
 
-            owner?.GetOne<Inventory>()?.Remove(this); // ERROR
             Move?.Unbind(this);
         }
 

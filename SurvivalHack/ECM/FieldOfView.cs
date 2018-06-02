@@ -1,6 +1,8 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SurvivalHack
 {
@@ -239,7 +241,7 @@ namespace SurvivalHack
             Visibility[v] |= SET_VISIBLE;
         }
 
-        public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
         public string Describe() => null;
     }
 }

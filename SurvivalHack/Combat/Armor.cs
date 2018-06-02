@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
@@ -37,7 +38,7 @@ namespace SurvivalHack.Combat
             return $"Has a {BlockChance:%} to block incoming attacks";
         }
 
-        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     class Armour : IDamageMutator
@@ -67,6 +68,6 @@ namespace SurvivalHack.Combat
             return $"Reduces damage by {DamageReduction}.";
         }
 
-        public bool Use(Entity user, Entity item, Entity target, ECM.EUseMessage filter) => false;
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }
