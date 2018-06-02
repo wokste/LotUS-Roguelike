@@ -17,7 +17,7 @@ namespace SurvivalHack.Factory
             var d100 = new Range(1, 100);
             var f = d100.Rand(info.Rnd);
 
-            if (f <= 20)
+            if (f <= 40)
                 return _weaponFactory.Gen(info);
             else
                 return _potionFactory.Gen(info);

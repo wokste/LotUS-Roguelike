@@ -33,15 +33,15 @@ namespace SurvivalHack.Mapgen
         {
             foreach (var room in rooms)
             {
-                var roll = _info.Rnd.Next(100);
+                //var roll = _info.Rnd.Next(100);
 
-                if (roll < 50)
-                    continue;
+                //if (roll < 30)
+                //    continue;
 
                 FillRoom(room, difficulty);
 
-                if (roll >= 95)
-                    FillRoom(room, difficulty);
+                //if (roll >= 95)
+                //    FillRoom(room, difficulty);
             }
         }
 
@@ -49,8 +49,8 @@ namespace SurvivalHack.Mapgen
         {
             PlaceMonsters(room, difficulty);
 
-            if (_info.Rnd.Next(100) < 40)
-                PlaceTreasure(room, difficulty);
+            //if (_info.Rnd.Next(100) < 80)
+            PlaceTreasure(room, difficulty);
         }
 
         private Vec GetFreeTile(Room room)

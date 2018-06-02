@@ -18,7 +18,7 @@ namespace SurvivalHack.Factory
         RandomTable<string> BasePropabilities;
 
         public WeaponFactory() {
-            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,sbow:3,lbow:5");
+            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,sbow:3,lbow:5,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5");
         }
 
         public Entity Gen(EntityGenerationInfo info)
@@ -56,19 +56,19 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('|', "Dagger", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EDamageType.Piercing));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "ssword":
                     {
-                        var e = new Entity('|', "Shortsword", EEntityFlag.Pickable);
+                        var e = new Entity('\\', "Shortsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "lsword":
                     {
-                        var e = new Entity('|', "Longsword", EEntityFlag.Pickable);
+                        var e = new Entity('\\', "Longsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
@@ -77,12 +77,12 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Handaxe", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "spear":
                     {
-                        var e = new Entity('/', "Spear", EEntityFlag.Pickable);
+                        var e = new Entity('\\', "Spear", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
@@ -91,14 +91,14 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Mace", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Bludgeoing));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "sbow":
                     {
                         var e = new Entity(')', "Shortbow", EEntityFlag.Pickable);
                         e.Add(new Combat.RangedWeapon(5, Combat.EDamageType.Piercing, 20));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Ranged));
                         //TODO: require ammo
                         return e;
                     }
@@ -106,8 +106,36 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity(')', "Longbow", EEntityFlag.Pickable);
                         e.Add(new Combat.RangedWeapon(6, Combat.EDamageType.Piercing, 50 ));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new EquippableComponent(ESlotType.Ranged));
                         //TODO: require ammo
+                        return e;
+                    }
+                case "armour_leather":
+                    {
+                        var e = new Entity('^', "Leather Armour", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(2, 0.05f));
+                        e.Add(new EquippableComponent(ESlotType.Body));
+                        return e;
+                    }
+                case "armour_chain":
+                    {
+                        var e = new Entity('^', "Chainmail Armour", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(3, 0.05f));
+                        e.Add(new EquippableComponent(ESlotType.Body));
+                        return e;
+                    }
+                case "armour_plate":
+                    {
+                        var e = new Entity('^', "Plate Armour", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(4, 0.05f));
+                        e.Add(new EquippableComponent(ESlotType.Body));
+                        return e;
+                    }
+                case "helmet":
+                    {
+                        var e = new Entity('^', "Helmet", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(3, 0.1f));
+                        e.Add(new EquippableComponent(ESlotType.Head));
                         return e;
                     }
             }

@@ -44,14 +44,12 @@ namespace SurvivalHack
 
             public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
             {
-                throw new System.NotImplementedException();
+                if (Filter == filter && source == EUseSource.This)
+                    yield return new UseFunc(Genocide);
             }
 
-            public bool Use(Entity user, Entity item, Entity target, EUseMessage filter)
+            public void Genocide(Entity user, Entity item, Entity target)
             {
-                if (Filter != filter)
-                    return false;
-
                 var level = user.Move.Level;
                 foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
                 {
@@ -66,8 +64,6 @@ namespace SurvivalHack
 
                     Attack.Fight(user, item, e);
                 }
-
-                return true;
             }
 
             public string Describe() => $"Area Attack deals {Damage} damage";

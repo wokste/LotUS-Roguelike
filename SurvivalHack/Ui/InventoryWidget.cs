@@ -69,6 +69,7 @@ namespace SurvivalHack.Ui
 
         private void ShowEquipMenu(int index)
         {
+            _inventory.Equip(_player, null, index);
             var o = new OptionWidget<Entity>
             {
                 DesiredSize = new Rect(new Vec(), new Vec(25, 25)),

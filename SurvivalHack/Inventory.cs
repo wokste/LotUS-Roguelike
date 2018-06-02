@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
@@ -15,7 +16,6 @@ namespace SurvivalHack
             (ESlotType.Ranged,  "Ranged"),
             (ESlotType.Head,    "Head"),
             (ESlotType.Body,    "Body"),
-            (ESlotType.Legs,    "Legs"),
             (ESlotType.Gloves,  "Gloves"),
             (ESlotType.Feet,    "Feet"),
             (ESlotType.Neck,    "Neck"),
@@ -63,9 +63,9 @@ namespace SurvivalHack
         {
             if (item != null)
             {
-                var ecs = item.Get<EquippableComponent>();
+                var ecs = item.Get<EquippableComponent>().ToArray();
 
-                if (!ecs.Any(ec => ec.SlotType != SlotNames[slot].type))
+                if (!ecs.Any(ec => ec.FitsIn(SlotNames[slot].type)))
                     return false; // Can't equip said item in said slot
             }
 
@@ -92,19 +92,21 @@ namespace SurvivalHack
 
     public class EquippableComponent : IComponent
     {
-        public ESlotType SlotType;
+        private ESlotType _slotType;
 
         public EquippableComponent(ESlotType slotType)
         {
-            SlotType = slotType;
+            _slotType = slotType;
         }
 
         public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
-        public string Describe() => $"Can be equipped in {SlotType}";
+        public string Describe() => $"Can be equipped in {_slotType}";
+
+        internal bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
     }
 
     public enum ESlotType
     {
-        Hand, Offhand, Ranged, Head, Body, Legs, Gloves, Feet, Neck, Ring
+        Hand, Offhand, Ranged, Head, Body, Gloves, Feet, Neck, Ring
     }
 }

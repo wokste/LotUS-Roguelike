@@ -48,6 +48,12 @@ namespace SurvivalHack.Combat
         public float CritChance = 0.02f;
         public int DamageReduction = 1;
 
+        public Armour(int damageReduction, float critChance)
+        {
+            DamageReduction = damageReduction;
+            CritChance = critChance;
+        }
+
         public bool Mutate(Attack attack)
         {
             // TODO: Armour should protect only a part of the body.
