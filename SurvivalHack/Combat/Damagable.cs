@@ -20,7 +20,7 @@ namespace SurvivalHack.Combat
 
             if (Health.Current == 0)
             {
-                self.Destroy();
+                self.Destroy(null);
 
                 Message.Write($"{self.Name} died", self.Move?.Pos, Color.Red);
             }

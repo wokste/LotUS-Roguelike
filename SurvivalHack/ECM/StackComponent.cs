@@ -16,14 +16,14 @@
         public static int GenMergeId(int count)
         {
             var ret = MergeIdAutoIncrement;
-            ret += count;
+            MergeIdAutoIncrement += count;
             return ret;
         }
 
         internal bool Consume()
         {
             Count--;
-            return (Count == 0);
+            return (Count <= 0);
         }
 
         public bool Use(Entity user, Entity item, Entity target, EUseMessage filter) => false;

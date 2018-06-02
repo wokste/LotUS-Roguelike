@@ -42,9 +42,7 @@ namespace SurvivalHack
         {
             foreach (var c in Components)
             {
-                var c2 = c as T;
-
-                if (c2 != null)
+                if (c is T c2)
                     yield return c2;
             }
         }
@@ -88,17 +86,17 @@ namespace SurvivalHack
 
             if (change)
                 if (item.GetOne<StackComponent>()?.Consume() ?? false)
-                    item.Destroy();
+                    item.Destroy(this);
 
             return change;
         }
 
-        public void Destroy()
+        public void Destroy(Entity owner)
         {
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
 
-            GetOne<Inventory>()?.Remove(this);
+            owner?.GetOne<Inventory>()?.Remove(this); // ERROR
             Move?.Unbind(this);
         }
 
