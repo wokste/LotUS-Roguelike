@@ -264,7 +264,7 @@ namespace SurvivalHack.Mapgen
             var c2 = _rooms[j].Center;
 
             var pn = new PerlinNoise(1337);
-            var aStar = new AStar<Tile>(_map.TileMap, (Vec v, Tile t) => t.MineCost, false);
+            var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.TileMap[v].MineCost, false);
             var path = aStar.Run(c1, c2);
 
             var floor = TileList.Get("floor");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HackConsole.Algo
 {
-    public class AStar<T>
+    public class AStar
     {
         readonly Dictionary<Vec, GridNode> _openList = new Dictionary<Vec, GridNode>();
         readonly Dictionary<Vec, GridNode> _closedList = new Dictionary<Vec, GridNode>();
@@ -14,17 +14,17 @@ namespace HackConsole.Algo
         readonly Func<Vec, float> _distFunc;
         readonly List<Vec> _neighbors;
 
-        readonly Grid<T> _grid;
-        readonly Func<Vec, T, float> _costFunc;
+        readonly Vec _size;
+        readonly Func<Vec, float> _costFunc;
 
         /// <summary>
         /// Creates an AStar grid.
         /// </summary>
-        /// <param name="grid">The map</param>
+        /// <param name="size">The size of the map</param>
         /// <param name="costFunc">Can determine the cost of a grid square. The lambda should return values in [1,inf], where 1 and inf are the most ideal for fast execution.</param>
         /// <param name="acceptDiagonals">true if you should be able to move diagonally. False otherwise. Diagonals cost x1.4 if allowed. </param>
-        public AStar(Grid<T> grid, Func<Vec, T, float> costFunc, bool acceptDiagonals) {
-            _grid = grid;
+        public AStar(Vec size, Func<Vec, float> costFunc, bool acceptDiagonals) {
+            _size = size;
             _costFunc = costFunc;
 
             if (acceptDiagonals)
@@ -57,8 +57,6 @@ namespace HackConsole.Algo
                 Parent = null, Travelled = 0, Dist = _distFunc(source - dest)
             });
 
-            Vec max = _grid.Size;
-
             while (true)
             {
                 if (_openList.Count == 0)
@@ -75,13 +73,13 @@ namespace HackConsole.Algo
                 foreach (Vec v in _neighbors)
                 {
                     Vec nbr = current.Key + v;
-                    if (nbr.X < 0 || nbr.Y < 0 || nbr.X >= _grid.Size.X || nbr.Y >= _grid.Size.Y)
+                    if (nbr.X < 0 || nbr.Y < 0 || nbr.X >= _size.X || nbr.Y >= _size.Y)
                         continue;
 
                     if (_closedList.ContainsKey(nbr))
                         continue;
 
-                    var cost = _costFunc(nbr, _grid[nbr]);
+                    var cost = _costFunc(nbr);
                     if (float.IsInfinity(cost))
                         continue;
 

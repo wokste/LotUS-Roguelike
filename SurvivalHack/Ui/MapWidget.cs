@@ -15,14 +15,25 @@ namespace SurvivalHack.Ui
 
         private Vec _offset;
         private IEnumerable<Vec> _path = null;
-        private AStar<Tile> _aStar;
+        private AStar _aStar;
 
         public MapWidget(Level level, FieldOfView view, Entity following)
         {
             _level = level;
             _view = view;
             _player = following;
-            _aStar = new AStar<Tile>(level.TileMap, (v, t) => ((t.Tag == "floor" || t.Tag == "door") ? 1f : float.PositiveInfinity), true);
+            _aStar = new AStar(level.TileMap.Size, costFunc, true);
+        }
+
+        private float costFunc(Vec v)
+        {
+            if ((_view.Visibility[v] & FieldOfView.FLAG_DISCOVERED) == 0)
+                return float.PositiveInfinity;
+
+            if (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk))
+                return float.PositiveInfinity;
+
+            return 1;
         }
 
         protected override void RenderImpl()

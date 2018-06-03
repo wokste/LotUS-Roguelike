@@ -16,7 +16,7 @@ namespace HackLibTests
         public void AStar_NoDiagonal()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 1 : float.PositiveInfinity, false);
+            var aStar = new AStar(grid.Size, (Vec v) => grid[v] ? 1 : float.PositiveInfinity, false);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 10);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 17);
@@ -27,7 +27,7 @@ namespace HackLibTests
         public void AStar_Diagonally()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 1 : float.PositiveInfinity, true);
+            var aStar = new AStar(grid.Size, (Vec v) => grid[v] ? 1 : float.PositiveInfinity, true);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 7);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 10);
@@ -39,7 +39,7 @@ namespace HackLibTests
         public void AStar_HigherCost()
         {
             var grid = MakeGrid();
-            var aStar = new AStar<bool>(grid, (Vec v, bool b) => b ? 2.5f : 100, true);
+            var aStar = new AStar(grid.Size, (Vec v) => grid[v] ? 2.5f : 100, true);
 
             RunPath(aStar, new Vec(3, 0), new Vec(6, 7), 7);
             RunPath(aStar, new Vec(1, 4), new Vec(8, 4), 10);
@@ -66,7 +66,7 @@ namespace HackLibTests
             return grid;
         }
 
-        void RunPath(AStar<bool> aStar, Vec start, Vec end, int? steps)
+        void RunPath(AStar aStar, Vec start, Vec end, int? steps)
         {
             var path = aStar.Run(start, end);
             if (steps == null)
