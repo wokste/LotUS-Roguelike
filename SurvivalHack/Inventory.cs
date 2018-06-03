@@ -10,17 +10,17 @@ namespace SurvivalHack
     {
         public readonly List<Entity> _items = new List<Entity>();
 
-        public static readonly (ESlotType type, string name)[] SlotNames = new(ESlotType type, string name)[] {
-            (ESlotType.Hand,    "Main Hand"),
-            (ESlotType.Offhand, "Offhand"),
-            (ESlotType.Ranged,  "Ranged"),
-            (ESlotType.Head,    "Head"),
-            (ESlotType.Body,    "Body"),
-            (ESlotType.Gloves,  "Gloves"),
-            (ESlotType.Feet,    "Feet"),
-            (ESlotType.Neck,    "Neck"),
-            (ESlotType.Ring,    "1st Ring"),
-            (ESlotType.Ring,    "2nd Ring"),
+        public static readonly (ESlotType type, string name, char key)[] SlotNames = new(ESlotType type, string name, char key)[] {
+            (ESlotType.Hand,    "Main Hand", 'm'),
+            (ESlotType.Offhand, "Offhand", 'o'),
+            (ESlotType.Ranged,  "Ranged", 'r'),
+            (ESlotType.Head,    "Head", 'h'),
+            (ESlotType.Body,    "Body", 'b'),
+            (ESlotType.Gloves,  "Gloves", 'g'),
+            (ESlotType.Feet,    "Feet", 'f'),
+            (ESlotType.Neck,    "Neck", 'n'),
+            (ESlotType.Ring,    "Ring main hand", 'M'),
+            (ESlotType.Ring,    "Ring offhand", 'O'),
         };
 
         public readonly Entity[] Equipped = new Entity[SlotNames.Length];
