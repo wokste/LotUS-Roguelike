@@ -90,6 +90,10 @@ namespace SurvivalHack
             return (Visibility[pos] & flag) == flag;
         }
 
+        public bool ShouldShow(Entity e) {
+            return Is(e.Move.Pos, FLAG_VISIBLE) || (Is(e.Move.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos));
+        }
+
         /// <summary>
         /// Calculates the visible cells within a cone recursively. Each recursion step is a single column.
         /// </summary>

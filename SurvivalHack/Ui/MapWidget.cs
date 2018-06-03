@@ -52,10 +52,10 @@ namespace SurvivalHack.Ui
         private void RenderCreatures()
         {
             var area = Size + _offset;
-            foreach (var creature in _level.GetEntities(area)) {
-                var p = creature.Move.Pos;
+            foreach (var e in _level.GetEntities(area)) {
+                var p = e.Move.Pos;
                 
-                if ((_view.Visibility[p] & FieldOfView.FLAG_VISIBLE) == 0)
+                if (!_view.ShouldShow(e))
                     continue;
 
                 p -= _offset;
@@ -63,7 +63,7 @@ namespace SurvivalHack.Ui
                 if (!Size.Contains(p))
                     continue;
 
-                WindowData.Data[p] = creature.Symbol;
+                WindowData.Data[p] = e.Symbol;
             }
         }
 
@@ -114,15 +114,19 @@ namespace SurvivalHack.Ui
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var absPos = mousePos + _offset;
-            if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0)
+            if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0 || _player.Move == null)
             {
                 OnSelected?.Invoke(null);
+                _path = null;
+                Dirty = true;
+                return;
             }
 
             var list = _level.GetEntity(absPos);
 
             foreach (var e in list)
-                OnSelected?.Invoke(e);
+                if (_view.ShouldShow(e))
+                    OnSelected?.Invoke(e);
 
             _path = _aStar.Run(_player.Move.Pos, absPos);
             Dirty = true;
