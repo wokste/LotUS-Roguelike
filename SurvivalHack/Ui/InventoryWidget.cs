@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.Ui
 {
-    class InventoryWidget : Widget, IKeyEventSuscriber, IPopupWidget
+    class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         private Entity _player;
         private Inventory _inventory;
@@ -47,7 +47,7 @@ namespace SurvivalHack.Ui
 
             if (keyCode == (char)13) // Enter
             {
-                ShowEquipMenu(_selectedRow);
+                ShowEquipMenu();
             }
             else if (keyCode == (char)27) // Escape
             {
@@ -60,27 +60,28 @@ namespace SurvivalHack.Ui
                     var (type, name, key) = Inventory.SlotNames[y];
                     if (key == keyCode)
                     {
-                        ShowEquipMenu(y);
+                        _selectedRow = y;
+                        ShowEquipMenu();
                         return;
                     }
                 }
             }
         }
 
-        private void ShowEquipMenu(int index)
+        private void ShowEquipMenu()
         {
-            _inventory.Equip(_player, null, index);
+            _inventory.Equip(_player, null, _selectedRow);
             var o = new OptionWidget<Entity>
             {
                 DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
                 OnSelect = i =>
                 {
-                    _inventory.Equip(_player, i, index);
+                    _inventory.Equip(_player, i, _selectedRow);
                     // TODO: Nextturn
 
                     Dirty = true;
                 },
-                Question = "Wield item",
+                Question = "Wield " + Inventory.SlotNames[_selectedRow].name,
                 Set = _inventory._items
             };
             _window.PopupStack.Push(o);
@@ -109,6 +110,23 @@ namespace SurvivalHack.Ui
                 }
             }
             Dirty = false;
+        }
+
+        public void OnMouseEvent(Vec mousePos, EventFlags flags)
+        {
+            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventPress))
+                ShowEquipMenu();
+        }
+
+        public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        {
+            var relMousePos = mousePos - Size.TopLeft;
+            _selectedRow = relMousePos.Y;
+            Dirty = true;
+        }
+
+        public void OnMouseWheel(Vec delta, EventFlags flags)
+        {
         }
     }
 }

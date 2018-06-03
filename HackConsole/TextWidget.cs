@@ -77,11 +77,11 @@ namespace HackConsole
 
         protected abstract void MakeLines();
 
-        public void OnMouseEvent(Vec mousePos, EventFlags flags)
+        public virtual void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
         }
 
-        public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        public virtual void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
         }
 

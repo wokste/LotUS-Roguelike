@@ -4,7 +4,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    internal class OptionWidget<T> : TextWidget, IKeyEventSuscriber, IPopupWidget
+    internal class OptionWidget<T> : TextWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         public Action<T> OnSelect;
         public List<T> Set;
@@ -72,6 +72,25 @@ namespace SurvivalHack.Ui
 
             Lines.Clear();
             MakeLines();
+        }
+
+
+        public override void OnMouseEvent(Vec mousePos, EventFlags flags)
+        {
+            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventPress))
+                if (Use(_selectedIndex))
+                    OnClose?.Invoke();
+        }
+
+        public override void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        {
+            var relMousePos = mousePos - Size.TopLeft;
+            _selectedIndex = relMousePos.Y - 1;
+
+            Lines.Clear();
+            MakeLines();
+
+            Dirty = true;
         }
     }
 }

@@ -5,16 +5,6 @@ namespace SurvivalHack.Factory
 {
     class WeaponFactory : IEntityFactory
     {
-        (string name, Range damage, string tags)[] WeaponTypes = new(string name, Range damage, string tags)[]
-        {
-            ("Dagger", new Range("4-6"), "piercing" ),
-            ("Shortsword", new Range("5-7"), "slashing, piercing" ),
-            ("Longsword", new Range("6-9"), "shashing, piercing" ),
-            ("Handaxe", new Range("6-8"), "slashing, hooking" ),
-            ("Spear", new Range("5-9"), "piercing, range" ),
-            ("Mace", new Range("5-7"), "bludgeoing" ),
-        };
-
         RandomTable<string> BasePropabilities;
 
         public WeaponFactory() {
@@ -54,7 +44,7 @@ namespace SurvivalHack.Factory
             {
                 case "dagger":
                     {
-                        var e = new Entity('|', "Dagger", EEntityFlag.Pickable);
+                        var e = new Entity('\\', "Dagger", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
