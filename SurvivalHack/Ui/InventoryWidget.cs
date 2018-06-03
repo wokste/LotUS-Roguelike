@@ -71,19 +71,12 @@ namespace SurvivalHack.Ui
         private void ShowEquipMenu()
         {
             _inventory.Equip(_player, null, _selectedRow);
-            var o = new OptionWidget<Entity>
-            {
-                DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
-                OnSelect = i =>
-                {
-                    _inventory.Equip(_player, i, _selectedRow);
-                    // TODO: Nextturn
+            var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _inventory._items, i => {
+                _inventory.Equip(_player, i, _selectedRow);
+                // TODO: Nextturn
 
-                    Dirty = true;
-                },
-                Question = "Wield " + Inventory.SlotNames[_selectedRow].name,
-                Set = _inventory._items
-            };
+                Dirty = true;
+            });
             _window.PopupStack.Push(o);
         }
 
@@ -109,7 +102,6 @@ namespace SurvivalHack.Ui
                     Print(new Vec(x, y), item.Name, Color.White); // TODO: What if the length is too long
                 }
             }
-            Dirty = false;
         }
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)

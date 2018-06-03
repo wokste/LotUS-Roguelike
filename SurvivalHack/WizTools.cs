@@ -12,19 +12,19 @@ namespace SurvivalHack
 
         public static void Init() {
             Entity entity;
-            entity = new Entity('\\', "Reveal Map", EEntityFlag.Pickable);
+            entity = new Entity('w', "Reveal Map", EEntityFlag.Pickable);
             entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, EUseMessage.Cast));
             Tools.Add(entity);
 
-            entity = new Entity('\\', "Discover Map - scroll?", EEntityFlag.Pickable);
+            entity = new Entity('w', "Discover Map - scroll?", EEntityFlag.Pickable);
             entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, EUseMessage.Cast));
             Tools.Add(entity);
 
-            entity = new Entity('\\', "Genocide", EEntityFlag.Pickable);
+            entity = new Entity('w', "Genocide", EEntityFlag.Pickable);
             entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, EUseMessage.Cast));
             Tools.Add(entity);
 
-            entity = new Entity('\\', "Heal", EEntityFlag.Pickable);
+            entity = new Entity('w', "Heal", EEntityFlag.Pickable);
             entity.Add(new HealComponent(9001, 0, EUseMessage.Cast));
             Tools.Add(entity);
         }

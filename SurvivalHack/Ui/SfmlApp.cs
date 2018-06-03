@@ -123,33 +123,10 @@ namespace SurvivalHack.Ui
             {
                 case 'd':
                     {
-                        var o = new OptionWidget<Entity>
-                        {
-                            DesiredSize = new Rect(new Vec(), new Vec(25,25) ),
-                            OnSelect = i =>
-                            {
-                                if (_player.Event(i, _player, ECM.EUseMessage.Drink))
-                                    NextTurn();
-                            },
-                            Question = "Drink item",
-                            Set = _player.GetOne<Inventory>()._items
-                        };
-                        _window.PopupStack.Push(o);
-                    }
-                    break;
-                case 'r':
-                    {
-                        var o = new OptionWidget<Entity>
-                        {
-                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
-                            OnSelect = i =>
-                            {
-                                if (_player.Event(i, _player, ECM.EUseMessage.Cast))
-                                    NextTurn();
-                            },
-                            Question = "Read item",
-                            Set = _player.GetOne<Inventory>()._items
-                        };
+                        var o = new OptionWidget($"Drink", _player.GetOne<Inventory>()._items, i => {
+                            if (_player.Event(i, _player, ECM.EUseMessage.Drink))
+                                NextTurn();
+                        });
                         _window.PopupStack.Push(o);
                     }
                     break;
@@ -185,17 +162,9 @@ namespace SurvivalHack.Ui
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear
                     {
-                        var o = new OptionWidget<Entity>
-                        {
-                            DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
-                            OnSelect = i =>
-                            {
-                                if (_player.Event(i, _player, ECM.EUseMessage.Cast))
-                                    NextTurn();
-                            },
-                            Question = "Wizard Tools",
-                            Set = WizTools.Tools._items
-                        };
+                        var o = new OptionWidget($"Wizard tools", WizTools.Tools._items, i => {
+                            _player.Event(i, _player, ECM.EUseMessage.Cast);
+                        });
                         _window.PopupStack.Push(o);
                     }
                     break;
