@@ -20,6 +20,7 @@ namespace SurvivalHack.Ui
         {
             _level = level;
             _controller = controller;
+            _controller.OnMove += () => { _path = null; };
             _aStar = new AStar(level.TileMap.Size, CostFunc, true);
         }
 
