@@ -9,18 +9,16 @@ namespace SurvivalHack.Ui
 {
     class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
-        private Entity _player;
-        private Inventory _inventory;
+        TurnController _controller;
         private BaseWindow _window;
         private int _selectedRow = 0;
         private int[] _columnWidth = new int[4];
 
         public Action OnClose { get ; set ; }
         public bool Interrupt => false;
-        public InventoryWidget(Entity player, BaseWindow window)
+        public InventoryWidget(TurnController controller, BaseWindow window)
         {
-            _player = player;
-            _inventory = player.GetOne<Inventory>();
+            _controller = controller;
 
             _columnWidth[0] = 1;
             _columnWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
@@ -70,10 +68,10 @@ namespace SurvivalHack.Ui
 
         private void ShowEquipMenu()
         {
-            _inventory.Equip(_player, null, _selectedRow);
-            var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _inventory._items, i => {
-                _inventory.Equip(_player, i, _selectedRow);
-                // TODO: Nextturn
+            _controller.Inventory.Equip(_controller.Player, null, _selectedRow);
+            var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _controller.Inventory.Items, i => {
+                if (_controller.Inventory.Equip(_controller.Player, i, _selectedRow))
+                    _controller.EndTurn();
 
                 Dirty = true;
             });
@@ -87,7 +85,7 @@ namespace SurvivalHack.Ui
             for (var y = 0; y < Inventory.SlotNames.Length; y++)
             {
                 var (type, name, key) = Inventory.SlotNames[y];
-                var item = _inventory.Equipped[y];
+                var item = _controller.Inventory.Equipped[y];
 
                 var color = (y == _selectedRow) ? Color.White : Color.Gray;
                 Print(new Vec(2, y), name, color);

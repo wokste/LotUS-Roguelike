@@ -10,7 +10,7 @@ namespace SurvivalHack.Ui
         public List<Entity> Set;
         public string Question;
         private int _selectedIndex = 0;
-        private int _columns = 1;
+        //private int _columns = 1;
         private const int COLUMN_WIDTH = 22;
 
         public Action OnClose { get; set; }
@@ -21,7 +21,7 @@ namespace SurvivalHack.Ui
             Question = question;
             Set = set;
             OnSelect = onSelect;
-            _columns = 1;
+            //_columns = 1;
 
             DesiredSize = new Rect(0, 0, COLUMN_WIDTH, Set.Count + 1);
         }

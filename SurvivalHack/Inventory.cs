@@ -8,7 +8,7 @@ namespace SurvivalHack
 {
     public class Inventory : IComponent
     {
-        public readonly List<Entity> _items = new List<Entity>();
+        public readonly List<Entity> Items = new List<Entity>();
 
         public static readonly (ESlotType type, string name, char key)[] SlotNames = new(ESlotType type, string name, char key)[] {
             (ESlotType.Hand,    "Main Hand", 'm'),
@@ -30,7 +30,7 @@ namespace SurvivalHack
             var stack1 = entity.GetOne<StackComponent>();
             if (stack1 != null)
             {
-                foreach (var i in _items)
+                foreach (var i in Items)
                 {
                     var stack2 = i.GetOne<StackComponent>();
 
@@ -46,11 +46,11 @@ namespace SurvivalHack
             }
 
             Message.Write($"You aquired {entity}", null, Color.Green);
-            _items.Add(entity);
+            Items.Add(entity);
         }
 
         public void Remove(Entity entity) {
-            _items.Remove(entity);
+            Items.Remove(entity);
 
             for (int i = 0; i < Equipped.Length; ++i)
             {

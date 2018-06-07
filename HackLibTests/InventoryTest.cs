@@ -11,7 +11,7 @@ namespace HackLibTests
 
         public int? FindItem(Inventory inv, int mergeId)
         {
-            var item = inv._items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().MergeId == mergeId);
+            var item = inv.Items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().MergeId == mergeId);
             if (item == null)
                 return null;
 

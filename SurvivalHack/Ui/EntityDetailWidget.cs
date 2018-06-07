@@ -5,13 +5,15 @@ namespace SurvivalHack.Ui
 {
     internal class EntityDetailWidget : Widget
     {
-        private readonly Entity _entity;
+        private readonly TurnController _controller;
 
         private static readonly char[] Gradient = new[] {' ', (char) 0xB0, (char) 0xB1, (char) 0xB2};
 
-        public EntityDetailWidget(Entity entity)
+        public EntityDetailWidget(TurnController controller)
         {
-            _entity = entity;
+            _controller = controller;
+
+            controller.OnTurnEnd += RenderImpl;
         }
 
         private void PrintBar(string name, int y, Bar bar)
@@ -30,12 +32,12 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
-            PrintBar("HP:", y++, _entity.GetOne<Combat.Damagable>().Health);
+            PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>().Health);
 
             y++;
             Print(new Vec(0, y++), "Inventory", Color.White);
 
-            foreach (var inv in _entity.GetOne<Inventory>()._items)
+            foreach (var inv in _controller.Player.GetOne<Inventory>().Items)
             {
                 Print(new Vec(0, y++), $"- {inv}", Color.Gray);
             }

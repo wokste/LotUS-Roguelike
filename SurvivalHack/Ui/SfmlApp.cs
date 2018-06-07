@@ -7,7 +7,7 @@ namespace SurvivalHack.Ui
     {
         private Game _game;
         private readonly BaseWindow _window;
-        private Entity _player;
+        private TurnController _controller;
 
         private static void Main(string[] args)
         {
@@ -20,7 +20,7 @@ namespace SurvivalHack.Ui
             InitGame();
             _window = InitGui();
 
-            Message.Write("You wake up in an unknown world.", _player.Move.Pos, Color.White);
+            Message.Write("You wake up in an unknown world.", null, Color.White);
         }
 
         private void InitGame()
@@ -28,27 +28,18 @@ namespace SurvivalHack.Ui
             _game = new Game();
             _game.Init();
 
-            _player = new Entity((char)2, "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
-            {
-                Components = new List<ECM.IComponent>()
-                {
-                    new Combat.MeleeWeapon(2, Combat.EDamageType.Bludgeoing),
-                    new Combat.Damagable(100)
-                },
-                Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
-                Flags = TerrainFlag.Walk,
+            _controller = new TurnController(_game);
+            _controller.OnTurnEnd += () => {
+                _game.MonsterTurn();
+                WindowData.ForceUpdate = true;
             };
-            var inventory = new Inventory();
-
-            inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));
-            inventory.Equip(_player, inventory._items[0], 0);
-
-            _player.Add(inventory);
-            _player.OnDestroy += PlayerDied;
-
-            var pos = _game.Level.GetEmptyLocation();
-            ECM.MoveComponent.Bind(_player, _game.Level, pos);
-            _player.Add(new FieldOfView(_player.Move));
+            _controller.OnGameOver += () => {
+                var o = new GameOverWidget
+                {
+                    DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                };
+                _window.PopupStack.Push(o);
+            };
         }
 
         private BaseWindow InitGui()
@@ -58,7 +49,7 @@ namespace SurvivalHack.Ui
             Message.OnMessage += (m) =>
             {
                 var pos2 = m.Pos ?? Vec.Zero;
-                if (_player == null || m.Pos == null || _player.GetOne<FieldOfView>().Is(pos2, FieldOfView.FLAG_VISIBLE))
+                if (_controller.Player == null || m.Pos == null || _controller.Player.GetOne<FieldOfView>().Is(pos2, FieldOfView.FLAG_VISIBLE))
                 {
                     consoleWidget.AddMessage(m);
                 }
@@ -69,14 +60,14 @@ namespace SurvivalHack.Ui
             var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
             window.Widgets.Add(infoWidget);
 
-            var characterWidget = new EntityDetailWidget(_player)
+            var characterWidget = new EntityDetailWidget(_controller)
             {
                 DesiredSize = { Width = 16 },
                 Docking = Docking.Right
             };
             window.Widgets.Add(characterWidget);
 
-            var worldWidget = new MapWidget(_game.Level, _player.GetOne<FieldOfView>(), _player)
+            var worldWidget = new MapWidget(_game.Level, _controller)
             {
                 Docking = Docking.Fill
             };
@@ -86,24 +77,6 @@ namespace SurvivalHack.Ui
             worldWidget.OnSelected += c => { infoWidget.Item = c; };
 
             return window;
-        }
-
-        private void PlayerDied(Entity obj)
-        {
-            var o = new GameOverWidget
-            {
-                DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
-            };
-            _window.PopupStack.Push(o);
-            _player = null;
-        }
-
-        private void NextTurn()
-        {
-            _game.MonsterTurn();
-
-            // TODO: Update only part of the UI
-            WindowData.ForceUpdate = true;
         }
 
         public void Run()
@@ -123,34 +96,34 @@ namespace SurvivalHack.Ui
             {
                 case 'd':
                     {
-                        var o = new OptionWidget($"Drink", _player.GetOne<Inventory>()._items, i => {
-                            if (_player.Event(i, _player, ECM.EUseMessage.Drink))
-                                NextTurn();
+                        var o = new OptionWidget($"Drink", _controller.Player.GetOne<Inventory>().Items, i => {
+                            if (_controller.Player.Event(i, _controller.Player, ECM.EUseMessage.Drink))
+                                _controller.EndTurn();
                         });
                         _window.PopupStack.Push(o);
                     }
                     break;
                 case 'w':
                     {
-                        var o = new InventoryWidget(_player, _window);
+                        var o = new InventoryWidget(_controller, _window);
                         _window.PopupStack.Push(o);
                     }
                     break;
                 case 'g':
                     {
-                        var pos = _player.Move.Pos;
+                        var pos = _controller.Player.Move.Pos;
                         bool didTurn = false;
                         foreach (var i in _game.Level.GetEntities(new Rect(pos, Vec.One)))
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
                                 i.Move.Unbind(i);
-                                _player.GetOne<Inventory>().Add(i);
+                                _controller.Player.GetOne<Inventory>().Add(i);
                             }
                         }
 
                         if (didTurn)
-                            NextTurn();
+                            _controller.EndTurn();
                     }
                     break;
                 case 'f':
@@ -162,8 +135,8 @@ namespace SurvivalHack.Ui
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear
                     {
-                        var o = new OptionWidget($"Wizard tools", WizTools.Tools._items, i => {
-                            _player.Event(i, _player, ECM.EUseMessage.Cast);
+                        var o = new OptionWidget($"Wizard tools", WizTools.Tools.Items, i => {
+                            _controller.Player.Event(i, _controller.Player, ECM.EUseMessage.Cast);
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -176,27 +149,24 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
-            var actPoint = _player.Move.Pos + move;
+            var actPoint = _controller.Player.Move.Pos + move;
 
             foreach (var enemy in _game.Level.GetEntity(actPoint))
             {
                 if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
-                    (var weapon, var weaponComponent) = _player.GetWeapon(enemy);
+                    (var weapon, var weaponComponent) = _controller.Player.GetWeapon(enemy);
 
                     if (weaponComponent != null)
                     {
-                        weaponComponent.Attack(_player, weapon, enemy);
-                        NextTurn();
+                        weaponComponent.Attack(_controller.Player, weapon, enemy);
+                        _controller.EndTurn();
                     }
                     return;
                 }
             }
 
-            if (_player.Move.Move(_player, move))
-            {
-                NextTurn();
-            }
+            _controller.Move(move);
         }
     }
 }

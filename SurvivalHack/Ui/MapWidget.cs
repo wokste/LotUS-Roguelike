@@ -9,25 +9,23 @@ namespace SurvivalHack.Ui
     internal class MapWidget : Widget, IMouseEventSuscriber
     {
         private readonly Level _level;
-        private readonly FieldOfView _view;
-        private readonly Entity _player;
+        private readonly TurnController _controller;
         private readonly Color _pathColor = new Color(0, 128, 255, 128);
 
         private Vec _offset;
         private IEnumerable<Vec> _path = null;
         private AStar _aStar;
 
-        public MapWidget(Level level, FieldOfView view, Entity following)
+        public MapWidget(Level level, TurnController controller)
         {
             _level = level;
-            _view = view;
-            _player = following;
-            _aStar = new AStar(level.TileMap.Size, costFunc, true);
+            _controller = controller;
+            _aStar = new AStar(level.TileMap.Size, CostFunc, true);
         }
 
-        private float costFunc(Vec v)
+        private float CostFunc(Vec v)
         {
-            if ((_view.Visibility[v] & FieldOfView.FLAG_DISCOVERED) == 0)
+            if ((_controller.FoV.Visibility[v] & FieldOfView.FLAG_DISCOVERED) == 0)
                 return float.PositiveInfinity;
 
             if (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk))
@@ -38,8 +36,8 @@ namespace SurvivalHack.Ui
 
         protected override void RenderImpl()
         {
-            if (!_player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
-                _offset = _player.Move.Pos - Size.Center;
+            if (!_controller.Player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
+                _offset = _controller.Player.Move.Pos - Size.Center;
             
             Clear();
             RenderGrid();
@@ -55,7 +53,7 @@ namespace SurvivalHack.Ui
             foreach (var e in _level.GetEntities(area)) {
                 var p = e.Move.Pos;
                 
-                if (!_view.ShouldShow(e))
+                if (!_controller.FoV.ShouldShow(e))
                     continue;
 
                 p -= _offset;
@@ -94,7 +92,7 @@ namespace SurvivalHack.Ui
                 if (!_level.InBoundary(v + _offset))
                     continue;
 
-                var visibility = _view.Visibility[v + _offset];
+                var visibility = _controller.FoV.Visibility[v + _offset];
 
                 if (visibility == 0)
                     continue;
@@ -114,7 +112,7 @@ namespace SurvivalHack.Ui
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var absPos = mousePos + _offset;
-            if (!_level.InBoundary(absPos) || _view.Visibility[absPos] == 0 || _player.Move == null)
+            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.Player.Move == null)
             {
                 OnSelected?.Invoke(null);
                 _path = null;
@@ -125,10 +123,10 @@ namespace SurvivalHack.Ui
             var list = _level.GetEntity(absPos);
 
             foreach (var e in list)
-                if (_view.ShouldShow(e))
+                if (_controller.FoV.ShouldShow(e))
                     OnSelected?.Invoke(e);
 
-            _path = _aStar.Run(_player.Move.Pos, absPos);
+            _path = _aStar.Run(_controller.Player.Move.Pos, absPos);
             Dirty = true;
         }
 

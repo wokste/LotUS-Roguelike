@@ -68,13 +68,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />
     <Compile Include="Combat\Damagable.cs" />
     <Compile Include="Combat\Weapons.cs" />
     <Compile Include="Bar.cs" />
-    <Compile Include="AI\Attitude.cs" />
-    <Compile Include="AI\AiActor.cs" />
+    <Compile Include="Ai\Attitude.cs" />
+    <Compile Include="Ai\AiActor.cs" />
     <Compile Include="ECM\IComponent.cs" />
     <Compile Include="ECM\StackComponent.cs" />
     <Compile Include="Entity.cs" />
