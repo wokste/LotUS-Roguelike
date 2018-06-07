@@ -40,7 +40,7 @@ namespace SurvivalHack.Combat
 
         public bool InRange(Entity attacker, Entity defender)
         {
-            return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 2;
+            return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
         }
 
         public string Describe() => $"Melee attack deals {Damage} damage";
