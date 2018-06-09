@@ -87,6 +87,8 @@ namespace SurvivalHack.Ui
         private void Update()
         {
             _game.Update(5);
+
+            _controller.DoAutoAction();
         }
 
         public void OnKeyPress(char keyCode, EventFlags flags)

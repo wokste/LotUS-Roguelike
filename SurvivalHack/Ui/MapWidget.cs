@@ -110,8 +110,6 @@ namespace SurvivalHack.Ui
             if (flags.HasFlag(EventFlags.LeftButton & EventFlags.MouseEventPress) && _path != null)
             {
                 _controller.Path = _path.ToList();
-
-                while (_controller.DoAutoAction()) { }
             }
         }
 
