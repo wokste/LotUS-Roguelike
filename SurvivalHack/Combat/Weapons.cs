@@ -1,7 +1,5 @@
-﻿using HackConsole;
-using HackConsole.Algo;
+﻿using HackConsole.Algo;
 using SurvivalHack.ECM;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -75,7 +73,7 @@ namespace SurvivalHack.Combat
         public bool InRange(Entity attacker, Entity defender)
         {
             var level = attacker.Move.Level;
-            var path = Bresenham.Run(attacker.Move.Pos, defender.Move.Pos);
+            var path = Line.Run(attacker.Move.Pos, defender.Move.Pos);
             foreach (var v in path)
                 if (!level.HasFlag(v, TerrainFlag.Sight))
                     return false;

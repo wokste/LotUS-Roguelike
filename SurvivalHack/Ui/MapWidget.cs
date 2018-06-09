@@ -107,7 +107,12 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
+            if (flags.HasFlag(EventFlags.LeftButton & EventFlags.MouseEventPress) && _path != null)
+            {
+                _controller.Path = _path.ToList();
 
+                while (_controller.DoAutoAction()) { }
+            }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)

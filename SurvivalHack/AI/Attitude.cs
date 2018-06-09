@@ -63,7 +63,7 @@ namespace SurvivalHack.Ai
                 return;
 
             var level = self.Move.Level;
-            var path = Bresenham.Run(self.Move.Pos, other.Move.Pos);
+            var path = Line.Run(self.Move.Pos, other.Move.Pos);
             foreach (var v in path)
                 if (!level.HasFlag(v, TerrainFlag.Sight))
                     return;

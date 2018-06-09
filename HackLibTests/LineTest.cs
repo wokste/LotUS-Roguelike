@@ -7,10 +7,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HackLibTests
 {
     [TestClass]
-    public class BresenhamTest
+    public class LineTest
     {
         [TestMethod]
-        public void Brensen_HorVert()
+        public void Line_HorVert()
         {
             RunLine(new Vec(3, 3), new Vec(3, 6), 3);
             RunLine(new Vec(3, 3), new Vec(6, 3), 3);
@@ -19,7 +19,7 @@ namespace HackLibTests
         }
 
         [TestMethod]
-        public void Brensen_Diagonal()
+        public void Line_Diagonal()
         {
             RunLine(new Vec(3, 3), new Vec(6, 6), 3);
             RunLine(new Vec(3, 3), new Vec(6, 0), 3);
@@ -28,12 +28,12 @@ namespace HackLibTests
         }
 
         [TestMethod]
-        public void Brensen_Specific()
+        public void Line_Specific()
         {
             var start = new Vec(3, 3);
             var end = new Vec(4, 6);
 
-            var path = Bresenham.Run(start, end).ToArray();
+            var path = Line.Run(start, end).ToArray();
             Assert.AreEqual(path.Length, 4);
             Assert.AreEqual(path[0], new Vec(3, 3));
             Assert.AreEqual(path[1], new Vec(3, 4));
@@ -43,7 +43,7 @@ namespace HackLibTests
 
         void RunLine(Vec start, Vec end, int steps)
         {
-            var path = Bresenham.Run(start, end).ToArray();
+            var path = Line.Run(start, end).ToArray();
             Assert.AreEqual(path.First(), start);
             Assert.AreEqual(path.Last(), end);
             Assert.AreEqual(steps, path.Length - 1);

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -53,22 +52,34 @@ namespace SurvivalHack
             Player.Add(FoV);
         }
 
-        public void EndTurn() {
+        public void EndTurn(bool interrupt = true) {
+            // Make sure that auto turns will not be executed anymore after a manual turn.
+            if (interrupt)
+                Path = null;
+
             OnTurnEnd?.Invoke();
         }
 
-        public void PlayerMoved()
-        {
-            OnMove?.Invoke();
-        }
-
-        public void Move(Vec move)
+        public void Move(Vec move, bool interrupt = true)
         {
             if (Player.Move.Move(Player, move))
             {
-                OnTurnEnd?.Invoke();
                 OnMove?.Invoke();
+                EndTurn(interrupt);
             }
+        }
+
+        public bool DoAutoAction()
+        {
+            if (Path == null || Path.Count <= 1)
+                return false;
+
+            Debug.Assert(Player.Move.Pos == Path.First());
+            
+            Path.RemoveAt(0);
+            Move(Path.First() - Player.Move.Pos, false);
+
+            return true;
         }
     }
 }

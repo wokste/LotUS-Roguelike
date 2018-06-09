@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algo\AStar.cs" />
-    <Compile Include="Algo\Bresenham.cs" />
+    <Compile Include="Algo\Line.cs" />
     <Compile Include="BaseWindow.cs" />
     <Compile Include="BorderedWidget.cs" />
     <Compile Include="Dir.cs" />

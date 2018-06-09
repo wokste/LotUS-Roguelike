@@ -1,5 +1,4 @@
 ﻿using HackConsole;
-using System.Collections.Generic;
 
 namespace SurvivalHack.Ui
 {
