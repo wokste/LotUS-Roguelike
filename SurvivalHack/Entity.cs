@@ -77,17 +77,18 @@ namespace SurvivalHack
             Components.Add(component);
         }
 
-        public bool Event(Entity item, Entity target, EUseMessage message)
+        public bool Event(Entity item, Entity target, EUseMessage message, IEnumerable<UseFunc> functions = null)
         {
-            var funcs = new List<UseFunc>();
+            var funcs = new List<UseFunc>(functions ?? Enumerable.Empty<UseFunc>());
             funcs.AddRange(item.Components.SelectMany(c => c.GetActions(message, EUseSource.This)));
-
-            // TODO: Add things to funcs from EUseSource.Target and especially EUseSource.User
 
             if (!funcs.Any(f => f.Order == EUseOrder.Event))
             {
                 return false;
             }
+
+            funcs.AddRange(target.Components.SelectMany(c => c.GetActions(message, EUseSource.Target)));
+            funcs.AddRange(this.Components.SelectMany(c => c.GetActions(message, EUseSource.User)));
 
             if (funcs.Any(f => f.Order == EUseOrder.Interrupt))
             {

@@ -43,6 +43,10 @@ namespace SurvivalHack.ECM
     {
         Drink,       // Mainly for potions
         Cast,        // Spells, scrolls, etc.
+        Threaten,    // Do an attack.
+        Attack,      // Being attacked obviously.
+        Damage,      // Successfully hit with an attack
+
         //Attack,      // Hitting someone. Vampiric daggers etc.
         //BumpAttack,  // Used in bump attacks etc.
         //Kill,      // Killing someone. E.g. 

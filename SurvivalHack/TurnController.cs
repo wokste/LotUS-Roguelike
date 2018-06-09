@@ -18,8 +18,6 @@ namespace SurvivalHack
         public Action OnTurnEnd;
         public Action OnMove;
         public Action OnGameOver;
-        
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
 
         public TurnController(Game game) {
             var pos = game.Level.GetEmptyLocation();
@@ -55,7 +53,7 @@ namespace SurvivalHack
         public void EndTurn(bool interrupt = true) {
             // Make sure that auto turns will not be executed anymore after a manual turn.
             if (interrupt)
-                Path = null;
+                Interrupt();
 
             OnTurnEnd?.Invoke();
         }
@@ -80,6 +78,17 @@ namespace SurvivalHack
             Move(Path.First() - Player.Move.Pos, false);
 
             return true;
+        }
+
+        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+        {
+            if (source == EUseSource.Target && (filter == EUseMessage.Attack || filter == EUseMessage.Threaten))
+                yield return new UseFunc((a, b, c) => Interrupt());
+        }
+
+        private void Interrupt()
+        {
+            Path = null;
         }
     }
 }

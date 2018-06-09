@@ -1,5 +1,7 @@
 ﻿using HackConsole;
+using SurvivalHack.ECM;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Combat
@@ -15,13 +17,17 @@ namespace SurvivalHack.Combat
 
         public void Fight(Entity attacker, Entity weapon, Entity defender)
         {
-            // TODO: Choose attack location
-            var damagable = defender.GetOne<Damagable>();
-            //DamageLoc = damagable.GenerateLoc();
-            DamageLoc = Game.Rnd.NextDouble() < 0.33 ? EDamageLocation.Head : EDamageLocation.Body;
             Attacker = attacker;
             Defender = defender;
+            DamageLoc = Game.Rnd.NextDouble() < 0.33 ? EDamageLocation.Head : EDamageLocation.Body;
 
+            attacker.Event(weapon, defender, ECM.EUseMessage.Attack, new[] {
+                new UseFunc(ToHitRoll)
+            });
+        }
+
+        private void ToHitRoll(Entity attacker, Entity weapon, Entity defender)
+        {
             // Collect all items that mutate damage, sorted by priority (highest to lowest)
             var defenderItems = defender.ListSubEntities().SelectMany(e => e.Get<IDamageMutator>().Select(m => (Entity: e, Mututor: m)));
             defenderItems.OrderBy(p => -p.Mututor.Priority);
@@ -33,15 +39,18 @@ namespace SurvivalHack.Combat
                     return;
             }
 
-            Message.Write($"{attacker.Name} attacks {defender.Name} for {Damage} damage.", attacker?.Move?.Pos, Color.Orange);
-            damagable.TakeDamage(defender, this);
-
-            // TODO: Post-Effects (poison, hooking, petrification, etc)
-
-            // TODO: Post-attack logging
+            Attacker.Event(weapon, defender, EUseMessage.Damage, new[] {
+                new UseFunc(DamageTarget)
+            });
         }
 
 
+        private void DamageTarget(Entity attacker, Entity weapon, Entity defender)
+        {
+            var damagable = defender.GetOne<Damagable>();
+            Message.Write($"{attacker.Name} attacks {defender.Name} for {Damage} damage.", attacker?.Move?.Pos, Color.Orange);
+            damagable.TakeDamage(defender, this);
+        }
     }
 
     [Flags]
