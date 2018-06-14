@@ -28,12 +28,12 @@ namespace SurvivalHack.Factory
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            Entity e = new Entity('?', "Potion", EEntityFlag.Pickable);
+            Entity e = new Entity('!', "Potion", EEntityFlag.Pickable);
 
             var potionId = info.Rnd.Next(2);
 
             (var colorName, var color) = types[potionId];
-            e.Symbol = new Symbol('?', color);
+            e.Symbol = new Symbol('!', color);
 
             e.Add(new StackComponent(1, potionId + BaseId));
 
