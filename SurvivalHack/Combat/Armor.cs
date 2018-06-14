@@ -6,41 +6,41 @@ using HackConsole;
 
 namespace SurvivalHack.Combat
 {
-    interface IDamageMutator : ECM.IComponent
-    {
-        int Priority { get; }
-        bool Mutate(Attack attack);
-    }
-
-    class Blockable : IDamageMutator
+    class Blockable : ECM.IComponent
     {
         public int Priority { get; set; } = 100;
 
         public float BlockChance = 0.3f;
 
-        public bool Mutate(Attack attack)
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
         {
+            if (message is AttackMessage && (source == EUseSource.Target || source == EUseSource.TargetItem))
+                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+        }
+
+        public void Mutate(UseMessage msg)
+        {
+            AttackMessage attack = (AttackMessage)msg;
+
+            if (attack.State != "hit")
+
             if (Game.Rnd.NextDouble() > BlockChance)
-                return false;
+                return;
 
-            attack.Damage = 0;
+            attack.State = "block"; // TODO: Blocked or parried.
 
-            // TODO: I need to send information on how it is blocked to the log system
+            Message.Write($"{attack.Target} blocks {attack.Self}s attack", attack.Target.Move.Pos, Color.Cyan);
 
-            Message.Write($"{attack.Defender} blocks {attack.Attacker}s attack", attack.Defender.Move.Pos, Color.Cyan);
-
-            return true;
+            return;
         }
 
         public string Describe()
         {
             return $"Has a {BlockChance:%} to block incoming attacks";
         }
-
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
-    class Armour : IDamageMutator
+    class Armour : ECM.IComponent
     {
         public int Priority { get; set; } = 50;
 
@@ -53,28 +53,34 @@ namespace SurvivalHack.Combat
             CritChance = critChance;
         }
 
-        public bool Mutate(Attack attack)
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
         {
+            if (message is DamageMessage && (source == EUseSource.Target || source == EUseSource.TargetItem))
+                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+        }
+
+        public void Mutate(UseMessage msg)
+        {
+            var attack = (DamageMessage)msg;
+
             // TODO: Armour should protect only a part of the body.
 
             if (Game.Rnd.NextDouble() < CritChance)
             {
                 // TODO: Crit messages.
-                return false;
+                return;
             }
 
             var newDamage = Math.Max(attack.Damage - DamageReduction, 0);
-            Message.Write($"{attack.Defender}'s armour reduces the damage of the incoming attack from {attack.Damage} to {newDamage}", attack.Defender.Move.Pos, Color.Cyan);
+            Message.Write($"{attack.Target}'s armour reduces the damage of the incoming attack from {attack.Damage} to {newDamage}", attack.Target.Move.Pos, Color.Cyan);
             attack.Damage = newDamage;
 
-            return true;
+            return;
         }
 
         public string Describe()
         {
             return $"Reduces damage by {DamageReduction}.";
         }
-
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

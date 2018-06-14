@@ -80,10 +80,10 @@ namespace SurvivalHack
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(UseMessage filter, EUseSource source)
         {
-            if (source == EUseSource.Target && (filter == EUseMessage.Attack || filter == EUseMessage.Threaten))
-                yield return new UseFunc((a, b, c) => Interrupt());
+            if (source == EUseSource.Target && (filter is AttackMessage || filter is ThreatenMessage))
+                yield return new UseFunc((m) => Interrupt());
         }
 
         private void Interrupt()

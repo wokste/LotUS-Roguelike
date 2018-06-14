@@ -1,22 +1,84 @@
-﻿using System;
+﻿using SurvivalHack.Combat;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SurvivalHack.ECM
 {
+    public class UseMessage
+    {
+        public Entity Self;
+        public Entity Item;
+        public Entity Target;
+    }
+
+    public class DrinkMessage : UseMessage
+    {
+        public DrinkMessage(Entity self, Entity item)
+        {
+            Self = self;
+            Item = item;
+        }
+    }
+
+    public class CastMessage : UseMessage
+    {
+        public CastMessage(Entity self, Entity item)
+        {
+            Self = self;
+            Item = item;
+        }
+    }
+
+    public class ThreatenMessage : UseMessage
+    {
+        public ThreatenMessage(Entity self, Entity target)
+        {
+            Self = self;
+            Target = target;
+        }
+    }
+
+    public class AttackMessage : UseMessage
+    {
+        internal string State = "hit";
+
+        public AttackMessage(Entity self, Entity weapon, Entity target)
+        {
+            Self = self;
+            Item = weapon;
+            Target = target;
+        }
+    }
+
+    public class DamageMessage : UseMessage
+    {
+        public int Damage;
+        public EDamageType DamageType;
+        public bool Significant => (Damage > 0);
+
+        public DamageMessage(UseMessage prevMessage, int damage, EDamageType damageType)
+        {
+            Self = prevMessage.Self;
+            Item = prevMessage.Item;
+            Target = prevMessage.Target;
+            Damage = damage;
+            DamageType = damageType;
+        }
+    }
+
+
     public interface IComponent
     {
         string Describe();
-
-        //bool Use(Entity user, Entity item, Entity target, EUseMessage filter);
-
-        IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source);
+        IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source);
     }
 
     public struct UseFunc {
         public EUseOrder Order;
-        public Action<Entity, Entity, Entity> Action;
+        public Action<UseMessage> Action;
 
-        public UseFunc(Action<Entity, Entity, Entity> action, EUseOrder order = EUseOrder.Event)
+        public UseFunc(Action<UseMessage> action, EUseOrder order = EUseOrder.Event)
         {
             Action = action;
             Order = order;
@@ -34,24 +96,10 @@ namespace SurvivalHack.ECM
     public enum EUseSource
     {
         User,
+        UserItem,
         This,
         Target,
-        Timer,
-    }
-
-    public enum EUseMessage
-    {
-        Drink,       // Mainly for potions
-        Cast,        // Spells, scrolls, etc.
-        Threaten,    // Do an attack.
-        Attack,      // Being attacked obviously.
-        Damage,      // Successfully hit with an attack
-
-        //Attack,      // Hitting someone. Vampiric daggers etc.
-        //BumpAttack,  // Used in bump attacks etc.
-        //Kill,      // Killing someone. E.g. 
-        //Blocked,   // Item blocks an attack. Shields etc.
-        //Damaged,   // Entity is damaged.
-        //Destroyed, // Entity is destroyed. Spawning smaller slimes when a slime dies
+        TargetItem,
+        //Timer,
     }
 }

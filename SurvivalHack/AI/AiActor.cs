@@ -1,5 +1,6 @@
 ﻿using System;
 using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ai
 {
@@ -91,11 +92,11 @@ namespace SurvivalHack.Ai
         {
             if (enemy != null)
             {
-                (var weapon, var weaponComponent) = self.GetWeapon(enemy);
+                (var weapon, var comp) = self.GetWeapon(enemy);
 
-                if (weaponComponent != null)
+                if (weapon != null)
                 {
-                    weaponComponent.Attack(self, weapon, enemy);
+                    self.Event(new AttackMessage(self, weapon, enemy));
                     return true;
                 }
             }

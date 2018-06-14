@@ -85,8 +85,10 @@ namespace SurvivalHack
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
+        
         public string Describe() => null;
+
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public class EquippableComponent : IComponent
@@ -98,10 +100,12 @@ namespace SurvivalHack
             _slotType = slotType;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
+        
         public string Describe() => $"Can be equipped in {_slotType}";
 
         internal bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
+
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public enum ESlotType

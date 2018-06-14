@@ -43,7 +43,9 @@ namespace SurvivalHack
             foreach (var c in Components)
             {
                 if (c is T c2)
+                {
                     yield return c2;
+                }
             }
         }
 
@@ -59,8 +61,6 @@ namespace SurvivalHack
 
         public IEnumerable<Entity> ListSubEntities()
         {
-            yield return this;
-
             // == Inventory ==
             var inv = GetOne<Inventory>();
             if (inv != null)
@@ -77,18 +77,29 @@ namespace SurvivalHack
             Components.Add(component);
         }
 
-        public bool Event(Entity item, Entity target, EUseMessage message, IEnumerable<UseFunc> functions = null)
+        public bool Event(UseMessage message)
         {
-            var funcs = new List<UseFunc>(functions ?? Enumerable.Empty<UseFunc>());
-            funcs.AddRange(item.Components.SelectMany(c => c.GetActions(message, EUseSource.This)));
+            message.Self = this;
+
+            var funcs = new List<UseFunc>();
+            funcs.AddRange(message.Item.Components.SelectMany(c => c.GetActions(message, EUseSource.This)));
 
             if (!funcs.Any(f => f.Order == EUseOrder.Event))
             {
                 return false;
             }
 
-            funcs.AddRange(target.Components.SelectMany(c => c.GetActions(message, EUseSource.Target)));
-            funcs.AddRange(this.Components.SelectMany(c => c.GetActions(message, EUseSource.User)));
+            if (message.Target != null)
+            {
+                funcs.AddRange(message.Target.Components.SelectMany(c => c.GetActions(message, EUseSource.Target)));
+                funcs.AddRange(message.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(message, EUseSource.TargetItem))));
+            }
+
+            if (message.Self != null)
+            {
+                funcs.AddRange(message.Self.Components.SelectMany(c => c.GetActions(message, EUseSource.User)));
+                funcs.AddRange(message.Self.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(message, EUseSource.UserItem))));
+            }
 
             if (funcs.Any(f => f.Order == EUseOrder.Interrupt))
             {
@@ -97,7 +108,7 @@ namespace SurvivalHack
 
             foreach (var f in funcs.OrderBy(f => f.Order))
             {
-                f.Action?.Invoke(this, item, target);
+                f.Action?.Invoke(message);
             }
 
             return true;
@@ -111,15 +122,23 @@ namespace SurvivalHack
             Move?.Unbind(this);
         }
 
-        internal (Entity Item, IWeapon IWeapon) GetWeapon(Entity target)
+        internal (Entity,IWeapon) GetWeapon(Entity target)
         {
-            IEnumerable<(Entity Item, IWeapon IWeapon)> WeaponFilter(Entity e) {
-                foreach (var w in e.Get<IWeapon>())
-                    if (w.InRange(this, target))
-                        yield return (e, w);
+            IEnumerable<Entity> It() {
+                var inventory = GetOne<Inventory>();
+                yield return inventory?.Equipped[0];
+                yield return inventory?.Equipped[1];
+                yield return this;
             }
-            var pairList = ListSubEntities().SelectMany(WeaponFilter).OrderByDescending(p => p.IWeapon.WeaponPriority + Game.Rnd.NextDouble());
-            return pairList.FirstOrDefault();
+
+            foreach(var elem in It())
+            {
+                var comp = elem?.GetOne<IWeapon>();
+                if (comp != null && comp.InRange(this, target))
+                    return (elem, comp);
+            }
+
+            return (null, null);
         }
     }
 

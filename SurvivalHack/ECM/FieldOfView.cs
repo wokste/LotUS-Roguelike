@@ -245,7 +245,7 @@ namespace SurvivalHack
             Visibility[v] |= SET_VISIBLE;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
         public string Describe() => null;
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

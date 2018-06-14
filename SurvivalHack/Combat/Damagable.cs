@@ -14,15 +14,27 @@ namespace SurvivalHack.Combat
             Health = new Bar(HP);
         }
 
-        public void TakeDamage(Entity self, Attack attack)
+
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
         {
+            if (message is DamageMessage && source == EUseSource.Target)
+                yield return new UseFunc(TakeDamage);
+        }
+
+        public void TakeDamage(UseMessage msg)
+        {
+            var attack = (DamageMessage)msg;
+
+            if (!attack.Significant)
+                return;
+
             Health.Current -= attack.Damage;
 
             if (Health.Current == 0)
             {
-                self.Destroy();
+                msg.Target.Destroy();
 
-                Message.Write($"{self.Name} died", self.Move?.Pos, Color.Red);
+                Message.Write($"{msg.Target.Name} died", msg.Target.Move?.Pos, Color.Red);
             }
         }
 
@@ -36,6 +48,5 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => null;
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

@@ -8,55 +8,55 @@ namespace SurvivalHack.ECM
     {
         public int Restore;
         public int StatID;
-        public EUseMessage Filter { get; }
+        public Type MessageType { get; }
 
-        public HealComponent(int restore, int statID, EUseMessage filter)
+        public HealComponent(int restore, int statID, Type messageType)
         {
             Restore = restore;
             StatID = statID;
-            Filter = filter;
+            MessageType = messageType;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source)
         {
-            if (filter == Filter && source == EUseSource.This)
+            if (MessageType.IsAssignableFrom(msg.GetType()) && source == EUseSource.This)
                 yield return new UseFunc(Heal);
         }
 
-        public void Heal(Entity user, Entity item, Entity target)
+        public void Heal(UseMessage msg)
         {
-            bool healed = user.GetOne<Combat.Damagable>().Heal(Restore, StatID);
+            bool healed = msg.Self.GetOne<Combat.Damagable>().Heal(Restore, StatID);
 
-            if (healed && user.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
+            if (healed && msg.Self.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
             {
                 Message.Write($"You heal {Restore} HP", null, Color.Green);
                 // TODO: Item identification
             }
         }
 
-        public string Describe() => $"Heals {Restore} when {Filter}.";
+        public string Describe() => $"Heals {Restore} when used.";
     }
 
     public class MapRevealComponent : IComponent
     {
-        public EUseMessage Filter { get; }
+        public Type MessageType { get; }
         public byte Flags;
 
-        public MapRevealComponent(byte flags, EUseMessage filter)
+        public MapRevealComponent(byte flags, Type messageType)
         {
-            Filter = filter;
+            MessageType = messageType;
             Flags = flags;
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source)
         {
-            if (filter == Filter && source == EUseSource.This)
+            if (MessageType.IsAssignableFrom(msg.GetType()) && source == EUseSource.This)
                 yield return new UseFunc(Reveal);
         }
 
-        public void Reveal(Entity user, Entity item, Entity target)
+        public void Reveal(UseMessage msg)
         {
-            var FoV = user.GetOne<FieldOfView>();
+            var FoV = msg.Self.GetOne<FieldOfView>();
             var Map = FoV.Map;
 
             // This function returns true if it can be seen from any direction.

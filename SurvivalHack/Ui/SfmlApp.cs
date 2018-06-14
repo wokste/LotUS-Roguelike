@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {
@@ -98,7 +99,7 @@ namespace SurvivalHack.Ui
                 case 'd':
                     {
                         var o = new OptionWidget($"Drink", _controller.Player.GetOne<Inventory>().Items, i => {
-                            if (_controller.Player.Event(i, _controller.Player, ECM.EUseMessage.Drink))
+                            if (_controller.Player.Event(new DrinkMessage(_controller.Player, i)))
                                 _controller.EndTurn();
                         });
                         _window.PopupStack.Push(o);
@@ -137,7 +138,7 @@ namespace SurvivalHack.Ui
                 case '\\': // Well 'w' will be used for wield/wear
                     {
                         var o = new OptionWidget($"Wizard tools", WizTools.Tools.Items, i => {
-                            _controller.Player.Event(i, _controller.Player, ECM.EUseMessage.Cast);
+                            _controller.Player.Event(new CastMessage(_controller.Player, i));
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -156,11 +157,11 @@ namespace SurvivalHack.Ui
             {
                 if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
-                    (var weapon, var weaponComponent) = _controller.Player.GetWeapon(enemy);
+                    (var weapon, var comp) = _controller.Player.GetWeapon(enemy);
 
-                    if (weaponComponent != null)
+                    if (weapon != null)
                     {
-                        weaponComponent.Attack(_controller.Player, weapon, enemy);
+                        _controller.Player.Event(new AttackMessage(_controller.Player, weapon, enemy));
                         _controller.EndTurn();
                     }
                     return;

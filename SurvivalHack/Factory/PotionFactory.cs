@@ -40,10 +40,10 @@ namespace SurvivalHack.Factory
             switch (potionId)
             {
                 case 0: // Lesser healing potion
-                    e.Add(new HealComponent(20, 0, EUseMessage.Drink));
+                    e.Add(new HealComponent(20, 0, typeof(DrinkMessage)));
                     break;
                 case 1: // Greater healing potion
-                    e.Add(new HealComponent(40, 0, EUseMessage.Drink));
+                    e.Add(new HealComponent(40, 0, typeof(DrinkMessage)));
                     break;
             }
             //TODO: Add randomized effects to the potion.

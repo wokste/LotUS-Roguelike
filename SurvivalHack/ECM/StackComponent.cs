@@ -22,20 +22,20 @@ namespace SurvivalHack.ECM
             return ret;
         }
 
-        private void Consume(Entity user, Entity item, Entity target)
+        private void Consume(UseMessage msg)
         {
             Count--;
             if (Count <= 0)
             {
-                user?.GetOne<Inventory>()?.Remove(item);
-                item.Destroy();
+                msg.Self?.GetOne<Inventory>()?.Remove(msg.Item);
+                msg.Item.Destroy();
             }
         }
 
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) {
+        public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source) {
             if (source == EUseSource.This)
             {
-                if (filter == EUseMessage.Drink) // TODO, others
+                if (msg is DrinkMessage) // TODO, others
                 {
                     yield return new UseFunc(Consume, EUseOrder.PostEvent);
                 }

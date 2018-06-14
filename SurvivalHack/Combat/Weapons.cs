@@ -1,13 +1,13 @@
-﻿using HackConsole.Algo;
+﻿using HackConsole;
+using HackConsole.Algo;
 using SurvivalHack.ECM;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SurvivalHack.Combat
 {
-    interface IWeapon : ECM.IComponent
+    interface IWeapon : IComponent
     {
-        void Attack(Entity attacker, Entity weapon, Entity defender);
         bool InRange(Entity attacker, Entity defender);
         float WeaponPriority { get; }
     }
@@ -25,24 +25,34 @@ namespace SurvivalHack.Combat
             DamageType = damageType;
         }
 
-        public void Attack(Entity attacker, Entity weapon, Entity defender)
-        {
-            var Attack = new Attack
-            {
-                Damage = (int)(Damage * (0.5 + Game.Rnd.NextDouble())),
-                DamageType = DamageType
-            };
-
-            Attack.Fight(attacker, weapon, defender);
-        }
-
         public bool InRange(Entity attacker, Entity defender)
         {
             return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
         }
 
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        {
+            if (message is AttackMessage && (source == EUseSource.This))
+                yield return new UseFunc(ToHitRoll);
+            if (message is DamageMessage && (source == EUseSource.This))
+                yield return new UseFunc(DamageMessage);
+        }
+
+        private void ToHitRoll(UseMessage msg)
+        {
+            var attack = (AttackMessage)msg;
+            if (attack.State == "hit")
+            {
+                msg.Self.Event(new DamageMessage(msg as AttackMessage, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+            }
+        }
+
+        private void DamageMessage(UseMessage msg)
+        {
+            Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
+        }
+
         public string Describe() => $"Melee attack deals {Damage} damage";
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public class RangedWeapon : IWeapon
@@ -59,17 +69,6 @@ namespace SurvivalHack.Combat
             Range = range;
         }
 
-        public void Attack(Entity attacker, Entity weapon, Entity defender)
-        {
-            var Attack = new Attack
-            {
-                Damage = (int)(Damage * (0.5 + Game.Rnd.NextDouble())),
-                DamageType = DamageType
-            };
-
-            Attack.Fight(attacker, weapon, defender);
-        }
-
         public bool InRange(Entity attacker, Entity defender)
         {
             var level = attacker.Move.Level;
@@ -81,7 +80,29 @@ namespace SurvivalHack.Combat
             return true;
         }
 
+        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        {
+            if (message is AttackMessage && (source == EUseSource.This))
+                yield return new UseFunc(ToHitRoll);
+            if (message is DamageMessage && (source == EUseSource.This))
+                yield return new UseFunc(DamageMessage);
+        }
+
+        private void ToHitRoll(UseMessage msg)
+        {
+            var attack = (AttackMessage)msg;
+            if (attack.State == "hit")
+            {
+                msg.Self.Event(new DamageMessage(msg as AttackMessage, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+            }
+        }
+
+        private void DamageMessage(UseMessage msg)
+        {
+            Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
+        }
+
         public string Describe() => $"Ranged attack deals {Damage} damage";
-        public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source) => Enumerable.Empty<UseFunc>();
+        
     }
 }

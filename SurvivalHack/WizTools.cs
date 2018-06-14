@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -13,19 +14,19 @@ namespace SurvivalHack
         public static void Init() {
             Entity entity;
             entity = new Entity('w', "Reveal Map", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, EUseMessage.Cast));
+            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastMessage)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Discover Map - scroll?", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, EUseMessage.Cast));
+            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastMessage)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Genocide", EEntityFlag.Pickable);
-            entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, EUseMessage.Cast));
+            entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, typeof(CastMessage)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Heal", EEntityFlag.Pickable);
-            entity.Add(new HealComponent(9001, 0, EUseMessage.Cast));
+            entity.Add(new HealComponent(9001, 0, typeof(CastMessage)));
             Tools.Add(entity);
         }
 
@@ -33,36 +34,30 @@ namespace SurvivalHack
         {
             public float Damage;
             public Combat.EDamageType DamageType;
-            public EUseMessage Filter;
+            public Type MessageType;
 
-            public AreaAttack(float damage, Combat.EDamageType damageType, EUseMessage filter)
+            public AreaAttack(float damage, Combat.EDamageType damageType, Type messageType)
             {
                 Damage = damage;
                 DamageType = damageType;
-                Filter = filter;
+                MessageType = messageType;
             }
 
-            public IEnumerable<UseFunc> GetActions(EUseMessage filter, EUseSource source)
+            public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source)
             {
-                if (Filter == filter && source == EUseSource.This)
+                if (source == EUseSource.This && MessageType.IsAssignableFrom(msg.GetType()))
                     yield return new UseFunc(Genocide);
             }
 
-            public void Genocide(Entity user, Entity item, Entity target)
+            public void Genocide(UseMessage msg)
             {
-                var level = user.Move.Level;
+                var level = msg.Self.Move.Level;
                 foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
                 {
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
 
-                    var Attack = new Combat.Attack
-                    {
-                        Damage = (int)Damage,
-                        DamageType = DamageType
-                    };
-
-                    Attack.Fight(user, item, e);
+                    msg.Self.Event(new DamageMessage(msg, 9001, Combat.EDamageType.Fire));
                 }
             }
 
