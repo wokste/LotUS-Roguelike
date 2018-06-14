@@ -10,8 +10,14 @@ namespace SurvivalHack.Combat
     {
         public int Priority { get; set; } = 100;
 
-        public float BlockChance = 0.3f;
-        public EAttackState BlockMethod = EAttackState.Blocked;
+        public float BlockChance;
+        public EAttackState BlockMethod;
+
+        public Blockable(float blockChance, EAttackState blockMethod)
+        {
+            BlockChance = blockChance;
+            BlockMethod = blockMethod;
+        }
 
         public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
         {

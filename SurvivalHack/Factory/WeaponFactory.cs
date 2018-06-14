@@ -8,7 +8,7 @@ namespace SurvivalHack.Factory
         RandomTable<string> BasePropabilities;
 
         public WeaponFactory() {
-            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,sbow:3,lbow:5,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5");
+            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,wshield:3,ishield:1,sbow:3,lbow:5,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5,ring:2,cloak:2,gloves:2,gauntlets:1,boots:2");
         }
 
         public Entity Gen(EntityGenerationInfo info)
@@ -46,6 +46,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Dagger", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
@@ -53,6 +54,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Shortsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
@@ -60,6 +62,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Longsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
@@ -67,6 +70,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Handaxe", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
+                        e.Add(new Combat.Blockable(0.1f, Combat.EAttackState.Parried));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
@@ -81,6 +85,20 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('\\', "Mace", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        return e;
+                    }
+                case "wshield":
+                    {
+                        var e = new Entity('[', "Wooden Shield", EEntityFlag.Pickable);
+                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
+                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        return e;
+                    }
+                case "ishield":
+                    {
+                        var e = new Entity('[', "Wooden Shield", EEntityFlag.Pickable);
+                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
@@ -126,6 +144,40 @@ namespace SurvivalHack.Factory
                         var e = new Entity('^', "Helmet", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(3, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Head));
+                        return e;
+                    }
+
+                case "boots":
+                    {
+                        var e = new Entity('"', "Boots", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new EquippableComponent(ESlotType.Feet));
+                        return e;
+                    }
+                case "gloves":
+                    {
+                        var e = new Entity('"', "Gloves", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new EquippableComponent(ESlotType.Gloves));
+                        return e;
+                    }
+                case "gauntlets":
+                    {
+                        var e = new Entity('"', "Gauntlets", EEntityFlag.Pickable);
+                        e.Add(new Combat.Armour(4, 0.1f));
+                        e.Add(new EquippableComponent(ESlotType.Gloves));
+                        return e;
+                    }
+                case "ring":
+                    {
+                        var e = new Entity('*', "Ring", EEntityFlag.Pickable);
+                        e.Add(new EquippableComponent(ESlotType.Ring));
+                        return e;
+                    }
+                case "cloak":
+                    {
+                        var e = new Entity('*', "Cloak", EEntityFlag.Pickable);
+                        e.Add(new EquippableComponent(ESlotType.Neck));
                         return e;
                     }
             }
