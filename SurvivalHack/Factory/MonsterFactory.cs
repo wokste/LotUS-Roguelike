@@ -40,7 +40,7 @@ namespace SurvivalHack.Factory
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Flags = TerrainFlag.Walk,
                         Speed = 0.6f,
-                        Symbol = new Symbol('z', Color.White)
+                        Symbol = new Symbol('z', Color.Cyan)
                     };
                 case "bat":
                     return new Entity('b', "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
@@ -68,7 +68,7 @@ namespace SurvivalHack.Factory
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Flags = TerrainFlag.Walk,
                         Speed = 0.6f,
-                        Symbol = new Symbol('s', Color.White)
+                        Symbol = new Symbol('s', Color.Cyan)
                     };
                 case "firebat":
                     return new Entity('b', "Fire Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
