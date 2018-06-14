@@ -22,7 +22,7 @@ namespace SurvivalHack.ECM
             return ret;
         }
 
-        private void Consume(UseMessage msg)
+        private void Consume(BaseEvent msg)
         {
             Count--;
             if (Count <= 0)
@@ -32,10 +32,10 @@ namespace SurvivalHack.ECM
             }
         }
 
-        public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source) {
+        public IEnumerable<UseFunc> GetActions(BaseEvent msg, EUseSource source) {
             if (source == EUseSource.This)
             {
-                if (msg is DrinkMessage) // TODO, others
+                if (msg is DrinkEvent) // TODO, others
                 {
                     yield return new UseFunc(Consume, EUseOrder.PostEvent);
                 }

@@ -10,18 +10,21 @@ namespace SurvivalHack.Combat
     {
         bool InRange(Entity attacker, Entity defender);
         float WeaponPriority { get; }
+        EAttackMove AttackMove { get; }
     }
 
     public class MeleeWeapon : IWeapon
     {
         public float Damage;
+        public EAttackMove AttackMove { get; }
         public EDamageType DamageType;
 
         public float WeaponPriority { get; set; }
 
-        public MeleeWeapon(float damage, EDamageType damageType)
+        public MeleeWeapon(float damage, EAttackMove attackMove, EDamageType damageType)
         {
             Damage = damage;
+            AttackMove = attackMove;
             DamageType = damageType;
         }
 
@@ -30,24 +33,24 @@ namespace SurvivalHack.Combat
             return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
         }
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
         {
-            if (message is AttackMessage && (source == EUseSource.This))
+            if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
-            if (message is DamageMessage && (source == EUseSource.This))
+            if (message is DamageEvent && (source == EUseSource.This))
                 yield return new UseFunc(DamageMessage);
         }
 
-        private void ToHitRoll(UseMessage msg)
+        private void ToHitRoll(BaseEvent msg)
         {
-            var attack = (AttackMessage)msg;
-            if (attack.State == "hit")
+            var attack = (AttackEvent)msg;
+            if (attack.State == EAttackState.Hit)
             {
-                msg.Self.Event(new DamageMessage(msg as AttackMessage, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
             }
         }
 
-        private void DamageMessage(UseMessage msg)
+        private void DamageMessage(BaseEvent msg)
         {
             Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
         }
@@ -58,6 +61,7 @@ namespace SurvivalHack.Combat
     public class RangedWeapon : IWeapon
     {
         public float Damage;
+        public EAttackMove AttackMove => EAttackMove.Projectile;
         public EDamageType DamageType;
         public float Range;
         public float WeaponPriority { get; set; }
@@ -80,24 +84,24 @@ namespace SurvivalHack.Combat
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
         {
-            if (message is AttackMessage && (source == EUseSource.This))
+            if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
-            if (message is DamageMessage && (source == EUseSource.This))
+            if (message is DamageEvent && (source == EUseSource.This))
                 yield return new UseFunc(DamageMessage);
         }
 
-        private void ToHitRoll(UseMessage msg)
+        private void ToHitRoll(BaseEvent msg)
         {
-            var attack = (AttackMessage)msg;
-            if (attack.State == "hit")
+            var attack = (AttackEvent)msg;
+            if (attack.State == EAttackState.Hit)
             {
-                msg.Self.Event(new DamageMessage(msg as AttackMessage, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
             }
         }
 
-        private void DamageMessage(UseMessage msg)
+        private void DamageMessage(BaseEvent msg)
         {
             Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
         }

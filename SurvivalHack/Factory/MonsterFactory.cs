@@ -18,7 +18,7 @@ namespace SurvivalHack.Factory
                 {
                     Components = new List<IComponent>()
                     {
-                        new Combat.MeleeWeapon(9, Combat.EDamageType.Bludgeoing),
+                        new Combat.MeleeWeapon(9, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing),
                         new Combat.Damagable(6),
                     },
                     Ai = new AiActor(),
@@ -34,7 +34,7 @@ namespace SurvivalHack.Factory
                 {
                     Components = new List<IComponent>()
                     {
-                        new Combat.MeleeWeapon(3, Combat.EDamageType.Piercing),
+                        new Combat.MeleeWeapon(3, Combat.EAttackMove.Close, Combat.EDamageType.Piercing),
                         new Combat.Damagable(3),
                     },
                     Ai = new AiActor(),

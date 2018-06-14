@@ -88,7 +88,7 @@ namespace SurvivalHack
         
         public string Describe() => null;
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source) => Enumerable.Empty<UseFunc>();
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public class EquippableComponent : IComponent
@@ -105,7 +105,7 @@ namespace SurvivalHack
 
         internal bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source) => Enumerable.Empty<UseFunc>();
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
     public enum ESlotType

@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Eventing.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />

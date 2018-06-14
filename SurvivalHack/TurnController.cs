@@ -28,7 +28,7 @@ namespace SurvivalHack
                 Components = new List<IComponent>()
                 {
                     this,
-                    new Combat.MeleeWeapon(2, Combat.EDamageType.Bludgeoing),
+                    new Combat.MeleeWeapon(2, Combat.EAttackMove.Thrust, Combat.EDamageType.Bludgeoing),
                     new Combat.Damagable(100),
                     Inventory
                 },
@@ -80,9 +80,9 @@ namespace SurvivalHack
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(UseMessage filter, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(BaseEvent filter, EUseSource source)
         {
-            if (source == EUseSource.Target && (filter is AttackMessage || filter is ThreatenMessage))
+            if (source == EUseSource.Target && (filter is AttackEvent || filter is ThreatenEvent))
                 yield return new UseFunc((m) => Interrupt());
         }
 

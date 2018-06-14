@@ -14,19 +14,19 @@ namespace SurvivalHack
         public static void Init() {
             Entity entity;
             entity = new Entity('w', "Reveal Map", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastMessage)));
+            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastEvent)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Discover Map - scroll?", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastMessage)));
+            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastEvent)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Genocide", EEntityFlag.Pickable);
-            entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, typeof(CastMessage)));
+            entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, typeof(CastEvent)));
             Tools.Add(entity);
 
             entity = new Entity('w', "Heal", EEntityFlag.Pickable);
-            entity.Add(new HealComponent(9001, 0, typeof(CastMessage)));
+            entity.Add(new HealComponent(9001, 0, typeof(CastEvent)));
             Tools.Add(entity);
         }
 
@@ -43,13 +43,13 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public IEnumerable<UseFunc> GetActions(UseMessage msg, EUseSource source)
+            public IEnumerable<UseFunc> GetActions(BaseEvent msg, EUseSource source)
             {
                 if (source == EUseSource.This && MessageType.IsAssignableFrom(msg.GetType()))
                     yield return new UseFunc(Genocide);
             }
 
-            public void Genocide(UseMessage msg)
+            public void Genocide(BaseEvent msg)
             {
                 var level = msg.Self.Move.Level;
                 foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
@@ -57,7 +57,7 @@ namespace SurvivalHack
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
 
-                    msg.Self.Event(new DamageMessage(msg, 9001, Combat.EDamageType.Fire));
+                    Eventing.On(new DamageEvent(msg, 9001, Combat.EDamageType.Fire));
                 }
             }
 

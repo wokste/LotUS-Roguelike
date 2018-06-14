@@ -99,7 +99,7 @@ namespace SurvivalHack.Ui
                 case 'd':
                     {
                         var o = new OptionWidget($"Drink", _controller.Player.GetOne<Inventory>().Items, i => {
-                            if (_controller.Player.Event(new DrinkMessage(_controller.Player, i)))
+                            if (Eventing.On(new DrinkEvent(_controller.Player, i)))
                                 _controller.EndTurn();
                         });
                         _window.PopupStack.Push(o);
@@ -138,7 +138,7 @@ namespace SurvivalHack.Ui
                 case '\\': // Well 'w' will be used for wield/wear
                     {
                         var o = new OptionWidget($"Wizard tools", WizTools.Tools.Items, i => {
-                            _controller.Player.Event(new CastMessage(_controller.Player, i));
+                            Eventing.On(new CastEvent(_controller.Player, i));
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -161,7 +161,7 @@ namespace SurvivalHack.Ui
 
                     if (weapon != null)
                     {
-                        _controller.Player.Event(new AttackMessage(_controller.Player, weapon, enemy));
+                        Eventing.On(new AttackEvent(_controller.Player, weapon, enemy, comp.AttackMove));
                         _controller.EndTurn();
                     }
                     return;

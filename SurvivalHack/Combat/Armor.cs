@@ -11,23 +11,25 @@ namespace SurvivalHack.Combat
         public int Priority { get; set; } = 100;
 
         public float BlockChance = 0.3f;
+        public EAttackState BlockMethod = EAttackState.Blocked;
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
         {
-            if (message is AttackMessage && (source == EUseSource.Target || source == EUseSource.TargetItem))
+            if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 yield return new UseFunc(Mutate, EUseOrder.PreEvent);
         }
 
-        public void Mutate(UseMessage msg)
+        public void Mutate(BaseEvent msg)
         {
-            AttackMessage attack = (AttackMessage)msg;
+            AttackEvent attack = (AttackEvent)msg;
 
-            if (attack.State != "hit")
+            if (attack.State != EAttackState.Hit)
+                return;
 
             if (Game.Rnd.NextDouble() > BlockChance)
                 return;
 
-            attack.State = "block"; // TODO: Blocked or parried.
+            attack.State = BlockMethod;
 
             Message.Write($"{attack.Target} blocks {attack.Self}s attack", attack.Target.Move.Pos, Color.Cyan);
 
@@ -53,15 +55,15 @@ namespace SurvivalHack.Combat
             CritChance = critChance;
         }
 
-        public IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
         {
-            if (message is DamageMessage && (source == EUseSource.Target || source == EUseSource.TargetItem))
+            if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 yield return new UseFunc(Mutate, EUseOrder.PreEvent);
         }
 
-        public void Mutate(UseMessage msg)
+        public void Mutate(BaseEvent msg)
         {
-            var attack = (DamageMessage)msg;
+            var attack = (DamageEvent)msg;
 
             // TODO: Armour should protect only a part of the body.
 

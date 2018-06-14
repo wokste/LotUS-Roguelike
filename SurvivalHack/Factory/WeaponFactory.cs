@@ -45,42 +45,42 @@ namespace SurvivalHack.Factory
                 case "dagger":
                     {
                         var e = new Entity('\\', "Dagger", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(5, Combat.EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "ssword":
                     {
                         var e = new Entity('\\', "Shortsword", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "lsword":
                     {
                         var e = new Entity('\\', "Longsword", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "axe":
                     {
                         var e = new Entity('\\', "Handaxe", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Slashing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }
                 case "spear":
                     {
                         var e = new Entity('\\', "Spear", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(7, Combat.EDamageType.Piercing));
+                        e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
                         e.Add(new EquippableComponent(ESlotType.Hand));
                         return e;
                     }
                 case "mace":
                     {
                         var e = new Entity('\\', "Mace", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EDamageType.Bludgeoing));
+                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing));
                         e.Add(new EquippableComponent(ESlotType.Offhand));
                         return e;
                     }

@@ -96,7 +96,7 @@ namespace SurvivalHack.Ai
 
                 if (weapon != null)
                 {
-                    self.Event(new AttackMessage(self, weapon, enemy));
+                    Eventing.On(new AttackEvent(self, weapon, enemy, comp.AttackMove));
                     return true;
                 }
             }

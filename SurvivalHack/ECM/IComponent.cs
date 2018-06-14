@@ -5,59 +5,61 @@ using System.Linq;
 
 namespace SurvivalHack.ECM
 {
-    public class UseMessage
+    public class BaseEvent
     {
         public Entity Self;
         public Entity Item;
         public Entity Target;
     }
 
-    public class DrinkMessage : UseMessage
+    public class DrinkEvent : BaseEvent
     {
-        public DrinkMessage(Entity self, Entity item)
+        public DrinkEvent(Entity self, Entity item)
         {
             Self = self;
             Item = item;
         }
     }
 
-    public class CastMessage : UseMessage
+    public class CastEvent : BaseEvent
     {
-        public CastMessage(Entity self, Entity item)
+        public CastEvent(Entity self, Entity item)
         {
             Self = self;
             Item = item;
         }
     }
 
-    public class ThreatenMessage : UseMessage
+    public class ThreatenEvent : BaseEvent
     {
-        public ThreatenMessage(Entity self, Entity target)
+        public ThreatenEvent(Entity self, Entity target)
         {
             Self = self;
             Target = target;
         }
     }
 
-    public class AttackMessage : UseMessage
+    public class AttackEvent : BaseEvent
     {
-        internal string State = "hit";
+        public EAttackState State = EAttackState.Hit;
+        public EAttackMove Move;
 
-        public AttackMessage(Entity self, Entity weapon, Entity target)
+        public AttackEvent(Entity self, Entity weapon, Entity target, EAttackMove move)
         {
             Self = self;
             Item = weapon;
             Target = target;
+            Move = move;
         }
     }
 
-    public class DamageMessage : UseMessage
+    public class DamageEvent : BaseEvent
     {
         public int Damage;
         public EDamageType DamageType;
         public bool Significant => (Damage > 0);
 
-        public DamageMessage(UseMessage prevMessage, int damage, EDamageType damageType)
+        public DamageEvent(BaseEvent prevMessage, int damage, EDamageType damageType)
         {
             Self = prevMessage.Self;
             Item = prevMessage.Item;
@@ -71,14 +73,14 @@ namespace SurvivalHack.ECM
     public interface IComponent
     {
         string Describe();
-        IEnumerable<UseFunc> GetActions(UseMessage message, EUseSource source);
+        IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source);
     }
 
     public struct UseFunc {
         public EUseOrder Order;
-        public Action<UseMessage> Action;
+        public Action<BaseEvent> Action;
 
-        public UseFunc(Action<UseMessage> action, EUseOrder order = EUseOrder.Event)
+        public UseFunc(Action<BaseEvent> action, EUseOrder order = EUseOrder.Event)
         {
             Action = action;
             Order = order;
