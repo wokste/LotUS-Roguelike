@@ -111,6 +111,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="Ui\MapWidget.cs" />
     <Compile Include="WizTools.cs" />
+    <Compile Include="Word.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

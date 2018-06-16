@@ -27,7 +27,7 @@ namespace SurvivalHack.ECM
             Count--;
             if (Count <= 0)
             {
-                msg.Self?.GetOne<Inventory>()?.Remove(msg.Item);
+                msg.User?.GetOne<Inventory>()?.Remove(msg.Item);
                 msg.Item.Destroy();
             }
         }

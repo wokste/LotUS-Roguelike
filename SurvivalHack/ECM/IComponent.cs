@@ -32,6 +32,7 @@ namespace SurvivalHack.ECM
 
     public enum EUseSource
     {
+        None, 
         User,
         UserItem,
         This,

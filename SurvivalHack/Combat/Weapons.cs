@@ -37,8 +37,6 @@ namespace SurvivalHack.Combat
         {
             if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
-            if (message is DamageEvent && (source == EUseSource.This))
-                yield return new UseFunc(DamageMessage);
         }
 
         private void ToHitRoll(BaseEvent msg)
@@ -50,12 +48,7 @@ namespace SurvivalHack.Combat
             }
         }
 
-        private void DamageMessage(BaseEvent msg)
-        {
-            Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
-        }
-
-        public string Describe() => $"Melee attack deals {Damage} damage";
+        public string Describe() => $"Melee attack deals {Damage} {DamageType} damage";
     }
 
     public class RangedWeapon : IWeapon
@@ -88,8 +81,6 @@ namespace SurvivalHack.Combat
         {
             if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
-            if (message is DamageEvent && (source == EUseSource.This))
-                yield return new UseFunc(DamageMessage);
         }
 
         private void ToHitRoll(BaseEvent msg)
@@ -101,12 +92,6 @@ namespace SurvivalHack.Combat
             }
         }
 
-        private void DamageMessage(BaseEvent msg)
-        {
-            Message.Write($"{msg.Self.Name} attacks {msg.Target.Name} for {Damage} damage.", msg.Self?.Move?.Pos, Color.Orange);
-        }
-
-        public string Describe() => $"Ranged attack deals {Damage} damage";
-        
+        public string Describe() => $"Ranged attack deals {Damage} {DamageType} damage";
     }
 }

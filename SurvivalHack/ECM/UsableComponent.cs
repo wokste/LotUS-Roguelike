@@ -25,9 +25,9 @@ namespace SurvivalHack.ECM
 
         public void Heal(BaseEvent msg)
         {
-            bool healed = msg.Self.GetOne<Combat.Damagable>().Heal(Restore, StatID);
+            bool healed = msg.User.GetOne<Combat.Damagable>().Heal(Restore, StatID);
 
-            if (healed && msg.Self.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
+            if (healed && msg.User.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
             {
                 Message.Write($"You heal {Restore} HP", null, Color.Green);
                 // TODO: Item identification
@@ -56,7 +56,7 @@ namespace SurvivalHack.ECM
 
         public void Reveal(BaseEvent msg)
         {
-            var FoV = msg.Self.GetOne<FieldOfView>();
+            var FoV = msg.User.GetOne<FieldOfView>();
             var Map = FoV.Map;
 
             // This function returns true if it can be seen from any direction.

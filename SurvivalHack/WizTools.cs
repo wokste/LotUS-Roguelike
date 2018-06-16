@@ -51,7 +51,7 @@ namespace SurvivalHack
 
             public void Genocide(BaseEvent msg)
             {
-                var level = msg.Self.Move.Level;
+                var level = msg.User.Move.Level;
                 foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
                 {
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))

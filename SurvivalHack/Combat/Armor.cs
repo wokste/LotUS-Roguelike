@@ -36,9 +36,6 @@ namespace SurvivalHack.Combat
                 return;
 
             attack.State = BlockMethod;
-
-            Message.Write($"{attack.Target} blocks {attack.Self}s attack", attack.Target.Move.Pos, Color.Cyan);
-
             return;
         }
 
@@ -75,14 +72,10 @@ namespace SurvivalHack.Combat
 
             if (Game.Rnd.NextDouble() < CritChance)
             {
-                // TODO: Crit messages.
                 return;
             }
 
-            var newDamage = Math.Max(attack.Damage - DamageReduction, 0);
-            Message.Write($"{attack.Target}'s armour reduces the damage of the incoming attack from {attack.Damage} to {newDamage}", attack.Target.Move.Pos, Color.Cyan);
-            attack.Damage = newDamage;
-
+            attack.Modifiers.Add((-DamageReduction, "armor"));
             return;
         }
 

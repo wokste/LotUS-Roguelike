@@ -24,7 +24,7 @@ namespace SurvivalHack.Combat
 
     public enum EAttackState
     {
-        Hit, Miss, Blocked, Parried
+        Hit, Miss, Dodge, Blocked, Parried
     }
 
     [Flags]
