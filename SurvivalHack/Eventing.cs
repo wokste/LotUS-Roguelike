@@ -13,18 +13,18 @@ namespace SurvivalHack
         public static bool On(BaseEvent message)
         {
             var funcs = new List<UseFunc>();
-            funcs.AddRange(message.Item.Components.SelectMany(c => c.GetActions(message, EUseSource.This)));
+            funcs.AddRange(message.Item.Components.SelectMany(c => c.GetActions(message.Item, message, EUseSource.This)));
 
             if (message.Target != null)
             {
-                funcs.AddRange(message.Target.Components.SelectMany(c => c.GetActions(message, EUseSource.Target)));
-                funcs.AddRange(message.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(message, EUseSource.TargetItem))));
+                funcs.AddRange(message.Target.Components.SelectMany(c => c.GetActions(message.Target, message, EUseSource.Target)));
+                funcs.AddRange(message.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, message, EUseSource.TargetItem))));
             }
 
             if (message.Self != null)
             {
-                funcs.AddRange(message.Self.Components.SelectMany(c => c.GetActions(message, EUseSource.User)));
-                funcs.AddRange(message.Self.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(message, EUseSource.UserItem))));
+                funcs.AddRange(message.Self.Components.SelectMany(c => c.GetActions(message.Self, message, EUseSource.User)));
+                funcs.AddRange(message.Self.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, message, EUseSource.UserItem))));
             }
 
             if (!funcs.Any(f => f.Order == EUseOrder.Event))

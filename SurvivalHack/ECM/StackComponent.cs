@@ -32,7 +32,7 @@ namespace SurvivalHack.ECM
             }
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent msg, EUseSource source) {
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source) {
             if (source == EUseSource.This)
             {
                 if (msg is DrinkEvent) // TODO, others

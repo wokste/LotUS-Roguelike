@@ -88,7 +88,7 @@ namespace SurvivalHack
             }
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent filter, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent filter, EUseSource source)
         {
             if (source == EUseSource.Target && (filter is AttackEvent || filter is ThreatenEvent))
                 yield return new UseFunc((m) => Interrupt());

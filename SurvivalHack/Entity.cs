@@ -121,6 +121,5 @@ namespace SurvivalHack
         // Blessed and cursed
         Identified = 0x1000, // Set on true if item/monster is identified.
         Cursed = 0x2000,
-        Blessed = 0x4000,
     }
 }

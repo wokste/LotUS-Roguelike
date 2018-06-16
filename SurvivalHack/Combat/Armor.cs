@@ -19,7 +19,7 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 yield return new UseFunc(Mutate, EUseOrder.PreEvent);
@@ -63,7 +63,7 @@ namespace SurvivalHack.Combat
             CritChance = critChance;
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 yield return new UseFunc(Mutate, EUseOrder.PreEvent);

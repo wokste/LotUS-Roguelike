@@ -246,6 +246,6 @@ namespace SurvivalHack
         }
 
         public string Describe() => null;
-        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 }

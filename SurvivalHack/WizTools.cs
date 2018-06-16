@@ -43,7 +43,7 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public IEnumerable<UseFunc> GetActions(BaseEvent msg, EUseSource source)
+            public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
                 if (source == EUseSource.This && MessageType.IsAssignableFrom(msg.GetType()))
                     yield return new UseFunc(Genocide);
@@ -57,8 +57,10 @@ namespace SurvivalHack
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
 
-                    var dmgMsg = new DamageEvent(msg, 9001, Combat.EDamageType.Fire, Combat.EDamageLocation.Head);
-                    dmgMsg.Target = e;
+                    var dmgMsg = new DamageEvent(msg, 9001, Combat.EDamageType.Fire, Combat.EDamageLocation.Head)
+                    {
+                        Target = e
+                    };
                     Eventing.On(dmgMsg);
                 }
             }
