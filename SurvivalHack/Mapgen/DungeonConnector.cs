@@ -218,9 +218,8 @@ namespace SurvivalHack.Mapgen
             }
         }
 
-        public void EliminateDeadEnds(Random rnd, double p) {
-            Debug.WriteLine("EliminateDeadEnds");
-
+        public void EliminateDeadEnds(Random rnd, double p)
+        {
             for (int i = 0; i < RoomCount; i++)
             {
                 if (!Flags[i].HasFlag(RoomStatFlag.Path))
@@ -257,8 +256,6 @@ namespace SurvivalHack.Mapgen
         }
 
         void Connect(int i, int j) {
-
-            Debug.WriteLine($"Connected room {i} with {j} weight {Weights[i,j]}");
 
             var c1 = _rooms[i].Center;
             var c2 = _rooms[j].Center;

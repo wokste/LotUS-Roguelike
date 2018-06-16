@@ -62,6 +62,6 @@ namespace HackConsole
         RightButton = 0x40,
 
         MouseEventPress = 0x100,
-        MouseEventRelease = 0x100,
+        MouseEventRelease = 0x200,
     }
 }

@@ -90,7 +90,6 @@ namespace SurvivalHack.Mapgen
 
                 if (room.TryPlaceOnMap(map, maskMap, rooms))
                 {
-                    Debug.WriteLine($"Placed room {rooms.Count - 1} on {room.Transform.Offset}");
                     return room;
                 }
             }
