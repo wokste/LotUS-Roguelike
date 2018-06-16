@@ -57,7 +57,9 @@ namespace SurvivalHack
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
 
-                    Eventing.On(new DamageEvent(msg, 9001, Combat.EDamageType.Fire, Combat.EDamageLocation.Head));
+                    var dmgMsg = new DamageEvent(msg, 9001, Combat.EDamageType.Fire, Combat.EDamageLocation.Head);
+                    dmgMsg.Target = e;
+                    Eventing.On(dmgMsg);
                 }
             }
 

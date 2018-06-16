@@ -76,8 +76,6 @@ namespace SurvivalHack.Combat
             if ((attack.Location & ProtectLocation) == 0)
                 return;
 
-            // TODO: Armour should protect only a part of the body.
-
             if (Game.Rnd.NextDouble() < CritChance)
             {
                 // TODO: Crit messages.
