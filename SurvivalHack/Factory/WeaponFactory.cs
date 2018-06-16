@@ -121,28 +121,28 @@ namespace SurvivalHack.Factory
                 case "armour_leather":
                     {
                         var e = new Entity('^', "Leather Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 2, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "armour_chain":
                     {
                         var e = new Entity('^', "Chainmail Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(3, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 3, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "armour_plate":
                     {
                         var e = new Entity('^', "Plate Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(4, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 4, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "helmet":
                     {
                         var e = new Entity('^', "Helmet", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(3, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Head));
                         return e;
                     }
@@ -150,21 +150,21 @@ namespace SurvivalHack.Factory
                 case "boots":
                     {
                         var e = new Entity('"', "Boots", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Feet, 2, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Feet));
                         return e;
                     }
                 case "gloves":
                     {
                         var e = new Entity('"', "Gloves", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 2, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Gloves));
                         return e;
                     }
                 case "gauntlets":
                     {
                         var e = new Entity('"', "Gauntlets", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(4, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 4, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Gloves));
                         return e;
                     }

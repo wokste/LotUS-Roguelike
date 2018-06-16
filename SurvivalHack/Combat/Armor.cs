@@ -54,9 +54,11 @@ namespace SurvivalHack.Combat
 
         public float CritChance = 0.02f;
         public int DamageReduction = 1;
+        public EDamageLocation ProtectLocation;
 
-        public Armour(int damageReduction, float critChance)
+        public Armour(EDamageLocation protectLocation, int damageReduction, float critChance)
         {
+            ProtectLocation = protectLocation;
             DamageReduction = damageReduction;
             CritChance = critChance;
         }
@@ -70,6 +72,9 @@ namespace SurvivalHack.Combat
         public void Mutate(BaseEvent msg)
         {
             var attack = (DamageEvent)msg;
+
+            if ((attack.Location & ProtectLocation) == 0)
+                return;
 
             // TODO: Armour should protect only a part of the body.
 

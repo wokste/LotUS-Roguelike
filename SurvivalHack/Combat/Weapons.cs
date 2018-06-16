@@ -46,7 +46,7 @@ namespace SurvivalHack.Combat
             var attack = (AttackEvent)msg;
             if (attack.State == EAttackState.Hit)
             {
-                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location));
             }
         }
 
@@ -97,7 +97,7 @@ namespace SurvivalHack.Combat
             var attack = (AttackEvent)msg;
             if (attack.State == EAttackState.Hit)
             {
-                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location));
             }
         }
 

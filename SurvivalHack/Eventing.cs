@@ -84,6 +84,7 @@ namespace SurvivalHack
     {
         public EAttackState State = EAttackState.Hit;
         public EAttackMove Move;
+        public EDamageLocation Location;
 
         public AttackEvent(Entity self, Entity weapon, Entity target, EAttackMove move)
         {
@@ -91,6 +92,20 @@ namespace SurvivalHack
             Item = weapon;
             Target = target;
             Move = move;
+            Location = GetRandomLocation();
+        }
+
+        private EDamageLocation GetRandomLocation()
+        {
+            var rnd = Game.Rnd.NextDouble();
+            if (rnd < 0.75)
+                return EDamageLocation.Body;
+            else if (rnd < 0.9)
+                return EDamageLocation.Head;
+            else if (rnd < 0.95)
+                return EDamageLocation.Hands;
+            else
+                return EDamageLocation.Feet;
         }
     }
 
@@ -98,15 +113,17 @@ namespace SurvivalHack
     {
         public int Damage;
         public EDamageType DamageType;
+        public EDamageLocation Location;
         public bool Significant => (Damage > 0);
 
-        public DamageEvent(BaseEvent prevMessage, int damage, EDamageType damageType)
+        public DamageEvent(BaseEvent prevMessage, int damage, EDamageType damageType, EDamageLocation location)
         {
             Self = prevMessage.Self;
             Item = prevMessage.Item;
             Target = prevMessage.Target;
             Damage = damage;
             DamageType = damageType;
+            Location = location;
         }
     }
 }
