@@ -47,14 +47,7 @@ namespace SurvivalHack
 
         public bool HasFlag(Vec v, TerrainFlag flag)
         {
-            if (TileMap[v].Flags.HasFlag(flag))
-                return true;
-            
-            foreach (var c in GetEntity(v))
-                if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
-                    return true;
-            
-            return false;
+            return TileMap[v].Flags.HasFlag(flag);
         }
 
         public Tile GetTile(Vec v)

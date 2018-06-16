@@ -42,6 +42,12 @@ namespace SurvivalHack.ECM
             if (!Level.HasFlag(newPosition, self.Flags))
                 return false;
 
+            // Monster collisions
+            if (self.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                foreach (var c in Level.GetEntity(newPosition))
+                    if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                        return false;
+
             var oldChunk = Level.GetChunck(Pos);
             Pos = newPosition;
             var newChunk = Level.GetChunck(Pos);

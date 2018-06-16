@@ -58,13 +58,15 @@ namespace SurvivalHack
             OnTurnEnd?.Invoke();
         }
 
-        public void Move(Vec move, bool interrupt = true)
+        public bool Move(Vec move, bool interrupt = true)
         {
             if (Player.Move.Move(Player, move))
             {
                 OnMove?.Invoke();
                 EndTurn(interrupt);
+                return true;
             }
+            return false;
         }
 
         public bool DoAutoAction()
@@ -75,9 +77,15 @@ namespace SurvivalHack
             Debug.Assert(Player.Move.Pos == Path.First());
             
             Path.RemoveAt(0);
-            Move(Path.First() - Player.Move.Pos, false);
-
-            return true;
+            if (Move(Path.First() - Player.Move.Pos, false))
+            {
+                return true;
+            }
+            else
+            {
+                Path.Clear();
+                return false;
+            }
         }
 
         public IEnumerable<UseFunc> GetActions(BaseEvent filter, EUseSource source)
