@@ -70,24 +70,41 @@ namespace SurvivalHack
                     return false; // Can't equip said item in said slot
             }
 
-            if (Equipped[slot] != null)
-            {
-                //TODO: Cursed items.
-
-                //TODO: trigger event on unequip
-            }
+            Unequip(slot);
+            Unequip(item);
 
             Equipped[slot] = item;
-
-            if (Equipped[slot] != null)
-            {
-                //TODO: trigger event on equip
-            }
 
             return true;
         }
 
-        
+        public int? EquippedInSlot(Entity item)
+        {
+            for (int i = 0; i < Equipped.Length; ++i)
+                if (Equipped[i] == item)
+                    return i;
+
+            return null;
+        }
+
+        public bool Unequip(Entity Item)
+        {
+            var slot = EquippedInSlot(Item);
+            if (slot is int s)
+            {
+                return Unequip(s);
+            }
+            return true;
+        }
+
+        public bool Unequip(int slot)
+        {
+            // TODO: Cursed items
+
+            Equipped[slot] = null;
+            return true;
+        }
+
         public string Describe() => null;
 
         public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
