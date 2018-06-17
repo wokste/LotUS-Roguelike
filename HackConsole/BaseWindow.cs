@@ -33,7 +33,17 @@ namespace HackConsole
 
         protected Widget WidgetAt(Vec pos)
         {
-            return PopupStack.WidgetAt(pos) ?? Widgets.WidgetAt(pos);
+            if (!PopupStack.Empty)
+            {
+                var topStackWidget = PopupStack.Top;
+                if (topStackWidget.Size.Contains(pos))
+                    return topStackWidget;
+                else
+                    return null;
+
+                return topStackWidget.Size.Contains(pos) ? topStackWidget : null;
+            }
+            return Widgets.WidgetAt(pos);
         }
 
         protected bool RenderWidgets()

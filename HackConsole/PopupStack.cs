@@ -12,6 +12,7 @@ namespace HackConsole
 
         private readonly List<Widget> _widgets = new List<Widget>();
         public Widget Top => (_widgets.Count > 0 ? _widgets[_widgets.Count - 1] : null);
+        public bool Empty => (_widgets.Count == 0);
 
         public override bool Render(bool forceUpdate)
         {
@@ -38,7 +39,6 @@ namespace HackConsole
         public void Push(Widget innerWidget)
         {
             var outerWidget = new BorderedWidget(innerWidget);
-
             outerWidget.CenterPopup(Size);
             (innerWidget as IPopupWidget).OnClose += () => { Pop(outerWidget); };
             _widgets.Add(outerWidget);

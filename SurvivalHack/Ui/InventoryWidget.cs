@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -65,6 +66,7 @@ namespace SurvivalHack.Ui
 
         private void ShowEquipMenu()
         {
+            Debug.WriteLine($"ShowEquipMenu()");
             _controller.Inventory.Equip(_controller.Player, null, _selectedRow);
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _controller.Inventory.Items, i => {
                 if (_controller.Inventory.Equip(_controller.Player, i, _selectedRow))
@@ -101,7 +103,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventPress))
+            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventRelease))
                 ShowEquipMenu();
         }
 

@@ -111,13 +111,15 @@ namespace SurvivalHack
         Blocking = 0x1, // Occupies a square
         Pickable = 0x2, // Can be held in the inventory.
         FixedPos = 0x4, // Nothing should be able to move this entity. E.g. Doors, fountains and stairs down shouldn't be affected by push-effects.
-        Identified = 0x8, // Set on true if item/monster is identified.
-        IsPlayer = 0x10, // Only the player actor is a player. This is useful for confusion-like debuffs that effect either AI or UI.
-        Destroyed = 0x20,
+        IsPlayer = 0x8, // Only the player actor is a player. This is useful for confusion-like debuffs that effect either AI or UI.
+        Destroyed = 0x10,
 
         // Teams are for AI. 
         TeamPlayer = 0x100, // Players, summons, etc
         TeamMonster = 0x200, // Most monsters aggressive to the player
 
+        // Blessed and cursed
+        Identified = 0x1000, // Set on true if item/monster is identified.
+        Cursed = 0x2000,
     }
 }

@@ -17,25 +17,20 @@ namespace SurvivalHack.Factory
 
             var e = GetBasic(tag);
 
-            if (info.Level != 0 && info.Rnd.NextDouble() < 0.2)
-                Enchant(info, e);
+            Morph(info, e);
 
             return e;
         }
 
-        private void Enchant(EntityGenerationInfo info, Entity e)
+        private void Morph(EntityGenerationInfo info, Entity e)
         {
-            var modifier = new Range(1, info.Level / 3 + 1).Rand(info.Rnd);
+            var roll = info.Rnd.Next(1,3);
 
-            Message.Write($"Error: Could not enchant item {e}", null, Color.White);
-
-            e.Name = $"{e.Name} +{modifier}";
-            /*
-            foreach(var c in e.Get<ECM.DamageComponent>())
+            if (roll == 1)
             {
-                c.Damage += modifier;
+                e.Name = $"Cursed {e.Name}";
+                e.EntityFlags |= EEntityFlag.Cursed;
             }
-            */
         }
 
         public Entity GetBasic(string tag)
@@ -121,28 +116,29 @@ namespace SurvivalHack.Factory
                 case "armour_leather":
                     {
                         var e = new Entity('^', "Leather Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 2, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "armour_chain":
                     {
                         var e = new Entity('^', "Chainmail Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(3, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 3, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "armour_plate":
                     {
                         var e = new Entity('^', "Plate Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(4, 0.05f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 4, 0.05f));
                         e.Add(new EquippableComponent(ESlotType.Body));
                         return e;
                     }
                 case "helmet":
                     {
                         var e = new Entity('^', "Helmet", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(3, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
+                        e.Add(new ECM.Prohibitor(typeof(DrinkEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
                         e.Add(new EquippableComponent(ESlotType.Head));
                         return e;
                     }
@@ -150,21 +146,21 @@ namespace SurvivalHack.Factory
                 case "boots":
                     {
                         var e = new Entity('"', "Boots", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Feet, 2, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Feet));
                         return e;
                     }
                 case "gloves":
                     {
                         var e = new Entity('"', "Gloves", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(2, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 2, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Gloves));
                         return e;
                     }
                 case "gauntlets":
                     {
                         var e = new Entity('"', "Gauntlets", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(4, 0.1f));
+                        e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 4, 0.1f));
                         e.Add(new EquippableComponent(ESlotType.Gloves));
                         return e;
                     }

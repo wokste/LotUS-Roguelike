@@ -33,7 +33,7 @@ namespace SurvivalHack.Combat
             return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
@@ -44,7 +44,7 @@ namespace SurvivalHack.Combat
             var attack = (AttackEvent)msg;
             if (attack.State == EAttackState.Hit)
             {
-                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location));
             }
         }
 
@@ -77,7 +77,7 @@ namespace SurvivalHack.Combat
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(BaseEvent message, EUseSource source)
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.This))
                 yield return new UseFunc(ToHitRoll);
@@ -88,7 +88,7 @@ namespace SurvivalHack.Combat
             var attack = (AttackEvent)msg;
             if (attack.State == EAttackState.Hit)
             {
-                Eventing.On(new DamageEvent(msg as AttackEvent, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType));
+                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location));
             }
         }
 

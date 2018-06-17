@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using HackConsole;
 
 namespace SurvivalHack.Ui
@@ -73,6 +74,7 @@ namespace SurvivalHack.Ui
         {
             if (_selectedIndex >= 0 && _selectedIndex < Set.Count)
             {
+                Debug.WriteLine($"Use({_selectedIndex})");
                 OnSelect?.Invoke(Set[_selectedIndex]);
                 return true;
             }
@@ -81,7 +83,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventPress))
+            if (flags.HasFlag(EventFlags.LeftButton) && flags.HasFlag(EventFlags.MouseEventRelease))
                 if (Use())
                     OnClose?.Invoke();
         }

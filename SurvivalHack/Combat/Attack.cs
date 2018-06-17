@@ -41,12 +41,16 @@ namespace SurvivalHack.Combat
 
     public enum EDamageLocation
     {
-        Head,
-        Body,
-        LArm,
-        RArm,
-        Legs,
-        Wings,
-        Tail,
+        Head = 0x1,
+        Body = 0x10,
+        LArm = 0x20,
+        RArm = 0x40,
+        Legs = 0x80,
+        AllBody = (Body | LArm | RArm | Legs),
+        Hands = 100,
+        Feet = 200,
+
+        Wings = 0x1000,
+        Tail = 0x2000,
     }
 }

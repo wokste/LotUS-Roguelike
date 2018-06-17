@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using SFML.Graphics;
 using SFML.Window;
@@ -155,12 +156,16 @@ namespace HackConsole
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
+            Debug.WriteLine("OnMouseButtonReleased");
             OnMouseButton(e, false);
+            Debug.WriteLine("~OnMouseButtonReleased");
         }
 
         private void OnMouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
+            Debug.WriteLine("OnMouseButtonPressed");
             OnMouseButton(e, true);
+            Debug.WriteLine("~OnMouseButtonPressed");
         }
 
         private void OnMouseButton(MouseButtonEventArgs e, bool pressed)
