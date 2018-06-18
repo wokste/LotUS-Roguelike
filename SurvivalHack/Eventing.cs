@@ -60,6 +60,20 @@ namespace SurvivalHack
         public Entity Item;
         public Entity Target;
 
+        public BaseEvent(Entity user, Entity item, Entity target)
+        {
+            User = user;
+            Item = item;
+            Target = target;
+        }
+
+        public BaseEvent(BaseEvent parent)
+        {
+            User = parent.User;
+            Item = parent.Item;
+            Target = parent.Target;
+        }
+
         public abstract String GetMessage(bool isChildMessage);
 		
 		///<summary>Used in Eventing.On() for the order of events. You typically won't need to manually write to this.</summary>
@@ -68,10 +82,8 @@ namespace SurvivalHack
 
     public class DrinkEvent : BaseEvent
     {
-        public DrinkEvent(Entity self, Entity item)
+        public DrinkEvent(Entity user, Entity item) : base(user, item, null)
         {
-            User = self;
-            Item = item;
         }
 
         public override string GetMessage(bool isChildMessage)
@@ -83,10 +95,8 @@ namespace SurvivalHack
 
     public class CastEvent : BaseEvent
     {
-        public CastEvent(Entity self, Entity item)
+        public CastEvent(Entity user, Entity item) : base(user, item, null)
         {
-            User = self;
-            Item = item;
         }
 
         public override string GetMessage(bool isChildMessage)
@@ -98,10 +108,8 @@ namespace SurvivalHack
 
     public class ThreatenEvent : BaseEvent
     {
-        public ThreatenEvent(Entity self, Entity target)
+        public ThreatenEvent(Entity user, Entity target) : base(user, null, target)
         {
-            User = self;
-            Target = target;
         }
 
         public override string GetMessage(bool isChildMessage)
@@ -119,11 +127,8 @@ namespace SurvivalHack
         public EAttackMove Move;
         public EDamageLocation Location;
 
-        public AttackEvent(Entity self, Entity weapon, Entity target, EAttackMove move)
+        public AttackEvent(Entity user, Entity weapon, Entity target, EAttackMove move) : base(user, weapon, target)
         {
-            User = self;
-            Item = weapon;
-            Target = target;
             Move = move;
             Location = GetRandomLocation();
         }
@@ -200,11 +205,8 @@ namespace SurvivalHack
         }
         public bool Significant => (Damage > 0);
 
-        public DamageEvent(BaseEvent prevMessage, int damage, EDamageType damageType, EDamageLocation location)
+        public DamageEvent(BaseEvent parentEvent, int damage, EDamageType damageType, EDamageLocation location) : base (parentEvent)
         {
-            User = prevMessage.User;
-            Item = prevMessage.Item;
-            Target = prevMessage.Target;
             BaseDamage = damage;
             DamageType = damageType;
             Location = location;
