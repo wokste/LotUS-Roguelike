@@ -5,7 +5,7 @@ namespace HackConsole
 {
     public abstract class TextWidget : Widget , IMouseEventSuscriber
     {
-        protected readonly List<(string,Color)> Lines = new List<(string, Color)>();
+        protected readonly List<ColoredString> Lines = new List<ColoredString>();
 
         private int _posY;
 
@@ -28,43 +28,9 @@ namespace HackConsole
             var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
             {
-                Print(new Vec(0, y), Lines[i].Item1, Lines[i].Item2);
+                Print(new Vec(0, y), Lines[i]);
                 y++;
             }
-        }
-
-        protected int WordWrap(string msg, string prefix, Color color)
-        {
-            var count = 0;
-            var noPrefix = new string(' ', prefix.Length);
-
-            var lineStart = 0;
-            var lastSpace = 0;
-
-            var maxWidth = Size.Width - prefix.Length;
-            if (maxWidth < 1)
-                return 0;
-
-            for (var i = 0; i < msg.Length; i++)
-            {
-                if (i - lineStart > maxWidth)
-                {
-                    var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, lastSpace - lineStart);
-                    Lines.Add((txt,color));
-                    count++;
-
-                    lineStart = lastSpace + 1;
-                }
-                if (msg[i] == ' ')
-                    lastSpace = i;
-            }
-            {
-                var txt = (lineStart == 0 ? prefix : noPrefix) + msg.Substring(lineStart, msg.Length - lineStart);
-                Lines.Add((txt, color));
-                count++;
-            }
-            Dirty = true;
-            return count;
         }
 
         protected override void OnResized()

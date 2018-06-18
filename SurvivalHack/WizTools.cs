@@ -61,7 +61,7 @@ namespace SurvivalHack
                     {
                         Target = e
                     };
-                    Eventing.On(dmgMsg);
+                    Eventing.On(dmgMsg, msg);
                 }
             }
 

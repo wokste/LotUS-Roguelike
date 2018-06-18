@@ -66,6 +66,21 @@ namespace HackConsole
             }
         }
 
+        /// <summary>
+        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
+        /// </summary>
+        /// <param name="v">Relative position to topleft of widget</param>
+        /// <param name="msg">The text.</param>
+        protected void Print(Vec v, ColoredString msg)
+        {
+            v += Size.TopLeft;
+            var length = Math.Min(msg.Length, Size.Right - v.X);
+
+            for (var i = 0; i < length; i++)
+            {
+                WindowData.Data[new Vec(v.X + i, v.Y)] = msg[i];
+            }
+        }
 
         protected void Print(Vec v, Symbol s)
         {

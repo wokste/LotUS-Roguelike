@@ -11,21 +11,21 @@ namespace SurvivalHack
 {
     static class Eventing
     {
-        public static bool On(BaseEvent evt)
+        public static bool On(BaseEvent evt, BaseEvent parent = null)
         {
             var funcs = new List<UseFunc>();
-            funcs.AddRange(evt.Item.Components.SelectMany(c => c.GetActions(evt, EUseSource.This)));
+            funcs.AddRange(evt.Item.Components.SelectMany(c => c.GetActions(evt.Item, evt, EUseSource.This)));
 
             if (evt.Target != null)
             {
-                funcs.AddRange(evt.Target.Components.SelectMany(c => c.GetActions(evt, EUseSource.Target)));
-                funcs.AddRange(evt.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(evt, EUseSource.TargetItem))));
+                funcs.AddRange(evt.Target.Components.SelectMany(c => c.GetActions(evt.Target, evt, EUseSource.Target)));
+                funcs.AddRange(evt.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, evt, EUseSource.TargetItem))));
             }
 
             if (evt.User != null)
             {
-                funcs.AddRange(evt.User.Components.SelectMany(c => c.GetActions(evt, EUseSource.User)));
-                funcs.AddRange(evt.User.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(evt, EUseSource.UserItem))));
+                funcs.AddRange(evt.User.Components.SelectMany(c => c.GetActions(evt.User, evt, EUseSource.User)));
+                funcs.AddRange(evt.User.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, evt, EUseSource.UserItem))));
             }
 
             if (!funcs.Any(f => f.Order == EUseOrder.Event))
@@ -43,7 +43,12 @@ namespace SurvivalHack
                 f.Action?.Invoke(evt);
             }
 
-            Message.Write(evt.GetMessage(), evt.User?.Move?.Pos, Color.Pink); //TODO: Color
+            var message = $"{evt.GetMessage((parent != null))} {evt.PostMessage}";
+
+            if (parent != null)
+				parent.PostMessage = $"{parent.PostMessage} {message}";
+			else
+				ColoredString.Write(message, Color.Pink); //TODO: Color
 
             return true;
         }
@@ -55,7 +60,10 @@ namespace SurvivalHack
         public Entity Item;
         public Entity Target;
 
-        public abstract String GetMessage();
+        public abstract String GetMessage(bool isChildMessage);
+		
+		///<summary>Used in Eventing.On() for the order of events. You typically won't need to manually write to this.</summary>
+		public string PostMessage;
     }
 
     public class DrinkEvent : BaseEvent
@@ -66,7 +74,7 @@ namespace SurvivalHack
             Item = item;
         }
 
-        public override string GetMessage()
+        public override string GetMessage(bool isChildMessage)
         {
             // TODO: drinks
             return $"{Word.Name(User)} drink {Word.AName(Item)}";
@@ -81,7 +89,7 @@ namespace SurvivalHack
             Item = item;
         }
 
-        public override string GetMessage()
+        public override string GetMessage(bool isChildMessage)
         {
             // TODO: casts
             return $"{Word.Name(User)} cast {Word.AName(Item)}";
@@ -96,7 +104,7 @@ namespace SurvivalHack
             Target = target;
         }
 
-        public override string GetMessage()
+        public override string GetMessage(bool isChildMessage)
         {
             if (Target.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
                 return $"{Word.AName(User)} spotted you.";
@@ -133,7 +141,7 @@ namespace SurvivalHack
                 return EDamageLocation.Feet;
         }
 
-        public override string GetMessage()
+        public override string GetMessage(bool isChildMessage)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -175,16 +183,17 @@ namespace SurvivalHack
         public readonly int BaseDamage;
         public EDamageType DamageType;
         public EDamageLocation Location;
-        public List<(double, string)> PreMults = new List<(double, string)>();
+        //public List<(double, string)> PreMults = new List<(double, string)>();
         public List<(int, string)> Modifiers = new List<(int, string)>();
-        public List<(double, string)> PostMults = new List<(double, string)>();
+        //public List<(double, string)> PostMults = new List<(double, string)>();
+        public bool KillHit = false;
 
         public int Damage {
             get {
                 double dmg = BaseDamage;
-                foreach ((var d, var s) in PreMults) dmg += d;
+                //foreach ((var d, var s) in PreMults) dmg *= (d+1);
                 foreach ((var i, var s) in Modifiers) dmg += i;
-                foreach ((var d, var s) in PostMults) dmg += d;
+                //foreach ((var d, var s) in PostMults) dmg *= (d+1);
 
                 return (int)(Math.Max(dmg + 0.5, 0));
             }
@@ -201,13 +210,20 @@ namespace SurvivalHack
             Location = location;
         }
 
-        public override string GetMessage()
+        public override string GetMessage(bool isChildMessage)
         {
             var dmg = Damage;
 
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{Word.AName(Target)} {Word.Verb(Target, "take")} {(dmg > 0 ? dmg.ToString() : "no") } damage. (Base damage {BaseDamage})");
-
+            sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")} {(dmg > 0 ? dmg.ToString() : "no") } damage");
+            sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ".");
+            
+            if (Modifiers.Count > 0)
+            {
+                string adds = string.Join("", Modifiers.Select(p => $" {(p.Item1 >= 0 ? "+" : "-")} {Math.Abs(p.Item1)} {p.Item2}"));
+                string formula = ($"({BaseDamage}{adds})");
+                sb.Append(formula);
+            }
 
             return sb.ToString();
         }

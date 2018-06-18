@@ -1,10 +1,12 @@
 ﻿using HackConsole;
+using HackConsole.Algo;
 
 namespace SurvivalHack.Ui
 {
-    public class InfoWidget : TextWidget
+    public class InfoWidget : Widget
     {
         private Entity _item;
+        //protected readonly List<string> Lines = new List<string>();
 
         public Entity Item {
             get => _item;
@@ -13,26 +15,28 @@ namespace SurvivalHack.Ui
                     return;
 
                 _item = value;
-                
-                MakeLines();
-                
+
                 Dirty = true;
             }
         }
 
-        protected override void MakeLines()
+        protected override void RenderImpl()
         {
-            Lines.Clear();
+            Clear();
+
+            var y = 0;
+
             if (_item != null)
             {
-                WordWrap(_item.Name, "", Color.White);
+                Print(new Vec(0, y++), _item.Name, Color.White);
                 //if (_item.EntityFlags.HasFlag(EEntityFlag.Identified))
                 {
                     foreach (var c in _item.Components)
                     {
                         var s = c.Describe();
                         if (s != null)
-                            WordWrap(s, " -", Color.Gray);
+                            foreach (var l in WordWrap.Prefix(WordWrap.Wrap(s, Size.Width - 2), " -"))
+                                Print(new Vec(0, y++), l, Color.White);
                     }
                 }
             }

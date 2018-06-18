@@ -1,45 +1,75 @@
-﻿using System;
+﻿using HackConsole.Algo;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HackConsole
 {
-    public class MessageListWidget : TextWidget
+    public class MessageListWidget : Widget, IMouseEventSuscriber
     {
-        private readonly List<Message> _messages = new List<Message>();
+        private readonly List<ColoredString> _messages = new List<ColoredString>();
+        protected readonly List<string> Lines = new List<string>();
 
-        public void AddMessage(Message msg)
+        private int _posY;
+
+        protected int PosY {
+            get => _posY;
+            set {
+                var max = Math.Max(0, Lines.Count - Size.Height);
+                _posY = MyMath.Clamp(value, 0, max);
+            }
+        }
+
+        protected override void RenderImpl()
+        {
+            Clear();
+
+            var y = 0;
+
+            var firstLine = _posY;
+            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
+            {
+                Print(new Vec(0, y), Lines[i], Color.White);
+                y++;
+            }
+        }
+
+        public void Add(ColoredString msg)
         {
             _messages.Add(msg);
-            PosY += WordWrap(msg.Text, "> ", msg.Color);
+            var range = WordWrap.Prefix(WordWrap.Wrap(msg.Text, Size.Width - 2), "> ");
+            PosY += range.Count();
+            Lines.AddRange(range);
             Dirty = true;
         }
 
-        protected override void MakeLines()
+        protected void MakeLines()
         {
             Lines.Clear();
             foreach (var msg in _messages)
-                WordWrap(msg.Text, "> ", msg.Color);
+                Lines.AddRange(WordWrap.Prefix(WordWrap.Wrap(msg.Text, Size.Width - 2), "> "));
         }
-    }
 
-    public struct Message
-    {
-        public string Text;
-        public Vec? Pos; // Where the message comes from
-        public Color Color;
-
-        private Message(string text, Vec? pos, Color color)
+        protected override void OnResized()
         {
-            Text = text;
-            Pos = pos;
-            Color = color;
+            // If the width has changed, the lines need to be recalculated.
+            MakeLines();
+            PosY = Math.Max(0, Lines.Count - Size.Height);
+            Dirty = true;
         }
 
-        public static void Write(string text, Vec? pos, Color color)
+        public virtual void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            OnMessage?.Invoke(new Message(text, pos, color));
         }
 
-        public static Action<Message> OnMessage;
+        public virtual void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
+        {
+        }
+
+        public void OnMouseWheel(Vec delta, EventFlags flags)
+        {
+            Dirty = true;
+            PosY -= delta.Y;
+        }
     }
 }

@@ -55,8 +55,10 @@
   <ItemGroup>
     <Compile Include="Algo\AStar.cs" />
     <Compile Include="Algo\Line.cs" />
+    <Compile Include="Algo\WordWrap.cs" />
     <Compile Include="BaseWindow.cs" />
     <Compile Include="BorderedWidget.cs" />
+    <Compile Include="ColoredString.cs" />
     <Compile Include="Dir.cs" />
     <Compile Include="EventSuscriber.cs" />
     <Compile Include="Grid.cs" />

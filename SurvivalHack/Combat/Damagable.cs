@@ -25,16 +25,17 @@ namespace SurvivalHack.Combat
         {
             var attack = (DamageEvent)msg;
 
-            if (!attack.Significant)
+            var damage = attack.Damage;
+
+            if (damage <= 0)
                 return;
 
-            Health.Current -= attack.Damage;
+            Health.Current -= damage;
 
-            if (Health.Current == 0)
+            if (Health.Current <= 0)
             {
                 msg.Target.Destroy();
-
-                Message.Write($"{msg.Target.Name} died", msg.Target.Move?.Pos, Color.Red);
+                attack.KillHit = true;
             }
         }
 

@@ -20,7 +20,7 @@ namespace SurvivalHack.Ui
             InitGame();
             _window = InitGui();
 
-            Message.Write("You wake up in an unknown world.", null, Color.White);
+            ColoredString.Write("You wake up in an unknown world.", Color.White);
         }
 
         private void InitGame()
@@ -46,13 +46,9 @@ namespace SurvivalHack.Ui
         {
             var window = new VBOWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
-            Message.OnMessage += (m) =>
+            ColoredString.OnMessage += (m) =>
             {
-                var pos2 = m.Pos ?? Vec.Zero;
-                if (_controller.Player == null || m.Pos == null || _controller.Player.GetOne<FieldOfView>().Is(pos2, FieldOfView.FLAG_VISIBLE))
-                {
-                    consoleWidget.AddMessage(m);
-                }
+                consoleWidget.Add(m);
             };
 
             window.Widgets.Add(consoleWidget);

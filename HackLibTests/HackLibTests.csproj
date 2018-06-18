@@ -61,6 +61,7 @@
     <Compile Include="InventoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimelineTest.cs" />
+    <Compile Include="WordWrapTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

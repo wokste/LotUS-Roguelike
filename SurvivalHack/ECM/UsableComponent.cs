@@ -29,7 +29,7 @@ namespace SurvivalHack.ECM
 
             if (healed && msg.User.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
             {
-                Message.Write($"You heal {Restore} HP", null, Color.Green);
+                ColoredString.Write($"You heal {Restore} HP", Color.Green);
                 // TODO: Item identification
             }
         }
