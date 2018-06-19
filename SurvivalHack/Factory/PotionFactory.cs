@@ -9,15 +9,25 @@ namespace SurvivalHack.Factory
     {
         static int BaseId;
 
-        (string, Color)[] types = new(string, Color)[]{
-            ("Red", Color.Parse("#f33")),
-            ("blue", Color.Parse("#36f")),
-            ("aqua", Color.Parse("#0fc")),
-            ("yellow", Color.Parse("#cf0")),
-            ("purple", Color.Parse("#f0f")),
-            ("green", Color.Parse("#3f0")),
-            ("white", Color.Parse("#fff")),
-            ("orange", Color.Parse("#f90")),
+        (string, string, Color)[] types = new(string, string, Color)[]{
+            ("a", "red", Color.Parse("#f33")),
+            ("a", "blue", Color.Parse("#36f")),
+            ("an", "aqua", Color.Parse("#0fc")),
+            ("a", "purple", Color.Parse("#f0f")),
+            ("a", "green", Color.Parse("#3f0")),
+            ("a", "violet", Color.Parse("#CDA4DE")),
+            ("a", "yellow", Color.Parse("#FFE135")),
+            ("a", "bronze ", Color.Parse("#CD7F32")),
+            ("an", "orange ", Color.Parse("#ED9121")),
+            ("a", "crystal ", Color.Parse("#A7D8DE")),
+            ("a", "pink ", Color.Parse("#FFC0CB")),
+            ("a", "sandy ", Color.Parse("#EDC9AF")),
+            ("a", "beige ", Color.Parse("#F5F5DC")),
+            ("a", "gold ", Color.Parse("#CFB53B")),
+            ("a", "mossy ", Color.Parse("#867E36")),
+            ("a", "rusty ", Color.Parse("#B7410E")),
+            ("a", "silvery ", Color.Parse("#848482")),
+            ("a", "peachy ", Color.Parse("#FFE5B4")),
         };
 
         public PotionFactory(Random rnd)
@@ -30,9 +40,9 @@ namespace SurvivalHack.Factory
         {
             Entity e = new Entity('!', "Potion", EEntityFlag.Pickable);
 
-            var potionId = info.Rnd.Next(2);
+            var potionId = info.Rnd.Next(4);
 
-            (var colorName, var color) = types[potionId];
+            (var article, var colorName, var color) = types[potionId];
             e.Symbol = new Symbol('!', color);
 
             e.Add(new StackComponent(1, potionId + BaseId));
