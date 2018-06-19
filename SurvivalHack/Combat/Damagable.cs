@@ -19,6 +19,9 @@ namespace SurvivalHack.Combat
         {
             if (message is DamageEvent && source == EUseSource.Target)
                 yield return new UseFunc(TakeDamage);
+
+            if (message is HealEvent && source == EUseSource.Target)
+                yield return new UseFunc(Heal);
         }
 
         public void TakeDamage(BaseEvent msg)
@@ -39,13 +42,15 @@ namespace SurvivalHack.Combat
             }
         }
 
-        internal bool Heal(int restore, int statID)
+        public void Heal(BaseEvent msg)
         {
-            if (Health.Current == Health.Max)
-                return false;
+            var heal = (HealEvent)msg;
 
-            Health.Current += restore;
-            return true;
+            if (Health.Current == Health.Max)
+                return;
+
+            Health.Current += heal.Restore;
+            return;
         }
 
         public string Describe() => null;

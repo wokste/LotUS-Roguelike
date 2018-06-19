@@ -1,8 +1,10 @@
 ﻿using HackConsole;
+using HackConsole.Algo;
 using SurvivalHack.Combat;
 using SurvivalHack.ECM;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,12 +45,12 @@ namespace SurvivalHack
                 f.Action?.Invoke(evt);
             }
 
-            var message = $"{evt.GetMessage((parent != null))} {evt.PostMessage}";
+            var message = evt.GetMessage(parent != null) + evt.PostMessage;
 
             if (parent != null)
-				parent.PostMessage = $"{parent.PostMessage} {message}";
+				parent.PostMessage += message;
 			else
-				ColoredString.Write(message, Color.Pink); //TODO: Color
+				ColoredString.Write(message.CleanUp(), Color.Pink); //TODO: Color
 
             return true;
         }
@@ -82,27 +84,27 @@ namespace SurvivalHack
 
     public class DrinkEvent : BaseEvent
     {
-        public DrinkEvent(Entity user, Entity item) : base(user, item, null)
+        public DrinkEvent(Entity user, Entity item) : base(user, item, user)
         {
         }
 
         public override string GetMessage(bool isChildMessage)
         {
             // TODO: drinks
-            return $"{Word.Name(User)} drink {Word.AName(Item)}";
+            return $"{Word.Name(User)} drink {Word.AName(Item)}. ";
         }
     }
 
     public class CastEvent : BaseEvent
     {
-        public CastEvent(Entity user, Entity item) : base(user, item, null)
+        public CastEvent(Entity user, Entity item) : base(user, item, user)
         {
         }
 
         public override string GetMessage(bool isChildMessage)
         {
             // TODO: casts
-            return $"{Word.Name(User)} cast {Word.AName(Item)}";
+            return $"{Word.Name(User)} cast {Word.AName(Item)}. ";
         }
     }
 
@@ -115,9 +117,9 @@ namespace SurvivalHack
         public override string GetMessage(bool isChildMessage)
         {
             if (Target.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
-                return $"{Word.AName(User)} spotted you.";
+                return $"{Word.AName(User)} spotted {Word.AName(Target)}. ";
             else
-                return null;
+                return "";
         }
     }
 
@@ -164,11 +166,11 @@ namespace SurvivalHack
             if (State == EAttackState.Hit)
             {
                 var location = "the stomach"; // TODO: Actual locations.
-                sb.Append($" and {Word.Verb(User, "hit")} {Word.It(Target)} in {location}.");
+                sb.Append($" and {Word.Verb(User, "hit")} {Word.It(Target)} in {location}. ");
             }
             else if (State == EAttackState.Miss)
             {
-                sb.Append($" but {Word.Verb(User, "miss", "misses")} the attack.");
+                sb.Append($" but {Word.Verb(User, "miss", "misses")} the attack. ");
             }
             else
             {
@@ -176,7 +178,7 @@ namespace SurvivalHack
                 var verb = Word.Verb(Target, verbs[(int)State, 0], verbs[(int)State, 1]);
 
                 //TODO: What if I add hooking.
-                sb.Append($" but {verb} the attack. No damage is dealt.");
+                sb.Append($" but {verb} the attack. No damage is dealt. ");
             }
             
             return sb.ToString();
@@ -218,16 +220,57 @@ namespace SurvivalHack
 
             StringBuilder sb = new StringBuilder();
             sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")} {(dmg > 0 ? dmg.ToString() : "no") } damage");
-            sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ".");
+            sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ". ");
             
             if (Modifiers.Count > 0)
             {
                 string adds = string.Join("", Modifiers.Select(p => $" {(p.Item1 >= 0 ? "+" : "-")} {Math.Abs(p.Item1)} {p.Item2}"));
-                string formula = ($"({BaseDamage}{adds})");
+                string formula = ($"({BaseDamage}{adds}). ");
                 sb.Append(formula);
             }
 
             return sb.ToString();
+        }
+    }
+
+    public class HealEvent : BaseEvent
+    {
+        public int Restore;
+        public readonly int Stat;
+
+        public HealEvent(BaseEvent parent, int value, int stat) : base(parent)
+        {
+            Restore = value;
+            Stat = stat;
+        }
+
+        public override string GetMessage(bool isChildMessage)
+        {
+            return $"{Word.AName(User)} {Word.Verb(User, "heal")} {Restore} HP. ";
+        }
+    }
+
+    public class GrabEvent : BaseEvent
+    {
+        public GrabEvent(Entity user, Entity item, Entity target) : base(user, item, target)
+        {
+        }
+
+        public override string GetMessage(bool isChildMessage)
+        {
+            return $"{Word.AName(User)} {Word.Verb(User, "grab")} {Word.AName(Item)}. ";
+        }
+    }
+
+    public class IdentifyEvent : BaseEvent
+    {
+        public IdentifyEvent(BaseEvent parent) : base(parent)
+        {
+        }
+
+        public override string GetMessage(bool isChildMessage)
+        {
+            return $"It is {Word.AName(Item)}. ";
         }
     }
 }

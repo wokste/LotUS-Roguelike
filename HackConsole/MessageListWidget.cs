@@ -37,7 +37,7 @@ namespace HackConsole
         public void Add(ColoredString msg)
         {
             _messages.Add(msg);
-            var range = WordWrap.Prefix(WordWrap.Wrap(msg.Text, Size.Width - 2), "> ");
+            var range = StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> ");
             PosY += range.Count();
             Lines.AddRange(range);
             Dirty = true;
@@ -47,7 +47,7 @@ namespace HackConsole
         {
             Lines.Clear();
             foreach (var msg in _messages)
-                Lines.AddRange(WordWrap.Prefix(WordWrap.Wrap(msg.Text, Size.Width - 2), "> "));
+                Lines.AddRange(StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> "));
         }
 
         protected override void OnResized()

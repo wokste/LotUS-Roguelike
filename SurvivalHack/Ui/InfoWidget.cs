@@ -35,7 +35,7 @@ namespace SurvivalHack.Ui
                     {
                         var s = c.Describe();
                         if (s != null)
-                            foreach (var l in WordWrap.Prefix(WordWrap.Wrap(s, Size.Width - 2), " -"))
+                            foreach (var l in StringExt.Prefix(StringExt.Wrap(s, Size.Width - 2), " -"))
                                 Print(new Vec(0, y++), l, Color.White);
                     }
                 }

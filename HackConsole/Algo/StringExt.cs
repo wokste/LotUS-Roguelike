@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HackConsole.Algo
 {
-    public static class WordWrap
+    public static class StringExt
     {
-        public static IEnumerable<string> Prefix(IEnumerable<string> input, string prefix)
+        public static IEnumerable<string> Prefix(this IEnumerable<string> input, string prefix)
         {
             var noPrefix = new string(' ', prefix.Length);
             bool first = true;
@@ -20,8 +21,16 @@ namespace HackConsole.Algo
             }
         }
 
-        public static IEnumerable<string> Wrap(string msg, int maxWidth)// string prefix)
+        public static IEnumerable<string> Wrap(this string msg, int maxWidth)// string prefix)
         {
+            int FirstChar(int pos)
+            {
+                for (int i = pos; i < msg.Length; i++)
+                    if (!(msg[i] == ' ' || msg[i] == '\n'))
+                        return i;
+                return msg.Length;
+            }
+
             var lineStart = 0;
             var lastSpace = 0;
 
@@ -38,7 +47,7 @@ namespace HackConsole.Algo
                         {
                             var lineEnd = i;
                             yield return msg.Substring(lineStart, Math.Max(0, lineEnd - lineStart));
-                            lineStart = FirstChar(msg, lineEnd);
+                            lineStart = FirstChar(lineEnd);
                         }
                         break;
                     default:
@@ -46,7 +55,7 @@ namespace HackConsole.Algo
                         {
                             var lineEnd = (lastSpace > lineStart) ? lastSpace : i;
                             yield return msg.Substring(lineStart, Math.Max(0, lineEnd - lineStart));
-                            lineStart = FirstChar(msg, lineEnd);
+                            lineStart = FirstChar(lineEnd);
                         }
                         break;
                 }
@@ -58,11 +67,35 @@ namespace HackConsole.Algo
             }
         }
 
-        private static int FirstChar(string msg, int pos) {
-            for (int i = pos; i < msg.Length; i++)
-                if (!(msg[i] == ' ' || msg[i] == '\n'))
-                    return i;
-            return msg.Length;
+        public static string CleanUp(this string source)
+        {
+            var sb = new StringBuilder(source.Length);
+
+            bool firstChar = true;
+            bool space = false;
+
+            foreach (var c in source)
+            {
+                // Max 1 space to be added
+                if (c == ' ')
+                {
+                    space = true;
+                    continue;
+                }
+                if (space)
+                {
+                    space = false;
+                    sb.Append(' ');
+                }
+                
+                // ToUpper all first characters
+                sb.Append(firstChar ? char.ToUpper(c) : c);
+                if (c == '\t' || c == ' ' || c == '\n' || c == '\r')
+                    continue;
+
+                firstChar = (c == '.' || c == '?' || c == '!');
+            }
+            return sb.ToString();
         }
     }
 }

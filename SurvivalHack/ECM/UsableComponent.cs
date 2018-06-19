@@ -25,13 +25,7 @@ namespace SurvivalHack.ECM
 
         public void Heal(BaseEvent msg)
         {
-            bool healed = msg.User.GetOne<Combat.Damagable>().Heal(Restore, StatID);
-
-            if (healed && msg.User.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
-            {
-                ColoredString.Write($"You heal {Restore} HP", Color.Green);
-                // TODO: Item identification
-            }
+            Eventing.On(new HealEvent(msg, Restore, StatID), msg);
         }
 
         public string Describe() => $"Heals {Restore} when used.";

@@ -10,12 +10,12 @@ using System.Diagnostics;
 namespace HackLibTests
 {
     [TestClass]
-    public class WordWrapTest
+    public class StringExtTest
     {
         [TestMethod]
-        public void WordWrap_Wrap() {
+        public void StringExt_Wrap() {
             var sentence = "the quick old abcdefghijklmnopqrstuvwxyz jumps over the lazy dog.\n\n:P";
-            var lines = WordWrap.Wrap(sentence, 10).ToArray();
+            var lines = sentence.Wrap(10).ToArray();
 
             Assert.AreEqual("the quick", lines[0]);
             Assert.AreEqual("old", lines[1]);
@@ -30,13 +30,19 @@ namespace HackLibTests
         }
 
         [TestMethod]
-        public void WordWrap_Prefix()
+        public void StringExt_Prefix()
         {
             var sentences = new string[] { "hello", "world" };
-            var lines = WordWrap.Prefix(sentences, "* ").ToArray();
+            var lines = sentences.Prefix("* ").ToArray();
 
             Assert.AreEqual("* hello", lines[0]);
             Assert.AreEqual("  world", lines[1]);
+        }
+
+        [TestMethod]
+        public void StringExt_CleanUp()
+        {
+            Assert.AreEqual("double  space.capital!   other capital?\nthird capital.".CleanUp(), "Double space.Capital! Other capital?\nThird capital.");
         }
     }
 }
