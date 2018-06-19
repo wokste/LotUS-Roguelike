@@ -148,6 +148,27 @@ namespace SurvivalHack
                 return EDamageLocation.Feet;
         }
 
+        private string LocationToString(EDamageLocation loc)
+        {
+            switch (loc) {
+                case EDamageLocation.Body:
+                    return "torso";
+                case EDamageLocation.Head:
+                    return "head";
+                case EDamageLocation.Hands:
+                    return "hand";
+                case EDamageLocation.Feet:
+                    return "foot";
+                case EDamageLocation.LArm:
+                    return "left arm";
+                case EDamageLocation.RArm:
+                    return "right arm";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+
         public override string GetMessage(bool isChildMessage)
         {
             StringBuilder sb = new StringBuilder();
@@ -165,8 +186,7 @@ namespace SurvivalHack
 
             if (State == EAttackState.Hit)
             {
-                var location = "the stomach"; // TODO: Actual locations.
-                sb.Append($" and {Word.Verb(User, "hit")} {Word.It(Target)} in {location}. ");
+                sb.Append($" and {Word.Verb(User, "hit")} {Word.Its(Target)} {LocationToString(Location)}. ");
             }
             else if (State == EAttackState.Miss)
             {
