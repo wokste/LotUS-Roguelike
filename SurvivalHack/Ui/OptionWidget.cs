@@ -12,7 +12,7 @@ namespace SurvivalHack.Ui
         public string Question;
         private int _selectedIndex = 0;
         //private int _columns = 1;
-        private const int COLUMN_WIDTH = 22;
+        private const int COLUMN_WIDTH = 42;
 
         public Action OnClose { get; set; }
         public bool Interrupt => false; // Maybe, this should be an option?
@@ -39,9 +39,16 @@ namespace SurvivalHack.Ui
                 var item = Set[i];
 
                 var color = (i == _selectedIndex) ? Color.White : Color.Gray;
-                
-                Print(new Vec(0, y), item.Symbol);
-                Print(new Vec(2, y), item.Name, color);
+
+                if (item == null)
+                {
+                    Print(new Vec(2, y), "None", color);
+                }
+                else
+                {
+                    Print(new Vec(0, y), item.Symbol);
+                    Print(new Vec(2, y), item.Name, color);
+                }
             }
         }
 

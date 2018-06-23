@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace SurvivalHack.Ui
             _columnWidth[0] = 1;
             _columnWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
             _columnWidth[2] = 1;
-            _columnWidth[3] = 20;
+            _columnWidth[3] = 40;
             _window = window;
 
             DesiredSize = new Rect(0, 0, _columnWidth.Sum() + _columnWidth.Length - 1, Inventory.SlotNames.Length);
@@ -69,8 +70,13 @@ namespace SurvivalHack.Ui
             if (_selectedRow < 0 || _selectedRow >= Inventory.SlotNames.Length)
                 return;
 
-            _controller.Inventory.Equip(_controller.Player, null, _selectedRow);
-            var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _controller.Inventory.Items, i => {
+            var slotType = Inventory.SlotNames[_selectedRow].type;
+
+            var list = new List<Entity>();
+            list.AddRange(_controller.Inventory.Items.Where(e => e.Get<Equippable>().Any(c => c.FitsIn(slotType))));
+            list.Add(null);
+
+            var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", list, i => {
                 if (_controller.Inventory.Equip(_controller.Player, i, _selectedRow))
                     _controller.EndTurn();
 

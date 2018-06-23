@@ -64,7 +64,7 @@ namespace SurvivalHack
             Debug.WriteLine($"Equip item {item?.Name}");
             if (item != null)
             {
-                var ecs = item.Get<EquippableComponent>().ToArray();
+                var ecs = item.Get<Equippable>().ToArray();
 
                 if (!ecs.Any(ec => ec.FitsIn(SlotNames[slot].type)))
                     return false; // Can't equip said item in said slot
@@ -110,11 +110,11 @@ namespace SurvivalHack
         public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source) => Enumerable.Empty<UseFunc>();
     }
 
-    public class EquippableComponent : IComponent
+    public class Equippable : IComponent
     {
         private readonly ESlotType _slotType;
 
-        public EquippableComponent(ESlotType slotType)
+        public Equippable(ESlotType slotType)
         {
             _slotType = slotType;
         }

@@ -42,7 +42,7 @@ namespace SurvivalHack.Factory
                         var e = new Entity('\\', Color.Gray, "Dagger", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
                         e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "ssword":
@@ -50,7 +50,7 @@ namespace SurvivalHack.Factory
                         var e = new Entity('\\', Color.Gray, "Shortsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "lsword":
@@ -58,7 +58,7 @@ namespace SurvivalHack.Factory
                         var e = new Entity('\\', Color.Gray, "Longsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
                         e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new Equippable(ESlotType.Hand));
                         return e;
                     }
                 case "axe":
@@ -66,42 +66,42 @@ namespace SurvivalHack.Factory
                         var e = new Entity('\\', Color.Orange, "Handaxe", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
                         e.Add(new Combat.Blockable(0.1f, Combat.EAttackState.Parried));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "spear":
                     {
                         var e = new Entity('\\', Color.Orange, "Spear", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
-                        e.Add(new EquippableComponent(ESlotType.Hand));
+                        e.Add(new Equippable(ESlotType.Hand));
                         return e;
                     }
                 case "mace":
                     {
                         var e = new Entity('\\', Color.Gray, "Mace", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "wshield":
                     {
                         var e = new Entity('[', Color.Orange, "Wooden Shield", EEntityFlag.Pickable);
                         e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "ishield":
                     {
                         var e = new Entity('[', Color.Gray, "Iron Shield", EEntityFlag.Pickable);
                         e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
-                        e.Add(new EquippableComponent(ESlotType.Offhand));
+                        e.Add(new Equippable(ESlotType.Offhand));
                         return e;
                     }
                 case "sbow":
                     {
                         var e = new Entity(')', Color.Orange, "Shortbow", EEntityFlag.Pickable);
                         e.Add(new Combat.RangedWeapon(5, Combat.EDamageType.Piercing, 20));
-                        e.Add(new EquippableComponent(ESlotType.Ranged));
+                        e.Add(new Equippable(ESlotType.Ranged));
                         //TODO: require ammo
                         return e;
                     }
@@ -109,7 +109,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity(')', Color.Orange, "Longbow", EEntityFlag.Pickable);
                         e.Add(new Combat.RangedWeapon(6, Combat.EDamageType.Piercing, 50 ));
-                        e.Add(new EquippableComponent(ESlotType.Ranged));
+                        e.Add(new Equippable(ESlotType.Ranged));
                         //TODO: require ammo
                         return e;
                     }
@@ -117,21 +117,21 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('^', Color.Orange, "Leather Armour", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 2, 0.05f));
-                        e.Add(new EquippableComponent(ESlotType.Body));
+                        e.Add(new Equippable(ESlotType.Body));
                         return e;
                     }
                 case "armour_chain":
                     {
                         var e = new Entity('^', Color.Gray, "Chainmail Armour", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 3, 0.05f));
-                        e.Add(new EquippableComponent(ESlotType.Body));
+                        e.Add(new Equippable(ESlotType.Body));
                         return e;
                     }
                 case "armour_plate":
                     {
                         var e = new Entity('^', Color.White, "Plate Armour", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 4, 0.05f));
-                        e.Add(new EquippableComponent(ESlotType.Body));
+                        e.Add(new Equippable(ESlotType.Body));
                         return e;
                     }
                 case "helmet":
@@ -139,7 +139,7 @@ namespace SurvivalHack.Factory
                         var e = new Entity('^', Color.Cyan, "Helmet", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
                         e.Add(new ECM.Prohibitor(typeof(DrinkEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
-                        e.Add(new EquippableComponent(ESlotType.Head));
+                        e.Add(new Equippable(ESlotType.Head));
                         return e;
                     }
 
@@ -147,39 +147,39 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('"', Color.Orange, "Boots", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Feet, 2, 0.1f));
-                        e.Add(new EquippableComponent(ESlotType.Feet));
+                        e.Add(new Equippable(ESlotType.Feet));
                         return e;
                     }
                 case "gloves":
                     {
                         var e = new Entity('"', Color.White, "Gloves", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 2, 0.1f));
-                        e.Add(new EquippableComponent(ESlotType.Gloves));
+                        e.Add(new Equippable(ESlotType.Gloves));
                         return e;
                     }
                 case "gauntlets":
                     {
                         var e = new Entity('"', Color.Gray, "Gauntlets", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 4, 0.1f));
-                        e.Add(new EquippableComponent(ESlotType.Gloves));
+                        e.Add(new Equippable(ESlotType.Gloves));
                         return e;
                     }
                 case "ring":
                     {
                         var e = new Entity('*', Color.Yellow, "Ring", EEntityFlag.Pickable);
-                        e.Add(new EquippableComponent(ESlotType.Ring));
+                        e.Add(new Equippable(ESlotType.Ring));
                         return e;
                     }
                 case "cloak":
                     {
                         var e = new Entity(']', Color.Gray, "Cloak", EEntityFlag.Pickable);
-                        e.Add(new EquippableComponent(ESlotType.Neck));
+                        e.Add(new Equippable(ESlotType.Neck));
                         return e;
                     }
                 case "amulet":
                     {
                         var e = new Entity('*', Color.Cyan, "Amulet", EEntityFlag.Pickable);
-                        e.Add(new EquippableComponent(ESlotType.Neck));
+                        e.Add(new Equippable(ESlotType.Neck));
                         return e;
                     }
                 case "@resistance":
