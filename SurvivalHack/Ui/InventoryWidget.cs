@@ -66,7 +66,9 @@ namespace SurvivalHack.Ui
 
         private void ShowEquipMenu()
         {
-            Debug.WriteLine($"ShowEquipMenu()");
+            if (_selectedRow < 0 || _selectedRow >= Inventory.SlotNames.Length)
+                return;
+
             _controller.Inventory.Equip(_controller.Player, null, _selectedRow);
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", _controller.Inventory.Items, i => {
                 if (_controller.Inventory.Equip(_controller.Player, i, _selectedRow))

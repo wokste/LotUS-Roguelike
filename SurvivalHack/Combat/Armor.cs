@@ -87,4 +87,33 @@ namespace SurvivalHack.Combat
             return $"Reduces damage by {DamageReduction}.";
         }
     }
+
+    internal class ElementalResistance : IComponent
+    {
+        private readonly EDamageType DamageType;
+        private readonly float Mult;
+
+        public ElementalResistance(EDamageType damageType, float mult)
+        {
+            DamageType = damageType;
+            Mult = mult;
+        }
+
+        public string Describe() => $"Reduces all {DamageType} damage by {Mult}";
+
+        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        {
+            if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
+                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+        }
+
+        public void Mutate(BaseEvent msg)
+        {
+            var attack = (DamageEvent)msg;
+
+            //TODO: Fix
+            attack.Modifiers.Add((-(int)(Mult * 10), "elemental resistance"));
+            return;
+        }
+    }
 }

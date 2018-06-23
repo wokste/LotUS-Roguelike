@@ -33,6 +33,7 @@ namespace SurvivalHack.Combat
         Bludgeoing = 1,
         Piercing = 2,
         Slashing = 4,
+        Poison = 8,
 
         Fire = 0x10,
         Ice = 0x20,

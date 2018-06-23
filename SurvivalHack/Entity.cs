@@ -38,6 +38,13 @@ namespace SurvivalHack
             EntityFlags = entityFlags;
         }
 
+        public Entity(char ascii, Color fc, string name, EEntityFlag entityFlags)
+        {
+            Symbol = new Symbol(ascii, fc);
+            Name = name;
+            EntityFlags = entityFlags;
+        }
+
         public IEnumerable<T> Get<T>() where T : class, IComponent
         {
             foreach (var c in Components)

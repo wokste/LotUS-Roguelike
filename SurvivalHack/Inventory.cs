@@ -112,7 +112,7 @@ namespace SurvivalHack
 
     public class EquippableComponent : IComponent
     {
-        private ESlotType _slotType;
+        private readonly ESlotType _slotType;
 
         public EquippableComponent(ESlotType slotType)
         {

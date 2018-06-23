@@ -10,7 +10,7 @@ namespace SurvivalHack.Mapgen
     public class DungeonPopulator
     {
         //private Dictionary<int, RandomTable<string>> _randomTables = new Dictionary<int, RandomTable<string>>();
-        private DungeonGenerator _gen;
+        private readonly DungeonGenerator _gen;
         private EntityGenerationInfo _info;
         private Level _level;
 

@@ -10,11 +10,12 @@ namespace SurvivalHack.Mapgen
     public class DungeonConnector
     {
         Level _map;
-        double[,] Weights; // Adjacency matrix. 0 means the rooms are connected.
+        readonly double[,] Weights; // Adjacency matrix. 0 means the rooms are connected.
         Room[] _rooms;
 
         int RoomCount => _rooms.Length;
-        RoomStatFlag[] Flags;
+
+        readonly RoomStatFlag[] Flags;
 
         public DungeonConnector(Level map, List<Room> rooms)
         {

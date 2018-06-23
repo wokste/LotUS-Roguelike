@@ -26,7 +26,7 @@ namespace SurvivalHack.Ai
         private Goal _goal;
 
         public ETeam Team;
-        private IAttitudeRule[] _rules;
+        private readonly IAttitudeRule[] _rules;
 
         public Attitude(ETeam team, IAttitudeRule[] rules)
         {
@@ -115,9 +115,9 @@ namespace SurvivalHack.Ai
 
     public class TeamAttitudeRule : IAttitudeRule
     {
-        private ETargetAction _act;
-        private ETeam _team;
-        private int _priority;
+        private readonly ETargetAction _act;
+        private readonly ETeam _team;
+        private readonly int _priority;
 
         public TeamAttitudeRule(ETargetAction act, ETeam team, int priority = 1) {
             
