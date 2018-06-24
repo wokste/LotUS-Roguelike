@@ -21,10 +21,10 @@ namespace SurvivalHack.ECM
         }
 
         public string Describe() => null;
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
             if (EventType.IsAssignableFrom(msg.GetType()) && source == Source && (!CurseOnly || self.EntityFlags.HasFlag(EEntityFlag.Cursed)))
-                yield return UseFunc.MakeInterrupt(Message);
+                msg.OnEventCheck.Add(m => Message);
         }
     }
 }

@@ -17,10 +17,10 @@ namespace SurvivalHack.ECM
             MessageType = messageType;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (MessageType.IsAssignableFrom(msg.GetType()) && source == EUseSource.This)
-                yield return new UseFunc(Heal);
+            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.This)
+                message.OnEvent += Heal;
         }
 
         public void Heal(BaseEvent msg)
@@ -42,10 +42,10 @@ namespace SurvivalHack.ECM
             Flags = flags;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (MessageType.IsAssignableFrom(msg.GetType()) && source == EUseSource.This)
-                yield return new UseFunc(Reveal);
+            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.This)
+                message.OnEvent += Reveal;
         }
 
         public void Reveal(BaseEvent msg)

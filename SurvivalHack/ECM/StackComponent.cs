@@ -32,12 +32,12 @@ namespace SurvivalHack.ECM
             }
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source) {
+        public void GetActions(Entity self, BaseEvent message, EUseSource source) {
             if (source == EUseSource.This)
             {
-                if (msg is ConsumeEvent) // TODO, others
+                if (message is ConsumeEvent) // TODO, others
                 {
-                    yield return new UseFunc(Consume, EUseOrder.PostEvent);
+                    message.PostEvent += Consume;
                 }
             }
         }

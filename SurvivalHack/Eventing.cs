@@ -15,42 +15,50 @@ namespace SurvivalHack
     {
         public static bool On(BaseEvent evt, BaseEvent parent = null)
         {
-            var funcs = new List<UseFunc>();
-            funcs.AddRange(evt.Item.Components.SelectMany(c => c.GetActions(evt.Item, evt, EUseSource.This)));
+            // Prepare event, filling in PreEvent, OnEvent, PostEvent, etc
+            foreach (var c in evt.Item.Components)
+                c.GetActions(evt.Item, evt, EUseSource.This);
 
             if (evt.Target != null)
             {
-                funcs.AddRange(evt.Target.Components.SelectMany(c => c.GetActions(evt.Target, evt, EUseSource.Target)));
-                funcs.AddRange(evt.Target.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, evt, EUseSource.TargetItem))));
+                foreach (var c in evt.Target.Components)
+                    c.GetActions(evt.Target, evt, EUseSource.Target);
+                foreach (var e in evt.Target.ListSubEntities())
+                    foreach (var c in e.Components)
+                        c.GetActions(e, evt, EUseSource.TargetItem);
             }
 
             if (evt.User != null)
             {
-                funcs.AddRange(evt.User.Components.SelectMany(c => c.GetActions(evt.User, evt, EUseSource.User)));
-                funcs.AddRange(evt.User.ListSubEntities().SelectMany(e => e.Components.SelectMany(c => c.GetActions(e, evt, EUseSource.UserItem))));
+                foreach (var c in evt.User.Components)
+                    c.GetActions(evt.User, evt, EUseSource.User);
+                foreach (var e in evt.User.ListSubEntities())
+                    foreach (var c in e.Components)
+                        c.GetActions(e, evt, EUseSource.UserItem);
             }
 
-            if (!funcs.Any(f => f.Order == EUseOrder.Event))
+            // == Execute the event ==
+            //evt.PreEventCheck?.Invoke(evt);
+            foreach (var check in evt.OnEventCheck)
             {
-                return false;
+                var str = check.Invoke(evt);
+                if (str != null)
+                {
+                    ColoredString.Write(str.CleanUp(), Color.Red);
+                    return false;
+                }
             }
+            evt.PreEvent?.Invoke(evt);
+            evt.OnEvent?.Invoke(evt);
+            evt.PostEvent?.Invoke(evt);
 
-            if (funcs.Any(f => f.Order == EUseOrder.Interrupt))
-            {
-                return false;
-            }
-
-            foreach (var f in funcs.OrderBy(f => f.Order))
-            {
-                f.Action?.Invoke(evt);
-            }
-
+            // == Logging ==
             var message = evt.GetMessage(parent != null) + evt.PostMessage;
 
             if (parent != null)
 				parent.PostMessage += message;
 			else
-				ColoredString.Write(message.CleanUp(), Color.Pink); //TODO: Color
+				ColoredString.Write(message.CleanUp(), Color.Yellow); //TODO: Color
 
             return true;
         }
@@ -61,6 +69,12 @@ namespace SurvivalHack
         public Entity User;
         public Entity Item;
         public Entity Target;
+
+        //public Action<BaseEvent> PreEventCheck;
+        public List<Func<BaseEvent, string>> OnEventCheck = new List<Func<BaseEvent, string>>();
+        public Action<BaseEvent> PreEvent;
+        public Action<BaseEvent> OnEvent;
+        public Action<BaseEvent> PostEvent;
 
         public BaseEvent(Entity user, Entity item, Entity target)
         {

@@ -43,10 +43,10 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
+            public void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
                 if (source == EUseSource.This && MessageType.IsAssignableFrom(msg.GetType()))
-                    yield return new UseFunc(Genocide);
+                    msg.OnEvent += Genocide;
             }
 
             public void Genocide(BaseEvent msg)

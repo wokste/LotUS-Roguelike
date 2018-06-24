@@ -33,10 +33,10 @@ namespace SurvivalHack.Combat
             return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.This))
-                yield return new UseFunc(ToHitRoll);
+                message.OnEvent += ToHitRoll;
         }
 
         private void ToHitRoll(BaseEvent msg)
@@ -77,10 +77,10 @@ namespace SurvivalHack.Combat
             return true;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.This))
-                yield return new UseFunc(ToHitRoll);
+                message.OnEvent += ToHitRoll;
         }
 
         private void ToHitRoll(BaseEvent msg)

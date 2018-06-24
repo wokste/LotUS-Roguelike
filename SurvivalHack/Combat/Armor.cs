@@ -19,10 +19,10 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+                message.PreEvent += Mutate;
         }
 
         public void Mutate(BaseEvent msg)
@@ -60,10 +60,10 @@ namespace SurvivalHack.Combat
             CritChance = critChance;
         }
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+                message.PreEvent += Mutate;
         }
 
         public void Mutate(BaseEvent msg)
@@ -101,10 +101,10 @@ namespace SurvivalHack.Combat
 
         public string Describe() => $"Reduces all {DamageType} damage by {Mult}";
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                yield return new UseFunc(Mutate, EUseOrder.PreEvent);
+                message.PreEvent += Mutate;
         }
 
         public void Mutate(BaseEvent msg)

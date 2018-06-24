@@ -15,13 +15,13 @@ namespace SurvivalHack.Combat
         }
 
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && source == EUseSource.Target)
-                yield return new UseFunc(TakeDamage);
+                message.OnEvent += TakeDamage;
 
             if (message is HealEvent && source == EUseSource.Target)
-                yield return new UseFunc(Heal);
+                message.OnEvent += Heal;
         }
 
         public void TakeDamage(BaseEvent msg)
