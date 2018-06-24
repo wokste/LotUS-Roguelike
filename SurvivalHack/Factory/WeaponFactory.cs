@@ -39,7 +39,7 @@ namespace SurvivalHack.Factory
             {
                 case "dagger":
                     {
-                        var e = new Entity('\\', Color.Gray, "Dagger", EEntityFlag.Pickable);
+                        var e = new Entity('\\', Color.Gray, "Dagger", EEntityFlag.Pickable | EEntityFlag.Throwable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
                         e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
                         e.Add(new Equippable(ESlotType.Offhand));
@@ -63,7 +63,7 @@ namespace SurvivalHack.Factory
                     }
                 case "axe":
                     {
-                        var e = new Entity('\\', Color.Orange, "Handaxe", EEntityFlag.Pickable);
+                        var e = new Entity('\\', Color.Orange, "Handaxe", EEntityFlag.Pickable | EEntityFlag.Throwable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
                         e.Add(new Combat.Blockable(0.1f, Combat.EAttackState.Parried));
                         e.Add(new Equippable(ESlotType.Offhand));
@@ -71,7 +71,7 @@ namespace SurvivalHack.Factory
                     }
                 case "spear":
                     {
-                        var e = new Entity('\\', Color.Orange, "Spear", EEntityFlag.Pickable);
+                        var e = new Entity('\\', Color.Orange, "Spear", EEntityFlag.Pickable | EEntityFlag.Throwable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
                         e.Add(new Equippable(ESlotType.Hand));
                         return e;
@@ -138,7 +138,7 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('^', Color.Cyan, "Helmet", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
-                        e.Add(new ECM.Prohibitor(typeof(DrinkEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
+                        e.Add(new ECM.Prohibitor(typeof(ConsumeEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
                         e.Add(new Equippable(ESlotType.Head));
                         return e;
                     }

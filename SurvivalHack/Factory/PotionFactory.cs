@@ -38,9 +38,9 @@ namespace SurvivalHack.Factory
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            Entity e = new Entity('!', "Potion", EEntityFlag.Pickable);
+            Entity e = new Entity('!', "Potion", EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
 
-            var potionId = info.Rnd.Next(4);
+            var potionId = info.Rnd.Next(3);
 
             (var article, var colorName, var color) = types[potionId];
             e.Symbol = new Symbol('!', color);
@@ -50,10 +50,13 @@ namespace SurvivalHack.Factory
             switch (potionId)
             {
                 case 0: // Lesser healing potion
-                    e.Add(new HealComponent(20, 0, typeof(DrinkEvent)));
+                    e.Add(new HealComponent(20, 0, typeof(ConsumeEvent)));
                     break;
                 case 1: // Greater healing potion
-                    e.Add(new HealComponent(40, 0, typeof(DrinkEvent)));
+                    e.Add(new HealComponent(40, 0, typeof(ConsumeEvent)));
+                    break;
+                case 2: // Poison draught
+                    //e.Add(new Combat.Poisonous(20, typeof(ConsumeEvent)));
                     break;
             }
             //TODO: Add randomized effects to the potion.

@@ -81,7 +81,6 @@ namespace SurvivalHack.Ui
         {
             if (_selectedIndex >= 0 && _selectedIndex < Set.Count)
             {
-                Debug.WriteLine($"Use({_selectedIndex})");
                 OnSelect?.Invoke(Set[_selectedIndex]);
                 return true;
             }

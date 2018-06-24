@@ -61,7 +61,6 @@ namespace SurvivalHack
 
         public bool Equip(Entity self, Entity item, int slot)
         {
-            Debug.WriteLine($"Equip item {item?.Name}");
             if (item != null)
             {
                 var ecs = item.Get<Equippable>().ToArray();

@@ -35,7 +35,7 @@ namespace SurvivalHack.ECM
         public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source) {
             if (source == EUseSource.This)
             {
-                if (msg is DrinkEvent) // TODO, others
+                if (msg is ConsumeEvent) // TODO, others
                 {
                     yield return new UseFunc(Consume, EUseOrder.PostEvent);
                 }

@@ -82,16 +82,16 @@ namespace SurvivalHack
 		public string PostMessage;
     }
 
-    public class DrinkEvent : BaseEvent
+    public class ConsumeEvent : BaseEvent
     {
-        public DrinkEvent(Entity user, Entity item) : base(user, item, user)
+        public ConsumeEvent(Entity user, Entity item) : base(user, item, user)
         {
         }
 
         public override string GetMessage(bool isChildMessage)
         {
             // TODO: drinks
-            return $"{Word.Name(User)} drink {Word.AName(Item)}. ";
+            return $"{Word.Name(User)} {Word.Verb(User, "consume")} {Word.AName(Item)}. ";
         }
     }
 

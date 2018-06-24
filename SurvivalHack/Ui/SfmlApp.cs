@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using System.Linq;
 
 namespace SurvivalHack.Ui
 {
@@ -92,19 +93,38 @@ namespace SurvivalHack.Ui
         {
             switch (keyCode)
             {
+                case 'a':
+                    {
+                        // TODO: Reserved for interactin with the map. Open doors, pray at altars, etc.
+                    }
+                    break;
+                case 'c':
+                    {
+                        // TODO: Reserved for casting spells
+                    }
+                    break;
                 case 'd':
                     {
-                        var o = new OptionWidget($"Drink", _controller.Player.GetOne<Inventory>().Items, i => {
-                            if (Eventing.On(new DrinkEvent(_controller.Player, i)))
+                        /*var l = _controller.Player.GetOne<Inventory>().Items;
+                        var o = new OptionWidget($"Drop Item", l, i => {
+                            //TODO: drop item
+                        });
+                        _window.PopupStack.Push(o);*/
+                    }
+                    break;
+                case 'e':
+                    {
+                        var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
+                        var o = new OptionWidget($"Consume", l, i => {
+                            if (Eventing.On(new ConsumeEvent(_controller.Player, i)))
                                 _controller.EndTurn();
                         });
                         _window.PopupStack.Push(o);
                     }
                     break;
-                case 'w':
+                case 'f':
                     {
-                        var o = new InventoryWidget(_controller, _window);
-                        _window.PopupStack.Push(o);
+                        // TODO: Fight, especially useful for ranged attacks.
                     }
                     break;
                 case 'g':
@@ -124,9 +144,31 @@ namespace SurvivalHack.Ui
                             _controller.EndTurn();
                     }
                     break;
-                case 'f':
+                case 's':
                     {
-                        // TODO: Fight, especially useful for ranged attacks.
+                        // TODO: Reserved for searching
+                    }
+                    break;
+                case 't':
+                    {
+                        var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Throwable)).ToList();
+                        /* TODO: Reserved for throwing
+                        var o = new OptionWidget($"Throw", l, i => {
+                            
+                        });
+                        _window.PopupStack.Push(o);
+                        */
+                    }
+                    break;
+                case 'w':
+                    {
+                        var o = new InventoryWidget(_controller, _window);
+                        _window.PopupStack.Push(o);
+                    }
+                    break;
+                case 'z':
+                    {
+                        // TODO: Reserved for zapping wands
                     }
                     break;
 

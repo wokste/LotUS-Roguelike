@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combat\Elemental.cs" />
     <Compile Include="ECM\Prohibitor.cs" />
     <Compile Include="Eventing.cs" />
     <Compile Include="TurnController.cs" />
