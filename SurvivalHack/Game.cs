@@ -19,7 +19,8 @@ namespace SurvivalHack
             var generator = new Mapgen.DungeonGenerator();
             generator.OnNewEvent += (e)=>{ Timeline.Insert(e); };
 
-            Level = generator.Generate(Rnd.Next(), new Vec(128,64));
+            Level = new Level(this, 1, new Vec(64, 64));
+            generator.Generate(Level, Rnd.Next());
         }
 
         public void MonsterTurn()

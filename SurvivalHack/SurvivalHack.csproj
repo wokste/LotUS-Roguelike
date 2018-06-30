@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ECM\Prohibitor.cs" />
+    <Compile Include="ECM\Stairs.cs" />
     <Compile Include="Eventing.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />

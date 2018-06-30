@@ -13,6 +13,7 @@ namespace SurvivalHack
         public List<Vec> Path;
         public FieldOfView FoV;
         public Inventory Inventory;
+        public Level Level => Player.Move.Level;
 
         public string Describe() => null;
         public Action OnTurnEnd;

@@ -8,7 +8,7 @@ namespace SurvivalHack.Ui
 {
     internal class MapWidget : Widget, IMouseEventSuscriber
     {
-        private readonly Level _level;
+        private Level _level;
         private readonly TurnController _controller;
         private readonly Color _pathColor = new Color(0, 128, 255, 128);
 
@@ -16,12 +16,21 @@ namespace SurvivalHack.Ui
         private IEnumerable<Vec> _path = null;
         private AStar _aStar;
 
-        public MapWidget(Level level, TurnController controller)
+        public MapWidget(TurnController controller)
         {
-            _level = level;
             _controller = controller;
-            _controller.OnMove += () => { _path = null; };
-            _aStar = new AStar(level.TileMap.Size, CostFunc, true);
+            _controller.OnMove += Moved;
+            Moved();
+        }
+
+        private void Moved()
+        {
+            _path = null;
+            if (_level != _controller.Level)
+            {
+                _level = _controller.Level;
+                _aStar = new AStar(_controller.Level.Size, CostFunc, true);
+            }
         }
 
         private float CostFunc(Vec v)

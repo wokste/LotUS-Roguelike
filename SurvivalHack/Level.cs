@@ -8,13 +8,18 @@ namespace SurvivalHack
     public class Level
     {
         public Grid<Tile> TileMap;
+        public Game Game;
+        public int Depth;
         private readonly Grid<List<Entity>> _entityChunks;
         private const int CHUNK_SIZE = 16;
 
         public Vec Size => TileMap.Size;
 
-        public Level(Vec size)
+        public Level(Game game, int depth, Vec size)
         {
+            Game = game;
+            Depth = depth;
+
             TileMap = new Grid<Tile>(size, TileList.Get("rock"));
             _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 

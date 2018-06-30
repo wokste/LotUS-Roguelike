@@ -63,7 +63,7 @@ namespace SurvivalHack.Ui
             };
             window.Widgets.Add(characterWidget);
 
-            var worldWidget = new MapWidget(_game.Level, _controller)
+            var worldWidget = new MapWidget(_controller)
             {
                 Docking = Docking.Fill
             };

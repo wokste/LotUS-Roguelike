@@ -28,14 +28,13 @@ namespace SurvivalHack.Mapgen
             RoomFactories.Add(new BlobRoomFactory());
         }
 
-        internal Level Generate(int seed, Vec size)
+        internal Level Generate(Level map, int seed)
         {
             Seed = seed;
             _rnd = new Random(seed);
 
             // Add rooms
-            var map = new Level(size);
-            var maskMap = new Grid<int>(size, MASKID_VOID);
+            var maskMap = new Grid<int>(map.Size, MASKID_VOID);
 
             var rooms = new List<Room>();
             for (var i = 0; i < 50; i++)
