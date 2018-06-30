@@ -40,8 +40,6 @@ namespace HackConsole
                     return topStackWidget;
                 else
                     return null;
-
-                return topStackWidget.Size.Contains(pos) ? topStackWidget : null;
             }
             return Widgets.WidgetAt(pos);
         }

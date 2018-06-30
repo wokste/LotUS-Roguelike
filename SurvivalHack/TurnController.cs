@@ -21,7 +21,6 @@ namespace SurvivalHack
         public Action OnGameOver;
 
         public TurnController(Game game) {
-            var pos = game.Level.GetEmptyLocation();
             Inventory = new Inventory();
 
             Player = new Entity((char)2, "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
@@ -46,7 +45,8 @@ namespace SurvivalHack
                 OnGameOver?.Invoke();
             };
 
-            MoveComponent.Bind(Player, game.Level, pos);
+            var pos = game.Levels[0].GetEmptyLocation();
+            MoveComponent.Bind(Player, game.Levels[0], pos);
             FoV = new FieldOfView(Player.Move);
             Player.Add(FoV);
         }

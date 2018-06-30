@@ -7,7 +7,7 @@ namespace SurvivalHack
     {
         public static readonly Random Rnd = new Random();
 
-        public Level Level;
+        public Level[] Levels;
         public Timeline Timeline = new Timeline();
 
         public void Init()
@@ -19,8 +19,7 @@ namespace SurvivalHack
             var generator = new Mapgen.DungeonGenerator();
             generator.OnNewEvent += (e)=>{ Timeline.Insert(e); };
 
-            Level = new Level(this, 1, new Vec(64, 64));
-            generator.Generate(Level, Rnd.Next());
+            Levels = generator.GenerateAll(Rnd.Next());
         }
 
         public void MonsterTurn()

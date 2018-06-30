@@ -111,7 +111,7 @@ namespace SurvivalHack.Ui
                     {
                         var pos = _controller.Player.Move.Pos;
                         bool didTurn = false;
-                        foreach (var i in _game.Level.GetEntities(new Rect(pos, Vec.One)))
+                        foreach (var i in _controller.Level.GetEntities(new Rect(pos, Vec.One)))
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
@@ -149,7 +149,7 @@ namespace SurvivalHack.Ui
         {
             var actPoint = _controller.Player.Move.Pos + move;
 
-            foreach (var enemy in _game.Level.GetEntity(actPoint))
+            foreach (var enemy in _controller.Level.GetEntity(actPoint))
             {
                 if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {
