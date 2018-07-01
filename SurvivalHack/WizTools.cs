@@ -45,7 +45,7 @@ namespace SurvivalHack
 
             public void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
-                if (source == EUseSource.This && MessageType.IsAssignableFrom(msg.GetType()))
+                if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
                     msg.OnEvent += Genocide;
             }
 

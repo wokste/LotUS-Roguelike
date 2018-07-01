@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using System;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -169,6 +170,24 @@ namespace SurvivalHack.Ui
                 case 'z':
                     {
                         // TODO: Reserved for zapping wands
+                    }
+                    break;
+                case '>':
+                case '<':
+                    {
+                        foreach (var entity in _controller.Level.GetEntity(_controller.Player.Move.Pos))
+                        {
+                            if (_controller.Player == entity)
+                                continue;
+
+                            if (Eventing.On(new UpDownEvent(_controller.Player, entity, keyCode)))
+                            {
+                                _controller.EndTurn();
+                                break;
+                            }
+                        }
+                        
+                        // TODO: move Up/Down
                     }
                     break;
 

@@ -33,7 +33,7 @@ namespace SurvivalHack.ECM
         }
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source) {
-            if (source == EUseSource.This)
+            if (source == EUseSource.Item)
             {
                 if (message is ConsumeEvent) // TODO, others
                 {

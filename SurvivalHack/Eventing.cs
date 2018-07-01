@@ -17,7 +17,7 @@ namespace SurvivalHack
         {
             // Prepare event, filling in PreEvent, OnEvent, PostEvent, etc
             foreach (var c in evt.Item.Components)
-                c.GetActions(evt.Item, evt, EUseSource.This);
+                c.GetActions(evt.Item, evt, EUseSource.Item);
 
             if (evt.Target != null)
             {
@@ -305,6 +305,24 @@ namespace SurvivalHack
         public override string GetMessage(bool isChildMessage)
         {
             return $"It is {Word.AName(Item)}. ";
+        }
+    }
+
+    public class UpDownEvent : BaseEvent
+    {
+        public char Dir;
+        public string Method = "";
+
+        public UpDownEvent(Entity user, Entity stairs, char dir) : base(user, stairs, null)
+        {
+            Debug.Assert(dir == '>' || dir == '<');
+
+            Dir = dir;
+        }
+
+        public override string GetMessage(bool isChildMessage)
+        {
+            return $"{Word.AName(User)} {Word.Verb(User, "walk")} {(Dir == '>' ? "down" : "up")} the {Method}. ";
         }
     }
 }

@@ -5,7 +5,7 @@ namespace SurvivalHack.ECM
     public class MoveComponent
     {
         public Vec Pos { get; set; }
-        public Level Level;
+        public Level Level { get; private set; }
 
         private MoveComponent()
         {
@@ -13,6 +13,8 @@ namespace SurvivalHack.ECM
 
         public static void Bind(Entity self, Level level, Vec pos)
         {
+            self.Move?.Unbind(self);
+
             var c = level.GetChunck(pos);
             c.Add(self);
 

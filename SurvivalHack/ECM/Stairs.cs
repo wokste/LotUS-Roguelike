@@ -10,30 +10,30 @@ namespace SurvivalHack.ECM
 {
     public class Stairs : IComponent
     {
-        public int Dir;
+        public char Ascii;
         public Entity Dest;
 
-        public Stairs(Entity dest)
+        public Stairs(Entity dest, char ascii)
         {
             Dest = dest;
+            Ascii = ascii;
         }
 
-        public string Describe() => $"Can be used to travel {(Dir == '>' ? "down" : "up")}";
+        public string Describe() => $"Can be used to travel {(Ascii == '>' ? "down" : "up")}";
 
-        public IEnumerable<UseFunc> GetActions(Entity self, BaseEvent msg, EUseSource source)
+
+        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
-            if (msg is UpDownEvent && source == EUseSource.User)
+            if (msg is UpDownEvent && source == EUseSource.Item)
             {
                 var travelMsg = msg as UpDownEvent;
-                if (travelMsg.Dir == Dir)
-                    yield return new UseFunc(Travel);
-                //message.OnEvent += Move; // TODO
+                if (travelMsg.Dir == Ascii)
+                    msg.OnEvent += Travel;
             }
         }
 
         private void Travel(BaseEvent msg)
         {
-            msg.User.Move.Unbind(msg.User);
             MoveComponent.Bind(msg.User, Dest.Move.Level, Dest.Move.Pos);
         }
 
@@ -43,26 +43,9 @@ namespace SurvivalHack.ECM
             var e2 = new Entity('<', "stairs up", EEntityFlag.FixedPos);
             MoveComponent.Bind(e1, srcMap, srcPos);
             MoveComponent.Bind(e2, destMap, destPos);
-            e1.Add(new Stairs(e2));
-            e2.Add(new Stairs(e1));
-        }
-    }
-
-    public class UpDownEvent : BaseEvent
-    {
-        public char Dir;
-        public string Method = "";
-
-        public UpDownEvent(Entity user, Entity stairs, char dir) : base(user, stairs, null)
-        {
-            Debug.Assert(dir == '>' || dir == '<');
-
-            Dir = dir;
+            e1.Add(new Stairs(e2, '>'));
+            e2.Add(new Stairs(e1, '<'));
         }
 
-        public override string GetMessage(bool isChildMessage)
-        {
-            return $"{Word.AName(User)} {Word.Verb(User, "walk")} {(Dir == '>' ? "down" : "up")} the {Method}. ";
-        }
     }
 }

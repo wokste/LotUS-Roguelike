@@ -19,7 +19,7 @@ namespace SurvivalHack.ECM
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.This)
+            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
                 message.OnEvent += Heal;
         }
 
@@ -44,7 +44,7 @@ namespace SurvivalHack.ECM
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.This)
+            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
                 message.OnEvent += Reveal;
         }
 

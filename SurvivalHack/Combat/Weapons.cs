@@ -35,7 +35,7 @@ namespace SurvivalHack.Combat
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (message is AttackEvent && (source == EUseSource.This))
+            if (message is AttackEvent && (source == EUseSource.Item))
                 message.OnEvent += ToHitRoll;
         }
 
@@ -79,7 +79,7 @@ namespace SurvivalHack.Combat
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
-            if (message is AttackEvent && (source == EUseSource.This))
+            if (message is AttackEvent && (source == EUseSource.Item))
                 message.OnEvent += ToHitRoll;
         }
 
