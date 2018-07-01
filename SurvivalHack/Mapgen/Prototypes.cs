@@ -1,7 +1,7 @@
 ﻿namespace SurvivalHack.Mapgen
 {
 #if TODO
-    class Prototypes
+    public class Prototypes
     {
         private readonly Dictionary<string, Entity> _prototypes = new Dictionary<string, Entity>();
 

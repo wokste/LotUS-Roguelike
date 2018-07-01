@@ -3,7 +3,7 @@ using HackConsole;
 
 namespace SurvivalHack.Mapgen.Rooms
 {
-    internal class RectRoomFactory : RoomFactory
+    public class RectRoomFactory : RoomFactory
     {
         public Range RangeX = new Range("4-10");
         public Range RangeY = new Range("4-10");

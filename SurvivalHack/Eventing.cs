@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack
 {
-    static class Eventing
+    static public class Eventing
     {
         public static bool On(BaseEvent evt, BaseEvent parent = null)
         {

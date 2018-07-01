@@ -2,7 +2,7 @@
 
 namespace SurvivalHack.Ui
 {
-    internal class EntityDetailWidget : Widget
+    public class EntityDetailWidget : Widget
     {
         private readonly TurnController _controller;
 

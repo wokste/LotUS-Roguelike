@@ -89,13 +89,13 @@ namespace SurvivalHack.Mapgen
             return triangulation;
         }
 
-        internal struct Triangle
+        public struct Triangle
         {
-            internal int P0;
-            internal int P1;
-            internal int P2;
+            public int P0;
+            public int P1;
+            public int P2;
 
-            internal Triangle(List<Vec> pointList, int p0, int p1, int p2)
+            public Triangle(List<Vec> pointList, int p0, int p1, int p2)
             {
                 P0 = p0;
                 P1 = p1;
@@ -116,19 +116,19 @@ namespace SurvivalHack.Mapgen
                 }
             }
 
-            internal IEnumerable<Edge> Edges()
+            public IEnumerable<Edge> Edges()
             {
                 yield return new Edge(P0, P1);
                 yield return new Edge(P0, P2);
                 yield return new Edge(P1, P2);
             }
 
-            internal bool ContainsID(int i)
+            public bool ContainsID(int i)
             {
                 return P0 == i || P1 == i || P2 == i;
             }
 
-            internal bool ContainsID(IEnumerable<int> l)
+            public bool ContainsID(IEnumerable<int> l)
             {
                 foreach (var i in l)
 			        if (ContainsID(i))
@@ -140,7 +140,7 @@ namespace SurvivalHack.Mapgen
             // Inspiration:
             // - https://en.wikipedia.org/wiki/Delaunay_triangulation
             // - https://stackoverflow.com/questions/39984709/how-can-i-check-wether-a-point-is-inside-the-circumcircle-of-3-points
-            internal bool InCircumCricle(List<Vec> pointList, int i)
+            public bool InCircumCricle(List<Vec> pointList, int i)
             {
                 var v0 = pointList[P0] - pointList[i];
                 var v1 = pointList[P1] - pointList[i];
@@ -154,14 +154,14 @@ namespace SurvivalHack.Mapgen
             }
         }
 
-        internal struct Edge
+        public struct Edge
         {
-            internal int P0;
-            internal int P1;
+            public int P0;
+            public int P1;
 
-            internal int ID => P0 << 16 + P1;
+            public int ID => P0 << 16 + P1;
 
-            internal Edge(int p0, int p1)
+            public Edge(int p0, int p1)
             {
                 if (p0 < p1)
                 {

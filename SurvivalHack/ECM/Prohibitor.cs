@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.ECM
 {
-    class Prohibitor : IComponent
+    public class Prohibitor : IComponent
     {
         public Type EventType;
         public EUseSource Source;

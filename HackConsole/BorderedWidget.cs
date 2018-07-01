@@ -2,7 +2,7 @@
 
 namespace HackConsole
 {
-    class BorderedWidget : Widget, IPopupWidget, IKeyEventSuscriber, IMouseEventSuscriber
+    public class BorderedWidget : Widget, IPopupWidget, IKeyEventSuscriber, IMouseEventSuscriber
     {
         Widget InnerWidget;
         Color FcColor = Color.White;

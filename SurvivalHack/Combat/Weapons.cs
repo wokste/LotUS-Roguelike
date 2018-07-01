@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SurvivalHack.Combat
 {
-    interface IWeapon : IComponent
+    public interface IWeapon : IComponent
     {
         bool InRange(Entity attacker, Entity defender);
         float WeaponPriority { get; }

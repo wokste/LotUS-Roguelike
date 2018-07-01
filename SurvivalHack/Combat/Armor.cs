@@ -6,7 +6,7 @@ using HackConsole;
 
 namespace SurvivalHack.Combat
 {
-    class Blockable : ECM.IComponent
+    public class Blockable : ECM.IComponent
     {
         public int Priority { get; set; } = 100;
 
@@ -45,7 +45,7 @@ namespace SurvivalHack.Combat
         }
     }
 
-    class Armour : ECM.IComponent
+    public class Armour : ECM.IComponent
     {
         public int Priority { get; set; } = 50;
 
@@ -88,7 +88,7 @@ namespace SurvivalHack.Combat
         }
     }
 
-    internal class ElementalResistance : IComponent
+    public class ElementalResistance : IComponent
     {
         private readonly EDamageType DamageType;
         private readonly float Mult;

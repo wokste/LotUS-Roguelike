@@ -25,7 +25,7 @@ namespace SurvivalHack.ECM
             };
         }
 
-        internal void Unbind(Entity self)
+        public void Unbind(Entity self)
         {
             Level.GetChunck(Pos).Remove(self);
             self.Move = null;

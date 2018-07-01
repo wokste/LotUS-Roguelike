@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack
 {
-    static class Word
+    static public class Word
     {
         public static string Name(Entity e)
         {

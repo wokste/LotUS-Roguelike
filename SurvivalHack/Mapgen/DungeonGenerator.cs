@@ -11,18 +11,18 @@ namespace SurvivalHack.Mapgen
     {
         private Random _rnd = new Random();
 
-        internal float Density { get; set; } = 0.5f;
-        internal int Seed { get; private set; }
+        public float Density { get; set; } = 0.5f;
+        public int Seed { get; private set; }
 
-        internal List<RoomFactory> RoomFactories = new List<RoomFactory>();
+        public List<RoomFactory> RoomFactories = new List<RoomFactory>();
 
-        internal Action<ITimeEvent> OnNewEvent;
+        public Action<ITimeEvent> OnNewEvent;
 
         public const int MASKID_VOID = -3;
         public const int MASKID_NOFLOOR = -2;
         public const int MASKID_KEEP = -1;
 
-        internal DungeonGenerator()
+        public DungeonGenerator()
         {
             RoomFactories.Add(new RectRoomFactory());
             RoomFactories.Add(new BlobRoomFactory());

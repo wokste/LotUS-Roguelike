@@ -4,7 +4,7 @@ using HackConsole;
 
 namespace SurvivalHack.Mapgen.Rooms
 {
-    class BlobRoomFactory : RoomFactory
+    public class BlobRoomFactory : RoomFactory
     {
         public Range MaxRadius = new Range("4-8");
         public Range MinRadius = new Range("1");
@@ -69,7 +69,7 @@ namespace SurvivalHack.Mapgen.Rooms
             }
         }
 
-        class Blob
+        public class Blob
         {
             private readonly double[] _dist;
             public Rect Rect;
@@ -101,7 +101,7 @@ namespace SurvivalHack.Mapgen.Rooms
                 };
             }
 
-            internal bool IsFloor(int x, int y)
+            public bool IsFloor(int x, int y)
             {
                 if (x == 0 && y == 0)
                     return true;

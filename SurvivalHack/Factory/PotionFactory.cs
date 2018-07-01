@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SurvivalHack.Factory
 {
-    class PotionFactory : IEntityFactory
+    public class PotionFactory : IEntityFactory
     {
         static int BaseId;
 

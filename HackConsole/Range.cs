@@ -34,7 +34,7 @@ namespace HackConsole
             return rnd.Next(Min, Max+1);
         }
 
-        internal double RandDouble(Random rnd)
+        public double RandDouble(Random rnd)
         {
             return rnd.NextDouble() * (Max - Min) + Min;
         }

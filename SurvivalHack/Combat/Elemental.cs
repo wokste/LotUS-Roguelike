@@ -4,7 +4,7 @@ using SurvivalHack.ECM;
 namespace SurvivalHack.Combat
 {
     /*
-    internal class Poisonous : IComponent
+    public class Poisonous : IComponent
     {
         private int Damage;
         //private Type type;

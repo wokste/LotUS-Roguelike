@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SurvivalHack.Factory
 {
-    class MonsterFactory : IEntityFactory
+    public class MonsterFactory : IEntityFactory
     {
         RandomTable<string> BasePropabilities;
 

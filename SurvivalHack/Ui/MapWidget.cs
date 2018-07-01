@@ -6,7 +6,7 @@ using HackConsole.Algo;
 
 namespace SurvivalHack.Ui
 {
-    internal class MapWidget : Widget, IMouseEventSuscriber
+    public class MapWidget : Widget, IMouseEventSuscriber
     {
         private Level _level;
         private readonly TurnController _controller;

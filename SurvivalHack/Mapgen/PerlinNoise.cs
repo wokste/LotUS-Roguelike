@@ -2,7 +2,7 @@
 
 namespace SurvivalHack.Mapgen
 {
-    internal class PerlinNoise
+    public class PerlinNoise
     {
         public int Octaves = 4;
         public float Persistence = 0.5f;

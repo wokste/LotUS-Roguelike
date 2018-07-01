@@ -7,7 +7,7 @@ namespace HackConsole
 {
     public class RandomTable<T>
     {
-        private (T Elem, int Odds)[] _elems;// = new (T Elem, int Odds)>();
+        private (T Elem, int Odds)[] _elems;
         private int _totalOdds = 0;
 
         private RandomTable()

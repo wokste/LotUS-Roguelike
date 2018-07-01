@@ -8,7 +8,7 @@ namespace HackLibTests
     [TestClass]
     public class TimelineTest
     {
-        private class MockEvent : ITimeEvent
+        public class MockEvent : ITimeEvent
         {
             private readonly string v;
             public int RepeatTurns { get; set; } = 1;

@@ -3,7 +3,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    internal class GameOverWidget : Widget, IPopupWidget
+    public class GameOverWidget : Widget, IPopupWidget
     {
         // Well, you can't close the Game Over widget as the game is over.
         public Action OnClose { get; set; }

@@ -6,7 +6,7 @@ namespace SurvivalHack.Ai
 {
     public class AiActor
     {
-        internal void Move(Entity self, Goal goal)
+        public void Move(Entity self, Goal goal)
         {
             switch (goal.TargetAction)
             {

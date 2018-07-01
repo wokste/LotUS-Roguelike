@@ -5,21 +5,21 @@ namespace SurvivalHack.Mapgen
 {
     public class Room
     {
-        internal Level Level = null;
+        public Level Level = null;
 
-        internal Transform Transform;
-        internal Vec Size => Tiles.Size;
+        public Transform Transform;
+        public Vec Size => Tiles.Size;
 
         public Vec Center => Transform.Convert(Size / 2);
 
-        internal Grid<Tile> Tiles;
+        public Grid<Tile> Tiles;
 
-        internal Room(Vec size)
+        public Room(Vec size)
         {
             Tiles = new Grid<Tile>(size);
         }
 
-        internal void Render(Grid<int> maskMap, int roomID)
+        public void Render(Grid<int> maskMap, int roomID)
         {
             foreach(var v in Tiles.Ids())
             { 
@@ -47,7 +47,7 @@ namespace SurvivalHack.Mapgen
             }
         }
 
-        internal bool TryPlaceOnMap(Level level, Grid<int> maskMap, List<Room> rooms)
+        public bool TryPlaceOnMap(Level level, Grid<int> maskMap, List<Room> rooms)
         {
             var mapRect = new Rect(Vec.Zero, level.Size);
 

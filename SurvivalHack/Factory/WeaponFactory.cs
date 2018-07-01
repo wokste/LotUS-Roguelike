@@ -3,7 +3,7 @@ using HackConsole;
 
 namespace SurvivalHack.Factory
 {
-    class WeaponFactory : IEntityFactory
+    public class WeaponFactory : IEntityFactory
     {
         RandomTable<string> BasePropabilities;
 

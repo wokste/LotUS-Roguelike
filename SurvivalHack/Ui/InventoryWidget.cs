@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SurvivalHack.Ui
 {
-    class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
+    public class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         TurnController _controller;
         private BaseWindow _window;

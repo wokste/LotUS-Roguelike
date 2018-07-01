@@ -121,7 +121,7 @@ namespace SurvivalHack
         
         public string Describe() => $"Can be equipped in {_slotType}";
 
-        internal bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
+        public bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
     }

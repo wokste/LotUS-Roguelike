@@ -79,7 +79,7 @@ namespace SurvivalHack
             // TODO: Add status effects.
         }
 
-        internal void Add(IComponent component)
+        public void Add(IComponent component)
         {
             Components.Add(component);
         }
@@ -92,7 +92,7 @@ namespace SurvivalHack
             Move?.Unbind(this);
         }
 
-        internal (Entity,IWeapon) GetWeapon(Entity target)
+        public (Entity,IWeapon) GetWeapon(Entity target)
         {
             IEnumerable<Entity> It() {
                 var inventory = GetOne<Inventory>();

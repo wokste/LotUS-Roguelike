@@ -7,7 +7,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    static class WizTools
+    static public class WizTools
     {
         public static Inventory Tools = new Inventory();
 

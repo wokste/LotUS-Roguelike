@@ -5,7 +5,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    class Damagable : ECM.IComponent
+    public class Damagable : ECM.IComponent
     {
         public Bar Health;
 
