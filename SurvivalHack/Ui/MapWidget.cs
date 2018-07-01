@@ -19,11 +19,11 @@ namespace SurvivalHack.Ui
         public MapWidget(TurnController controller)
         {
             _controller = controller;
-            _controller.OnMove += Moved;
-            Moved();
+            _controller.OnTurnEnd += ReactNewTurn;
+            ReactNewTurn();
         }
 
-        private void Moved()
+        private void ReactNewTurn()
         {
             _path = null;
             if (_level != _controller.Level)

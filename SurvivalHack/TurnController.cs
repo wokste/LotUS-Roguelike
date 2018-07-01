@@ -17,7 +17,6 @@ namespace SurvivalHack
 
         public string Describe() => null;
         public Action OnTurnEnd;
-        public Action OnMove;
         public Action OnGameOver;
 
         public TurnController(Game game) {
@@ -63,7 +62,6 @@ namespace SurvivalHack
         {
             if (Player.Move.Move(Player, move))
             {
-                OnMove?.Invoke();
                 EndTurn(interrupt);
                 return true;
             }
