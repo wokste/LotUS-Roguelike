@@ -138,28 +138,28 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity('^', Color.Cyan, "Helmet", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
-                        e.Add(new ECM.Prohibitor(typeof(ConsumeEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
+                        //e.Add(new ECM.Prohibitor(typeof(ConsumeEvent), "The cursed helmet prohibits drinking stuff", ECM.EUseSource.UserItem, true));
                         e.Add(new Equippable(ESlotType.Head));
                         return e;
                     }
 
                 case "boots":
                     {
-                        var e = new Entity('"', Color.Orange, "Boots", EEntityFlag.Pickable);
+                        var e = new Entity('&', Color.Orange, "Boots", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Feet, 2, 0.1f));
                         e.Add(new Equippable(ESlotType.Feet));
                         return e;
                     }
                 case "gloves":
                     {
-                        var e = new Entity('"', Color.White, "Gloves", EEntityFlag.Pickable);
+                        var e = new Entity('&', Color.White, "Gloves", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 2, 0.1f));
                         e.Add(new Equippable(ESlotType.Gloves));
                         return e;
                     }
                 case "gauntlets":
                     {
-                        var e = new Entity('"', Color.Gray, "Gauntlets", EEntityFlag.Pickable);
+                        var e = new Entity('&', Color.Gray, "Gauntlets", EEntityFlag.Pickable);
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 4, 0.1f));
                         e.Add(new Equippable(ESlotType.Gloves));
                         return e;

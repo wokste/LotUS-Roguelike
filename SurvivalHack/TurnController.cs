@@ -36,7 +36,7 @@ namespace SurvivalHack
             };
 
             Inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));
-            Inventory.Equip(Player, Inventory.Items[0], 0);
+            Inventory.Equip(Inventory.Items[0], 0);
 
             Player.OnDestroy += i =>
             {

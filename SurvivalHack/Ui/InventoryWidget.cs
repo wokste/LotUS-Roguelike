@@ -77,7 +77,7 @@ namespace SurvivalHack.Ui
             list.Add(null);
 
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", list, i => {
-                if (_controller.Inventory.Equip(_controller.Player, i, _selectedRow))
+                if (_controller.Inventory.Equip(i, _selectedRow))
                     _controller.EndTurn();
 
                 Dirty = true;

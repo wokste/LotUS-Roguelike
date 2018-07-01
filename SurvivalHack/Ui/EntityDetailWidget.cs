@@ -31,6 +31,8 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
+
+
             PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>().Health);
 
             y++;

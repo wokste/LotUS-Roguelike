@@ -106,11 +106,13 @@ namespace SurvivalHack.Ui
                     break;
                 case 'd':
                     {
-                        /*var l = _controller.Player.GetOne<Inventory>().Items;
-                        var o = new OptionWidget($"Drop Item", l, i => {
+                        var inv = _controller.Player.GetOne<Inventory>();
+                        var o = new OptionWidget($"Drop Item", inv.Items, i => {
                             //TODO: drop item
+                            inv.Remove(i);
+                            MoveComponent.Bind(i, _controller.Player.Move.Level, _controller.Player.Move.Pos);
                         });
-                        _window.PopupStack.Push(o);*/
+                        _window.PopupStack.Push(o);
                     }
                     break;
                 case 'e':

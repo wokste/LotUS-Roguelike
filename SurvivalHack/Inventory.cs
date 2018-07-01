@@ -59,7 +59,7 @@ namespace SurvivalHack
             }
         }
 
-        public bool Equip(Entity self, Entity item, int slot)
+        public bool Equip(Entity item, int slot)
         {
             if (item != null)
             {
@@ -69,8 +69,14 @@ namespace SurvivalHack
                     return false; // Can't equip said item in said slot
             }
 
-            Unequip(slot);
-            Unequip(item);
+            int? lastSlot = EquippedInSlot(item);
+
+            // Check for cursed items
+            if ((item.EntityFlags.HasFlag(EEntityFlag.Cursed) && lastSlot != null) || (Equipped[slot] != null && Equipped[slot].EntityFlags.HasFlag(EEntityFlag.Cursed)))
+                return false;
+
+            if (lastSlot is int s)
+                Equipped[s] = null;
 
             Equipped[slot] = item;
 
@@ -84,24 +90,6 @@ namespace SurvivalHack
                     return i;
 
             return null;
-        }
-
-        public bool Unequip(Entity Item)
-        {
-            var slot = EquippedInSlot(Item);
-            if (slot is int s)
-            {
-                return Unequip(s);
-            }
-            return true;
-        }
-
-        public bool Unequip(int slot)
-        {
-            // TODO: Cursed items
-
-            Equipped[slot] = null;
-            return true;
         }
 
         public string Describe() => null;
