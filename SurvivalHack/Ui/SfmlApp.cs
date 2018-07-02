@@ -58,7 +58,7 @@ namespace SurvivalHack.Ui
             var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
             window.Widgets.Add(infoWidget);
 
-            var characterWidget = new EntityDetailWidget(_controller)
+            var characterWidget = new HudWidget(_controller)
             {
                 DesiredSize = { Width = 16 },
                 Docking = Docking.Right
@@ -134,7 +134,7 @@ namespace SurvivalHack.Ui
                     {
                         var pos = _controller.Player.Move.Pos;
                         bool didTurn = false;
-                        foreach (var i in _controller.Level.GetEntities(new Rect(pos, Vec.One)))
+                        foreach (var i in _controller.Level.GetEntities(pos).ToArray())
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
@@ -177,7 +177,7 @@ namespace SurvivalHack.Ui
                 case '>':
                 case '<':
                     {
-                        foreach (var entity in _controller.Level.GetEntity(_controller.Player.Move.Pos))
+                        foreach (var entity in _controller.Level.GetEntities(_controller.Player.Move.Pos))
                         {
                             if (_controller.Player == entity)
                                 continue;
@@ -212,7 +212,7 @@ namespace SurvivalHack.Ui
         {
             var actPoint = _controller.Player.Move.Pos + move;
 
-            foreach (var enemy in _controller.Level.GetEntity(actPoint))
+            foreach (var enemy in _controller.Level.GetEntities(actPoint))
             {
                 if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                 {

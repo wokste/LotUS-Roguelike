@@ -55,8 +55,10 @@ namespace HackConsole
         /// <param name="msg">The text.</param>
         /// <param name="fgColor">Foreground color</param>
         /// <param name="bgColor">Background color</param>
-        protected void Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
+        protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
         {
+            //TODO: Input validation
+
             v += Size.TopLeft;
             var length = Math.Min(msg.Length, Size.Right - v.X);
 
@@ -64,6 +66,7 @@ namespace HackConsole
             {
                 WindowData.Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
             }
+            return true;
         }
 
         /// <summary>
@@ -71,8 +74,10 @@ namespace HackConsole
         /// </summary>
         /// <param name="v">Relative position to topleft of widget</param>
         /// <param name="msg">The text.</param>
-        protected void Print(Vec v, ColoredString msg)
+        protected bool Print(Vec v, ColoredString msg)
         {
+            //TODO: Input validation
+
             v += Size.TopLeft;
             var length = Math.Min(msg.Length, Size.Right - v.X);
 
@@ -80,6 +85,7 @@ namespace HackConsole
             {
                 WindowData.Data[new Vec(v.X + i, v.Y)] = msg[i];
             }
+            return true;
         }
 
         protected void Print(Vec v, Symbol s)

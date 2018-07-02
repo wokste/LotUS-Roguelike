@@ -46,7 +46,7 @@ namespace SurvivalHack.ECM
 
             // Monster collisions
             if (self.EntityFlags.HasFlag(EEntityFlag.Blocking))
-                foreach (var c in Level.GetEntity(newPosition))
+                foreach (var c in Level.GetEntities(newPosition))
                     if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
                         return false;
 

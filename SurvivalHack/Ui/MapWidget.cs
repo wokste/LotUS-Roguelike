@@ -133,7 +133,7 @@ namespace SurvivalHack.Ui
                 return;
             }
 
-            var list = _level.GetEntity(absPos);
+            var list = _level.GetEntities(absPos);
 
             foreach (var e in list)
                 if (_controller.FoV.ShouldShow(e))

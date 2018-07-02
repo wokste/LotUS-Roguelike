@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using HackConsole;
 
 namespace SurvivalHack
@@ -55,9 +56,18 @@ namespace SurvivalHack
             return TileMap[v];
         }
 
-        public IEnumerable<Entity> GetEntity(Vec v)
+        public IEnumerable<Entity> GetEntities(Vec v, int radius = 0)
         {
-            return GetEntities(new Rect(v, new Vec(1, 1)));
+            if (radius == 0)
+                return GetEntities(new Rect(v, new Vec(1, 1)));
+
+            var ls = GetEntities(new Rect(v - new Vec(radius,radius), new Vec(1 + 2 * radius, 1 + 2 * radius)));
+            return ls.Where(e => (e.Move.Pos - v).LengthSquared <= radius * radius);
+        }
+
+        public IEnumerable<Entity> GetEntities()
+        {
+            return GetEntities(new Rect(Vec.Zero, Size));
         }
 
         public IEnumerable<Entity> GetEntities(Rect r)
@@ -67,15 +77,11 @@ namespace SurvivalHack
             var x1 = Math.Min(r.Right / CHUNK_SIZE, _entityChunks.Size.X - 1);
             var y1 = Math.Min(r.Bottom / CHUNK_SIZE, _entityChunks.Size.Y - 1);
 
-            List<Entity> ret = new List<Entity>();
-
             for (var y = y0; y <= y1; ++y)
                 for (var x = x0; x <= x1; ++x)
                     foreach (var e in _entityChunks[new Vec(x, y)])
                         if (r.Contains(e.Move.Pos))
-                            ret.Add(e);
-
-            return ret;
+                            yield return e;
         }
 
         public IList<Entity> GetChunck(Vec Pos)

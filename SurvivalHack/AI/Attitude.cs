@@ -44,9 +44,8 @@ namespace SurvivalHack.Ai
             var pos = self.Move.Pos;
 
             // Todo: Sight radius
-            var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
-
-            foreach (var e in self.Move.Level.GetEntities(area))
+            var radius = 10;
+            foreach (var e in self.Move.Level.GetEntities(pos, radius))
             {
                 CheckSee(self, e);
             }
@@ -57,9 +56,6 @@ namespace SurvivalHack.Ai
         private void CheckSee(Entity self, Entity other)
         {
             if (other == self)
-                return;
-
-            if ((self.Move.Pos - other.Move.Pos).LengthSquared >= 100) // Todo: Sight radius
                 return;
 
             var level = self.Move.Level;
@@ -83,9 +79,9 @@ namespace SurvivalHack.Ai
                 return;
 
             // Warn allies within 10 squares
-            var area = new Rect(pos - new Vec(10, 10), new Vec(21, 21));
+            var radius = 10; // Todo: Sight radius
 
-            foreach (var ally in self.Move.Level.GetEntities(area))
+            foreach (var ally in self.Move.Level.GetEntities(pos, radius))
             {
                 if (ally == self)
                     continue;
@@ -94,10 +90,7 @@ namespace SurvivalHack.Ai
                 if (aiAttitude == null || aiAttitude.Team != Team)
                     continue;
 
-                var delta = self.Move.Pos - ally.Move.Pos;
-
-                if (delta.LengthSquared < 100) // Todo: Sight radius
-                    aiAttitude.TeamAttacked(ally, other);
+                aiAttitude.TeamAttacked(ally, other);
             }
         }
 

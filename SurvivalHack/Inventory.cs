@@ -105,7 +105,6 @@ namespace SurvivalHack
         {
             _slotType = slotType;
         }
-
         
         public string Describe() => $"Can be equipped in {_slotType}";
 
