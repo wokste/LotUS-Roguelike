@@ -35,37 +35,37 @@ namespace SurvivalHack.Ai
             {
                 var delta = new Vec(move.Rand(Game.Rnd), move.Rand(Game.Rnd));
                 
-                if (self.Move.Move(self, delta))
+                if (self.Move(self, delta))
                     return;
             }
         }
 
         private void MoveTo(Entity self, Entity other)
         {
-            var delta = other.Move.Pos - self.Move.Pos;
+            var delta = other.Pos - self.Pos;
 
             var deltaClamped = new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
 
             if (delta == deltaClamped)
                 return;
 
-            if (self.Move.Move(self, deltaClamped))
+            if (self.Move(self, deltaClamped))
                 return;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (self.Move.Move(self, new Vec(deltaClamped.X, 0)))
+                if (self.Move(self, new Vec(deltaClamped.X, 0)))
                     return;
 
-                if (self.Move.Move(self, new Vec(0, deltaClamped.Y)))
+                if (self.Move(self, new Vec(0, deltaClamped.Y)))
                     return;
             }
             else
             {
-                if (self.Move.Move(self, new Vec(0, deltaClamped.Y)))
+                if (self.Move(self, new Vec(0, deltaClamped.Y)))
                     return;
                 
-                if (self.Move.Move(self, new Vec(deltaClamped.X, 0)))
+                if (self.Move(self, new Vec(deltaClamped.X, 0)))
                     return;
             }
 

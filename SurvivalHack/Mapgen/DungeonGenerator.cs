@@ -28,66 +28,44 @@ namespace SurvivalHack.Mapgen
             RoomFactories.Add(new BlobRoomFactory());
         }
 
-        struct FloorData {
-            public Level map;
-            public Grid<int> mask;
-            public List<Room> rooms;
-
-            public FloorData(Vec size) {
-                map = new Level(size);
-                mask = new Grid<int>(size, MASKID_VOID);
-                rooms = new List<Room>();
-            }
-        }
-
-        public Level[] GenerateAll(int seed)
+        public (Level,Vec) Generate(Game game, int seed, int difficulty)
         {
             Seed = seed;
             _rnd = new Random(seed);
 
-            var levels = new FloorData[10];
-            for (int i = 0; i < levels.Length; ++i)
-            {
-                levels[i] = new FloorData(new Vec(64, 64));
-            }
+            var size = new Vec(64, 64);
+            var map = new Level(game, size);
+            var mask = new Grid<int>(size, MASKID_VOID);
+            var rooms = new List<Room>();
+            
+            PlaceRooms(map, mask, rooms, difficulty);
 
-            for (int i = 0; i < levels.Length; ++i)
-            {
-                PlaceRooms(levels[i], i);
-            }
-
-            for (int i = 0; i < levels.Length - 1; ++i)
-            {
-                ECM.Stairs.Link(levels[i].map, levels[i].rooms[0].Center, levels[i+1].map, levels[i+1].rooms[1].Center);
-            }
+            ECM.Stairs.MakeStairs(map, rooms[1].Center, difficulty++);
 
             // TODO: Connection
 
-            for (int i = 0; i < levels.Length; ++i)
-            {
-                SpawnStuff(levels[i], i);
-            }
-
-            return levels.Select(d => d.map).ToArray();
+            SpawnStuff(map, mask, rooms, difficulty);
+            
+            return (map, rooms[0].Center);
         }
 
-        void PlaceRooms(FloorData data, int depth) {
+        void PlaceRooms(Level map, Grid<int> mask, List<Room> rooms, int depth) {
             
             for (var i = 0; i < 50; i++)
             {
-                var room = GenerateRoom(data);
+                var room = GenerateRoom(map, mask, rooms);
             }
 
             // Create MST
-            var Connector = new DungeonConnector(data.map, data.rooms);
+            var Connector = new DungeonConnector(map, rooms);
             Connector.Prim();
             Connector.EliminateDeadEnds(_rnd, 0.5);
         }
 
-        void SpawnStuff(FloorData data, int depth)
+        void SpawnStuff(Level map, Grid<int> mask, List<Room> rooms, int depth)
         {
-            var spawner = new DungeonPopulator(this, data.map, _rnd); // TODO FloorData
-            spawner.Spawn(data.rooms, depth);
+            var spawner = new DungeonPopulator(this, map, _rnd); // TODO FloorData
+            spawner.Spawn(rooms, depth);
         }
 
         private RoomFactory GetFactory()
@@ -104,11 +82,11 @@ namespace SurvivalHack.Mapgen
             throw new ArithmeticException("Divide by zero exception");
         }
 
-        private Room GenerateRoom(FloorData data)
+        private Room GenerateRoom(Level map, Grid<int> mask, List<Room> rooms)
         {
             var room = GetFactory().Make(_rnd);
 
-            var free = data.map.Size - room.Size;
+            var free = map.Size - room.Size;
             const double a1 = 0;
             const double a2 = 1 - a1;
 
@@ -122,7 +100,7 @@ namespace SurvivalHack.Mapgen
                     Offset = new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd))
                 };
 
-                if (room.TryPlaceOnMap(data.map, data.mask, data.rooms))
+                if (room.TryPlaceOnMap(map, mask, rooms))
                 {
                     return room;
                 }

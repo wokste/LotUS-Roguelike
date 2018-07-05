@@ -13,7 +13,7 @@ namespace SurvivalHack
         public List<Vec> Path;
         public FieldOfView FoV;
         public Inventory Inventory;
-        public Level Level => Player.Move.Level;
+        public Level Level => Player.Level;
 
         public string Describe() => null;
         public Action OnTurnEnd;
@@ -44,9 +44,9 @@ namespace SurvivalHack
                 OnGameOver?.Invoke();
             };
 
-            var pos = game.Levels[0].GetEmptyLocation();
-            MoveComponent.Bind(Player, game.Levels[0], pos);
-            FoV = new FieldOfView(Player.Move);
+            (var level, var pos) = game.GetLevel(0);
+            Player.SetLevel(level, pos);
+            FoV = new FieldOfView(Player);
             Player.Add(FoV);
         }
 
@@ -60,7 +60,7 @@ namespace SurvivalHack
 
         public bool Move(Vec move, bool interrupt = true)
         {
-            if (Player.Move.Move(Player, move))
+            if (Player.Move(Player, move))
             {
                 EndTurn(interrupt);
                 return true;
@@ -73,10 +73,10 @@ namespace SurvivalHack
             if (Path == null || Path.Count <= 1)
                 return false;
 
-            Debug.Assert(Player.Move.Pos == Path.First());
+            Debug.Assert(Player.Pos == Path.First());
             
             Path.RemoveAt(0);
-            if (Move(Path.First() - Player.Move.Pos, false))
+            if (Move(Path.First() - Player.Pos, false))
             {
                 return true;
             }

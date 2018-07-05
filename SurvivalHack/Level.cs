@@ -10,12 +10,15 @@ namespace SurvivalHack
     {
         public Grid<Tile> TileMap;
         private readonly Grid<List<Entity>> _entityChunks;
+        public Game Game;
+
         private const int CHUNK_SIZE = 16;
 
         public Vec Size => TileMap.Size;
 
-        public Level(Vec size)
+        public Level(Game game, Vec size)
         {
+            Game = game;
             TileMap = new Grid<Tile>(size, TileList.Get("rock"));
             _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 
@@ -62,7 +65,7 @@ namespace SurvivalHack
                 return GetEntities(new Rect(v, new Vec(1, 1)));
 
             var ls = GetEntities(new Rect(v - new Vec(radius,radius), new Vec(1 + 2 * radius, 1 + 2 * radius)));
-            return ls.Where(e => (e.Move.Pos - v).LengthSquared <= radius * radius);
+            return ls.Where(e => (e.Pos - v).LengthSquared <= radius * radius);
         }
 
         public IEnumerable<Entity> GetEntities()
@@ -80,7 +83,7 @@ namespace SurvivalHack
             for (var y = y0; y <= y1; ++y)
                 for (var x = x0; x <= x1; ++x)
                     foreach (var e in _entityChunks[new Vec(x, y)])
-                        if (r.Contains(e.Move.Pos))
+                        if (r.Contains(e.Pos))
                             yield return e;
         }
 

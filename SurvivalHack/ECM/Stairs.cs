@@ -10,41 +10,37 @@ namespace SurvivalHack.ECM
 {
     public class Stairs : IComponent
     {
-        public char Ascii;
-        public Entity Dest;
+        public int Depth;
 
-        public Stairs(Entity dest, char ascii)
+        public Stairs(int depth)
         {
-            Dest = dest;
-            Ascii = ascii;
+            Depth = depth;
         }
 
-        public string Describe() => $"Can be used to travel {(Ascii == '>' ? "down" : "up")}";
+        public string Describe() => $"Can be used to travel down";
 
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
-            if (msg is UpDownEvent && source == EUseSource.Item)
+            if (msg is DownEvent && source == EUseSource.Item)
             {
-                var travelMsg = msg as UpDownEvent;
-                if (travelMsg.Dir == Ascii)
-                    msg.OnEvent += Travel;
+                msg.OnEvent += Travel;
             }
         }
 
         private void Travel(BaseEvent msg)
         {
-            MoveComponent.Bind(msg.User, Dest.Move.Level, Dest.Move.Pos);
+            Game game = msg.User.Level.Game;
+            (var Level, var Pos) = game.GetLevel(Depth);
+
+            msg.User.SetLevel(Level, Pos);
         }
 
-        public static void Link(Level srcMap, Vec srcPos, Level destMap, Vec destPos)
+        public static void MakeStairs(Level srcMap, Vec srcPos, int depth)
         {
             var e1 = new Entity('>', "stairs down", EEntityFlag.FixedPos);
-            var e2 = new Entity('<', "stairs up", EEntityFlag.FixedPos);
-            MoveComponent.Bind(e1, srcMap, srcPos);
-            MoveComponent.Bind(e2, destMap, destPos);
-            e1.Add(new Stairs(e2, '>'));
-            e2.Add(new Stairs(e1, '<'));
+            e1.SetLevel(srcMap, srcPos);
+            e1.Add(new Stairs(depth));
         }
 
     }

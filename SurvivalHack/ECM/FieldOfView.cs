@@ -35,21 +35,21 @@ namespace SurvivalHack
         // A 2-dimensional grid of visibility flags.
         public Grid<byte> Visibility;
 
-        public FieldOfView(MoveComponent move)
+        public FieldOfView(Entity e)
         {
-            Update(move);
+            Update(e);
         }
         
-        public void Update(MoveComponent move)
+        public void Update(Entity e)
         {
-            if (Map != move.Level)
+            if (Map != e.Level)
             {
-                Map = move.Level;
+                Map = e.Level;
                 Visibility = new Grid<byte>(Map.TileMap.Size); // 0 initialized so everything is dark.
             }
 
             VisibleToDark();
-            _entityPos = move.Pos;
+            _entityPos = e.Pos;
             ToVisible();
         }
 
@@ -91,7 +91,7 @@ namespace SurvivalHack
         }
 
         public bool ShouldShow(Entity e) {
-            return Is(e.Move.Pos, FLAG_VISIBLE) || (Is(e.Move.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos));
+            return Is(e.Pos, FLAG_VISIBLE) || (Is(e.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos));
         }
 
         /// <summary>

@@ -308,12 +308,12 @@ namespace SurvivalHack
         }
     }
 
-    public class UpDownEvent : BaseEvent
+    public class DownEvent : BaseEvent
     {
         public char Dir;
         public string Method = "";
 
-        public UpDownEvent(Entity user, Entity stairs, char dir) : base(user, stairs, null)
+        public DownEvent(Entity user, Entity stairs, char dir) : base(user, stairs, null)
         {
             Debug.Assert(dir == '>' || dir == '<');
 

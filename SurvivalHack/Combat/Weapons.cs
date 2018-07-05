@@ -30,7 +30,7 @@ namespace SurvivalHack.Combat
 
         public bool InRange(Entity attacker, Entity defender)
         {
-            return (attacker.Move.Pos - defender.Move.Pos).ManhattanLength <= 1;
+            return (attacker.Pos - defender.Pos).ManhattanLength <= 1;
         }
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -68,8 +68,8 @@ namespace SurvivalHack.Combat
 
         public bool InRange(Entity attacker, Entity defender)
         {
-            var level = attacker.Move.Level;
-            var path = Line.Run(attacker.Move.Pos, defender.Move.Pos);
+            var level = attacker.Level;
+            var path = Line.Run(attacker.Pos, defender.Pos);
             foreach (var v in path)
                 if (!level.HasFlag(v, TerrainFlag.Sight))
                     return false;

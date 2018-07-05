@@ -73,7 +73,7 @@ namespace SurvivalHack.Mapgen
         {
             var monster = _monsterFactory.Gen(_info);
             var pos = GetFreeTile(room);
-            MoveComponent.Bind(monster, _level, pos);
+            monster.SetLevel(_level, pos);
             _gen?.OnNewEvent(new ActEvent(monster));
         }
 
@@ -81,7 +81,7 @@ namespace SurvivalHack.Mapgen
         {
             var item = _itemFactory.Gen(_info);
             var pos = GetFreeTile(room);
-            MoveComponent.Bind(item, _level, pos);
+            item.SetLevel(_level, pos);
         }
     }
 }

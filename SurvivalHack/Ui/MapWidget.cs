@@ -47,7 +47,7 @@ namespace SurvivalHack.Ui
         protected override void RenderImpl()
         {
             if (!_controller.Player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
-                _offset = _controller.Player.Move.Pos - Size.Center;
+                _offset = _controller.Player.Pos - Size.Center;
             
             Clear();
             RenderGrid();
@@ -61,7 +61,7 @@ namespace SurvivalHack.Ui
         {
             var area = Size + _offset;
             foreach (var e in _level.GetEntities(area)) {
-                var p = e.Move.Pos;
+                var p = e.Pos;
                 
                 if (!_controller.FoV.ShouldShow(e))
                     continue;
@@ -125,7 +125,7 @@ namespace SurvivalHack.Ui
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var absPos = mousePos + _offset;
-            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.Player.Move == null)
+            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.Player == null)
             {
                 OnSelected?.Invoke(null);
                 _path = null;
@@ -139,7 +139,7 @@ namespace SurvivalHack.Ui
                 if (_controller.FoV.ShouldShow(e))
                     OnSelected?.Invoke(e);
 
-            _path = _aStar.Run(_controller.Player.Move.Pos, absPos);
+            _path = _aStar.Run(_controller.Player.Pos, absPos);
             Dirty = true;
         }
 

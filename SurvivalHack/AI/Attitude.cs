@@ -41,11 +41,11 @@ namespace SurvivalHack.Ai
                 _goal = Goal.NullGoal;
             }
 
-            var pos = self.Move.Pos;
+            var pos = self.Pos;
 
             // Todo: Sight radius
             var radius = 10;
-            foreach (var e in self.Move.Level.GetEntities(pos, radius))
+            foreach (var e in self.Level.GetEntities(pos, radius))
             {
                 CheckSee(self, e);
             }
@@ -58,8 +58,8 @@ namespace SurvivalHack.Ai
             if (other == self)
                 return;
 
-            var level = self.Move.Level;
-            var path = Line.Run(self.Move.Pos, other.Move.Pos);
+            var level = self.Level;
+            var path = Line.Run(self.Pos, other.Pos);
             foreach (var v in path)
                 if (!level.HasFlag(v, TerrainFlag.Sight))
                     return;
@@ -70,7 +70,7 @@ namespace SurvivalHack.Ai
 
         public void TakeDamage(Entity self, Entity other)
         {
-            var pos = self.Move.Pos;
+            var pos = self.Pos;
 
             foreach (var rule in _rules)
                 rule.On(self, other, ref _goal, ERisk.Threaten | ERisk.AttackFaction | ERisk.Attack);
@@ -81,7 +81,7 @@ namespace SurvivalHack.Ai
             // Warn allies within 10 squares
             var radius = 10; // Todo: Sight radius
 
-            foreach (var ally in self.Move.Level.GetEntities(pos, radius))
+            foreach (var ally in self.Level.GetEntities(pos, radius))
             {
                 if (ally == self)
                     continue;

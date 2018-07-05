@@ -84,7 +84,6 @@
     <Compile Include="ECM\StackComponent.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ECM\FieldOfView.cs" />
-    <Compile Include="ECM\MoveComponent.cs" />
     <Compile Include="Factory\EntityFactory.cs" />
     <Compile Include="Factory\MonsterFactory.cs" />
     <Compile Include="Factory\PotionFactory.cs" />

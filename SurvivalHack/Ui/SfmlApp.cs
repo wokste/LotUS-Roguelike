@@ -110,7 +110,7 @@ namespace SurvivalHack.Ui
                         var o = new OptionWidget($"Drop Item", inv.Items, i => {
                             //TODO: drop item
                             inv.Remove(i);
-                            MoveComponent.Bind(i, _controller.Player.Move.Level, _controller.Player.Move.Pos);
+                            i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -132,13 +132,13 @@ namespace SurvivalHack.Ui
                     break;
                 case 'g':
                     {
-                        var pos = _controller.Player.Move.Pos;
+                        var pos = _controller.Player.Pos;
                         bool didTurn = false;
                         foreach (var i in _controller.Level.GetEntities(pos).ToArray())
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
-                                i.Move.Unbind(i);
+                                i.SetLevel(null, Vec.Zero);
                                 _controller.Player.GetOne<Inventory>().Add(i);
                             }
                         }
@@ -177,12 +177,12 @@ namespace SurvivalHack.Ui
                 case '>':
                 case '<':
                     {
-                        foreach (var entity in _controller.Level.GetEntities(_controller.Player.Move.Pos))
+                        foreach (var entity in _controller.Level.GetEntities(_controller.Player.Pos))
                         {
                             if (_controller.Player == entity)
                                 continue;
 
-                            if (Eventing.On(new UpDownEvent(_controller.Player, entity, keyCode)))
+                            if (Eventing.On(new DownEvent(_controller.Player, entity, keyCode)))
                             {
                                 _controller.EndTurn();
                                 break;
@@ -210,7 +210,7 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
-            var actPoint = _controller.Player.Move.Pos + move;
+            var actPoint = _controller.Player.Pos + move;
 
             foreach (var enemy in _controller.Level.GetEntities(actPoint))
             {

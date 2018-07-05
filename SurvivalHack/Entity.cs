@@ -17,7 +17,6 @@ namespace SurvivalHack
         public override string ToString() => Name;
 
         public List<IComponent> Components = new List<IComponent>();
-        public MoveComponent Move;
 
         public TerrainFlag Flags;
         public Symbol Symbol;
@@ -30,6 +29,10 @@ namespace SurvivalHack
         public float LeftoverMove;
 
         public Action<Entity> OnDestroy;
+
+
+        public Level Level { get; private set; }
+        public Vec Pos;
 
         public Entity(char ascii, string name, EEntityFlag entityFlags)
         {
@@ -89,7 +92,7 @@ namespace SurvivalHack
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
 
-            Move?.Unbind(this);
+            SetLevel(null, Vec.Zero);
         }
 
         public (Entity,IWeapon) GetWeapon(Entity target)
@@ -109,6 +112,58 @@ namespace SurvivalHack
             }
 
             return (null, null);
+        }
+
+        public void SetLevel(Level newLevel, Vec newPos)
+        {
+            Level?.GetChunck(Pos).Remove(this);
+            Level = null;
+
+            if (newLevel != null)
+            {
+                var c = newLevel.GetChunck(newPos);
+                c.Add(this);
+
+                if (newLevel != null)
+                {
+                    Level = newLevel;
+                    Pos = newPos;
+                }
+            }
+        }
+
+        public virtual bool Move(Entity self, Vec direction)
+        {
+            var newPosition = Pos;
+            newPosition += direction;
+
+            // You cannot walk of the edge of map
+            if (!Level.InBoundary(newPosition))
+                return false;
+
+            // Terrain collisions
+            if (!Level.HasFlag(newPosition, self.Flags))
+                return false;
+
+            // Monster collisions
+            if (self.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                foreach (var c in Level.GetEntities(newPosition))
+                    if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                        return false;
+
+            var oldChunk = Level.GetChunck(Pos);
+            Pos = newPosition;
+            var newChunk = Level.GetChunck(Pos);
+
+            if (oldChunk != newChunk)
+            {
+                oldChunk.Remove(self);
+                newChunk.Add(self);
+            }
+
+            self.GetOne<FieldOfView>()?.Update(this);
+
+            return true;
         }
     }
 

@@ -51,6 +51,9 @@ namespace HackConsole.Algo
         /// <returns>A path from source to dest, including sturce and dest</returns>
         public List<Vec> Run(Vec source, Vec dest)
         {
+            if (float.IsInfinity(_costFunc(dest)))
+                return new List<Vec>();
+
             _openList.Add(source, new GridNode {
                 Parent = null, Travelled = 0, Dist = _distFunc(source - dest)
             });
