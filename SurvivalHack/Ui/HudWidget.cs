@@ -19,11 +19,20 @@ namespace SurvivalHack.Ui
         private void PrintBar(string name, int y, Bar bar)
         {
             var str = $"{name} ({bar.Current}/{bar.Max})";
+            var width = Size.Width;
+            var offset = (width - str.Length) / 2;
 
             var p = bar.Perc;
-            var fgColor = (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
+            var fgColor = Color.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
+            
+            for (int x = 0; x < width; x++)
+            {
+                var bgColor = (x <= p * width + 0.5) ? Color.Red : Color.Black;
 
-            Print(new Vec(0, y), str, fgColor, Color.Transparent);
+                var ascii = (x >= offset && x < str.Length + offset) ? str[x-offset] : ' ';
+                WindowData.Data[new Vec(x + Size.Left, y + Size.Top)] = new Symbol { Ascii = ascii, BackgroundColor = bgColor, TextColor = fgColor };
+            }
+
         }
 
         protected override void RenderImpl()

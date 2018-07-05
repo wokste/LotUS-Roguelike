@@ -40,7 +40,7 @@ namespace SurvivalHack
 
             Player.OnDestroy += i =>
             {
-                Player = null;
+                //Player = null;
                 OnGameOver?.Invoke();
             };
 

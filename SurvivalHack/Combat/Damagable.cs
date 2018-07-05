@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
@@ -13,7 +14,6 @@ namespace SurvivalHack.Combat
         {
             Health = new Bar(HP);
         }
-
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
@@ -34,12 +34,13 @@ namespace SurvivalHack.Combat
                 return;
 
             Health.Current -= damage;
-
             if (Health.Current <= 0)
             {
                 msg.Target.Destroy();
                 attack.KillHit = true;
             }
+
+            UpdateStats(msg.Target);
         }
 
         public void Heal(BaseEvent msg)
@@ -50,7 +51,21 @@ namespace SurvivalHack.Combat
                 return;
 
             Health.Current += heal.Restore;
+            UpdateStats(msg.Target);
             return;
+        }
+
+        private void UpdateStats(Entity self)
+        {
+            if (self.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
+            {
+                var p = Health.Perc * 3;
+                byte r = 255;
+                byte g = (byte)MyMath.Lerp(p, 0, 255);
+                byte b = (byte)MyMath.Lerp(p - 1, 0, 255);
+
+                self.Symbol.TextColor = new Color(r, g, b);
+            }
         }
 
         public string Describe() => null;
