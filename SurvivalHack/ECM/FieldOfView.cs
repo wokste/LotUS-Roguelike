@@ -90,8 +90,19 @@ namespace SurvivalHack
             return (Visibility[pos] & flag) == flag;
         }
 
-        public bool ShouldShow(Entity e) {
-            return Is(e.Pos, FLAG_VISIBLE) || (Is(e.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos));
+        public Vec? ShowLocation(Entity e) {
+            if (Is(e.Pos, FLAG_VISIBLE) || (Is(e.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos)))
+            {
+                e.LastSeenPos = e.Pos;
+                return e.Pos;
+            }
+            else
+            {
+                if (e.LastSeenPos is Vec p2 && e.EntityFlags.HasFlag(EEntityFlag.Pickable))
+                    return e.LastSeenPos;
+                else
+                    return null;
+            }
         }
 
         /// <summary>

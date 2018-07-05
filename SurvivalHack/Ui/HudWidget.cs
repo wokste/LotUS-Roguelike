@@ -45,7 +45,7 @@ namespace SurvivalHack.Ui
             var monsterList = _controller.Level.GetEntities().Where(e => (
                 e != _controller.Player &&
                 e.EntityFlags.HasFlag(EEntityFlag.TeamMonster) &&
-                FoV.ShouldShow(e)
+                FoV.ShowLocation(e) != null
             ));
 
             foreach (var e in monsterList)

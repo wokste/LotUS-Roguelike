@@ -33,6 +33,7 @@ namespace SurvivalHack
 
         public Level Level { get; private set; }
         public Vec Pos;
+        public Vec? LastSeenPos;
 
         public Entity(char ascii, string name, EEntityFlag entityFlags)
         {

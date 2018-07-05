@@ -61,17 +61,17 @@ namespace SurvivalHack.Ui
         {
             var area = Size + _offset;
             foreach (var e in _level.GetEntities(area)) {
-                var p = e.Pos;
-                
-                if (!_controller.FoV.ShouldShow(e))
-                    continue;
+                var p = _controller.FoV.ShowLocation(e);
 
-                p -= _offset;
+                if (p is Vec p2)
+                {
+                    p2 -= _offset;
 
-                if (!Size.Contains(p))
-                    continue;
+                    if (!Size.Contains(p2))
+                        continue;
 
-                WindowData.Data[p] = e.Symbol;
+                    WindowData.Data[p2] = e.Symbol;
+                }
             }
         }
 
@@ -136,7 +136,7 @@ namespace SurvivalHack.Ui
             var list = _level.GetEntities(absPos);
 
             foreach (var e in list)
-                if (_controller.FoV.ShouldShow(e))
+                if (_controller.FoV.ShowLocation(e) != null)
                     OnSelected?.Invoke(e);
 
             _path = _aStar.Run(_controller.Player.Pos, absPos);
