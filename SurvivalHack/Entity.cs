@@ -76,9 +76,9 @@ namespace SurvivalHack
             // == Inventory ==
             var inv = GetOne<Inventory>();
             if (inv != null)
-                foreach (var item in inv.Equipped)
-                    if (item != null)
-                        yield return item;
+                foreach (var slot in inv.Slots)
+                    if (slot.Item != null)
+                        yield return slot.Item;
 
             // == Status effects ==
             // TODO: Add status effects.
@@ -101,8 +101,8 @@ namespace SurvivalHack
         {
             IEnumerable<Entity> It() {
                 var inventory = GetOne<Inventory>();
-                yield return inventory?.Equipped[0];
-                yield return inventory?.Equipped[1];
+                yield return inventory?.Slots[0].Item;
+                yield return inventory?.Slots[1].Item;
                 yield return this;
             }
 

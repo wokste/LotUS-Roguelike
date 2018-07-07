@@ -187,8 +187,6 @@ namespace SurvivalHack.Ui
                                 break;
                             }
                         }
-                        
-                        // TODO: move Up/Down
                     }
                     break;
 

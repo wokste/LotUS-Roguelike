@@ -71,6 +71,7 @@ namespace SurvivalHack.Ui
                 return;
 
             var slotType = Inventory.SlotNames[_selectedRow].type;
+            _controller.Inventory.Slots[_selectedRow].NewItems = false;
 
             var list = new List<Entity>();
             list.AddRange(_controller.Inventory.Items.Where(e => e.Get<Equippable>().Any(c => c.FitsIn(slotType))));
@@ -88,14 +89,17 @@ namespace SurvivalHack.Ui
         protected override void RenderImpl()
         {
             Clear();
-            
-            for (var y = 0; y < Inventory.SlotNames.Length; y++)
+
+            var inv = _controller.Inventory;
+            for (var y = 0; y < inv.Slots.Length; y++)
             {
                 var (type, name, key) = Inventory.SlotNames[y];
-                var item = _controller.Inventory.Equipped[y];
+                var item = inv.Slots[y].Item;
 
                 var color = (y == _selectedRow) ? Color.White : Color.Gray;
-                Print(new Vec(2, y), name, color);
+                var bgColor = inv.Slots[y].GetBackgroundColor();
+
+                Print(new Vec(2, y), name, color, bgColor);
                 Print(new Vec(0, y), new Symbol(key, Color.Yellow));
 
                 if (item != null)
@@ -104,6 +108,7 @@ namespace SurvivalHack.Ui
                     Print(new Vec(x, y), item.Symbol);
 
                     x += 2;
+                    
                     Print(new Vec(x, y), item.Name, Color.White); // TODO: What if the length is too long
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -52,7 +53,7 @@ namespace SurvivalHack
             public void Genocide(BaseEvent msg)
             {
                 var level = msg.User.Level;
-                foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
+                foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)).ToArray())
                 {
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;

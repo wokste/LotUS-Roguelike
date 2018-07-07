@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using HackConsole;
@@ -23,10 +24,16 @@ namespace SurvivalHack
             (ESlotType.Ring,    "Ring offhand", 'O'),
         };
 
-        public readonly Entity[] Equipped = new Entity[SlotNames.Length];
+        public readonly Slot[] Slots = new Slot[SlotNames.Length];
 
         public void Add(Entity entity)
         {
+            var equippable = entity.GetOne<Equippable>();
+            if (equippable != null)
+                for (int i = 0; i < Slots.Length; ++i)
+                    if (equippable.FitsIn(SlotNames[i].type))
+                        Slots[i].NewItems = true;
+
             var stack1 = entity.GetOne<StackComponent>();
             if (stack1 != null)
             {
@@ -52,10 +59,10 @@ namespace SurvivalHack
         public void Remove(Entity entity) {
             Items.Remove(entity);
 
-            for (int i = 0; i < Equipped.Length; ++i)
+            for (int i = 0; i < Slots.Length; ++i)
             {
-                if (Equipped[i] == entity)
-                    Equipped[i] = null;
+                if (Slots[i].Item == entity)
+                    Slots[i].Item = null;
             }
         }
 
@@ -72,21 +79,21 @@ namespace SurvivalHack
             int? lastSlot = EquippedInSlot(item);
 
             // Check for cursed items
-            if ((item.EntityFlags.HasFlag(EEntityFlag.Cursed) && lastSlot != null) || (Equipped[slot] != null && Equipped[slot].EntityFlags.HasFlag(EEntityFlag.Cursed)))
+            if ((item.EntityFlags.HasFlag(EEntityFlag.Cursed) && lastSlot != null) || (Slots[slot].Item != null && Slots[slot].Cursed))
                 return false;
 
             if (lastSlot is int s)
-                Equipped[s] = null;
+                Slots[s].Item = null;
 
-            Equipped[slot] = item;
+            Slots[slot].Item = item;
 
             return true;
         }
 
         public int? EquippedInSlot(Entity item)
         {
-            for (int i = 0; i < Equipped.Length; ++i)
-                if (Equipped[i] == item)
+            for (int i = 0; i < Slots.Length; ++i)
+                if (Slots[i].Item == item)
                     return i;
 
             return null;
@@ -95,6 +102,23 @@ namespace SurvivalHack
         public string Describe() => null;
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
+
+        public struct Slot
+        {
+            public Entity Item;
+            public bool NewItems;
+            public bool Cursed => Item?.EntityFlags.HasFlag(EEntityFlag.Cursed) ?? false;
+
+            internal Color GetBackgroundColor()
+            {
+                if (Cursed)
+                    return new Color(64, 0, 0);
+                else if (NewItems)
+                    return new Color(0, 64, 0);
+                else
+                    return new Color(0, 0, 0);
+            }
+        }
     }
 
     public class Equippable : IComponent
@@ -110,7 +134,7 @@ namespace SurvivalHack
 
         public bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
+        public void GetActions(Entity self, BaseEvent msg, EUseSource source) {}
     }
 
     public enum ESlotType
