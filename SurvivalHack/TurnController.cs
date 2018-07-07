@@ -60,7 +60,7 @@ namespace SurvivalHack
 
         public bool Move(Vec move, bool interrupt = true)
         {
-            if (Player.Move(Player, move))
+            if (Player.Move(move))
             {
                 EndTurn(interrupt);
                 return true;

@@ -175,14 +175,13 @@ namespace SurvivalHack.Ui
                     }
                     break;
                 case '>':
-                case '<':
                     {
                         foreach (var entity in _controller.Level.GetEntities(_controller.Player.Pos))
                         {
                             if (_controller.Player == entity)
                                 continue;
 
-                            if (Eventing.On(new DownEvent(_controller.Player, entity, keyCode)))
+                            if (Eventing.On(new DownEvent(_controller.Player, entity)))
                             {
                                 _controller.EndTurn();
                                 break;

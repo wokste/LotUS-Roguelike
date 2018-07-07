@@ -5,6 +5,7 @@ using SurvivalHack.Ai;
 using System.Collections.Generic;
 using System.Linq;
 using SurvivalHack.Combat;
+using System.Diagnostics;
 
 namespace SurvivalHack
 {
@@ -125,16 +126,17 @@ namespace SurvivalHack
                 var c = newLevel.GetChunck(newPos);
                 c.Add(this);
 
-                if (newLevel != null)
-                {
-                    Level = newLevel;
-                    Pos = newPos;
-                }
+                Level = newLevel;
+                Pos = newPos;
+
+                GetOne<FieldOfView>()?.Update(this);
             }
         }
 
-        public virtual bool Move(Entity self, Vec direction)
+        public virtual bool Move(Vec direction)
         {
+            Debug.Assert(Level != null);
+
             var newPosition = Pos;
             newPosition += direction;
 
@@ -143,11 +145,11 @@ namespace SurvivalHack
                 return false;
 
             // Terrain collisions
-            if (!Level.HasFlag(newPosition, self.Flags))
+            if (!Level.HasFlag(newPosition, Flags))
                 return false;
 
             // Monster collisions
-            if (self.EntityFlags.HasFlag(EEntityFlag.Blocking))
+            if (EntityFlags.HasFlag(EEntityFlag.Blocking))
                 foreach (var c in Level.GetEntities(newPosition))
                     if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
                         return false;
@@ -158,11 +160,11 @@ namespace SurvivalHack
 
             if (oldChunk != newChunk)
             {
-                oldChunk.Remove(self);
-                newChunk.Add(self);
+                oldChunk.Remove(this);
+                newChunk.Add(this);
             }
 
-            self.GetOne<FieldOfView>()?.Update(this);
+            GetOne<FieldOfView>()?.Update(this);
 
             return true;
         }
