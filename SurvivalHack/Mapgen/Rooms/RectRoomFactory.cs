@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using HackConsole;
 
 namespace SurvivalHack.Mapgen.Rooms
@@ -7,14 +8,14 @@ namespace SurvivalHack.Mapgen.Rooms
     {
         public Range RangeX = new Range("4-10");
         public Range RangeY = new Range("4-10");
-        public Tile FloorTile;
-        public Tile WallTile;
+        public int FloorTile;
+        public int WallTile;
 
-        public RectRoomFactory()
+        public RectRoomFactory(List<Tile> tileDefs)
         {
             Name = "RoomType";
-            FloorTile = TileList.Get("floor");
-            WallTile = TileList.Get("wall");
+            FloorTile = tileDefs.Get("floor_wood");
+            WallTile = tileDefs.Get("wall_stone");
         }
 
         public override Room Make(Random rnd)

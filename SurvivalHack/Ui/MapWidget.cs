@@ -38,7 +38,7 @@ namespace SurvivalHack.Ui
             if ((_controller.FoV.Visibility[v] & FieldOfView.FLAG_DISCOVERED) == 0)
                 return float.PositiveInfinity;
 
-            if (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk))
+            if (!_level.HasFlag(v, TerrainFlag.Walk))
                 return float.PositiveInfinity;
 
             return 1;

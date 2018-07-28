@@ -12,11 +12,11 @@ namespace SurvivalHack.Mapgen
 
         public Vec Center => Transform.Convert(Size / 2);
 
-        public Grid<Tile> Tiles;
+        public Grid<int?> Tiles;
 
         public Room(Vec size)
         {
-            Tiles = new Grid<Tile>(size);
+            Tiles = new Grid<int?>(size);
         }
 
         public void Render(Grid<int> maskMap, int roomID)
@@ -24,26 +24,30 @@ namespace SurvivalHack.Mapgen
             foreach(var v in Tiles.Ids())
             { 
                 var dest = Transform.Convert(v);
-
-                if (Tiles[v] == null || maskMap[dest] == DungeonGenerator.MASKID_KEEP)
+                if (maskMap[dest] == DungeonGenerator.MASKID_KEEP)
                     continue;
 
-                int mask;
-                if (Tiles[v].Flags.HasFlag(TerrainFlag.Walk))
+                if (Tiles[v] is int i)
                 {
-                    mask = roomID;
-                }
-                else if (Tiles[v] == TileList.Get("rock"))
-                {
-                    mask = DungeonGenerator.MASKID_NOFLOOR;
-                }
-                else
-                {
-                    mask = DungeonGenerator.MASKID_KEEP;
-                }
+                    int mask;
+                    Tile tile = Level.TileDefs[i];
 
-                Level.TileMap[dest] = Tiles[v];
-                maskMap[dest] = mask;
+                    if (tile.Flags.HasFlag(TerrainFlag.Walk))
+                    {
+                        mask = roomID;
+                    }
+                    else if (i == Level.TileDefs.Get("rock"))
+                    {
+                        mask = DungeonGenerator.MASKID_NOFLOOR;
+                    }
+                    else
+                    {
+                        mask = DungeonGenerator.MASKID_KEEP;
+                    }
+
+                    Level.TileMap[dest] = i;
+                    maskMap[dest] = mask;
+                }
             }
         }
 
@@ -56,32 +60,32 @@ namespace SurvivalHack.Mapgen
 
             foreach (var source in Tiles.Ids())
             {
-                var newTile = Tiles[source];
-                var dest = Transform.Convert(source);
-
-                var oldTile = level.TileMap[dest];
-                var oldMask = maskMap[dest];
-
-                if (newTile == null)
-                    continue;
-
-                if (newTile == oldTile)
-                    continue;
-
-                switch (oldMask)
+                if (Tiles[source] is int newId)
                 {
-                    case DungeonGenerator.MASKID_NOFLOOR:
-                        if (newTile.Flags.HasFlag(TerrainFlag.Walk))
+                    var dest = Transform.Convert(source);
+
+                    var oldId = level.TileMap[dest];
+                    var oldMask = maskMap[dest];
+
+
+                    if (newId == oldId)
+                        continue;
+
+                    switch (oldMask)
+                    {
+                        case DungeonGenerator.MASKID_NOFLOOR:
+                            if (level.TileDefs[newId].Flags.HasFlag(TerrainFlag.Walk))
+                                return false;
+                            break;
+                        case DungeonGenerator.MASKID_VOID:
+                            break;
+                        case DungeonGenerator.MASKID_KEEP:
+                            if (newId != level.TileDefs.Get("rock"))
+                                return false;
+                            break;
+                        default: // Floors
                             return false;
-                        break;
-                    case DungeonGenerator.MASKID_VOID:
-                        break;
-                    case DungeonGenerator.MASKID_KEEP:
-                        if (oldTile != newTile && newTile != TileList.Get("rock"))
-                            return false;
-                        break;
-                    default: // Floors
-                        return false;
+                    }
                 }
             }
 

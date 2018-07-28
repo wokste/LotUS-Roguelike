@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 
@@ -10,15 +11,15 @@ namespace SurvivalHack.Mapgen.Rooms
         public Range MinRadius = new Range("1");
         public Range Spikes = new Range("4-6");
 
-        public Tile FloorTile;
-        public Tile WallTile;
+        public int? FloorTile;
+        public int? WallTile;
         public double Roughness = 1;
         
-        public BlobRoomFactory()
+        public BlobRoomFactory(List<Tile> tileDefs)
         {
             Name = "BlobType";
-            FloorTile = TileList.Get("floor");
-            WallTile = TileList.Get("rock");
+            FloorTile = tileDefs.Get("floor_stone");
+            WallTile = tileDefs.Get("rock");
         }
 
         public override Room Make(Random rnd)

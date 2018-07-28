@@ -8,7 +8,8 @@ namespace SurvivalHack
 {
     public class Level
     {
-        public Grid<Tile> TileMap;
+        public Grid<int> TileMap;
+        public List<Tile> TileDefs => Game.TileDefs;
         private readonly Grid<List<Entity>> _entityChunks;
         public Game Game;
 
@@ -19,29 +20,13 @@ namespace SurvivalHack
         public Level(Game game, Vec size)
         {
             Game = game;
-            TileMap = new Grid<Tile>(size, TileList.Get("rock"));
+            TileMap = new Grid<int>(size, TileDefs.Get("rock"));
             _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 
             foreach (var v in _entityChunks.Ids())
             {
                 _entityChunks[v] = new List<Entity>();
             }
-        }
-
-        [Obsolete]
-        public Vec GetEmptyLocation(TerrainFlag flag = TerrainFlag.Walk)
-        {
-            Debug.Assert(flag != TerrainFlag.None);
-
-            Vec v;
-            do
-            {
-                v = new Vec(
-                    new Range(0, TileMap.Size.X - 1).Rand(Game.Rnd),
-                    new Range(0, TileMap.Size.Y - 1).Rand(Game.Rnd));
-            } while (!TileMap[v].Flags.HasFlag(flag));
-
-            return v;
         }
 
         public bool InBoundary(Vec v)
@@ -51,12 +36,12 @@ namespace SurvivalHack
 
         public bool HasFlag(Vec v, TerrainFlag flag)
         {
-            return TileMap[v].Flags.HasFlag(flag);
+            return GetTile(v).Flags.HasFlag(flag);
         }
 
         public Tile GetTile(Vec v)
         {
-            return TileMap[v];
+            return TileDefs[TileMap[v]];
         }
 
         public IEnumerable<Entity> GetEntities(Vec v, int radius = 0)

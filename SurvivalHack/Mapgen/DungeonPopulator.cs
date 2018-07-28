@@ -64,7 +64,7 @@ namespace SurvivalHack.Mapgen
                 v = new Vec(
                     new Range(p0.X, p1.X).Rand(Game.Rnd),
                     new Range(p0.Y, p1.Y).Rand(Game.Rnd));
-            } while (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk));
+            } while (!_level.HasFlag(v,TerrainFlag.Walk));
 
             return v;
         }

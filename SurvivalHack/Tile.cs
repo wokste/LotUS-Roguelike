@@ -21,82 +21,91 @@ namespace SurvivalHack
     {
         public string Tag;
 
-        public string DropTag = "";
-        public int DropCount = 0;
-
         public TerrainFlag Flags;
 
         public Symbol Symbol;
-        public float MineCost = 1;
+        public float HP = 1;
+        public bool isWall = false;
+        public bool Walkable = false;
 
         public override string ToString()
         {
             return Tag;
         }
-    }
 
-    public static class TileList
-    {
-        private static readonly List<Tile> Types = new List<Tile>();
-
-        public static void InitTypes()
+        public static List<Tile> InitTypes()
         {
-            Debug.Assert(Types.Count == 0);
+            var types = new List<Tile>();
 
-            Types.Add(new Tile
+            types.Add(new Tile
             {
-                Tag = "floor",
-                DropTag = "",
-                DropCount = 0,
+                Tag = "floor_stone",
                 Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('.', new Color(64,64,64), new Color(16, 16, 16))
+                Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
             });
 
-            Types.Add(new Tile
+            types.Add(new Tile
+            {
+                Tag = "floor_wood",
+                Flags = ~TerrainFlag.Swim,
+                Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
+            });
+
+            types.Add(new Tile
+            {
+                Tag = "short_grass",
+                Flags = ~TerrainFlag.Swim,
+                Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
+            });
+
+            types.Add(new Tile
+            {
+                Tag = "tall_grass",
+                Flags = ~TerrainFlag.Swim,
+                Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
+            });
+
+            types.Add(new Tile
             {
                 Tag = "water",
-                DropTag = "",
-                DropCount = 0,
                 Flags = ~TerrainFlag.Walk,
-                Symbol = new Symbol('~', new Color(136, 205, 247))
+                Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
             });
 
-            Types.Add(new Tile
+            types.Add(new Tile
             {
-                Tag = "door",
-                DropTag = "",
-                DropCount = 0,
-                Flags = ~TerrainFlag.Swim,
-                Symbol = new Symbol('+', new Color(164, 87, 40), new Color(210, 167, 140)),
+                Tag = "lava",
+                Flags = ~TerrainFlag.Walk,
+                Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
             });
 
-            Types.Add(new Tile
+            types.Add(new Tile
             {
                 Tag = "rock",
-                DropTag = "stone",
-                DropCount = 3,
                 Flags = TerrainFlag.None,
                 Symbol = new Symbol('#', Color.Black, Color.Gray),
-                MineCost = 2,
+                HP = 2,
             });
 
-            Types.Add(new Tile
+            types.Add(new Tile
             {
-                Tag = "wall",
-                DropTag = "stone",
-                DropCount = 3,
+                Tag = "wall_stone",
                 Flags = TerrainFlag.None,
                 Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
-                MineCost = 10
+                HP = 10
             });
 
+            return types;
         }
+    }
 
-        public static Tile Get(string tag)
+    public static class TileGenerics
+    {
+        public static int Get(this List<Tile> tiles, string tag)
         {
-            var tileId = Types.FindIndex(t => t.Tag == tag);
+            var tileId = tiles.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileId != -1);
-            return Types[tileId];
+            return tileId;
         }
     }
 }

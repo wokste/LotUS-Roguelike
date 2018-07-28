@@ -22,10 +22,10 @@ namespace SurvivalHack.Mapgen
         public const int MASKID_NOFLOOR = -2;
         public const int MASKID_KEEP = -1;
 
-        public DungeonGenerator()
+        public DungeonGenerator(List<Tile> tileDefs)
         {
-            RoomFactories.Add(new RectRoomFactory());
-            RoomFactories.Add(new BlobRoomFactory());
+            RoomFactories.Add(new RectRoomFactory(tileDefs));
+            RoomFactories.Add(new BlobRoomFactory(tileDefs));
         }
 
         public (Level,Vec) Generate(Game game, int seed, int difficulty)
