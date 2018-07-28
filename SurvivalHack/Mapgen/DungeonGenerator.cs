@@ -37,7 +37,8 @@ namespace SurvivalHack.Mapgen
             var map = new Level(game, size);
             var mask = new Grid<int>(size, MASKID_VOID);
             var rooms = new List<Room>();
-            
+
+            MakeBaseTerrain(map, difficulty);
             PlaceRooms(map, mask, rooms, difficulty);
 
             ECM.Stairs.MakeStairs(map, rooms[1].Center, difficulty++);
@@ -47,6 +48,22 @@ namespace SurvivalHack.Mapgen
             SpawnStuff(map, mask, rooms, difficulty);
             
             return (map, rooms[0].Center);
+        }
+
+        [Obsolete("Actually not obsolete but I need a better method to make this")]
+        private void MakeBaseTerrain(Level map, int difficulty)
+        {
+            PerlinNoise perlin = new PerlinNoise(_rnd.Next());
+            perlin.Scale = 2;
+
+            var water = map.TileDefs.Get("water");
+            var rock = map.TileDefs.Get("rock");
+
+            foreach (var v in map.TileMap.Ids()) {
+                var f = perlin.Get(v.X, v.Y);
+
+                map.TileMap[v] = f > 0.25 ? water : rock;
+            }
         }
 
         void PlaceRooms(Level map, Grid<int> mask, List<Room> rooms, int depth) {

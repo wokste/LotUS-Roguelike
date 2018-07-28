@@ -22,12 +22,14 @@ namespace SurvivalHack
         public string Tag;
 
         public Symbol Symbol;
-        public float HP = 1;
+        public float MineCost = 1;
         public bool Solid = false;
         public bool BlockSight = false;
         public float WalkDanger = 0;
         public bool Flamable = false;
         public bool Natural = true;
+
+        public bool IsFloor => (!Solid && WalkDanger <= 0);
 
         public override string ToString()
         {
@@ -71,6 +73,7 @@ namespace SurvivalHack
             {
                 Tag = "water",
                 WalkDanger = 0.5f,
+                MineCost = 1.5f,
                 Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
             });
 
@@ -78,6 +81,7 @@ namespace SurvivalHack
             {
                 Tag = "lava",
                 WalkDanger = 10,
+                MineCost = 1.5f,
                 Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
             });
 
@@ -87,7 +91,7 @@ namespace SurvivalHack
                 Solid = true,
                 BlockSight = true,
                 Symbol = new Symbol('#', Color.Black, Color.Gray),
-                HP = 2,
+                MineCost = 2,
             });
 
             types.Add(new Tile
@@ -96,7 +100,7 @@ namespace SurvivalHack
                 Solid = true,
                 BlockSight = true,
                 Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
-                HP = 10
+                MineCost = 10
             });
 
             return types;

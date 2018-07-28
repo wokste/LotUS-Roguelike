@@ -262,7 +262,7 @@ namespace SurvivalHack.Mapgen
             var c2 = _rooms[j].Center;
 
             var pn = new PerlinNoise(1337);
-            var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.GetTile(v).HP, false);
+            var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.GetTile(v).MineCost, false);
             var path = aStar.Run(c1, c2);
 
             var floor = _map.TileDefs.Get("tall_grass");

@@ -8,14 +8,14 @@ namespace SurvivalHack.Mapgen.Rooms
     {
         public Range RangeX = new Range("4-10");
         public Range RangeY = new Range("4-10");
-        public int FloorTile;
-        public int WallTile;
+        public Room.TileInfo FloorTile;
+        public Room.TileInfo WallTile;
 
         public RectRoomFactory(List<Tile> tileDefs)
         {
             Name = "RoomType";
-            FloorTile = tileDefs.Get("floor_wood");
-            WallTile = tileDefs.Get("wall_stone");
+            FloorTile = new Room.TileInfo { Id = tileDefs.Get("floor_wood"), Method = Room.PasteMethod.Paste };
+            WallTile = new Room.TileInfo { Id = tileDefs.Get("wall_stone"), Method = Room.PasteMethod.Paste };
         }
 
         public override Room Make(Random rnd)
