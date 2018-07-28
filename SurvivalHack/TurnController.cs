@@ -32,7 +32,6 @@ namespace SurvivalHack
                     Inventory
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
-                Flags = TerrainFlag.Walk,
             };
 
             Inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));

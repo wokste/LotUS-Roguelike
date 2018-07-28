@@ -61,7 +61,7 @@ namespace SurvivalHack.Ai
             var level = self.Level;
             var path = Line.Run(self.Pos, other.Pos);
             foreach (var v in path)
-                if (!level.HasFlag(v, TerrainFlag.Sight))
+                if (level.GetTile(v).BlockSight)
                     return;
 
             foreach (var rule in _rules)

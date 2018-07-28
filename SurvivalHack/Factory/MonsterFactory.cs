@@ -38,7 +38,6 @@ namespace SurvivalHack.Factory
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                        Flags = TerrainFlag.Walk,
                         Speed = 0.6f,
                         Symbol = new Symbol('z', Color.Cyan)
                     };
@@ -52,7 +51,6 @@ namespace SurvivalHack.Factory
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                        Flags = TerrainFlag.Fly,
                         Speed = 1.5f,
                         Symbol = new Symbol('b', Color.White),
                     };
@@ -66,7 +64,6 @@ namespace SurvivalHack.Factory
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                        Flags = TerrainFlag.Walk,
                         Speed = 0.6f,
                         Symbol = new Symbol('s', Color.Cyan)
                     };
@@ -80,7 +77,6 @@ namespace SurvivalHack.Factory
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
-                        Flags = TerrainFlag.Fly,
                         Speed = 1.5f,
                         Symbol = new Symbol('b', Color.Red),
                     };

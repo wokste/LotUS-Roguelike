@@ -18,8 +18,7 @@ namespace SurvivalHack
         public override string ToString() => Name;
 
         public List<IComponent> Components = new List<IComponent>();
-
-        public TerrainFlag Flags;
+        
         public Symbol Symbol;
 
         public float Speed = 1;
@@ -145,7 +144,7 @@ namespace SurvivalHack
                 return false;
 
             // Terrain collisions
-            if (!Level.HasFlag(newPosition, Flags))
+            if (Level.GetTile(newPosition).Solid)
                 return false;
 
             // Monster collisions

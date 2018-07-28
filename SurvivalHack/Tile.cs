@@ -21,12 +21,13 @@ namespace SurvivalHack
     {
         public string Tag;
 
-        public TerrainFlag Flags;
-
         public Symbol Symbol;
         public float HP = 1;
-        public bool isWall = false;
-        public bool Walkable = false;
+        public bool Solid = false;
+        public bool BlockSight = false;
+        public float WalkDanger = 0;
+        public bool Flamable = false;
+        public bool Natural = true;
 
         public override string ToString()
         {
@@ -40,49 +41,51 @@ namespace SurvivalHack
             types.Add(new Tile
             {
                 Tag = "floor_stone",
-                Flags = ~TerrainFlag.Swim,
                 Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
             });
 
             types.Add(new Tile
             {
                 Tag = "floor_wood",
-                Flags = ~TerrainFlag.Swim,
+                Natural = false,
+                Flamable = true,
                 Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
             });
 
             types.Add(new Tile
             {
                 Tag = "short_grass",
-                Flags = ~TerrainFlag.Swim,
+                Flamable = true,
                 Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
             });
 
             types.Add(new Tile
             {
                 Tag = "tall_grass",
-                Flags = ~TerrainFlag.Swim,
+                Flamable = true,
+                BlockSight = true,
                 Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
             });
 
             types.Add(new Tile
             {
                 Tag = "water",
-                Flags = ~TerrainFlag.Walk,
+                WalkDanger = 0.5f,
                 Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
             });
 
             types.Add(new Tile
             {
                 Tag = "lava",
-                Flags = ~TerrainFlag.Walk,
+                WalkDanger = 10,
                 Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
             });
 
             types.Add(new Tile
             {
                 Tag = "rock",
-                Flags = TerrainFlag.None,
+                Solid = true,
+                BlockSight = true,
                 Symbol = new Symbol('#', Color.Black, Color.Gray),
                 HP = 2,
             });
@@ -90,7 +93,8 @@ namespace SurvivalHack
             types.Add(new Tile
             {
                 Tag = "wall_stone",
-                Flags = TerrainFlag.None,
+                Solid = true,
+                BlockSight = true,
                 Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
                 HP = 10
             });

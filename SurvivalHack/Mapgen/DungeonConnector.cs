@@ -271,7 +271,7 @@ namespace SurvivalHack.Mapgen
             {
                 var tile = _map.GetTile(v);
 
-                if (!tile.Flags.HasFlag(TerrainFlag.Walk))
+                if (tile.Solid || tile.WalkDanger > 0)
                     _map.TileMap[v] = floor;
             }
             

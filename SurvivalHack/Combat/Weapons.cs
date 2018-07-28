@@ -71,7 +71,7 @@ namespace SurvivalHack.Combat
             var level = attacker.Level;
             var path = Line.Run(attacker.Pos, defender.Pos);
             foreach (var v in path)
-                if (!level.HasFlag(v, TerrainFlag.Sight))
+                if (level.GetTile(v).BlockSight)
                     return false;
 
             return true;

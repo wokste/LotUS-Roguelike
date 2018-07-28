@@ -58,8 +58,11 @@ namespace SurvivalHack.ECM
             {
                 for (int y = Math.Max(v.Y - 1, 0); y <= Math.Min(v.Y + 1, Map.Size.Y - 1); y++)
                     for (int x = Math.Max(v.X - 1, 0); x <= Math.Min(v.X + 1, Map.Size.X - 1); x++)
-                        if (Map.HasFlag(new Vec(x, y), TerrainFlag.Sight))
+                    {
+                        var tile = Map.GetTile(new Vec(x, y));
+                        if (!tile.Solid || !tile.BlockSight)
                             return true;
+                    }
                 return false;
             }
 

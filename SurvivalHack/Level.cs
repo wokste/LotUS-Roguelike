@@ -34,11 +34,6 @@ namespace SurvivalHack
             return (v.X >= 0 && v.X < TileMap.Size.X && v.Y >= 0 && v.Y < TileMap.Size.Y);
         }
 
-        public bool HasFlag(Vec v, TerrainFlag flag)
-        {
-            return GetTile(v).Flags.HasFlag(flag);
-        }
-
         public Tile GetTile(Vec v)
         {
             return TileDefs[TileMap[v]];

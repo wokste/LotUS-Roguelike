@@ -32,11 +32,11 @@ namespace SurvivalHack.Mapgen
                     int mask;
                     Tile tile = Level.TileDefs[i];
 
-                    if (tile.Flags.HasFlag(TerrainFlag.Walk))
+                    if (!tile.Solid)
                     {
                         mask = roomID;
                     }
-                    else if (i == Level.TileDefs.Get("rock"))
+                    else if (tile.Natural)
                     {
                         mask = DungeonGenerator.MASKID_NOFLOOR;
                     }
@@ -74,7 +74,7 @@ namespace SurvivalHack.Mapgen
                     switch (oldMask)
                     {
                         case DungeonGenerator.MASKID_NOFLOOR:
-                            if (level.TileDefs[newId].Flags.HasFlag(TerrainFlag.Walk))
+                            if (!level.TileDefs[newId].Solid && level.TileDefs[newId].WalkDanger > 1)
                                 return false;
                             break;
                         case DungeonGenerator.MASKID_VOID:
