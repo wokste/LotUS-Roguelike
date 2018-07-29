@@ -61,8 +61,16 @@ namespace SurvivalHack.Ui
 
         private void RenderCreatures()
         {
+            int RenderDepth(EEntityFlag flags) {
+                if (flags.HasFlag(EEntityFlag.IsPlayer))
+                    return 10;
+                else if (flags.HasFlag(EEntityFlag.Blocking))
+                    return 5;
+                return 1;
+            }
+
             var area = Size + _offset;
-            foreach (var e in _level.GetEntities(area)) {
+            foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags))) {
                 var p = _controller.FoV.ShowLocation(e);
 
                 if (p is Vec p2)
@@ -72,7 +80,7 @@ namespace SurvivalHack.Ui
                     if (!Size.Contains(p2))
                         continue;
 
-                    WindowData.Data[p2] = e.Symbol;
+                    WindowData.Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, WindowData.Data[p2].BackgroundColor);
                 }
             }
         }
