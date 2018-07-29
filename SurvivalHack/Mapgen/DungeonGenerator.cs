@@ -53,8 +53,10 @@ namespace SurvivalHack.Mapgen
         [Obsolete("Actually not obsolete but I need a better method to make this")]
         private void MakeBaseTerrain(Level map, int difficulty)
         {
-            PerlinNoise perlin = new PerlinNoise(_rnd.Next());
-            perlin.Scale = 10;
+            PerlinNoise perlin = new PerlinNoise(_rnd.Next())
+            {
+                Scale = 10
+            };
 
             var water = map.TileDefs.Get("water");
             var rock = map.TileDefs.Get("rock");

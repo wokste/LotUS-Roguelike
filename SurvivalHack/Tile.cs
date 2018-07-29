@@ -38,78 +38,79 @@ namespace SurvivalHack
 
         public static List<Tile> InitTypes()
         {
-            var types = new List<Tile>();
-
-            types.Add(new Tile
+            var types = new List<Tile>
             {
-                Tag = "floor_stone",
-                Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
-            });
+                new Tile
+                {
+                    Tag = "floor_stone",
+                    Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "floor_wood",
-                Natural = false,
-                Flamable = true,
-                Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
-            });
+                new Tile
+                {
+                    Tag = "floor_wood",
+                    Natural = false,
+                    Flamable = true,
+                    Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "short_grass",
-                Flamable = true,
-                Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
-            });
+                new Tile
+                {
+                    Tag = "short_grass",
+                    Flamable = true,
+                    Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "tall_grass",
-                Flamable = true,
-                BlockSight = true,
-                Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
-            });
+                new Tile
+                {
+                    Tag = "tall_grass",
+                    Flamable = true,
+                    BlockSight = true,
+                    Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "water",
-                WalkDanger = 0.5f,
-                MineCost = 15f,
-                Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
-            });
+                new Tile
+                {
+                    Tag = "water",
+                    WalkDanger = 0.5f,
+                    MineCost = 15f,
+                    Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "water_deep",
-                WalkDanger = 0.5f,
-                MineCost = 15f,
-                Symbol = new Symbol('~', Color.Parse("#0f12db"), Color.Parse("#0409a0"))
-            });
+                new Tile
+                {
+                    Tag = "water_deep",
+                    WalkDanger = 0.5f,
+                    MineCost = 15f,
+                    Symbol = new Symbol('~', Color.Parse("#0f12db"), Color.Parse("#0409a0"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "lava",
-                WalkDanger = 10,
-                MineCost = 15f,
-                Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
-            });
+                new Tile
+                {
+                    Tag = "lava",
+                    WalkDanger = 10,
+                    MineCost = 15f,
+                    Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "rock",
-                Solid = true,
-                BlockSight = true,
-                Symbol = new Symbol('#', Color.Black, Color.Gray),
-                MineCost = 2,
-            });
+                new Tile
+                {
+                    Tag = "rock",
+                    Solid = true,
+                    BlockSight = true,
+                    Symbol = new Symbol('#', Color.Black, Color.Gray),
+                    MineCost = 2,
+                },
 
-            types.Add(new Tile
-            {
-                Tag = "wall_stone",
-                Solid = true,
-                BlockSight = true,
-                Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
-                MineCost = 10
-            });
+                new Tile
+                {
+                    Tag = "wall_stone",
+                    Solid = true,
+                    BlockSight = true,
+                    Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
+                    MineCost = 10
+                }
+            };
 
             return types;
         }

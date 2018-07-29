@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HackConsole
 {
-    public struct Vec
+    public struct Vec : IShape
     {
         public readonly int X, Y;
         public static Vec Zero = new Vec(0, 0);
@@ -48,20 +48,15 @@ namespace HackConsole
             }
         }
 
-        public override string ToString()
-        {
-            return $"({X},{Y})";
-        }
+        public override string ToString() => $"({X},{Y})";
+
+        // Shape
+        public Rect BoundingBox => new Rect(this, Size.One);
+        public bool Contains(Vec v) => v == this;
+        public IEnumerable<Vec> Iterator() { yield return this; }
     }
 
-    public interface IRect
-    {
-        bool Contains(Vec v);
-
-        IEnumerable<Vec> Iterator();
-    }
-
-    public struct Size : IRect
+    public struct Size : IShape
     {
         public readonly int X, Y;
         public static Size Zero = new Size(0, 0);
@@ -112,71 +107,7 @@ namespace HackConsole
         public Vec BottomRight => new Vec(X, Y);
         public Vec TopLeft => new Vec(0, 0);
         public Vec Center => new Vec(X/2, Y/2);
-    }
 
-    public struct Rect : IRect
-    {
-        public int Left, Top, Width, Height;
-
-        public int Right => Left + Width;
-        public int Bottom => Top + Height;
-
-        public Vec TopLeft => new Vec(Left, Top);
-        public Size Size => new Size(Width, Height);
-        public Vec BottomRight => new Vec(Left + Width, Top + Height);
-        public Vec Center => new Vec(Width / 2 + Left, Height / 2 + Top);
-
-        public static Rect operator +(Rect l, Vec r) => new Rect(l.TopLeft + r, l.Size);
-        public static Rect operator -(Rect l, Vec r) => new Rect(l.TopLeft - r, l.Size);
-
-        public Rect(Vec pos, Size size)
-        {
-            Left = pos.X;
-            Top = pos.Y;
-            Width = size.X;
-            Height = size.Y;
-        }
-
-        public Rect(int x, int y, int w, int h)
-        {
-            Left = x;
-            Top = y;
-            Width = w;
-            Height = h;
-        }
-
-        public bool Contains(Vec v)
-        {
-            return (v.X >= Left) && (v.Y >= Top) && (v.X < Right) && (v.Y < Bottom);
-        }
-
-        public IEnumerable<Vec> Iterator()
-        {
-            for (var y = Top; y < Bottom; ++y)
-                for (var x = Left; x < Right; ++x)
-                    yield return new Vec(x, y);
-        }
-
-        public Rect Intersect(Rect other)
-        {
-            return new Rect
-            {
-                Left = Math.Max(Left, other.Left),
-                Top = Math.Max(Top, other.Top),
-                Width = Math.Min(Right, other.Right) - Math.Max(Left, other.Left),
-                Height = Math.Min(Bottom, other.Bottom) - Math.Max(Top, other.Top),
-            };
-        }
-
-        public Rect Grow(int count)
-        {
-            return new Rect
-            {
-                Left = Left - count,
-                Top = Top - count,
-                Width = Width + 2 * count,
-                Height = Height + 2 * count,
-            };
-        }
+        public Rect BoundingBox => this.ToRect();
     }
 }

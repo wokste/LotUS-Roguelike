@@ -39,26 +39,19 @@ namespace SurvivalHack
             return TileDefs[TileMap[v]];
         }
 
-        public IEnumerable<Entity> GetEntities(Vec v, int radius = 0)
-        {
-            if (radius == 0)
-                return GetEntities(new Rect(v, new Size(1, 1)));
-
-            var ls = GetEntities(new Rect(v - new Vec(radius,radius), new Size(1 + 2 * radius, 1 + 2 * radius)));
-            return ls.Where(e => (e.Pos - v).LengthSquared <= radius * radius);
-        }
-
         public IEnumerable<Entity> GetEntities()
         {
             return GetEntities(new Rect(Vec.Zero, Size));
         }
 
-        public IEnumerable<Entity> GetEntities(Rect r)
+        public IEnumerable<Entity> GetEntities(IShape r)
         {
-            var x0 = Math.Max(r.Left / CHUNK_SIZE,0);
-            var y0 = Math.Max(r.Top / CHUNK_SIZE, 0);
-            var x1 = Math.Min(r.Right / CHUNK_SIZE, _entityChunks.Size.X - 1);
-            var y1 = Math.Min(r.Bottom / CHUNK_SIZE, _entityChunks.Size.Y - 1);
+            var box = r.BoundingBox;
+
+            var x0 = Math.Max(box.Left / CHUNK_SIZE,0);
+            var y0 = Math.Max(box.Top / CHUNK_SIZE, 0);
+            var x1 = Math.Min(box.Right / CHUNK_SIZE, _entityChunks.Size.X - 1);
+            var y1 = Math.Min(box.Bottom / CHUNK_SIZE, _entityChunks.Size.Y - 1);
 
             for (var y = y0; y <= y1; ++y)
                 for (var x = x0; x <= x1; ++x)
