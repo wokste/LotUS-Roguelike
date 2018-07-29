@@ -56,14 +56,18 @@ namespace SurvivalHack
             Items.Add(entity);
         }
 
-        public void Remove(Entity entity) {
-            Items.Remove(entity);
-
-            for (int i = 0; i < Slots.Length; ++i)
+        public bool Remove(Entity item)
+        {
+            if (EquippedInSlot(item) is int slot)
             {
-                if (Slots[i].Item == entity)
-                    Slots[i].Item = null;
+                if (item.EntityFlags.HasFlag(EEntityFlag.Cursed))
+                    return false;
+
+                Slots[slot].Item = null;
             }
+
+            Items.Remove(item);
+            return true;
         }
 
         public bool Equip(Entity item, int slot)
