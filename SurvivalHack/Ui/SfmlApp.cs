@@ -92,6 +92,8 @@ namespace SurvivalHack.Ui
 
         public void OnKeyPress(char keyCode, EventFlags flags)
         {
+            bool didTurn = false;
+
             switch (keyCode)
             {
                 case 'a':
@@ -108,9 +110,11 @@ namespace SurvivalHack.Ui
                     {
                         var inv = _controller.Player.GetOne<Inventory>();
                         var o = new OptionWidget($"Drop Item", inv.Items, i => {
-                            //TODO: drop item
-                            inv.Remove(i);
-                            i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
+                            if (inv.Remove(i))
+                            {
+                                i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
+                                didTurn = true;
+                            }
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -120,7 +124,7 @@ namespace SurvivalHack.Ui
                         var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
                         var o = new OptionWidget($"Consume", l, i => {
                             if (Eventing.On(new ConsumeEvent(_controller.Player, i)))
-                                _controller.EndTurn();
+                                didTurn = true;
                         });
                         _window.PopupStack.Push(o);
                     }
@@ -133,18 +137,15 @@ namespace SurvivalHack.Ui
                 case 'g':
                     {
                         var pos = _controller.Player.Pos;
-                        bool didTurn = false;
                         foreach (var i in _controller.Level.GetEntities(pos).ToArray())
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
                                 i.SetLevel(null, Vec.Zero);
                                 _controller.Player.GetOne<Inventory>().Add(i);
+                                didTurn = true;
                             }
                         }
-
-                        if (didTurn)
-                            _controller.EndTurn();
                     }
                     break;
                 case 's':
@@ -183,7 +184,7 @@ namespace SurvivalHack.Ui
 
                             if (Eventing.On(new DownEvent(_controller.Player, entity)))
                             {
-                                _controller.EndTurn();
+                                didTurn = true;
                                 break;
                             }
                         }
@@ -203,6 +204,10 @@ namespace SurvivalHack.Ui
                 default:
                     break;
             }
+
+
+            if (didTurn)
+                _controller.EndTurn();
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)
