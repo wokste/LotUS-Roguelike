@@ -57,7 +57,7 @@ namespace SurvivalHack.Mapgen
         {
             Vec v;
             var p0 = room.Transform.Convert(Vec.Zero);
-            var p1 = room.Transform.Convert(room.Size - Vec.One);
+            var p1 = room.Transform.Convert(room.Size.BottomRight - Vec.One);
 
             do
             {

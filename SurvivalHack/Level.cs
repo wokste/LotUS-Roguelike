@@ -15,13 +15,13 @@ namespace SurvivalHack
 
         private const int CHUNK_SIZE = 16;
 
-        public Vec Size => TileMap.Size;
+        public Size Size => TileMap.Size;
 
-        public Level(Game game, Vec size)
+        public Level(Game game, Size size)
         {
             Game = game;
             TileMap = new Grid<int>(size, TileDefs.Get("rock"));
-            _entityChunks = new Grid<List<Entity>>(new Vec((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
+            _entityChunks = new Grid<List<Entity>>(new Size((int)Math.Ceiling((float)size.X / CHUNK_SIZE), (int)Math.Ceiling((float)size.Y / CHUNK_SIZE)));
 
             foreach (var v in _entityChunks.Ids())
             {
@@ -42,9 +42,9 @@ namespace SurvivalHack
         public IEnumerable<Entity> GetEntities(Vec v, int radius = 0)
         {
             if (radius == 0)
-                return GetEntities(new Rect(v, new Vec(1, 1)));
+                return GetEntities(new Rect(v, new Size(1, 1)));
 
-            var ls = GetEntities(new Rect(v - new Vec(radius,radius), new Vec(1 + 2 * radius, 1 + 2 * radius)));
+            var ls = GetEntities(new Rect(v - new Vec(radius,radius), new Size(1 + 2 * radius, 1 + 2 * radius)));
             return ls.Where(e => (e.Pos - v).LengthSquared <= radius * radius);
         }
 

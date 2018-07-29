@@ -9,13 +9,13 @@ namespace SurvivalHack.Mapgen
         public Level Level = null;
 
         public Transform Transform;
-        public Vec Size => Tiles.Size;
+        public Size Size => Tiles.Size;
 
-        public Vec Center => Transform.Convert(Size / 2);
+        public Vec Center => Transform.Convert(Size.Center);
 
         public Grid<TileInfo> Tiles;
 
-        public Room(Vec size)
+        public Room(Size size)
         {
             Tiles = new Grid<TileInfo>(size);
         }
@@ -49,7 +49,7 @@ namespace SurvivalHack.Mapgen
         {
             var mapRect = new Rect(Vec.Zero, Level.Size);
 
-            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size - new Vec(1, 1))))
+            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size.BottomRight)))
                 return false;
 
             foreach (var vecSrc in Tiles.Ids())
@@ -91,7 +91,7 @@ namespace SurvivalHack.Mapgen
         {
             var mapRect = new Rect(Vec.Zero, level.Size);
 
-            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size - new Vec(1,1))))
+            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size.BottomRight)))
                 return false;
             
             Level = level;

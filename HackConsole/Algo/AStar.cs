@@ -12,7 +12,7 @@ namespace HackConsole.Algo
         readonly Func<Vec, float> _distFunc;
         readonly List<Vec> _neighbors;
 
-        readonly Vec _size;
+        readonly Size _size;
         readonly Func<Vec, float> _costFunc;
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace HackConsole.Algo
         /// <param name="size">The size of the map</param>
         /// <param name="costFunc">Can determine the cost of a grid square. The lambda should return values in [1,inf], where 1 and inf are the most ideal for fast execution.</param>
         /// <param name="acceptDiagonals">true if you should be able to move diagonally. False otherwise. Diagonals cost x1.4 if allowed. </param>
-        public AStar(Vec size, Func<Vec, float> costFunc, bool acceptDiagonals) {
+        public AStar(Size size, Func<Vec, float> costFunc, bool acceptDiagonals) {
             _size = size;
             _costFunc = costFunc;
 

@@ -55,7 +55,7 @@ namespace HackLibTests
                 "..#.......",
             };
 
-            var grid = new Grid<bool>(new Vec(str[0].Length, str.Length));
+            var grid = new Grid<bool>(new Size(str[0].Length, str.Length));
             foreach (var v in grid.Ids())
             {
                 grid[v] = str[v.Y][v.X] == '.';

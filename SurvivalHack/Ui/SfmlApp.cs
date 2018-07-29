@@ -38,7 +38,7 @@ namespace SurvivalHack.Ui
             _controller.OnGameOver += () => {
                 var o = new GameOverWidget
                 {
-                    DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                    DesiredSize = new Rect(new Vec(), new Size(25, 25)),
                 };
                 _window.PopupStack.Push(o);
             };

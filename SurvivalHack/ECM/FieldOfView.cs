@@ -58,8 +58,8 @@ namespace SurvivalHack
         /// </summary>
         private void VisibleToDark()
         {
-            var r = new Rect(_entityPos, Vec.One).Grow(_visualRange);
-            r = r.Intersect(new Rect(Vec.Zero, Visibility.Size));
+            var r = new Rect(_entityPos, Size.One).Grow(_visualRange);
+            r = r.Intersect(Visibility.Size.ToRect());
 
             foreach (var v in r.Iterator())
             {

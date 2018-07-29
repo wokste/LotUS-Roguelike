@@ -25,7 +25,6 @@ namespace HackConsole
         public static bool operator !=(Vec l, Vec r) => (l.X != r.X || l.Y != r.Y);
 
         public int LengthSquared => X * X + Y * Y;
-        public int Area => X * Y;
         public double Length => Math.Sqrt(LengthSquared);
 
         public float ManhattanLength {
@@ -55,7 +54,67 @@ namespace HackConsole
         }
     }
 
-    public struct Rect
+    public interface IRect
+    {
+        bool Contains(Vec v);
+
+        IEnumerable<Vec> Iterator();
+    }
+
+    public struct Size : IRect
+    {
+        public readonly int X, Y;
+        public static Size Zero = new Size(0, 0);
+        public static Size One = new Size(1, 1);
+
+        public Size(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public static Size operator +(Size l, Vec r) => new Size(l.X + r.X, l.Y + r.Y);
+        public static Size operator -(Size l, Vec r) => new Size(l.X - r.X, l.Y - r.Y);
+        public static Vec operator -(Size l, Size r) => new Vec(l.X - r.X, l.Y - r.Y);
+
+        public static bool operator ==(Size l, Size r) => (l.X == r.X && l.Y == r.Y);
+        public static bool operator !=(Size l, Size r) => (l.X != r.X || l.Y != r.Y);
+
+        public int Area => X * Y;
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Size v) && (this == v);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X * 397) ^ Y;
+            }
+        }
+
+        public bool Contains(Vec v)
+        {
+            return (v.X >= 0) && (v.Y >= 0) && (v.X < X) && (v.Y < Y);
+        }
+
+        public IEnumerable<Vec> Iterator()
+        {
+            for (var y = 0; y < Y; ++y)
+                for (var x = 0; x < X; ++x)
+                    yield return new Vec(x, y);
+        }
+
+        public Rect ToRect() => new Rect(Vec.Zero, this);
+        public Vec ToVec() => new Vec(X, Y);
+        public Vec BottomRight => new Vec(X, Y);
+        public Vec TopLeft => new Vec(0, 0);
+        public Vec Center => new Vec(X/2, Y/2);
+    }
+
+    public struct Rect : IRect
     {
         public int Left, Top, Width, Height;
 
@@ -63,14 +122,14 @@ namespace HackConsole
         public int Bottom => Top + Height;
 
         public Vec TopLeft => new Vec(Left, Top);
-        public Vec Size => new Vec(Width, Height);
+        public Size Size => new Size(Width, Height);
         public Vec BottomRight => new Vec(Left + Width, Top + Height);
         public Vec Center => new Vec(Width / 2 + Left, Height / 2 + Top);
 
         public static Rect operator +(Rect l, Vec r) => new Rect(l.TopLeft + r, l.Size);
         public static Rect operator -(Rect l, Vec r) => new Rect(l.TopLeft - r, l.Size);
 
-        public Rect(Vec pos, Vec size)
+        public Rect(Vec pos, Size size)
         {
             Left = pos.X;
             Top = pos.Y;

@@ -33,7 +33,7 @@ namespace SurvivalHack.Mapgen
             Seed = seed;
             _rnd = new Random(seed);
 
-            var size = new Vec(64, 64);
+            var size = new Size(64, 64);
             var map = new Level(game, size);
             var mask = new Grid<int>(size, MASKID_VOID);
             var rooms = new List<Room>();

@@ -20,9 +20,9 @@ namespace SurvivalHack.Mapgen.Rooms
 
         public override Room Make(Random rnd)
         {
-            var innerSize = new Vec(RangeX.Rand(rnd), RangeY.Rand(rnd));
+            var innerSize = new Size(RangeX.Rand(rnd), RangeY.Rand(rnd));
             if (rnd.Next(2) == 1)
-                innerSize = new Vec(innerSize.Y, innerSize.X);
+                innerSize = new Size(innerSize.Y, innerSize.X);
             var outerSize = innerSize + new Vec(2, 2);
             
             var room = new Room(outerSize);
