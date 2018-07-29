@@ -73,15 +73,23 @@ namespace SurvivalHack
             {
                 Tag = "water",
                 WalkDanger = 0.5f,
-                MineCost = 1.5f,
+                MineCost = 15f,
                 Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
+            });
+
+            types.Add(new Tile
+            {
+                Tag = "water_deep",
+                WalkDanger = 0.5f,
+                MineCost = 15f,
+                Symbol = new Symbol('~', Color.Parse("#0f12db"), Color.Parse("#0409a0"))
             });
 
             types.Add(new Tile
             {
                 Tag = "lava",
                 WalkDanger = 10,
-                MineCost = 1.5f,
+                MineCost = 15f,
                 Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
             });
 
