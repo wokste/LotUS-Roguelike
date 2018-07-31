@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 using SurvivalHack.ECM;
+using System;
 using System.Collections.Generic;
 
 namespace HackLibTests
@@ -99,6 +100,16 @@ namespace HackLibTests
             inv.Equip(normalItem, 0);
             Assert.AreEqual(1, inv.EquippedInSlot(normalItem));
             Assert.AreEqual(0, inv.EquippedInSlot(cursedItem));
+
+            // Drop your items, but dropping the cursed item doesn't work
+            Assert.IsTrue(inv.Remove(normalItem));
+            Assert.IsFalse(inv.Remove(cursedItem));
+
+            Assert.IsNull(inv.EquippedInSlot(normalItem));
+            Assert.AreEqual(0, inv.EquippedInSlot(cursedItem));
+
+            Assert.IsFalse(inv.Items.Contains(normalItem));
+            Assert.IsTrue(inv.Items.Contains(cursedItem));
         }
     }
 }
