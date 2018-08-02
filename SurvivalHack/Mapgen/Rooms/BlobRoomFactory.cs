@@ -7,7 +7,7 @@ namespace SurvivalHack.Mapgen.Rooms
 {
     public class BlobRoomFactory : RoomFactory
     {
-        public Range MaxRadius = new Range("4-8");
+        public Range MaxRadius = new Range("1-3");
         public Range MinRadius = new Range("1");
         public Range Spikes = new Range("4-6");
 

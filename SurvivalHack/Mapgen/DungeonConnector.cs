@@ -265,7 +265,7 @@ namespace SurvivalHack.Mapgen
             var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.GetTile(v).MineCost, false);
             var path = aStar.Run(c1, c2);
 
-            var floor = _map.TileDefs.Get("tall_grass");
+            var floor = _map.TileDefs.Get("floor_stone");
 
             foreach (var v in path)
             {

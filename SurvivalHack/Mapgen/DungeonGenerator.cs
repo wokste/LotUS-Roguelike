@@ -4,6 +4,7 @@ using System.Linq;
 using SurvivalHack.Mapgen.Rooms;
 using HackConsole;
 using System.Diagnostics;
+using SurvivalHack.Mapgen.Automata;
 
 namespace SurvivalHack.Mapgen
 {
@@ -13,6 +14,7 @@ namespace SurvivalHack.Mapgen
 
         public float Density { get; set; } = 0.5f;
         public int Seed { get; private set; }
+        public int NumRooms { get; set; } = 50;
 
         public List<RoomFactory> RoomFactories = new List<RoomFactory>();
 
@@ -24,8 +26,19 @@ namespace SurvivalHack.Mapgen
 
         public DungeonGenerator(List<Tile> tileDefs)
         {
-            RoomFactories.Add(new RectRoomFactory(tileDefs));
-            RoomFactories.Add(new BlobRoomFactory(tileDefs));
+            RoomFactories.Add(new RectRoomFactory(tileDefs) {
+                Odds = 40,
+                FloorTile = new Room.TileInfo { Id = tileDefs.Get("floor_wood"), Method = Room.PasteMethod.Paste },
+                WallTile = new Room.TileInfo { Id = tileDefs.Get("wall_stone"), Method = Room.PasteMethod.Paste },
+            });
+            RoomFactories.Add(new RectRoomFactory(tileDefs) {
+                Odds = 60,
+                FloorTile = new Room.TileInfo { Id = tileDefs.Get("floor_stone"), Method = Room.PasteMethod.Paste },
+                WallTile = new Room.TileInfo { Id = tileDefs.Get("rock"), Method = Room.PasteMethod.Nil },
+                RangeX = new Range("1"),
+                RangeY = new Range("1"),
+            });
+            //RoomFactories.Add(new BlobRoomFactory(tileDefs));
         }
 
         public (Level,Vec) Generate(Game game, int seed, int difficulty)
@@ -33,17 +46,24 @@ namespace SurvivalHack.Mapgen
             Seed = seed;
             _rnd = new Random(seed);
 
-            var size = new Size(64, 64);
+            var size = new Size(128, 128);
             var map = new Level(game, size);
             var mask = new Grid<int>(size, MASKID_VOID);
             var rooms = new List<Room>();
 
-            MakeBaseTerrain(map, difficulty);
+            //MakeBaseTerrain(map, difficulty);
             PlaceRooms(map, mask, rooms, difficulty);
 
-            ECM.Stairs.MakeStairs(map, rooms[1].Center, difficulty++);
+            var floor = map.TileDefs.Get("floor_stone");
+            var wall = map.TileDefs[map.TileDefs.Get("rock")];
+            var caveAutomata = new BomberAutomata
+            {
+                TileId = floor,
+                AffectPred = (t) => t == wall
+            };
+            caveAutomata.Run(_rnd, map);
 
-            // TODO: Connection
+            ECM.Stairs.MakeStairs(map, rooms[1].Center, difficulty++);
 
             SpawnStuff(map, mask, rooms, difficulty);
             
@@ -70,7 +90,7 @@ namespace SurvivalHack.Mapgen
 
         void PlaceRooms(Level map, Grid<int> mask, List<Room> rooms, int depth) {
             
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < NumRooms; i++)
             {
                 var room = GenerateRoom(map, mask, rooms);
             }
