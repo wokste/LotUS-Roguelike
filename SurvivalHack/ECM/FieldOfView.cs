@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SurvivalHack
 {
-    public class FieldOfView : IComponent
+    public class FieldOfView : Component
     {
         public const byte FLAG_DISCOVERED = 0x1;    // True when the player seen the tile
         public const byte FLAG_VISIBLE = 0x2;       // True if the player sees the tile. In general, if something is visible it sould also be discovered.
@@ -255,8 +255,5 @@ namespace SurvivalHack
 
             Visibility[v] |= SET_VISIBLE;
         }
-
-        public string Describe() => null;
-        public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
     }
 }

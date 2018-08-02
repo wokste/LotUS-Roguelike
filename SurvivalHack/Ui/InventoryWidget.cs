@@ -74,7 +74,7 @@ namespace SurvivalHack.Ui
             _controller.Inventory.Slots[_selectedRow].NewItems = false;
 
             var list = new List<Entity>();
-            list.AddRange(_controller.Inventory.Items.Where(e => e.Get<Equippable>().Any(c => c.FitsIn(slotType))));
+            list.AddRange(_controller.Inventory.Items.Where(e => e.Components.Any(c => c.FitsIn(slotType))));
             list.Add(null);
 
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", list, i => {

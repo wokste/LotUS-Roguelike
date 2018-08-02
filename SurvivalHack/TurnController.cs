@@ -7,7 +7,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class TurnController : IComponent
+    public class TurnController : Component
     {
         public Entity Player;
         public List<Vec> Path;
@@ -15,7 +15,6 @@ namespace SurvivalHack
         public Inventory Inventory;
         public Level Level => Player.Level;
 
-        public string Describe() => null;
         public Action OnTurnEnd;
         public Action OnGameOver;
 
@@ -86,7 +85,7 @@ namespace SurvivalHack
             }
         }
 
-        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
             if (source == EUseSource.Target && (msg is AttackEvent || msg is ThreatenEvent))
                 msg.OnEvent += (m) => Interrupt();

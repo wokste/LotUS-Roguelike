@@ -49,6 +49,8 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => $"Melee attack deals {Damage} {DamageType} damage";
+
+        public bool FitsIn(ESlotType type) => type == ESlotType.Hand;
     }
 
     public class RangedWeapon : IWeapon
@@ -93,5 +95,6 @@ namespace SurvivalHack.Combat
         }
 
         public string Describe() => $"Ranged attack deals {Damage} {DamageType} damage";
+        public bool FitsIn(ESlotType type) => type == ESlotType.Ranged;
     }
 }

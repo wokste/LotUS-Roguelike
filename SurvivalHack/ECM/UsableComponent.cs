@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SurvivalHack.ECM
 {
-    public class HealComponent : IComponent
+    public class HealComponent : Component
     {
         public int Restore;
         public int StatID;
@@ -17,7 +17,7 @@ namespace SurvivalHack.ECM
             MessageType = messageType;
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
                 message.OnEvent += Heal;
@@ -28,10 +28,10 @@ namespace SurvivalHack.ECM
             Eventing.On(new HealEvent(msg, Restore, StatID), msg);
         }
 
-        public string Describe() => $"Heals {Restore} when used.";
+        public override string Describe() => $"Heals {Restore} when used.";
     }
 
-    public class MapRevealComponent : IComponent
+    public class MapRevealComponent : Component
     {
         public Type MessageType { get; }
         public byte Flags;
@@ -42,7 +42,7 @@ namespace SurvivalHack.ECM
             Flags = flags;
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
                 message.OnEvent += Reveal;
@@ -74,6 +74,6 @@ namespace SurvivalHack.ECM
             }
         }
 
-        public string Describe() => $"Reveals the map";
+        public override string Describe() => $"Reveals the map";
     }
 }

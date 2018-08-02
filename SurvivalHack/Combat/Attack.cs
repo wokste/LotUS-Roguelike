@@ -40,6 +40,7 @@ namespace SurvivalHack.Combat
         Thunder = 0x20,
     }
 
+    [Flags]
     public enum EDamageLocation
     {
         Head = 0x1,

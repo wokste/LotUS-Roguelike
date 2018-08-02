@@ -7,7 +7,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class Inventory : IComponent
+    public class Inventory : Component
     {
         public readonly List<Entity> Items = new List<Entity>();
 
@@ -26,15 +26,14 @@ namespace SurvivalHack
 
         public readonly Slot[] Slots = new Slot[SlotNames.Length];
 
-        public void Add(Entity entity)
+        public void Add(Entity item)
         {
-            var equippable = entity.GetOne<Equippable>();
-            if (equippable != null)
-                for (int i = 0; i < Slots.Length; ++i)
-                    if (equippable.FitsIn(SlotNames[i].type))
+            for (int i = 0; i < Slots.Length; ++i)
+                foreach (var component in item.Components)
+                    if (component.FitsIn(SlotNames[i].type))
                         Slots[i].NewItems = true;
 
-            var stack1 = entity.GetOne<StackComponent>();
+            var stack1 = item.GetOne<StackComponent>();
             if (stack1 != null)
             {
                 foreach (var i in Items)
@@ -46,14 +45,14 @@ namespace SurvivalHack
 
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     stack2.Count += stack1.Count;
-                    ColoredString.Write($"You aquired {entity} making a total of {stack2.Count}", Color.Green);
+                    ColoredString.Write($"You aquired {item} making a total of {stack2.Count}", Color.Green);
 
                     return;
                 };
             }
 
-            ColoredString.Write($"You aquired {entity}", Color.Green);
-            Items.Add(entity);
+            ColoredString.Write($"You aquired {item}", Color.Green);
+            Items.Add(item);
         }
 
         public bool Remove(Entity item)
@@ -74,7 +73,7 @@ namespace SurvivalHack
         {
             if (item != null)
             {
-                var ecs = item.Get<Equippable>().ToArray();
+                var ecs = item.Components;
 
                 if (!ecs.Any(ec => ec.FitsIn(SlotNames[slot].type)))
                     return false; // Can't equip said item in said slot
@@ -103,10 +102,6 @@ namespace SurvivalHack
             return null;
         }
 
-        public string Describe() => null;
-
-        public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
-
         public struct Slot
         {
             public Entity Item;
@@ -124,7 +119,7 @@ namespace SurvivalHack
             }
         }
     }
-
+    /*
     public class Equippable : IComponent
     {
         private readonly ESlotType _slotType;
@@ -140,6 +135,7 @@ namespace SurvivalHack
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source) {}
     }
+    */
 
     public enum ESlotType
     {

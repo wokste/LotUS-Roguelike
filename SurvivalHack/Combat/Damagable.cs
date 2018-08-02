@@ -6,7 +6,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    public class Damagable : ECM.IComponent
+    public class Damagable : Component
     {
         public Bar Health;
 
@@ -15,7 +15,7 @@ namespace SurvivalHack.Combat
             Health = new Bar(HP);
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && source == EUseSource.Target)
                 message.OnEvent += TakeDamage;
@@ -67,7 +67,5 @@ namespace SurvivalHack.Combat
                 self.Symbol.TextColor = new Color(r, g, b);
             }
         }
-
-        public string Describe() => null;
     }
 }

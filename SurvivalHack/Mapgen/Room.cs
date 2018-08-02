@@ -114,15 +114,10 @@ namespace SurvivalHack.Mapgen
 
             public static TileInfo Empty => new TileInfo { Id = 0, Method = PasteMethod.Nil };
 
-            public static bool operator==(TileInfo l, TileInfo r)
-            {
-                return l.Id == r.Id && l.Method == r.Method;
-            }
-
-            public static bool operator!=(TileInfo l, TileInfo r)
-            {
-                return !(l == r);
-            }
+            public override bool Equals(object obj) => (obj is TileInfo tileInfo) ? (this == tileInfo) : false;
+            public override int GetHashCode() => ((374696016 + Id) * -1521134295 + (int)Method) * -1521134295;
+            public static bool operator==(TileInfo l, TileInfo r) => (l.Id == r.Id && l.Method == r.Method);
+            public static bool operator!=(TileInfo l, TileInfo r) => !(l == r);
         }
     }
 }

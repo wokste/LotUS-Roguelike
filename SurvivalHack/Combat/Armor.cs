@@ -6,7 +6,7 @@ using HackConsole;
 
 namespace SurvivalHack.Combat
 {
-    public class Blockable : ECM.IComponent
+    public class Blockable : Component
     {
         public int Priority { get; set; } = 100;
 
@@ -19,7 +19,7 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 message.PreEvent += Mutate;
@@ -39,13 +39,13 @@ namespace SurvivalHack.Combat
             return;
         }
 
-        public string Describe()
+        public override string Describe()
         {
             return $"Has a {BlockChance:%} to block incoming attacks";
         }
     }
 
-    public class Armour : ECM.IComponent
+    public class Armour : IComponent
     {
         public int Priority { get; set; } = 50;
 
@@ -86,9 +86,27 @@ namespace SurvivalHack.Combat
         {
             return $"Reduces damage by {DamageReduction}.";
         }
+
+        public bool FitsIn(ESlotType type)
+        {
+
+            switch (type)
+            {
+                case ESlotType.Head:
+                    return (ProtectLocation & EDamageLocation.Head) != 0;
+                case ESlotType.Body:
+                    return (ProtectLocation & EDamageLocation.AllBody) != 0;
+                case ESlotType.Gloves:
+                    return (ProtectLocation & EDamageLocation.Hands) != 0;
+                case ESlotType.Feet:
+                    return (ProtectLocation & EDamageLocation.Feet) != 0;
+                default:
+                    return false;
+            }
+        }
     }
 
-    public class ElementalResistance : IComponent
+    public class ElementalResistance : Component
     {
         private readonly EDamageType DamageType;
         private readonly float Mult;
@@ -99,9 +117,9 @@ namespace SurvivalHack.Combat
             Mult = mult;
         }
 
-        public string Describe() => $"Reduces all {DamageType} damage by {Mult}";
+        public override string Describe() => $"Reduces all {DamageType} damage by {Mult}";
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 message.PreEvent += Mutate;

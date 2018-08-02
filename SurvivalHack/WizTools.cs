@@ -31,7 +31,7 @@ namespace SurvivalHack
             Tools.Add(entity);
         }
 
-        public class AreaAttack : IComponent
+        public class AreaAttack : Component
         {
             public float Damage;
             public Combat.EDamageType DamageType;
@@ -44,7 +44,7 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public void GetActions(Entity self, BaseEvent msg, EUseSource source)
+            public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
                 if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
                     msg.OnEvent += Genocide;
@@ -66,7 +66,7 @@ namespace SurvivalHack
                 }
             }
 
-            public string Describe() => $"Area Attack deals {Damage} damage";
+            public override string Describe() => $"Area Attack deals {Damage} damage";
         }
     }
 }

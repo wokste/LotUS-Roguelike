@@ -43,5 +43,6 @@ namespace SurvivalHack.ECM
             e1.Add(new Stairs(depth));
         }
 
+        public bool FitsIn(ESlotType type) => false;
     }
 }
