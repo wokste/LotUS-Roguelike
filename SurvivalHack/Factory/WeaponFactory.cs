@@ -8,7 +8,7 @@ namespace SurvivalHack.Factory
         RandomTable<string> BasePropabilities;
 
         public WeaponFactory() {
-            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,wshield:3,ishield:1,sbow:3,lbow:5,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5,gloves:2,gauntlets:1,boots:2"); // ,ring:1,cloak:1,amulet:1,@resistance:3
+            BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,wshield:3,ishield:1,sbow:3,lbow:5,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5,gloves:2,gauntlets:1,boots:2,ring:1,cloak:1,amulet:1,@resistance:3");
         }
 
         public Entity Gen(EntityGenerationInfo info)
@@ -146,7 +146,7 @@ namespace SurvivalHack.Factory
                         e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 4, 0.1f));
                         return e;
                     }
-                /*case "ring":
+                case "ring":
                     {
                         var e = new Entity('*', Color.Yellow, "Ring", EEntityFlag.Pickable);
                         e.Add(new Equippable(ESlotType.Ring));
@@ -177,7 +177,7 @@ namespace SurvivalHack.Factory
                         e.Name = $"{e.Name} of {DamageType} {Name}";
                         e.Add(new Combat.ElementalResistance(DamageType, Mult));
                         return e;
-                    }*/
+                    }
             }
             throw new ArgumentException($"Tag {tag} not found");
         }

@@ -119,7 +119,7 @@ namespace SurvivalHack
             }
         }
     }
-    /*
+    
     public class Equippable : IComponent
     {
         private readonly ESlotType _slotType;
@@ -135,7 +135,6 @@ namespace SurvivalHack
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source) {}
     }
-    */
 
     public enum ESlotType
     {
