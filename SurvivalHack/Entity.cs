@@ -93,7 +93,8 @@ namespace SurvivalHack
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
 
-            SetLevel(null, Vec.Zero);
+            if (!EntityFlags.HasFlag(EEntityFlag.IsPlayer))
+                SetLevel(null, Vec.Zero);
         }
 
         public (Entity,IWeapon) GetWeapon(Entity target)

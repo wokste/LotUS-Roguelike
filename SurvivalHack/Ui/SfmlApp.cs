@@ -96,7 +96,7 @@ namespace SurvivalHack.Ui
 
             switch (keyCode)
             {
-                case 'a':
+                case 'a': // Todo: Map actions
                     {
                         // TODO: Reserved for interactin with the map. Open doors, pray at altars, etc.
                     }
@@ -106,32 +106,33 @@ namespace SurvivalHack.Ui
                         // TODO: Reserved for casting spells
                     }
                     break;
-                case 'd':
+                case 'd': // Drop Item
                     {
                         var inv = _controller.Player.GetOne<Inventory>();
                         var o = new OptionWidget($"Drop Item", inv.Items, i => {
                             if (inv.Remove(i))
                             {
                                 i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
-                                didTurn = true;
+                                _controller.EndTurn();
                             }
                         });
                         _window.PopupStack.Push(o);
                     }
                     break;
-                case 'e':
+                case 'e': // Use item
                     {
                         var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
                         var o = new OptionWidget($"Consume", l, i => {
                             if (Eventing.On(new ConsumeEvent(_controller.Player, i)))
-                                didTurn = true;
+                                _controller.EndTurn();
                         });
                         _window.PopupStack.Push(o);
                     }
                     break;
-                case 'f':
+                case 'f': // Fire ranged weapon
                     {
-                        // TODO: Fight, especially useful for ranged attacks.
+                        // TODO: Fire, especially useful for ranged attacks.
+                        _controller.ActiveTool = new Tools.RangedWeaponTool(_controller);
                     }
                     break;
                 case 'g':

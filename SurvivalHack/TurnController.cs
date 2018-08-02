@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
+using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
@@ -15,8 +16,11 @@ namespace SurvivalHack
         public Inventory Inventory;
         public Level Level => Player.Level;
 
+        public ITool ActiveTool; // TODO: Event on tool change
+
         public Action OnTurnEnd;
         public Action OnGameOver;
+        public bool GameOver { get; private set; } = false;
 
         public TurnController(Game game) {
             Inventory = new Inventory();
@@ -38,7 +42,7 @@ namespace SurvivalHack
 
             Player.OnDestroy += i =>
             {
-                //Player = null;
+                GameOver = true;
                 OnGameOver?.Invoke();
             };
 

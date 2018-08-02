@@ -48,7 +48,7 @@ namespace SurvivalHack.Ui
 
         protected override void RenderImpl()
         {
-            if (!_controller.Player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
+            if (!_controller.GameOver)
                 _offset = _controller.Player.Pos - Size.Center;
             
             Clear();
@@ -126,16 +126,20 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            if (flags.HasFlag(EventFlags.LeftButton & EventFlags.MouseEventPress) && _path != null)
+            if (flags.HasFlag(EventFlags.RightButton) && flags.HasFlag(EventFlags.MouseEventPress) && _path != null)
             {
                 _controller.Path = _path.ToList();
+            }
+            else if (flags.HasFlag(EventFlags.LeftButton) & flags.HasFlag(EventFlags.MouseEventPress))
+            {
+                _controller.ActiveTool?.Apply(mousePos + _offset);
             }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var absPos = mousePos + _offset;
-            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.Player == null)
+            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.GameOver)
             {
                 OnSelected?.Invoke(null);
                 _path = null;

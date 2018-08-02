@@ -10,11 +10,15 @@ namespace SurvivalHack
     public class Inventory : Component
     {
         public readonly List<Entity> Items = new List<Entity>();
+        public const int SLOT_RANGED = 2;
+        public const int SLOT_WAND = 2;
+
 
         public static readonly (ESlotType type, string name, char key)[] SlotNames = new(ESlotType type, string name, char key)[] {
             (ESlotType.Hand,    "Main Hand", 'm'),
             (ESlotType.Offhand, "Offhand", 'o'),
             (ESlotType.Ranged,  "Ranged", 'r'),
+            (ESlotType.Wand,    "Wand", 'z'),
             (ESlotType.Head,    "Head", 'h'),
             (ESlotType.Body,    "Body", 'b'),
             (ESlotType.Gloves,  "Gloves", 'g'),
@@ -138,6 +142,6 @@ namespace SurvivalHack
 
     public enum ESlotType
     {
-        Hand, Offhand, Ranged, Head, Body, Gloves, Feet, Neck, Ring
+        Hand, Offhand, Ranged, Wand, Head, Body, Gloves, Feet, Neck, Ring
     }
 }

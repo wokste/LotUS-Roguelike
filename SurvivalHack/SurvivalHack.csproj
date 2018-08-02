@@ -106,6 +106,8 @@
     <Compile Include="Ui\GameOverWidget.cs" />
     <Compile Include="Ui\InfoWidget.cs" />
     <Compile Include="Ui\InventoryWidget.cs" />
+    <Compile Include="Ui\Tools\ITool.cs" />
+    <Compile Include="Ui\Tools\RangedWeaponTool.cs" />
     <Compile Include="Ui\OptionWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
