@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -49,24 +50,19 @@ namespace SurvivalHack.Ui
                 return;
             }
             PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>().Health);
-
-            var FoV = _controller.FoV;
-            var monsterList = _controller.Level.GetEntities().Where(e => (
-                e != _controller.Player &&
-                e.EntityFlags.HasFlag(EEntityFlag.TeamMonster) &&
-                FoV.ShowLocation(e) != null
-            ));
-
-            foreach (var e in monsterList)
+            
+            foreach (var e in _controller.VisibleEnemies)
             {
                 y++;
+                var fgColor = (e == _controller.SelectedTarget) ? Color.White : Color.Gray;
 
-                Print(new Vec(0, y++), e.Name, Color.White, Color.Transparent);
+                Print(new Vec(0, y++), e.Name, fgColor, Color.Transparent);
 
                 var damagable = e.GetOne<Combat.Damagable>();
                 if (damagable != null)
                     PrintBar("HP:", y++, damagable.Health);
             }
+            Dirty = true; // This is temporary.
         }
     }
 }

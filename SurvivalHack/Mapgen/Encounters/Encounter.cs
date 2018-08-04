@@ -29,7 +29,7 @@ namespace SurvivalHack.Mapgen.Encounters
             {
                 var v = new Vec(Game.Rnd.Next(map.Size.X), Game.Rnd.Next(map.Size.Y));
 
-                if (!map.GetTile(v).Flags.HasFlag(TerrainFlag.Walk))
+                if (!map.GetTile(v).IsFloor)
                     continue;
 
                 if (ids[v] != 0)

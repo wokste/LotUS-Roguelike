@@ -1,6 +1,7 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -131,8 +132,14 @@ namespace SurvivalHack.Ui
                     break;
                 case 'f': // Fire ranged weapon
                     {
-                        // TODO: Fire, especially useful for ranged attacks.
-                        _controller.ActiveTool = new Tools.RangedWeaponTool(_controller);
+                        var item = _controller.Player.GetOne<Inventory>()?.Slots[Inventory.SLOT_RANGED].Item;
+                        var enemy = _controller.SelectedTarget;
+
+                        if (item != null && enemy != null)
+                        {
+                            if (Eventing.On(new AttackEvent(_controller.Player, item, enemy, Combat.EAttackMove.Projectile)))
+                                _controller.EndTurn();
+                        }
                     }
                     break;
                 case 'g':
@@ -191,7 +198,14 @@ namespace SurvivalHack.Ui
                         }
                     }
                     break;
-
+                case (char)9:
+                    {
+                        var id = _controller.VisibleEnemies.IndexOf(_controller.SelectedTarget);
+                        id++;
+                        var newTarget = (id < _controller.VisibleEnemies.Count) ? _controller.VisibleEnemies[id] : null;
+                        _controller.SelectedTarget = newTarget;
+                        break;
+                    }
 #if WIZTOOLS
                 case '\\': // Well 'w' will be used for wield/wear
                     {

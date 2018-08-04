@@ -130,10 +130,6 @@ namespace SurvivalHack.Ui
             {
                 _controller.Path = _path.ToList();
             }
-            else if (flags.HasFlag(EventFlags.LeftButton) & flags.HasFlag(EventFlags.MouseEventPress))
-            {
-                _controller.ActiveTool?.Apply(mousePos + _offset);
-            }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
