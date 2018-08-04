@@ -38,7 +38,7 @@ namespace SurvivalHack.Ui
             _controller.OnGameOver += () => {
                 var o = new GameOverWidget
                 {
-                    DesiredSize = new Rect(new Vec(), new Vec(25, 25)),
+                    DesiredSize = new Rect(new Vec(), new Size(25, 25)),
                 };
                 _window.PopupStack.Push(o);
             };
@@ -92,9 +92,11 @@ namespace SurvivalHack.Ui
 
         public void OnKeyPress(char keyCode, EventFlags flags)
         {
+            bool didTurn = false;
+
             switch (keyCode)
             {
-                case 'a':
+                case 'a': // Todo: Map actions
                     {
                         // TODO: Reserved for interactin with the map. Open doors, pray at altars, etc.
                     }
@@ -104,18 +106,20 @@ namespace SurvivalHack.Ui
                         // TODO: Reserved for casting spells
                     }
                     break;
-                case 'd':
+                case 'd': // Drop Item
                     {
                         var inv = _controller.Player.GetOne<Inventory>();
                         var o = new OptionWidget($"Drop Item", inv.Items, i => {
-                            //TODO: drop item
-                            inv.Remove(i);
-                            i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
+                            if (inv.Remove(i))
+                            {
+                                i.SetLevel(_controller.Player.Level, _controller.Player.Pos);
+                                _controller.EndTurn();
+                            }
                         });
                         _window.PopupStack.Push(o);
                     }
                     break;
-                case 'e':
+                case 'e': // Use item
                     {
                         var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
                         var o = new OptionWidget($"Consume", l, i => {
@@ -125,26 +129,24 @@ namespace SurvivalHack.Ui
                         _window.PopupStack.Push(o);
                     }
                     break;
-                case 'f':
+                case 'f': // Fire ranged weapon
                     {
-                        // TODO: Fight, especially useful for ranged attacks.
+                        // TODO: Fire, especially useful for ranged attacks.
+                        _controller.ActiveTool = new Tools.RangedWeaponTool(_controller);
                     }
                     break;
                 case 'g':
                     {
                         var pos = _controller.Player.Pos;
-                        bool didTurn = false;
                         foreach (var i in _controller.Level.GetEntities(pos).ToArray())
                         {
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
                                 i.SetLevel(null, Vec.Zero);
                                 _controller.Player.GetOne<Inventory>().Add(i);
+                                didTurn = true;
                             }
                         }
-
-                        if (didTurn)
-                            _controller.EndTurn();
                     }
                     break;
                 case 's':
@@ -175,21 +177,18 @@ namespace SurvivalHack.Ui
                     }
                     break;
                 case '>':
-                case '<':
                     {
                         foreach (var entity in _controller.Level.GetEntities(_controller.Player.Pos))
                         {
                             if (_controller.Player == entity)
                                 continue;
 
-                            if (Eventing.On(new DownEvent(_controller.Player, entity, keyCode)))
+                            if (Eventing.On(new DownEvent(_controller.Player, entity)))
                             {
-                                _controller.EndTurn();
+                                didTurn = true;
                                 break;
                             }
                         }
-                        
-                        // TODO: move Up/Down
                     }
                     break;
 
@@ -206,6 +205,10 @@ namespace SurvivalHack.Ui
                 default:
                     break;
             }
+
+
+            if (didTurn)
+                _controller.EndTurn();
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)

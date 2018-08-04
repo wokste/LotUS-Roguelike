@@ -5,6 +5,7 @@ using SurvivalHack.Ai;
 using System.Collections.Generic;
 using System.Linq;
 using SurvivalHack.Combat;
+using System.Diagnostics;
 
 namespace SurvivalHack
 {
@@ -17,8 +18,7 @@ namespace SurvivalHack
         public override string ToString() => Name;
 
         public List<IComponent> Components = new List<IComponent>();
-
-        public TerrainFlag Flags;
+        
         public Symbol Symbol;
 
         public float Speed = 1;
@@ -75,9 +75,9 @@ namespace SurvivalHack
             // == Inventory ==
             var inv = GetOne<Inventory>();
             if (inv != null)
-                foreach (var item in inv.Equipped)
-                    if (item != null)
-                        yield return item;
+                foreach (var slot in inv.Slots)
+                    if (slot.Item != null)
+                        yield return slot.Item;
 
             // == Status effects ==
             // TODO: Add status effects.
@@ -93,15 +93,16 @@ namespace SurvivalHack
             EntityFlags |= EEntityFlag.Destroyed;
             OnDestroy?.Invoke(this);
 
-            SetLevel(null, Vec.Zero);
+            if (!EntityFlags.HasFlag(EEntityFlag.IsPlayer))
+                SetLevel(null, Vec.Zero);
         }
 
         public (Entity,IWeapon) GetWeapon(Entity target)
         {
             IEnumerable<Entity> It() {
                 var inventory = GetOne<Inventory>();
-                yield return inventory?.Equipped[0];
-                yield return inventory?.Equipped[1];
+                yield return inventory?.Slots[0].Item;
+                yield return inventory?.Slots[1].Item;
                 yield return this;
             }
 
@@ -125,16 +126,17 @@ namespace SurvivalHack
                 var c = newLevel.GetChunck(newPos);
                 c.Add(this);
 
-                if (newLevel != null)
-                {
-                    Level = newLevel;
-                    Pos = newPos;
-                }
+                Level = newLevel;
+                Pos = newPos;
+
+                GetOne<FieldOfView>()?.Update(this);
             }
         }
 
-        public virtual bool Move(Entity self, Vec direction)
+        public virtual bool Move(Vec direction)
         {
+            Debug.Assert(Level != null);
+
             var newPosition = Pos;
             newPosition += direction;
 
@@ -143,11 +145,11 @@ namespace SurvivalHack
                 return false;
 
             // Terrain collisions
-            if (!Level.HasFlag(newPosition, self.Flags))
+            if (Level.GetTile(newPosition).Solid)
                 return false;
 
             // Monster collisions
-            if (self.EntityFlags.HasFlag(EEntityFlag.Blocking))
+            if (EntityFlags.HasFlag(EEntityFlag.Blocking))
                 foreach (var c in Level.GetEntities(newPosition))
                     if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
                         return false;
@@ -158,11 +160,11 @@ namespace SurvivalHack
 
             if (oldChunk != newChunk)
             {
-                oldChunk.Remove(self);
-                newChunk.Add(self);
+                oldChunk.Remove(this);
+                newChunk.Add(this);
             }
 
-            self.GetOne<FieldOfView>()?.Update(this);
+            GetOne<FieldOfView>()?.Update(this);
 
             return true;
         }

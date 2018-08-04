@@ -45,7 +45,7 @@ namespace SurvivalHack.Ai
 
             // Todo: Sight radius
             var radius = 10;
-            foreach (var e in self.Level.GetEntities(pos, radius))
+            foreach (var e in self.Level.GetEntities(new Circle(pos, radius)))
             {
                 CheckSee(self, e);
             }
@@ -61,7 +61,7 @@ namespace SurvivalHack.Ai
             var level = self.Level;
             var path = Line.Run(self.Pos, other.Pos);
             foreach (var v in path)
-                if (!level.HasFlag(v, TerrainFlag.Sight))
+                if (level.GetTile(v).BlockSight)
                     return;
 
             foreach (var rule in _rules)
@@ -81,7 +81,7 @@ namespace SurvivalHack.Ai
             // Warn allies within 10 squares
             var radius = 10; // Todo: Sight radius
 
-            foreach (var ally in self.Level.GetEntities(pos, radius))
+            foreach (var ally in self.Level.GetEntities(new Circle(pos, radius)))
             {
                 if (ally == self)
                     continue;

@@ -310,19 +310,15 @@ namespace SurvivalHack
 
     public class DownEvent : BaseEvent
     {
-        public char Dir;
         public string Method = "";
 
-        public DownEvent(Entity user, Entity stairs, char dir) : base(user, stairs, null)
+        public DownEvent(Entity user, Entity stairs) : base(user, stairs, null)
         {
-            Debug.Assert(dir == '>' || dir == '<');
-
-            Dir = dir;
         }
 
         public override string GetMessage(bool isChildMessage)
         {
-            return $"{Word.AName(User)} {Word.Verb(User, "walk")} {(Dir == '>' ? "down" : "up")} the {Method}. ";
+            return $"{Word.AName(User)} {Word.Verb(User, "walk")} down the {Method}. ";
         }
     }
 }

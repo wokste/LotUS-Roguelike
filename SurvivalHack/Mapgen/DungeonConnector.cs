@@ -262,17 +262,16 @@ namespace SurvivalHack.Mapgen
             var c2 = _rooms[j].Center;
 
             var pn = new PerlinNoise(1337);
-            var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.TileMap[v].MineCost, false);
+            var aStar = new AStar(_map.TileMap.Size, (Vec v) => _map.GetTile(v).MineCost, false);
             var path = aStar.Run(c1, c2);
 
-            var floor = TileList.Get("floor");
-            var wall = TileList.Get("wall");
-            var door = TileList.Get("door");
+            var floor = _map.TileDefs.Get("floor_stone");
+
             foreach (var v in path)
             {
-                if (_map.TileMap[v] == wall || _map.TileMap[v] == door)
-                    _map.TileMap[v] = door;
-                else
+                var tile = _map.GetTile(v);
+
+                if (tile.Solid || tile.WalkDanger > 0)
                     _map.TileMap[v] = floor;
             }
             

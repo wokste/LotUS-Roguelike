@@ -69,9 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Combat\Elemental.cs" />
-    <Compile Include="ECM\Prohibitor.cs" />
     <Compile Include="ECM\Stairs.cs" />
     <Compile Include="Eventing.cs" />
+    <Compile Include="Mapgen\Automata\BomberAutomata.cs" />
     <Compile Include="Mapgen\Encounters\Encounter.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
@@ -107,6 +107,8 @@
     <Compile Include="Ui\GameOverWidget.cs" />
     <Compile Include="Ui\InfoWidget.cs" />
     <Compile Include="Ui\InventoryWidget.cs" />
+    <Compile Include="Ui\Tools\ITool.cs" />
+    <Compile Include="Ui\Tools\RangedWeaponTool.cs" />
     <Compile Include="Ui\OptionWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

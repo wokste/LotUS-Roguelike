@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
+using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
-    public class TurnController : IComponent
+    public class TurnController : Component
     {
         public Entity Player;
         public List<Vec> Path;
@@ -15,9 +16,11 @@ namespace SurvivalHack
         public Inventory Inventory;
         public Level Level => Player.Level;
 
-        public string Describe() => null;
+        public ITool ActiveTool; // TODO: Event on tool change
+
         public Action OnTurnEnd;
         public Action OnGameOver;
+        public bool GameOver { get; private set; } = false;
 
         public TurnController(Game game) {
             Inventory = new Inventory();
@@ -32,15 +35,17 @@ namespace SurvivalHack
                     Inventory
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
-                Flags = TerrainFlag.Walk,
             };
 
             Inventory.Add(new Factory.WeaponFactory().GetBasic("ssword"));
-            Inventory.Equip(Inventory.Items[0], 0);
+            Inventory.Equip(Inventory.Items.Last(), 0);
+
+            Inventory.Add(new Factory.WeaponFactory().GetBasic("sbow"));
+            Inventory.Equip(Inventory.Items.Last(), 2);
 
             Player.OnDestroy += i =>
             {
-                //Player = null;
+                GameOver = true;
                 OnGameOver?.Invoke();
             };
 
@@ -60,7 +65,7 @@ namespace SurvivalHack
 
         public bool Move(Vec move, bool interrupt = true)
         {
-            if (Player.Move(Player, move))
+            if (Player.Move(move))
             {
                 EndTurn(interrupt);
                 return true;
@@ -87,7 +92,7 @@ namespace SurvivalHack
             }
         }
 
-        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
             if (source == EUseSource.Target && (msg is AttackEvent || msg is ThreatenEvent))
                 msg.OnEvent += (m) => Interrupt();

@@ -56,14 +56,14 @@ namespace SurvivalHack.Mapgen
         {
             Vec v;
             var p0 = room.Transform.Convert(Vec.Zero);
-            var p1 = room.Transform.Convert(room.Size - Vec.One);
+            var p1 = room.Transform.Convert(room.Size.BottomRight - Vec.One);
 
             do
             {
                 v = new Vec(
                     new Range(p0.X, p1.X).Rand(Game.Rnd),
                     new Range(p0.Y, p1.Y).Rand(Game.Rnd));
-            } while (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk));
+            } while (_level.GetTile(v).Solid); // TODO: This can be less strict for flying creatures
 
             return v;
         }

@@ -43,7 +43,7 @@ namespace SurvivalHack.Ui
 
             Print(new Vec(0, y++), "Player:", Color.White, Color.Transparent);
 
-            if (_controller.Player == null)
+            if (_controller.GameOver)
             {
                 Print(new Vec(0, y++), "Dead", Color.White, Color.Transparent);
                 return;

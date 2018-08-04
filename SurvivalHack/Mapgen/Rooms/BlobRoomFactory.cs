@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 
@@ -6,19 +7,19 @@ namespace SurvivalHack.Mapgen.Rooms
 {
     public class BlobRoomFactory : RoomFactory
     {
-        public Range MaxRadius = new Range("4-8");
+        public Range MaxRadius = new Range("1-3");
         public Range MinRadius = new Range("1");
         public Range Spikes = new Range("4-6");
 
-        public Tile FloorTile;
-        public Tile WallTile;
+        public Room.TileInfo FloorTile;
+        public Room.TileInfo WallTile;
         public double Roughness = 1;
         
-        public BlobRoomFactory()
+        public BlobRoomFactory(List<Tile> tileDefs)
         {
             Name = "BlobType";
-            FloorTile = TileList.Get("floor");
-            WallTile = TileList.Get("rock");
+            FloorTile = new Room.TileInfo { Id = tileDefs.Get("floor_stone"), Method = Room.PasteMethod.Paste };
+            WallTile = new Room.TileInfo { Id = -1, Method = Room.PasteMethod.NoFloor };
         }
 
         public override Room Make(Random rnd)
@@ -40,7 +41,7 @@ namespace SurvivalHack.Mapgen.Rooms
             foreach (var v in r.Tiles.Ids())
             {
                 var pos = v + offset;
-                r.Tiles[v] = blob.IsFloor(pos.X, pos.Y) ? FloorTile : null;
+                r.Tiles[v] = blob.IsFloor(pos.X, pos.Y) ? FloorTile : Room.TileInfo.Empty;
             }
         }
 
@@ -48,7 +49,7 @@ namespace SurvivalHack.Mapgen.Rooms
 
             bool ShouldHaveWall(Vec v)
             {
-                if (r.Tiles[v] != null)
+                if (r.Tiles[v].Method == Room.PasteMethod.Paste)
                     return false; // Floor never becomes wall.
 
                 // Check if there is an adjacent floor.

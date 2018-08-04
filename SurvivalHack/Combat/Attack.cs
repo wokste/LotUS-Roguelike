@@ -40,6 +40,7 @@ namespace SurvivalHack.Combat
         Thunder = 0x20,
     }
 
+    [Flags]
     public enum EDamageLocation
     {
         Head = 0x1,
@@ -48,8 +49,8 @@ namespace SurvivalHack.Combat
         RArm = 0x40,
         Legs = 0x80,
         AllBody = (Body | LArm | RArm | Legs),
-        Hands = 100,
-        Feet = 200,
+        Hands = 0x100,
+        Feet = 0x200,
 
         Wings = 0x1000,
         Tail = 0x2000,

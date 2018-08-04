@@ -22,7 +22,7 @@ namespace HackConsole
         {
             _windowWidth = x;
             _windowHeight = y;
-            WindowData.Data = new Grid<Symbol>(new Vec((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
+            WindowData.Data = new Grid<Symbol>(new Size((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
 
             var r = new Rect(Vec.Zero, WindowData.Data.Size);
             PopupStack.Resize(ref r);

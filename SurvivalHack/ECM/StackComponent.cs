@@ -43,5 +43,7 @@ namespace SurvivalHack.ECM
         }
 
         public string Describe() => $"Stack consists of {Count} items";
+
+        public bool FitsIn(ESlotType type) => false;
     }
 }

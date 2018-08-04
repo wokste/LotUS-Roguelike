@@ -5,9 +5,9 @@ namespace HackConsole
     public class Grid<T>
     {
         private readonly T[,] _grid;
-        public readonly Vec Size;
+        public readonly Size Size;
 
-        public Grid(Vec size, T defaultValue = default(T))
+        public Grid(Size size, T defaultValue = default(T))
         {
             Size = size;
             _grid = new T[size.X, size.Y];

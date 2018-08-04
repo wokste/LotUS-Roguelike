@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using HackConsole;
 
 namespace SurvivalHack
@@ -8,10 +9,11 @@ namespace SurvivalHack
         public static readonly Random Rnd = new Random();
 
         public Timeline Timeline = new Timeline();
+        public List<Tile> TileDefs;
 
         public void Init()
         {
-            TileList.InitTypes();
+            TileDefs = Tile.InitTypes();
 #if WIZTOOLS
             WizTools.Init();
 #endif
@@ -19,7 +21,7 @@ namespace SurvivalHack
 
         public (Level,Vec) GetLevel(int difficulty)
         {
-            var generator = new Mapgen.DungeonGenerator();
+            var generator = new Mapgen.DungeonGenerator(TileDefs);
             generator.OnNewEvent += (e) => { Timeline.Insert(e); };
 
             return generator.Generate(this, Rnd.Next(), difficulty);

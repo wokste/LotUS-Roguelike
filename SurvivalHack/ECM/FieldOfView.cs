@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SurvivalHack
 {
-    public class FieldOfView : IComponent
+    public class FieldOfView : Component
     {
         public const byte FLAG_DISCOVERED = 0x1;    // True when the player seen the tile
         public const byte FLAG_VISIBLE = 0x2;       // True if the player sees the tile. In general, if something is visible it sould also be discovered.
@@ -58,8 +58,8 @@ namespace SurvivalHack
         /// </summary>
         private void VisibleToDark()
         {
-            var r = new Rect(_entityPos, Vec.One).Grow(_visualRange);
-            r = r.Intersect(new Rect(Vec.Zero, Visibility.Size));
+            var r = new Rect(_entityPos, Size.One).Grow(_visualRange);
+            r = r.Intersect(Visibility.Size.ToRect());
 
             foreach (var v in r.Iterator())
             {
@@ -136,9 +136,9 @@ namespace SurvivalHack
             {
                 UpdateVisibility(new Vec(x,y)); // Makes things visible
 
-                if (!Map.HasFlag(new Vec(x, y), TerrainFlag.Sight))
+                if (Map.GetTile(new Vec(x, y)).BlockSight)
                 {
-                    if (y > yMin && Map.HasFlag(new Vec(x, y-1), TerrainFlag.Sight))
+                    if (y > yMin && !Map.GetTile(new Vec(x, y - 1)).BlockSight)
                     {
                         // Found end of visible area.
                         ScanQuatrantH(distance + 1, direction, minSlope, GetSlope(x, y - 0.5, _entityPos.X, _entityPos.Y, direction));
@@ -146,7 +146,7 @@ namespace SurvivalHack
                 }
                 else
                 {
-                    if (y > yMin && !Map.HasFlag(new Vec(x, y - 1), TerrainFlag.Sight))
+                    if (y > yMin && Map.GetTile(new Vec(x, y - 1)).BlockSight)
                     {
                         // Found start of visible area.
                         minSlope = GetSlope(x, y - 0.5, _entityPos.X, _entityPos.Y, direction);
@@ -154,7 +154,7 @@ namespace SurvivalHack
                 }
             }
 
-            if (Map.HasFlag(new Vec(x, yMax), TerrainFlag.Sight))
+            if (!Map.GetTile(new Vec(x, yMax)).BlockSight)
             {
                 // This visible area is not processed yet. Do it now.
                 ScanQuatrantH(distance + 1, direction, minSlope, maxSlope);
@@ -191,9 +191,9 @@ namespace SurvivalHack
             {
                 UpdateVisibility(new Vec(x, y)); // Makes things visible
 
-                if (!Map.HasFlag(new Vec(x, y), TerrainFlag.Sight))
+                if (Map.GetTile(new Vec(x, y)).BlockSight)
                 {
-                    if (x > xMin && Map.HasFlag(new Vec(x - 1, y), TerrainFlag.Sight))
+                    if (x > xMin && !Map.GetTile(new Vec(x - 1, y)).BlockSight)
                     {
                         // Found end of visible area.
                         ScanQuatrantV(distance + 1, direction, minSlope, GetSlope(x - 0.5, y, _entityPos.X, _entityPos.Y, direction));
@@ -201,7 +201,7 @@ namespace SurvivalHack
                 }
                 else
                 {
-                    if (x > xMin && !Map.HasFlag(new Vec(x - 1, y), TerrainFlag.Sight))
+                    if (x > xMin && Map.GetTile(new Vec(x - 1, y)).BlockSight)
                     {
                         // Found start of visible area.
                         minSlope = GetSlope(x - 0.5, y, _entityPos.X, _entityPos.Y, direction);
@@ -209,7 +209,7 @@ namespace SurvivalHack
                 }
             }
 
-            if (Map.HasFlag(new Vec(xMax, y), TerrainFlag.Sight))
+            if (!Map.GetTile(new Vec(xMax, y)).BlockSight)
             {
                 // This visible area is not processed yet. Do it now.
                 ScanQuatrantV(distance + 1, direction, minSlope, maxSlope);
@@ -255,8 +255,5 @@ namespace SurvivalHack
 
             Visibility[v] |= SET_VISIBLE;
         }
-
-        public string Describe() => null;
-        public void GetActions(Entity self, BaseEvent message, EUseSource source) {}
     }
 }

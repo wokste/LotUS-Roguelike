@@ -38,7 +38,9 @@ namespace SurvivalHack.Ui
             if ((_controller.FoV.Visibility[v] & FieldOfView.FLAG_DISCOVERED) == 0)
                 return float.PositiveInfinity;
 
-            if (!_level.TileMap[v].Flags.HasFlag(TerrainFlag.Walk))
+            var tile = _level.GetTile(v);
+
+            if (tile.Solid || tile.WalkDanger > 0)
                 return float.PositiveInfinity;
 
             return 1;
@@ -46,7 +48,7 @@ namespace SurvivalHack.Ui
 
         protected override void RenderImpl()
         {
-            if (!_controller.Player.EntityFlags.HasFlag(EEntityFlag.Destroyed))
+            if (!_controller.GameOver)
                 _offset = _controller.Player.Pos - Size.Center;
             
             Clear();
@@ -59,8 +61,16 @@ namespace SurvivalHack.Ui
 
         private void RenderCreatures()
         {
+            int RenderDepth(EEntityFlag flags) {
+                if (flags.HasFlag(EEntityFlag.IsPlayer))
+                    return 10;
+                else if (flags.HasFlag(EEntityFlag.Blocking))
+                    return 5;
+                return 1;
+            }
+
             var area = Size + _offset;
-            foreach (var e in _level.GetEntities(area)) {
+            foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags))) {
                 var p = _controller.FoV.ShowLocation(e);
 
                 if (p is Vec p2)
@@ -70,7 +80,7 @@ namespace SurvivalHack.Ui
                     if (!Size.Contains(p2))
                         continue;
 
-                    WindowData.Data[p2] = e.Symbol;
+                    WindowData.Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, WindowData.Data[p2].BackgroundColor);
                 }
             }
         }
@@ -116,16 +126,20 @@ namespace SurvivalHack.Ui
 
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
-            if (flags.HasFlag(EventFlags.LeftButton & EventFlags.MouseEventPress) && _path != null)
+            if (flags.HasFlag(EventFlags.RightButton) && flags.HasFlag(EventFlags.MouseEventPress) && _path != null)
             {
                 _controller.Path = _path.ToList();
+            }
+            else if (flags.HasFlag(EventFlags.LeftButton) & flags.HasFlag(EventFlags.MouseEventPress))
+            {
+                _controller.ActiveTool?.Apply(mousePos + _offset);
             }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var absPos = mousePos + _offset;
-            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.Player == null)
+            if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.GameOver)
             {
                 OnSelected?.Invoke(null);
                 _path = null;

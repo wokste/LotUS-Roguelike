@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -30,7 +31,7 @@ namespace SurvivalHack
             Tools.Add(entity);
         }
 
-        public class AreaAttack : IComponent
+        public class AreaAttack : Component
         {
             public float Damage;
             public Combat.EDamageType DamageType;
@@ -43,7 +44,7 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public void GetActions(Entity self, BaseEvent msg, EUseSource source)
+            public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
                 if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
                     msg.OnEvent += Genocide;
@@ -52,7 +53,7 @@ namespace SurvivalHack
             public void Genocide(BaseEvent msg)
             {
                 var level = msg.User.Level;
-                foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)))
+                foreach (var e in level.GetEntities(new Rect(Vec.Zero, level.Size)).ToArray())
                 {
                     if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
                         continue;
@@ -65,7 +66,7 @@ namespace SurvivalHack
                 }
             }
 
-            public string Describe() => $"Area Attack deals {Damage} damage";
+            public override string Describe() => $"Area Attack deals {Damage} damage";
         }
     }
 }
