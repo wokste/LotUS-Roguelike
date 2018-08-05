@@ -21,7 +21,7 @@ namespace HackConsole
             }
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Clear();
 

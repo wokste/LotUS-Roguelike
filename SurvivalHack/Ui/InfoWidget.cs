@@ -20,7 +20,7 @@ namespace SurvivalHack.Ui
             }
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Clear();
 

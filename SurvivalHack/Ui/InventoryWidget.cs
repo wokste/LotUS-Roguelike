@@ -86,7 +86,7 @@ namespace SurvivalHack.Ui
             _window.PopupStack.Push(o);
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Clear();
 

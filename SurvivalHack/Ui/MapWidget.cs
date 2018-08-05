@@ -46,7 +46,7 @@ namespace SurvivalHack.Ui
             return 1;
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             if (!_controller.GameOver)
                 _offset = _controller.Player.Pos - Rect.Size.Center;
@@ -93,7 +93,7 @@ namespace SurvivalHack.Ui
             foreach (var absPos in _path)
             {
                 var relPos = absPos - _offset;
-                if (!Rect.Contains(relPos))
+                if (!Rect.Size.Contains(relPos))
                     continue;
 
                 var s = Data[relPos];

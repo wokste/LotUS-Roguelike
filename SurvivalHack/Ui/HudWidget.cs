@@ -13,7 +13,7 @@ namespace SurvivalHack.Ui
         {
             _controller = controller;
 
-            controller.OnTurnEnd += RenderImpl;
+            controller.OnTurnEnd += Render;
         }
 
         private void PrintBar(string name, int y, Bar bar)
@@ -35,7 +35,7 @@ namespace SurvivalHack.Ui
 
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Clear();
 

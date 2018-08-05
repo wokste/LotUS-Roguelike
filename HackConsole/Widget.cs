@@ -8,7 +8,6 @@ namespace HackConsole
         public Rect Rect;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
-        public bool Dirty = true;
 
         public abstract void Draw(RenderTarget target, RenderStates states);
 
@@ -29,7 +28,6 @@ namespace HackConsole
             Rect = newSize;
 
             OnResized();
-            Dirty = true;
         }
 
         public void CenterPopup(Rect screen)

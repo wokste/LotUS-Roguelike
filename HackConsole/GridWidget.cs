@@ -12,20 +12,24 @@ namespace HackConsole
     {
         private readonly VertexArray _vertices = new VertexArray();
         public Grid<Symbol> Data;
-        private int _fontX = 16;
-        private int _fontY = 16;
+        private readonly int _fontX = 16;
+        private readonly int _fontY = 16;
+
+        public bool Dirty = true;
 
         protected override void OnResized()
         {
             base.OnResized();
             ResizeVertices();
+            Dirty = true;
         }
 
         // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
         public override void Draw(RenderTarget target, RenderStates states)
         {
-            RenderImpl();
+            if (Dirty)
             {
+                Render();
                 var spaceAscii = 219;
                 var spacePos = new Vector2f((spaceAscii % 16) * _fontX, (spaceAscii / 16) * _fontY);
 
@@ -39,7 +43,7 @@ namespace HackConsole
                 foreach (var v in Data.Ids())
                 {
                     var idx = (uint)((v.Y * Data.Size.X) + v.X) * 8;
-                    var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
+                    var vecScreen = new Vector2f((v.X * _fontX + Rect.Left * _fontX), (v.Y * _fontY + Rect.Top * _fontY));
 
                     var Char = Data[v];
                     var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);
@@ -53,19 +57,25 @@ namespace HackConsole
                         _vertices[idx + i + 4] = new Vertex(vecScreen + d[i], fgColor, texPos + d[i]);
                     }
                 }
+                Dirty = false;
             }
             target.Draw(_vertices, states);
         }
 
-        protected abstract void RenderImpl();
+        protected abstract void Render();
 
         void ResizeVertices()
         {
-            Data = new Grid<Symbol>(Rect.Size);
+            var newSize = Rect.Size;
+
+            if (Data != null && newSize == Data.Size)
+                return;
+
+            Data = new Grid<Symbol>(newSize);
 
             // Build the vertex buffer
             _vertices.PrimitiveType = PrimitiveType.Quads;
-            _vertices.Resize((uint)Data.Size.Area * 8);
+            _vertices.Resize((uint)newSize.Area * 8);
         }
 
         private SFML.Graphics.Color ColorToSfml(HackConsole.Color color)
@@ -81,7 +91,7 @@ namespace HackConsole
         /// </summary>
         protected void Clear()
         {
-            foreach (var v in Rect.Size.Iterator())
+            foreach (var v in Data.Ids())
             {
                 Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
             }
@@ -98,7 +108,7 @@ namespace HackConsole
         {
             //TODO: Input validation
 
-            var length = Math.Min(msg.Length, Rect.Right - v.X);
+            var length = Math.Min(msg.Length, Data.Size.X - v.X);
 
             for (var i = 0; i < length; i++)
             {
@@ -116,7 +126,7 @@ namespace HackConsole
         {
             //TODO: Input validation
 
-            var length = Math.Min(msg.Length, Rect.Right - v.X);
+            var length = Math.Min(msg.Length, Data.Size.X - v.X);
 
             for (var i = 0; i < length; i++)
             {

@@ -27,7 +27,7 @@ namespace SurvivalHack.Ui
             DesiredSize = new Rect(0, 0, COLUMN_WIDTH, Set.Count + 1);
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Clear();
 

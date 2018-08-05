@@ -9,7 +9,7 @@ namespace SurvivalHack.Ui
         public Action OnClose { get; set; }
         public bool Interrupt => true;
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
             Print(new Vec(0,0), "Game Over", Color.White);
         }
