@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SurvivalHack.Ui
 {
-    public class HudWidget : Widget
+    public class HudWidget : GridWidget
     {
         private readonly TurnController _controller;
 
@@ -19,7 +19,7 @@ namespace SurvivalHack.Ui
         private void PrintBar(string name, int y, Bar bar)
         {
             var str = $"{name} ({bar.Current}/{bar.Max})";
-            var width = Size.Width;
+            var width = Rect.Width;
             var offset = (width - str.Length) / 2;
 
             var p = bar.Perc;
@@ -30,7 +30,7 @@ namespace SurvivalHack.Ui
                 var bgColor = (x <= p * width + 0.5) ? Color.Red : Color.Black;
 
                 var ascii = (x >= offset && x < str.Length + offset) ? str[x-offset] : ' ';
-                WindowData.Data[new Vec(x + Size.Left, y + Size.Top)] = new Symbol { Ascii = ascii, BackgroundColor = bgColor, TextColor = fgColor };
+                Data[new Vec(x, y)] = new Symbol { Ascii = ascii, BackgroundColor = bgColor, TextColor = fgColor };
             }
 
         }

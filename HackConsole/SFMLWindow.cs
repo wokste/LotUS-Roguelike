@@ -6,13 +6,12 @@ using SFML.Window;
 
 namespace HackConsole
 {
-    public class VBOWindow : BaseWindow
+    public class SFMLWindow : BaseWindow , Drawable
     {
         private readonly RenderWindow _window;
         private readonly Texture _fontTex;
-        private readonly VertexArray _vertices = new VertexArray();
 
-        public VBOWindow(string name)
+        public SFMLWindow(string name)
         {
             var contextSettings = new ContextSettings
             {
@@ -70,14 +69,7 @@ namespace HackConsole
         {
             ResizeScreen(e.Width, e.Height);
             _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
-            ResizeVertices();
-        }
-
-
-        void ResizeVertices() {
-            // Build the vertex buffer
-            _vertices.PrimitiveType = PrimitiveType.Quads;
-            _vertices.Resize((uint)WindowData.Data.Size.Area * 8);
+            //ResizeVertices();
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
@@ -200,63 +192,25 @@ namespace HackConsole
                 _window.DispatchEvents();
 
                 OnUpdate?.Invoke();
-                Render();
+
+                RenderStates states = new RenderStates(_fontTex);
+                Draw(_window, states);
                 Thread.Sleep(5);
             }
         }
 
-        private void Render()
+        public void Draw(RenderTarget target, RenderStates states)
         {
-            if (RenderWidgets())
-            {
-                _window.Clear();
-                DrawGrid(_window, new RenderStates());
-                _window.Display();
-            }
+            _window.Clear();
+            Widgets.Draw(target, states);
+            PopupStack.Draw(target, states);
+            _window.Display();
         }
 
         private static Texture MakeSprite(string texName)
         {
             var image = new Image($"{texName}");
             return new Texture(image);
-        }
-
-        // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
-        private void DrawGrid(RenderTarget target, RenderStates states)
-        {
-            var spaceAscii = 219;
-            var spacePos = new Vector2f((spaceAscii % 16) * _fontX, (spaceAscii / 16) * _fontY);
-
-            var d = new Vector2f[] {
-                new Vector2f(0, 0),
-                new Vector2f(_fontX, 0),
-                new Vector2f(_fontX, _fontY),
-                new Vector2f(0, _fontY),
-            };
-
-            foreach (var v in WindowData.Data.Ids())
-            {
-                var idx = (uint)((v.Y * WindowData.Data.Size.X) + v.X) * 8;
-                var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
-
-                var Char = WindowData.Data[v];
-                var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);
-
-                var bgColor = ColorToSfml(Char.BackgroundColor);
-                var fgColor = ColorToSfml(Char.TextColor);
-
-                for (uint i = 0; i < 4; ++i)
-                {
-                    _vertices[idx + i] = new Vertex(vecScreen + d[i], bgColor, spacePos + d[i]);
-                    _vertices[idx + i + 4] = new Vertex(vecScreen + d[i], fgColor, texPos + d[i]);
-                }
-            }
-            RenderStates states2 = new RenderStates(_fontTex);
-            target.Draw(_vertices, states2);
-        }
-
-        private SFML.Graphics.Color ColorToSfml(HackConsole.Color color) {
-            return new SFML.Graphics.Color(color.R, color.G, color.B);
         }
     }
 }

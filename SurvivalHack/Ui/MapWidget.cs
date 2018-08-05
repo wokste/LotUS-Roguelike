@@ -6,7 +6,7 @@ using HackConsole.Algo;
 
 namespace SurvivalHack.Ui
 {
-    public class MapWidget : Widget, IMouseEventSuscriber
+    public class MapWidget : GridWidget, IMouseEventSuscriber
     {
         private Level _level;
         private readonly TurnController _controller;
@@ -49,7 +49,7 @@ namespace SurvivalHack.Ui
         protected override void RenderImpl()
         {
             if (!_controller.GameOver)
-                _offset = _controller.Player.Pos - Size.Center;
+                _offset = _controller.Player.Pos - Rect.Size.Center;
             
             Clear();
             RenderGrid();
@@ -69,7 +69,7 @@ namespace SurvivalHack.Ui
                 return 1;
             }
 
-            var area = Size + _offset;
+            var area = (Rect + _offset);
             foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags))) {
                 var p = _controller.FoV.ShowLocation(e);
 
@@ -77,10 +77,10 @@ namespace SurvivalHack.Ui
                 {
                     p2 -= _offset;
 
-                    if (!Size.Contains(p2))
+                    if (!Rect.Size.Contains(p2))
                         continue;
 
-                    WindowData.Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, WindowData.Data[p2].BackgroundColor);
+                    Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, Data[p2].BackgroundColor);
                 }
             }
         }
@@ -93,19 +93,19 @@ namespace SurvivalHack.Ui
             foreach (var absPos in _path)
             {
                 var relPos = absPos - _offset;
-                if (!Size.Contains(relPos))
+                if (!Rect.Contains(relPos))
                     continue;
 
-                var s = WindowData.Data[relPos];
+                var s = Data[relPos];
                 s.TextColor.Add(_pathColor);
                 s.BackgroundColor.Add(_pathColor);
-                WindowData.Data[relPos] = s;
+                Data[relPos] = s;
             }
         }
 
         private void RenderGrid()
         {
-            var area = Size.Intersect(new Rect(Vec.Zero - _offset, _level.TileMap.Size));
+            var area = Rect.Size;
 
             foreach (var v in area.Iterator())
             {
@@ -117,10 +117,10 @@ namespace SurvivalHack.Ui
                 if (visibility == 0)
                     continue;
 
-                WindowData.Data[v] = _level.GetTile(v + _offset).Symbol;
+                Data[v] = _level.GetTile(v + _offset).Symbol;
 
                 if ((visibility & FieldOfView.FLAG_VISIBLE) != FieldOfView.FLAG_VISIBLE)
-                    WindowData.Data[v] = WindowData.Data[v].Darken(128);
+                    Data[v] = Data[v].Darken(128);
             }
         }
 

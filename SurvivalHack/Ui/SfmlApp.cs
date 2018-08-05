@@ -33,7 +33,6 @@ namespace SurvivalHack.Ui
             _controller = new TurnController(_game);
             _controller.OnTurnEnd += () => {
                 _game.MonsterTurn();
-                WindowData.ForceUpdate = true;
             };
             _controller.OnGameOver += () => {
                 var o = new GameOverWidget
@@ -46,7 +45,7 @@ namespace SurvivalHack.Ui
 
         private BaseWindow InitGui()
         {
-            var window = new VBOWindow("Lands of the undead sorceress");
+            var window = new SFMLWindow("Lands of the undead sorceress");
             var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
             ColoredString.OnMessage += (m) =>
             {

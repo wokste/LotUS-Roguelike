@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SurvivalHack.Ui
 {
-    public class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
+    public class InventoryWidget : GridWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         TurnController _controller;
         private BaseWindow _window;
@@ -122,7 +122,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var relMousePos = mousePos - Size.TopLeft;
+            var relMousePos = mousePos - Rect.TopLeft;
             _selectedRow = relMousePos.Y;
             Dirty = true;
         }

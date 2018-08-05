@@ -5,7 +5,7 @@ using HackConsole;
 
 namespace SurvivalHack.Ui
 {
-    public class OptionWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
+    public class OptionWidget : GridWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         public Action<Entity> OnSelect;
         public List<Entity> Set;
@@ -96,7 +96,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var relMousePos = mousePos - Size.TopLeft;
+            var relMousePos = mousePos - Rect.TopLeft;
             var index = relMousePos.Y - 1;
             if (index >= 0 && index < Set.Count && _selectedIndex != index)
             {

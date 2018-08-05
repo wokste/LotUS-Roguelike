@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HackConsole
 {
-    public class MessageListWidget : Widget, IMouseEventSuscriber
+    public class MessageListWidget : GridWidget, IMouseEventSuscriber
     {
         private readonly List<ColoredString> _messages = new List<ColoredString>();
         protected readonly List<string> Lines = new List<string>();
@@ -16,7 +16,7 @@ namespace HackConsole
         protected int PosY {
             get => _posY;
             set {
-                var max = Math.Max(0, Lines.Count - Size.Height);
+                var max = Math.Max(0, Lines.Count - Rect.Height);
                 _posY = MyMath.Clamp(value, 0, max);
             }
         }
@@ -28,7 +28,7 @@ namespace HackConsole
             var y = 0;
 
             var firstLine = _posY;
-            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
+            for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
             {
                 Print(new Vec(0, y), Lines[i], Color.White);
                 y++;
@@ -38,7 +38,7 @@ namespace HackConsole
         public void Add(ColoredString msg)
         {
             _messages.Add(msg);
-            var range = StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> ");
+            var range = StringExt.Prefix(StringExt.Wrap(msg.Text, Rect.Width - 2), "> ");
             PosY += range.Count();
             Lines.AddRange(range);
             Dirty = true;
@@ -48,14 +48,15 @@ namespace HackConsole
         {
             Lines.Clear();
             foreach (var msg in _messages)
-                Lines.AddRange(StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> "));
+                Lines.AddRange(StringExt.Prefix(StringExt.Wrap(msg.Text, Rect.Width - 2), "> "));
         }
 
         protected override void OnResized()
         {
+            base.OnResized();
             // If the width has changed, the lines need to be recalculated.
             MakeLines();
-            PosY = Math.Max(0, Lines.Count - Size.Height);
+            PosY = Math.Max(0, Lines.Count - Rect.Height);
             Dirty = true;
         }
 

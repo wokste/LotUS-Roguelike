@@ -1,110 +1,32 @@
 ﻿using System;
+using SFML.Graphics;
 
 namespace HackConsole
 {
-    public abstract class Widget
+    public abstract class Widget : SFML.Graphics.Drawable
     {
-        public Rect Size;
+        public Rect Rect;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
         public bool Dirty = true;
 
+        public abstract void Draw(RenderTarget target, RenderStates states);
+
         //public abstract bool CanHasFocus { get; }
-
-        /// <summary>
-        /// Renders the widget on the CellGrid.
-        /// </summary>
-        /// <param name="forceUpdate">If this is false, the widget may assume that the previous content is still on the same location.</param>
-        /// <returns>True if something updated. False otherwise.</returns>
-        public virtual bool Render(bool forceUpdate)
-        {
-            if (!Dirty && !forceUpdate)
-                return false;
-
-            Dirty = false;
-            RenderImpl();
-            return true;
-        }
-
-        protected abstract void RenderImpl();
 
         /// <summary>
         /// This will automatically be called when the widget is resized.
         /// </summary>
-        protected virtual void OnResized()
-        {
-        }
-
-        #region HelperFunctions
-
-        /// <summary>
-        /// Clear the area of the widget.
-        /// </summary>
-        protected void Clear()
-        {
-            foreach (var v in Size.Iterator())
-            {
-                WindowData.Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
-            }
-        }
-
-        /// <summary>
-        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
-        /// </summary>
-        /// <param name="v">Relative position to topleft of widget</param>
-        /// <param name="msg">The text.</param>
-        /// <param name="fgColor">Foreground color</param>
-        /// <param name="bgColor">Background color</param>
-        protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
-        {
-            //TODO: Input validation
-
-            v += Size.TopLeft;
-            var length = Math.Min(msg.Length, Size.Right - v.X);
-
-            for (var i = 0; i < length; i++)
-            {
-                WindowData.Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
-        /// </summary>
-        /// <param name="v">Relative position to topleft of widget</param>
-        /// <param name="msg">The text.</param>
-        protected bool Print(Vec v, ColoredString msg)
-        {
-            //TODO: Input validation
-
-            v += Size.TopLeft;
-            var length = Math.Min(msg.Length, Size.Right - v.X);
-
-            for (var i = 0; i < length; i++)
-            {
-                WindowData.Data[new Vec(v.X + i, v.Y)] = msg[i];
-            }
-            return true;
-        }
-
-        protected void Print(Vec v, Symbol s)
-        {
-            v += Size.TopLeft;
-            WindowData.Data[v] = s;
-        }
-
-        #endregion
-
+        protected virtual void OnResized() {}
 
         public void Resize(ref Rect free)
         {
             var newSize = MakeSize(ref free);
 
-            if (Size.Left == newSize.Left && Size.Width == newSize.Width && Size.Top == newSize.Top && Size.Height == newSize.Height)
+            if (Rect.Left == newSize.Left && Rect.Width == newSize.Width && Rect.Top == newSize.Top && Rect.Height == newSize.Height)
                 return;
 
-            Size = newSize;
+            Rect = newSize;
 
             OnResized();
             Dirty = true;
@@ -116,10 +38,10 @@ namespace HackConsole
             newSize.Left = screen.Left + (screen.Width - newSize.Width) / 2;
             newSize.Top = screen.Top + (screen.Height - newSize.Height) / 2;
 
-            if (Size.Left == newSize.Left && Size.Width == newSize.Width && Size.Top == newSize.Top && Size.Height == newSize.Height)
+            if (Rect.Left == newSize.Left && Rect.Width == newSize.Width && Rect.Top == newSize.Top && Rect.Height == newSize.Height)
                 return;
 
-            Size = newSize;
+            Rect = newSize;
 
             OnResized();
         }

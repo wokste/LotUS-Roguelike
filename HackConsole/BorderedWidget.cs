@@ -1,4 +1,5 @@
 ﻿using System;
+using SFML.Graphics;
 
 namespace HackConsole
 {
@@ -19,22 +20,8 @@ namespace HackConsole
         }
         public bool Interrupt => (InnerWidget as IPopupWidget).Interrupt;
 
-        public override bool Render(bool forceUpdate)
-        {
-            forceUpdate |= Dirty;
-
-            forceUpdate |= InnerWidget.Render(forceUpdate);
-            if (forceUpdate)
-            {
-                RenderBorders();
-                Dirty = false;
-            }
-
-            return forceUpdate;
-        }
-
         protected void RenderBorders() {
-            
+            /*
             for (int x = Size.Left + 1; x < Size.Right - 1; x++)
             {
                 var c = new Symbol((char)(205), FcColor, BgColor);
@@ -55,19 +42,18 @@ namespace HackConsole
                 WindowData.Data[Size.Right - 1, Size.Top] = new Symbol((char)(187), FcColor, BgColor);
                 WindowData.Data[Size.Right - 1, Size.Bottom - 1] = new Symbol((char)(188), FcColor, BgColor);
             }
+            */
         }
-
-        protected override void RenderImpl() { throw new Exception("Function should never be called"); }
 
         protected override void OnResized()
         {
-            var free = Size.Grow(-1);
+            var free = Rect.Grow(-1);
             InnerWidget.Resize(ref free);
         }
 
         public override Widget WidgetAt(Vec pos)
         {
-            if (InnerWidget.Size.Contains(pos))
+            if (InnerWidget.Rect.Contains(pos))
                 return InnerWidget.WidgetAt(pos);
 
             return this;
@@ -79,5 +65,11 @@ namespace HackConsole
         public void OnMouseEvent(Vec mousePos, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseMove(mousePos, mouseMove, flags);
         public void OnMouseWheel(Vec delta, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseWheel(delta, flags);
+
+        public override void Draw(RenderTarget target, RenderStates states)
+        {
+            // TODO: render border
+            InnerWidget.Draw(target, states);
+        }
     }
 }

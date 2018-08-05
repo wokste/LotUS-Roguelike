@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HackConsole
 {
-    public abstract class TextWidget : Widget , IMouseEventSuscriber
+    public abstract class TextWidget : GridWidget , IMouseEventSuscriber
     {
         protected readonly List<ColoredString> Lines = new List<ColoredString>();
 
@@ -14,7 +14,7 @@ namespace HackConsole
             get => _posY;
             set
             {
-                var max = Math.Max(0, Lines.Count - Size.Height);
+                var max = Math.Max(0, Lines.Count - Rect.Height);
                 _posY = MyMath.Clamp(value, 0, max);
             }
         }
@@ -26,7 +26,7 @@ namespace HackConsole
             var y = 0;
 
             var firstLine = _posY;
-            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
+            for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
             {
                 Print(new Vec(0, y), Lines[i]);
                 y++;
@@ -35,9 +35,10 @@ namespace HackConsole
 
         protected override void OnResized()
         {
+            base.OnResized();
             // If the width has changed, the lines need to be recalculated.
             MakeLines();
-            PosY = Math.Max(0, Lines.Count - Size.Height);
+            PosY = Math.Max(0, Lines.Count - Rect.Height);
             Dirty = true;
         }
 

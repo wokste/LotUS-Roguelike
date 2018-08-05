@@ -106,14 +106,14 @@
     <Compile Include="Ui\GameOverWidget.cs" />
     <Compile Include="Ui\InfoWidget.cs" />
     <Compile Include="Ui\InventoryWidget.cs" />
-    <Compile Include="Ui\Tools\ITool.cs" />
-    <Compile Include="Ui\Tools\RangedWeaponTool.cs" />
     <Compile Include="Ui\OptionWidget.cs" />
     <Compile Include="Ui\SfmlApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Timeline.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Ui\MapWidget.cs" />
+    <Compile Include="Ui\Tools\ITool.cs" />
+    <Compile Include="Ui\Tools\RangedWeaponTool.cs" />
     <Compile Include="WizTools.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>

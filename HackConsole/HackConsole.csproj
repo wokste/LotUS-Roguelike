@@ -62,6 +62,7 @@
     <Compile Include="Dir.cs" />
     <Compile Include="EventSuscriber.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="GridWidget.cs" />
     <Compile Include="MessageListWidget.cs" />
     <Compile Include="MyMath.cs" />
     <Compile Include="PopupStack.cs" />
@@ -69,10 +70,11 @@
     <Compile Include="RandomTable.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Shape.cs" />
-    <Compile Include="VBOWindow.cs" />
+    <Compile Include="SFMLWindow.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="TextWidget.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="Ui\Font.cs" />
     <Compile Include="Vec.cs" />
     <Compile Include="Widget.cs" />
     <Compile Include="WidgetContainer.cs" />
