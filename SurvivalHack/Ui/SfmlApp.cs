@@ -37,7 +37,7 @@ namespace SurvivalHack.Ui
             _controller.OnGameOver += () => {
                 var o = new GameOverWidget
                 {
-                    DesiredSize = new Rect(new Vec(), new Size(25, 25)),
+                    DesiredSize = new Rect(new Vec(), new Size(250, 250)),
                 };
                 _window.PopupStack.Push(o);
             };
@@ -46,7 +46,7 @@ namespace SurvivalHack.Ui
         private BaseWindow InitGui()
         {
             var window = new SFMLWindow("Lands of the undead sorceress");
-            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
+            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 160 } };
             ColoredString.OnMessage += (m) =>
             {
                 consoleWidget.Add(m);
@@ -54,12 +54,12 @@ namespace SurvivalHack.Ui
 
             window.Widgets.Add(consoleWidget);
 
-            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
+            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 256 } };
             window.Widgets.Add(infoWidget);
 
             var characterWidget = new HudWidget(_controller)
             {
-                DesiredSize = { Width = 16 },
+                DesiredSize = { Width = 256 },
                 Docking = Docking.Right
             };
             window.Widgets.Add(characterWidget);

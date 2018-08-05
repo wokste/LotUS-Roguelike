@@ -14,6 +14,9 @@ namespace SurvivalHack.Ui
         //private int _columns = 1;
         private const int COLUMN_WIDTH = 42;
 
+        private int LINE_HEIGHT => _fontY;
+        private int HEADER_HEIGHT => _fontY;
+
         public Action OnClose { get; set; }
         public bool Interrupt => false; // Maybe, this should be an option?
 
@@ -24,7 +27,7 @@ namespace SurvivalHack.Ui
             OnSelect = onSelect;
             //_columns = 1;
 
-            DesiredSize = new Rect(0, 0, COLUMN_WIDTH, Set.Count + 1);
+            DesiredSize = new Rect(0, 0, COLUMN_WIDTH * _fontX, Set.Count * LINE_HEIGHT + HEADER_HEIGHT);
         }
 
         protected override void Render()
@@ -97,7 +100,7 @@ namespace SurvivalHack.Ui
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var relMousePos = mousePos - Rect.TopLeft;
-            var index = relMousePos.Y - 1;
+            var index = (relMousePos.Y / LINE_HEIGHT) - HEADER_HEIGHT;
             if (index >= 0 && index < Set.Count && _selectedIndex != index)
             {
                 _selectedIndex = index;

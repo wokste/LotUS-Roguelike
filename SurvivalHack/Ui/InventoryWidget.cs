@@ -11,7 +11,8 @@ namespace SurvivalHack.Ui
         TurnController _controller;
         private BaseWindow _window;
         private int _selectedRow = 0;
-        private int[] _columnWidth = new int[4];
+        private int[] _columnCharWidth = new int[4];
+        private int[] _columnPxWidth = new int[4];
 
         public Action OnClose { get ; set ; }
         public bool Interrupt => false;
@@ -19,13 +20,18 @@ namespace SurvivalHack.Ui
         {
             _controller = controller;
 
-            _columnWidth[0] = 1;
-            _columnWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
-            _columnWidth[2] = 1;
-            _columnWidth[3] = 40;
+            _columnCharWidth[0] = 1;
+            _columnCharWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
+            _columnCharWidth[2] = 1;
+            _columnCharWidth[3] = 40;
             _window = window;
 
-            DesiredSize = new Rect(0, 0, _columnWidth.Sum() + _columnWidth.Length - 1, Inventory.SlotNames.Length);
+            for (int i = 0; i < 4; ++i)
+            {
+                _columnPxWidth[i] = _columnCharWidth[i] * _fontX;
+            }
+
+            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() * _fontX + _columnPxWidth.Length - _fontX, Inventory.SlotNames.Length * _fontY);
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)
@@ -104,7 +110,7 @@ namespace SurvivalHack.Ui
 
                 if (item != null)
                 {
-                    var x = _columnWidth[0] + _columnWidth[1] + 2;
+                    var x = _columnCharWidth[0] + _columnCharWidth[1] + 2;
                     Print(new Vec(x, y), item.Symbol);
 
                     x += 2;

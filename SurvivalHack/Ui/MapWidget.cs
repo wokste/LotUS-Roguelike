@@ -77,7 +77,7 @@ namespace SurvivalHack.Ui
                 {
                     p2 -= _offset;
 
-                    if (!Rect.Size.Contains(p2))
+                    if (!Data.Size.Contains(p2))
                         continue;
 
                     Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, Data[p2].BackgroundColor);
@@ -107,7 +107,7 @@ namespace SurvivalHack.Ui
         {
             var area = Rect.Size;
 
-            foreach (var v in area.Iterator())
+            foreach (var v in Data.Ids())
             {
                 if (!_level.InBoundary(v + _offset))
                     continue;

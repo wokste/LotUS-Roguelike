@@ -6,6 +6,8 @@ namespace HackConsole
     {
         private readonly T[,] _grid;
         public readonly Size Size;
+        public int Width => Size.X;
+        public int Height => Size.Y;
 
         public Grid(Size size, T defaultValue = default(T))
         {

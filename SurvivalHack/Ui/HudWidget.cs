@@ -19,7 +19,7 @@ namespace SurvivalHack.Ui
         private void PrintBar(string name, int y, Bar bar)
         {
             var str = $"{name} ({bar.Current}/{bar.Max})";
-            var width = Rect.Width;
+            var width = Data.Size.X;
             var offset = (width - str.Length) / 2;
 
             var p = bar.Perc;

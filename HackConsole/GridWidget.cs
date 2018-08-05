@@ -12,8 +12,8 @@ namespace HackConsole
     {
         private readonly VertexArray _vertices = new VertexArray();
         public Grid<Symbol> Data;
-        private readonly int _fontX = 16;
-        private readonly int _fontY = 16;
+        protected readonly int _fontX = 16;
+        protected readonly int _fontY = 16;
 
         public bool Dirty = true;
 
@@ -43,7 +43,7 @@ namespace HackConsole
                 foreach (var v in Data.Ids())
                 {
                     var idx = (uint)((v.Y * Data.Size.X) + v.X) * 8;
-                    var vecScreen = new Vector2f((v.X * _fontX + Rect.Left * _fontX), (v.Y * _fontY + Rect.Top * _fontY));
+                    var vecScreen = new Vector2f((v.X * _fontX + Rect.Left), (v.Y * _fontY + Rect.Top));
 
                     var Char = Data[v];
                     var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);
@@ -66,7 +66,7 @@ namespace HackConsole
 
         void ResizeVertices()
         {
-            var newSize = Rect.Size;
+            var newSize = new Size(Rect.Width / 16, Rect.Height / 16);
 
             if (Data != null && newSize == Data.Size)
                 return;

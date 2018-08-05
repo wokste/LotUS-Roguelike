@@ -126,7 +126,7 @@ namespace HackConsole
 
         private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)
         {
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
             var delta = new Vec(0, e.Delta > 0 ? 1 : -1);
             
             var widget = WidgetAt(mousePos);
@@ -135,7 +135,7 @@ namespace HackConsole
 
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
             var move = (mousePos - _lastMousePos) ?? Vec.Zero;
             _lastMousePos = mousePos;
 
@@ -173,7 +173,7 @@ namespace HackConsole
                     flags |= EventFlags.RightButton;
                     break;
             }
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
 
             var widget = WidgetAt(mousePos);
             (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);

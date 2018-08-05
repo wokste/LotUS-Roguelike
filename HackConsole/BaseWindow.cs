@@ -7,9 +7,6 @@ namespace HackConsole
         protected uint _windowWidth = 1280;
         protected uint _windowHeight = 800;
 
-        protected readonly uint _fontX = 16;
-        protected readonly uint _fontY = 16;
-
         public WidgetContainer Widgets = new WidgetContainer { Docking = Docking.Fill };
 
         public IKeyEventSuscriber BaseKeyHandler;
@@ -20,9 +17,7 @@ namespace HackConsole
 
         protected void ResizeScreen(uint x, uint y)
         {
-            _windowWidth = x;
-            _windowHeight = y;
-            var size = new Size((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY));
+            var size = new Size((int)x, (int)y);
 
             var r = new Rect(Vec.Zero, size);
             PopupStack.Resize(ref r);
