@@ -6,10 +6,9 @@ using SFML.Window;
 
 namespace HackConsole
 {
-    public class SFMLWindow : BaseWindow , Drawable
+    public class SFMLWindow : BaseWindow
     {
         private readonly RenderWindow _window;
-        private readonly Texture _fontTex;
 
         public SFMLWindow(string name)
         {
@@ -34,9 +33,7 @@ namespace HackConsole
             _window.MouseWheelMoved += OnMouseWheelMoved;
 
             _window.SetFramerateLimit(60);
-
-            _fontTex = MakeSprite("ascii.png");
-
+            
             OnResized(null, new SizeEventArgs(new SizeEvent {Width = _windowWidth, Height = _windowHeight }));
         }
 
@@ -192,25 +189,18 @@ namespace HackConsole
                 _window.DispatchEvents();
 
                 OnUpdate?.Invoke();
-
-                RenderStates states = new RenderStates(_fontTex);
-                Draw(_window, states);
+                
+                Draw(_window);
                 Thread.Sleep(5);
             }
         }
 
-        public void Draw(RenderTarget target, RenderStates states)
+        public void Draw(RenderTarget target)
         {
             _window.Clear();
-            Widgets.Draw(target, states);
-            PopupStack.Draw(target, states);
+            Widgets.Draw(target);
+            PopupStack.Draw(target);
             _window.Display();
-        }
-
-        private static Texture MakeSprite(string texName)
-        {
-            var image = new Image($"{texName}");
-            return new Texture(image);
         }
     }
 }

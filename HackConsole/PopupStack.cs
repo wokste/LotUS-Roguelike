@@ -48,10 +48,10 @@ namespace HackConsole
             return null;
         }
 
-        public override void Draw(RenderTarget target, RenderStates states)
+        public override void Draw(RenderTarget target)
         {
             foreach (var w in _widgets)
-                w.Draw(target, states);
+                w.Draw(target);
         }
     }
 

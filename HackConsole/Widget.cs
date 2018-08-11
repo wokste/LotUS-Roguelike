@@ -3,13 +3,13 @@ using SFML.Graphics;
 
 namespace HackConsole
 {
-    public abstract class Widget : SFML.Graphics.Drawable
+    public abstract class Widget 
     {
         public Rect Rect;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
 
-        public abstract void Draw(RenderTarget target, RenderStates states);
+        public abstract void Draw(RenderTarget target);
 
         //public abstract bool CanHasFocus { get; }
 

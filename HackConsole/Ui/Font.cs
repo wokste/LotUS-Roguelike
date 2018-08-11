@@ -18,7 +18,7 @@ namespace HackConsole.Ui
             Texture = new Texture(image);
         }
 
-        public static Font Mono;
+        public static Font Mono = new Font("font.png");
 
         /*
         /// <summary>

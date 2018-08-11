@@ -9,9 +9,11 @@ namespace HackConsole
         Colour FcColor = Colour.White;
         Colour BgColor = Colour.Gray;
 
+        public int BorderWidth = 4;
+
         public BorderedWidget(Widget inner) {
             InnerWidget = inner;
-            DesiredSize = InnerWidget.DesiredSize.Grow(1);
+            DesiredSize = InnerWidget.DesiredSize.Grow(BorderWidth);
         }
 
         public Action OnClose {
@@ -20,7 +22,8 @@ namespace HackConsole
         }
         public bool Interrupt => (InnerWidget as IPopupWidget).Interrupt;
 
-        protected void RenderBorders() {
+        protected void RenderBorders()
+        {
             /*
             for (int x = Size.Left + 1; x < Size.Right - 1; x++)
             {
@@ -47,7 +50,7 @@ namespace HackConsole
 
         protected override void OnResized()
         {
-            var free = Rect.Grow(-1);
+            var free = Rect.Grow(-BorderWidth);
             InnerWidget.Resize(ref free);
         }
 
@@ -66,10 +69,10 @@ namespace HackConsole
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseMove(mousePos, mouseMove, flags);
         public void OnMouseWheel(Vec delta, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseWheel(delta, flags);
 
-        public override void Draw(RenderTarget target, RenderStates states)
+        public override void Draw(RenderTarget target)
         {
             // TODO: render border
-            InnerWidget.Draw(target, states);
+            InnerWidget.Draw(target);
         }
     }
 }

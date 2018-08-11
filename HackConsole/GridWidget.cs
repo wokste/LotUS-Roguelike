@@ -25,7 +25,7 @@ namespace HackConsole
         }
 
         // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
-        public override void Draw(RenderTarget target, RenderStates states)
+        public override void Draw(RenderTarget target)
         {
             if (Dirty)
             {
@@ -59,6 +59,7 @@ namespace HackConsole
                 }
                 Dirty = false;
             }
+            var states = new RenderStates(Ui.Sprites.Ascii);
             target.Draw(_vertices, states);
         }
 
@@ -78,9 +79,9 @@ namespace HackConsole
             _vertices.Resize((uint)newSize.Area * 8);
         }
 
-        private SFML.Graphics.Color ColorToSfml(HackConsole.Colour color)
+        private Color ColorToSfml(HackConsole.Colour color)
         {
-            return new SFML.Graphics.Color(color.R, color.G, color.B);
+            return new Color(color.R, color.G, color.B);
         }
 
 
@@ -93,7 +94,7 @@ namespace HackConsole
         {
             foreach (var v in Data.Ids())
             {
-                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = bg, TextColor = Colour.White };
+                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Colour.Black, TextColor = Colour.White };
             }
         }
 
