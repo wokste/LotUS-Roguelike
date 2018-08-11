@@ -90,12 +90,7 @@ namespace SurvivalHack.Mapgen
         }
 
         public bool TryPlaceOnMap(Level level, Grid<int> maskMap, List<Room> rooms)
-        {
-            var mapRect = new Rect(Vec.Zero, level.Size);
-
-            if (!mapRect.Contains(Transform.TransformVec(Vec.Zero)) || !mapRect.Contains(Transform.TransformVec(Size.BottomRight)))
-                return false;
-            
+        {   
             Level = level;
             if (!CanRender(maskMap))
                 return false;

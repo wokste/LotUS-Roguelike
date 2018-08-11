@@ -28,9 +28,11 @@ namespace HackConsole
             var y = 0;
 
             var firstLine = _posY;
-            for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
+            var i = firstLine;
+            while (i < Lines.Count && y < Data.Height)
             {
                 Print(new Vec(0, y), Lines[i], Colour.White);
+                i++;
                 y++;
             }
         }

@@ -36,6 +36,7 @@ namespace SurvivalHack.Ui
                 _level = _controller.Level;
                 _aStar = new AStar(_controller.Level.Size, CostFunc, true);
             }
+            Dirty = true;
         }
 
         private float CostFunc(Vec v)
@@ -86,18 +87,17 @@ namespace SurvivalHack.Ui
 
             var area = new Rect(_relToAbs, Data.Size);
 
-            //}// _screenToGame.TransformRect(Rect);
             foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags))) {
-                var p = _controller.FoV.ShowLocation(e);
+                var absLoc = _controller.FoV.ShowLocation(e);
 
-                if (p is Vec p2)
+                if (absLoc is Vec absLoc2)
                 {
-                    p2 += _relToAbs;
+                    var relLoc = absLoc2 - _relToAbs;
 
-                    if (!Data.Size.Contains(p2))
+                    if (!Data.Size.Contains(relLoc))
                         continue;
 
-                    Data[p2] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, Data[p2].BackgroundColor);
+                    Data[relLoc] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, Data[relLoc].BackgroundColor);
                 }
             }
         }
