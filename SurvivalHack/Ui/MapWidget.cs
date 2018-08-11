@@ -63,7 +63,6 @@ namespace SurvivalHack.Ui
         // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
         public override void Draw(RenderTarget target)
         {
-
             var states = new RenderStates(HackConsole.Ui.Sprites.Tileset);
             _mapView.Draw(target, states);
             DrawCreatures(target, states);
@@ -98,14 +97,14 @@ namespace SurvivalHack.Ui
 
                     var g = e.Glyph;
 
+                    if (g.Method == TileGlyph.ANIM && DateTime.Now.Millisecond < 500)
+                        g.X++;
+
                     _entitySprite.Texture = HackConsole.Ui.Sprites.Tileset;
                     _entitySprite.Position = new Vector2f((relLoc.X * 16), (relLoc.Y * 16));
                     _entitySprite.TextureRect = new IntRect(g.X * 16, g.Y * 16, 16, 16);
-                    _entitySprite.Draw(target, states);
-
-                    //Data[relLoc] = new Symbol(e.Symbol.Ascii, e.Symbol.TextColor, Data[relLoc].BackgroundColor);
                     
-
+                    _entitySprite.Draw(target, states);
                 }
             }
         }
@@ -172,7 +171,9 @@ namespace SurvivalHack.Ui
         {
             public Size Size;
             public Vec RelToAbs;
-
+            public Color VisibleColor = new Color(255, 255, 255, 255);
+            public Color KnownColor = new Color(64, 128, 64, 255);
+            public Color Black = new Color(0,0,0,0);
 
             private readonly VertexArray _vertices = new VertexArray();
             protected readonly int _fontX = 16;
@@ -215,16 +216,40 @@ namespace SurvivalHack.Ui
                         continue;
 
                     var visibility = fov.Visibility[abs];
-                    var color = new Color(visibility, visibility, visibility);
 
-                    SetGlyph(rel, ChooseGlyph(map, abs), color);
+                    if ((visibility & FieldOfView.FLAG_VISIBLE) != 0)
+                        SetGlyph(rel, ChooseGlyph(map, abs), VisibleColor);
+                    else if ((visibility & FieldOfView.FLAG_DISCOVERED) != 0)
+                        SetGlyph(rel, ChooseGlyph(map, abs), KnownColor);
+                    else
+                        SetGlyph(rel, ChooseGlyph(map, abs), Black);
                 }
             }
 
             TileGlyph ChooseGlyph(Level map, Vec pos)
             {
                 var tile = map.GetTile(pos);
-                return tile.Glyph;
+                var glyph = tile.Glyph;
+
+                if (glyph.Method == TileGlyph.TERRAIN)
+                {
+                    var l = map.IsSameTile(pos, pos - new Vec(-1, 0));
+                    var r = map.IsSameTile(pos, pos - new Vec(1, 0));
+
+                    if (l && r) glyph.X += 2;
+                    if (l && !r) glyph.X += 1;
+                    if (!l && r) glyph.X += 3;
+
+
+                    var t = map.IsSameTile(pos, pos - new Vec(0, -1));
+                    var b = map.IsSameTile(pos, pos - new Vec(0, 1));
+
+                    if (t && b) glyph.Y += 2;
+                    if (t && !b) glyph.Y += 1;
+                    if (!t && b) glyph.Y += 3;
+                }
+
+                return glyph;
             }
 
             void SetGlyph(Vec v, TileGlyph g, Color c)

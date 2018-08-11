@@ -39,6 +39,14 @@ namespace SurvivalHack
             return TileDefs[TileMap[v]];
         }
 
+        public bool IsSameTile(Vec v0, Vec v1)
+        {
+            if (!InBoundary(v1))
+                return true;
+
+            return TileMap[v0] == TileMap[v1];
+        }
+
         public IEnumerable<Entity> GetEntities()
         {
             return GetEntities(new Rect(Vec.Zero, Size));
