@@ -9,25 +9,24 @@ namespace SurvivalHack.Factory
     {
         static int BaseId;
 
-        (string, string, Colour)[] types = new(string, string, Colour)[]{
-            ("a", "red", Colour.Parse("#f33")),
-            ("a", "blue", Colour.Parse("#36f")),
-            ("an", "aqua", Colour.Parse("#0fc")),
-            ("a", "purple", Colour.Parse("#f0f")),
-            ("a", "green", Colour.Parse("#3f0")),
-            ("a", "violet", Colour.Parse("#CDA4DE")),
-            ("a", "yellow", Colour.Parse("#FFE135")),
-            ("a", "bronze ", Colour.Parse("#CD7F32")),
-            ("an", "orange ", Colour.Parse("#ED9121")),
-            ("a", "crystal ", Colour.Parse("#A7D8DE")),
-            ("a", "pink ", Colour.Parse("#FFC0CB")),
-            ("a", "sandy ", Colour.Parse("#EDC9AF")),
-            ("a", "beige ", Colour.Parse("#F5F5DC")),
-            ("a", "gold ", Colour.Parse("#CFB53B")),
-            ("a", "mossy ", Colour.Parse("#867E36")),
-            ("a", "rusty ", Colour.Parse("#B7410E")),
-            ("a", "silvery ", Colour.Parse("#848482")),
-            ("a", "peachy ", Colour.Parse("#FFE5B4")),
+        (byte, string, string)[] types = new(byte, string, string)[]{
+            (0, "a", "red"),
+            (1, "a", "pink"),
+            (2, "an", "orange"),
+            (3, "a", "yellow"),
+            (4, "a", "grassy"),
+            (5, "a", "mouldy"),
+            (6, "a", "cyan"),
+            (7, "a", "light blue"),
+            (8, "a", "dark blue"),
+            (16, "an", "oily"),
+            (17, "a", "watery"),
+            (18, "a", "black"),
+            (19, "a", "golden"),
+            (20, "a", "brown"),
+            (22, "a", "gray"),
+            (23, "a", "white"),
+
         };
 
         public PotionFactory(Random rnd)
@@ -38,12 +37,12 @@ namespace SurvivalHack.Factory
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            Entity e = new Entity('!', "Potion", EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
-
             var potionId = info.Rnd.Next(3);
 
-            (var article, var colorName, var color) = types[potionId];
-            e.Symbol = new Symbol('!', color);
+            (var x, var article, var colorName) = types[potionId];
+
+
+            Entity e = new Entity(new TileGlyph(x, 15), $"{colorName} potion", EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
 
             e.Add(new StackComponent(1, potionId + BaseId));
 
@@ -62,7 +61,6 @@ namespace SurvivalHack.Factory
             //TODO: Add randomized effects to the potion.
 
             //TODO: Work on identitying potions
-            e.Name = $"{colorName} potion";
 
             return e;
         }

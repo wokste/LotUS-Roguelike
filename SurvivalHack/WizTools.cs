@@ -13,20 +13,22 @@ namespace SurvivalHack
         public static Inventory Tools = new Inventory();
 
         public static void Init() {
+            var glyph = new TileGlyph(2, 23, TileGlyph.ANIM);
+
             Entity entity;
-            entity = new Entity('w', "Reveal Map", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Reveal Map", EEntityFlag.Pickable);
             entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastEvent)));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Discover Map - scroll?", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Discover Map - scroll?", EEntityFlag.Pickable);
             entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastEvent)));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Genocide", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Genocide", EEntityFlag.Pickable);
             entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, typeof(CastEvent)));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Heal", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Heal", EEntityFlag.Pickable);
             entity.Add(new HealComponent(9001, 0, typeof(CastEvent)));
             Tools.Add(entity);
         }

@@ -29,7 +29,7 @@ namespace SurvivalHack.Factory
             switch (tag)
             {
                 case "zombie":
-                    return new Entity('z', "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(4, 20, TileGlyph.ANIM), "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -39,10 +39,9 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 0.6f,
-                        Symbol = new Symbol('z', Colour.Cyan)
                     };
                 case "bat":
-                    return new Entity('b', "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(10, 23, TileGlyph.ANIM), "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -52,10 +51,9 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 1.5f,
-                        Symbol = new Symbol('b', Colour.White),
                     };
                 case "skeleton":
-                    return new Entity('z', "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(0, 20, TileGlyph.ANIM), "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -65,10 +63,9 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 0.6f,
-                        Symbol = new Symbol('s', Colour.Cyan)
                     };
                 case "firebat":
-                    return new Entity('b', "Fire Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(12, 23, TileGlyph.ANIM), "Hell Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -78,7 +75,6 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 1.5f,
-                        Symbol = new Symbol('b', Colour.Red),
                     };
             }
             throw new ArgumentException($"Tag {tag} not found");

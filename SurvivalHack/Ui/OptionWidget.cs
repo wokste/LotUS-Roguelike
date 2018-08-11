@@ -49,7 +49,7 @@ namespace SurvivalHack.Ui
                 }
                 else
                 {
-                    Print(new Vec(0, y), item.Symbol);
+                    //Print(new Vec(0, y), item.Symbol);
                     Print(new Vec(2, y), item.Name, color);
                 }
             }

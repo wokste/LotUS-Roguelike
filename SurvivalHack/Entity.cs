@@ -18,8 +18,8 @@ namespace SurvivalHack
         public override string ToString() => Name;
 
         public List<IComponent> Components = new List<IComponent>();
-        
-        public Symbol Symbol;
+
+        public TileGlyph Glyph;
 
         public float Speed = 1;
 
@@ -35,16 +35,9 @@ namespace SurvivalHack
         public Vec Pos;
         public Vec? LastSeenPos;
 
-        public Entity(char ascii, string name, EEntityFlag entityFlags)
+        public Entity(TileGlyph glyph, string name, EEntityFlag entityFlags)
         {
-            Symbol = new Symbol(ascii, Colour.White);
-            Name = name;
-            EntityFlags = entityFlags;
-        }
-
-        public Entity(char ascii, Colour fc, string name, EEntityFlag entityFlags)
-        {
-            Symbol = new Symbol(ascii, fc);
+            Glyph = glyph;
             Name = name;
             EntityFlags = entityFlags;
         }

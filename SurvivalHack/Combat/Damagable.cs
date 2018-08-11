@@ -57,6 +57,8 @@ namespace SurvivalHack.Combat
 
         private void UpdateStats(Entity self)
         {
+            // TODO: Show being damaged in some way
+            /*
             if (self.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
             {
                 var p = Health.Perc * 3;
@@ -66,6 +68,8 @@ namespace SurvivalHack.Combat
 
                 self.Symbol.TextColor = new Colour(r, g, b);
             }
+            */
+            
         }
     }
 }

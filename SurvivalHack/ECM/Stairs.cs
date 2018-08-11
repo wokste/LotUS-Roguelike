@@ -38,7 +38,7 @@ namespace SurvivalHack.ECM
 
         public static void MakeStairs(Level srcMap, Vec srcPos, int depth)
         {
-            var e1 = new Entity('>', "stairs down", EEntityFlag.FixedPos);
+            var e1 = new Entity(new TileGlyph(3,9), "stairs down", EEntityFlag.FixedPos);
             e1.SetLevel(srcMap, srcPos);
             e1.Add(new Stairs(depth));
         }

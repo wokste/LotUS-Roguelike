@@ -115,7 +115,7 @@ namespace SurvivalHack.Ui
                 if (item != null)
                 {
                     var x = _columnCharWidth[0] + _columnCharWidth[1] + 2;
-                    Print(new Vec(x, y), item.Symbol);
+                    Print(new Vec(x, y), new Symbol(item.Name[0], Colour.White));
 
                     x += 2;
                     
