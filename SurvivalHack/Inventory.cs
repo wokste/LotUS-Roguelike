@@ -119,7 +119,7 @@ namespace SurvivalHack
                 else if (NewItems)
                     return new Colour(0, 64, 0);
                 else
-                    return new Colour(0, 0, 0);
+                    return new Colour(0, 0, 64);
             }
         }
     }

@@ -67,7 +67,7 @@ namespace SurvivalHack.Ui
                 //_gameToScreen = t.GetInverse();
             }
             
-            Clear();
+            Clear(Colour.Black);
             RenderGrid();
             RenderCreatures();
             RenderPath();

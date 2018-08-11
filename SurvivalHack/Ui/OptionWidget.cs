@@ -32,7 +32,7 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear();
+            Clear(Colour.Orange);
 
             Print(new Vec(0, 0), Question, Colour.White);
 

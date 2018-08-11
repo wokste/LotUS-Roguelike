@@ -22,7 +22,7 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear();
+            Clear(Colour.Blue);
 
             var y = 0;
 

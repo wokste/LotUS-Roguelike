@@ -16,6 +16,10 @@ namespace SurvivalHack.Ui
 
         public Action OnClose { get ; set ; }
         public bool Interrupt => false;
+        private const int ROW_HEIGHT = 16;
+        private const int HEADER_HEIGHT = 16;
+        private const int BORDER_WIDTH = 16;
+
         public InventoryWidget(TurnController controller, BaseWindow window)
         {
             _controller = controller;
@@ -31,7 +35,7 @@ namespace SurvivalHack.Ui
                 _columnPxWidth[i] = _columnCharWidth[i] * _fontX;
             }
 
-            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() * _fontX + _columnPxWidth.Length - _fontX, Inventory.SlotNames.Length * _fontY);
+            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() + (_columnPxWidth.Length -1) * BORDER_WIDTH, Inventory.SlotNames.Length * _fontY);
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)
@@ -94,7 +98,7 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear();
+            Clear(Colour.Pink);
 
             var inv = _controller.Inventory;
             for (var y = 0; y < inv.Slots.Length; y++)
@@ -129,7 +133,7 @@ namespace SurvivalHack.Ui
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
             var relMousePos = mousePos - Rect.TopLeft;
-            _selectedRow = relMousePos.Y;
+            _selectedRow = (relMousePos.Y - HEADER_HEIGHT) / ROW_HEIGHT;
             Dirty = true;
         }
 

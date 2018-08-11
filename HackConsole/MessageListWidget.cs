@@ -23,7 +23,7 @@ namespace HackConsole
 
         protected override void Render()
         {
-            Clear();
+            Clear(Colour.Green);
 
             var y = 0;
 

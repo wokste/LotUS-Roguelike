@@ -89,11 +89,11 @@ namespace HackConsole
         /// <summary>
         /// Clear the area of the widget.
         /// </summary>
-        protected void Clear()
+        protected void Clear(Colour bg)
         {
             foreach (var v in Data.Ids())
             {
-                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Colour.Black, TextColor = Colour.Yellow };
+                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = bg, TextColor = Colour.White };
             }
         }
 
