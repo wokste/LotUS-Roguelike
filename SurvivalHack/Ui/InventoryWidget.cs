@@ -102,11 +102,11 @@ namespace SurvivalHack.Ui
                 var (type, name, key) = Inventory.SlotNames[y];
                 var item = inv.Slots[y].Item;
 
-                var color = (y == _selectedRow) ? Color.White : Color.Gray;
+                var color = (y == _selectedRow) ? Colour.White : Colour.Gray;
                 var bgColor = inv.Slots[y].GetBackgroundColor();
 
                 Print(new Vec(2, y), name, color, bgColor);
-                Print(new Vec(0, y), new Symbol(key, Color.Yellow));
+                Print(new Vec(0, y), new Symbol(key, Colour.Yellow));
 
                 if (item != null)
                 {
@@ -115,7 +115,7 @@ namespace SurvivalHack.Ui
 
                     x += 2;
                     
-                    Print(new Vec(x, y), item.Name, Color.White); // TODO: What if the length is too long
+                    Print(new Vec(x, y), item.Name, Colour.White); // TODO: What if the length is too long
                 }
             }
         }

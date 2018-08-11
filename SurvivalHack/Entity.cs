@@ -37,12 +37,12 @@ namespace SurvivalHack
 
         public Entity(char ascii, string name, EEntityFlag entityFlags)
         {
-            Symbol = new Symbol(ascii, Color.White);
+            Symbol = new Symbol(ascii, Colour.White);
             Name = name;
             EntityFlags = entityFlags;
         }
 
-        public Entity(char ascii, Color fc, string name, EEntityFlag entityFlags)
+        public Entity(char ascii, Colour fc, string name, EEntityFlag entityFlags)
         {
             Symbol = new Symbol(ascii, fc);
             Name = name;

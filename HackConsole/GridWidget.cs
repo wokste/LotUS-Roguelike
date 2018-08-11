@@ -78,7 +78,7 @@ namespace HackConsole
             _vertices.Resize((uint)newSize.Area * 8);
         }
 
-        private SFML.Graphics.Color ColorToSfml(HackConsole.Color color)
+        private SFML.Graphics.Color ColorToSfml(HackConsole.Colour color)
         {
             return new SFML.Graphics.Color(color.R, color.G, color.B);
         }
@@ -93,7 +93,7 @@ namespace HackConsole
         {
             foreach (var v in Data.Ids())
             {
-                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
+                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Colour.Black, TextColor = Colour.Yellow };
             }
         }
 
@@ -104,7 +104,7 @@ namespace HackConsole
         /// <param name="msg">The text.</param>
         /// <param name="fgColor">Foreground color</param>
         /// <param name="bgColor">Background color</param>
-        protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
+        protected bool Print(Vec v, string msg, Colour fgColor, Colour bgColor = default(Colour))
         {
             //TODO: Input validation
 

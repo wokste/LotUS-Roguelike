@@ -56,8 +56,8 @@ namespace SurvivalHack.Mapgen
         private Vec GetFreeTile(Room room)
         {
             Vec v;
-            var p0 = room.Transform.Convert(Vec.Zero);
-            var p1 = room.Transform.Convert(room.Size.BottomRight - Vec.One);
+            var p0 = room.Transform.TransformVec(Vec.Zero);
+            var p1 = room.Transform.TransformVec(room.Size.BottomRight - Vec.One);
 
             do
             {

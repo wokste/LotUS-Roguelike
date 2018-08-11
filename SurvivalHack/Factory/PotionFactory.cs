@@ -9,25 +9,25 @@ namespace SurvivalHack.Factory
     {
         static int BaseId;
 
-        (string, string, Color)[] types = new(string, string, Color)[]{
-            ("a", "red", Color.Parse("#f33")),
-            ("a", "blue", Color.Parse("#36f")),
-            ("an", "aqua", Color.Parse("#0fc")),
-            ("a", "purple", Color.Parse("#f0f")),
-            ("a", "green", Color.Parse("#3f0")),
-            ("a", "violet", Color.Parse("#CDA4DE")),
-            ("a", "yellow", Color.Parse("#FFE135")),
-            ("a", "bronze ", Color.Parse("#CD7F32")),
-            ("an", "orange ", Color.Parse("#ED9121")),
-            ("a", "crystal ", Color.Parse("#A7D8DE")),
-            ("a", "pink ", Color.Parse("#FFC0CB")),
-            ("a", "sandy ", Color.Parse("#EDC9AF")),
-            ("a", "beige ", Color.Parse("#F5F5DC")),
-            ("a", "gold ", Color.Parse("#CFB53B")),
-            ("a", "mossy ", Color.Parse("#867E36")),
-            ("a", "rusty ", Color.Parse("#B7410E")),
-            ("a", "silvery ", Color.Parse("#848482")),
-            ("a", "peachy ", Color.Parse("#FFE5B4")),
+        (string, string, Colour)[] types = new(string, string, Colour)[]{
+            ("a", "red", Colour.Parse("#f33")),
+            ("a", "blue", Colour.Parse("#36f")),
+            ("an", "aqua", Colour.Parse("#0fc")),
+            ("a", "purple", Colour.Parse("#f0f")),
+            ("a", "green", Colour.Parse("#3f0")),
+            ("a", "violet", Colour.Parse("#CDA4DE")),
+            ("a", "yellow", Colour.Parse("#FFE135")),
+            ("a", "bronze ", Colour.Parse("#CD7F32")),
+            ("an", "orange ", Colour.Parse("#ED9121")),
+            ("a", "crystal ", Colour.Parse("#A7D8DE")),
+            ("a", "pink ", Colour.Parse("#FFC0CB")),
+            ("a", "sandy ", Colour.Parse("#EDC9AF")),
+            ("a", "beige ", Colour.Parse("#F5F5DC")),
+            ("a", "gold ", Colour.Parse("#CFB53B")),
+            ("a", "mossy ", Colour.Parse("#867E36")),
+            ("a", "rusty ", Colour.Parse("#B7410E")),
+            ("a", "silvery ", Colour.Parse("#848482")),
+            ("a", "peachy ", Colour.Parse("#FFE5B4")),
         };
 
         public PotionFactory(Random rnd)

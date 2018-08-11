@@ -7,10 +7,10 @@ namespace HackConsole
     public struct Symbol
     {
         public char Ascii;
-        public Color TextColor;
-        public Color BackgroundColor;
+        public Colour TextColor;
+        public Colour BackgroundColor;
 
-        public Symbol(char ascii, Color textColor, Color backgroundColor = default(Color))
+        public Symbol(char ascii, Colour textColor, Colour backgroundColor = default(Colour))
         {
             Ascii = ascii;
             TextColor = textColor;
@@ -26,26 +26,26 @@ namespace HackConsole
         }
     }
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Color
+    public struct Colour
     {
-        public static readonly Color White = new Color(255, 255, 255);
-        public static readonly Color Black = new Color(0, 0, 0);
-        public static readonly Color Red = new Color(255, 0, 0);
-        public static readonly Color Green = new Color(0, 255, 0);
-        public static readonly Color Blue = new Color(0, 0, 255);
-        public static readonly Color Yellow = new Color(255, 255, 0);
-        public static readonly Color Orange = new Color(255, 128, 0);
-        public static readonly Color Cyan = new Color(0, 255, 255);
-        public static readonly Color Pink = new Color(255, 0, 255);
-        public static readonly Color Gray = new Color(128, 128, 128);
-        public static readonly Color Transparent = new Color(0, 0, 0, 0);
+        public static readonly Colour White = new Colour(255, 255, 255);
+        public static readonly Colour Black = new Colour(0, 0, 0);
+        public static readonly Colour Red = new Colour(255, 0, 0);
+        public static readonly Colour Green = new Colour(0, 255, 0);
+        public static readonly Colour Blue = new Colour(0, 0, 255);
+        public static readonly Colour Yellow = new Colour(255, 255, 0);
+        public static readonly Colour Orange = new Colour(255, 128, 0);
+        public static readonly Colour Cyan = new Colour(0, 255, 255);
+        public static readonly Colour Pink = new Colour(255, 0, 255);
+        public static readonly Colour Gray = new Colour(128, 128, 128);
+        public static readonly Colour Transparent = new Colour(0, 0, 0, 0);
 
         public byte R;
         public byte G;
         public byte B;
         public byte A;
 
-        public Color(byte r, byte g, byte b, byte a = 255)
+        public Colour(byte r, byte g, byte b, byte a = 255)
         {
             R = r;
             G = g;
@@ -53,16 +53,16 @@ namespace HackConsole
             A = a;
         }
         
-        public Color Darken(byte mult)
+        public Colour Darken(byte mult)
         {
-            return new Color(
+            return new Colour(
                 (byte)(R * mult / 255),
                 (byte)(G * mult / 255),
                 (byte)(B * mult / 255),
                 A);
         }
 
-        public void Add(Color other)
+        public void Add(Colour other)
         {
             var f = other.A;
             R = (byte)((R * (255 - f) + other.R * f) / 256);
@@ -71,7 +71,7 @@ namespace HackConsole
             A = 255;
         }
 
-        public static Color? TryParse(string text) {
+        public static Colour? TryParse(string text) {
             if (text == null)
                 return null;
 
@@ -88,7 +88,7 @@ namespace HackConsole
                 if (!int.TryParse(hex, System.Globalization.NumberStyles.HexNumber, null, out var argb))
                     return null;
 
-                return new Color((byte)((argb & 0xff0000) >> 16), (byte)((argb & 0xff00) >> 8), (byte)(argb & 0xff), (byte)((argb & -16777216) >> 24));
+                return new Colour((byte)((argb & 0xff0000) >> 16), (byte)((argb & 0xff00) >> 8), (byte)(argb & 0xff), (byte)((argb & -16777216) >> 24));
             }
             else
             {
@@ -96,10 +96,10 @@ namespace HackConsole
             }
         }
 
-        public static Color Parse(string text)
+        public static Colour Parse(string text)
         {
             var c = TryParse(text);
-            if (c is Color cc)
+            if (c is Colour cc)
                 return cc;
 
             throw new FormatException($"{text} is not a valid color");

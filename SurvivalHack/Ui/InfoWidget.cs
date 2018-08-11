@@ -28,7 +28,7 @@ namespace SurvivalHack.Ui
 
             if (_item != null)
             {
-                Print(new Vec(0, y++), _item.Name, Color.White);
+                Print(new Vec(0, y++), _item.Name, Colour.White);
                 //if (_item.EntityFlags.HasFlag(EEntityFlag.Identified))
                 {
                     foreach (var c in _item.Components)
@@ -36,7 +36,7 @@ namespace SurvivalHack.Ui
                         var s = c.Describe();
                         if (s != null)
                             foreach (var l in StringExt.Prefix(StringExt.Wrap(s, Rect.Width - 2), " -"))
-                                Print(new Vec(0, y++), l, Color.White);
+                                Print(new Vec(0, y++), l, Colour.White);
                     }
                 }
             }

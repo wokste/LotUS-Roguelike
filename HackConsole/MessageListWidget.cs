@@ -30,7 +30,7 @@ namespace HackConsole
             var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
             {
-                Print(new Vec(0, y), Lines[i], Color.White);
+                Print(new Vec(0, y), Lines[i], Colour.White);
                 y++;
             }
         }

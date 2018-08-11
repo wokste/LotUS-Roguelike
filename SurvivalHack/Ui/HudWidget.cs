@@ -23,11 +23,11 @@ namespace SurvivalHack.Ui
             var offset = (width - str.Length) / 2;
 
             var p = bar.Perc;
-            var fgColor = Color.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
+            var fgColor = Colour.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
             
             for (int x = 0; x < width; x++)
             {
-                var bgColor = (x <= p * width + 0.5) ? Color.Red : Color.Black;
+                var bgColor = (x <= p * width + 0.5) ? Colour.Red : Colour.Black;
 
                 var ascii = (x >= offset && x < str.Length + offset) ? str[x-offset] : ' ';
                 Data[new Vec(x, y)] = new Symbol { Ascii = ascii, BackgroundColor = bgColor, TextColor = fgColor };
@@ -41,11 +41,11 @@ namespace SurvivalHack.Ui
 
             var y = 0;
 
-            Print(new Vec(0, y++), "Player:", Color.White, Color.Transparent);
+            Print(new Vec(0, y++), "Player:", Colour.White, Colour.Transparent);
 
             if (_controller.GameOver)
             {
-                Print(new Vec(0, y++), "Dead", Color.White, Color.Transparent);
+                Print(new Vec(0, y++), "Dead", Colour.White, Colour.Transparent);
                 return;
             }
             PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>().Health);
@@ -61,7 +61,7 @@ namespace SurvivalHack.Ui
             {
                 y++;
 
-                Print(new Vec(0, y++), e.Name, Color.White, Color.Transparent);
+                Print(new Vec(0, y++), e.Name, Colour.White, Colour.Transparent);
 
                 var damagable = e.GetOne<Combat.Damagable>();
                 if (damagable != null)

@@ -44,7 +44,7 @@ namespace SurvivalHack
                 var str = check.Invoke(evt);
                 if (str != null)
                 {
-                    ColoredString.Write(str.CleanUp(), Color.Red);
+                    ColoredString.Write(str.CleanUp(), Colour.Red);
                     return false;
                 }
             }
@@ -58,7 +58,7 @@ namespace SurvivalHack
             if (parent != null)
 				parent.PostMessage += message;
 			else
-				ColoredString.Write(message.CleanUp(), Color.Yellow); //TODO: Color
+				ColoredString.Write(message.CleanUp(), Colour.Yellow); //TODO: Color
 
             return true;
         }

@@ -5,6 +5,7 @@ using SurvivalHack.Mapgen.Rooms;
 using HackConsole;
 using System.Diagnostics;
 using SurvivalHack.Mapgen.Automata;
+using SFML.Graphics;
 
 namespace SurvivalHack.Mapgen
 {
@@ -134,10 +135,7 @@ namespace SurvivalHack.Mapgen
                 var rangeX = new Range((int)(free.X * a1), (int)(free.X * a2));
                 var rangeY = new Range((int)(free.Y * a1), (int)(free.Y * a2));
 
-                room.Transform = new Transform
-                {
-                    Offset = new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd))
-                };
+                room.Transform = TransformExt.MakeTranslateRotate(new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd)), 0f);
 
                 if (room.TryPlaceOnMap(map, mask, rooms))
                 {

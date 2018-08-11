@@ -64,7 +64,7 @@ namespace SurvivalHack.Combat
                 byte g = (byte)MyMath.Lerp(p, 0, 255);
                 byte b = (byte)MyMath.Lerp(p - 1, 0, 255);
 
-                self.Symbol.TextColor = new Color(r, g, b);
+                self.Symbol.TextColor = new Colour(r, g, b);
             }
         }
     }

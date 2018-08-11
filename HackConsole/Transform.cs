@@ -1,37 +1,34 @@
 ﻿using System;
+using SFML.Graphics;
 
 namespace HackConsole
 {
-    public struct Transform
+    public static class TransformExt
     {
-        public Vec Offset;
-        public int ClockwiseRotates;
-
-        public Vec Convert(Vec input)
+        public static Vec TransformVec(this Transform t, Vec v)
         {
-            return Rotate(input) + Offset;
+            var vf = t.TransformPoint(v.X, v.Y);
+            return new Vec((int)Math.Round(vf.X), (int)Math.Round(vf.Y));
         }
 
-        public Dir Convert(Dir input)
+        public static Rect TransformRect(this Transform t, Rect r)
         {
-            return (Dir)(((int)input + ClockwiseRotates) % 4);
+            var rf = t.TransformRect(new FloatRect(r.Left, r.Top, r.Width, r.Height));
+            // TODO: What should be rounded, width/height or right/bottom
+            return new Rect((int)Math.Round(rf.Left), (int)Math.Round(rf.Top), (int)Math.Round(rf.Width), (int)Math.Round(rf.Height));
         }
 
-        private Vec Rotate(Vec input)
+        public static void Translate(this Transform t, Vec v)
         {
-            switch (ClockwiseRotates)
-            {
-                case 0:
-                    return input;
-                case 1:
-                    return new Vec(input.Y, -input.X);
-                case 2:
-                    return new Vec(-input.X, -input.Y);
-                case 3:
-                    return new Vec(-input.Y, input.X);
-                default:
-                    throw new ArithmeticException($"ClockwiseRotates should be in the range[0,3]. It is {ClockwiseRotates}");
-            }
+            t.Translate(v.X, v.Y);
+        }
+
+        public static Transform MakeTranslateRotate(Vec v, float f)
+        {
+            var t = Transform.Identity;
+            t.Rotate(f);
+            t.Translate(v.X, v.Y);
+            return t;
         }
     }
 }

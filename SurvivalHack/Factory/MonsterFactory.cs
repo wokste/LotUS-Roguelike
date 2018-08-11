@@ -39,7 +39,7 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 0.6f,
-                        Symbol = new Symbol('z', Color.Cyan)
+                        Symbol = new Symbol('z', Colour.Cyan)
                     };
                 case "bat":
                     return new Entity('b', "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
@@ -52,7 +52,7 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 1.5f,
-                        Symbol = new Symbol('b', Color.White),
+                        Symbol = new Symbol('b', Colour.White),
                     };
                 case "skeleton":
                     return new Entity('z', "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
@@ -65,7 +65,7 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 0.6f,
-                        Symbol = new Symbol('s', Color.Cyan)
+                        Symbol = new Symbol('s', Colour.Cyan)
                     };
                 case "firebat":
                     return new Entity('b', "Fire Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
@@ -78,7 +78,7 @@ namespace SurvivalHack.Factory
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
                         Speed = 1.5f,
-                        Symbol = new Symbol('b', Color.Red),
+                        Symbol = new Symbol('b', Colour.Red),
                     };
             }
             throw new ArgumentException($"Tag {tag} not found");

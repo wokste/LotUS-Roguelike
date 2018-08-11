@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using HackConsole.Algo;
+using SFML.Graphics;
 
 namespace SurvivalHack.Ui
 {
-    public class MapWidget : GridWidget, IMouseEventSuscriber
+    public class MapWidget : GridWidget //, IMouseEventSuscriber
     {
         private Level _level;
         private readonly TurnController _controller;
-        private readonly Color _pathColor = new Color(0, 128, 255, 128);
+        private readonly Colour _pathColor = new Colour(0, 128, 255, 128);
 
-        private Vec _offset;
+        //private Vec _offset;
+        private Vec _relToAbs;
+        //private Transform _screenToGame;
+        //private Transform _gameToScreen;
+
         private IEnumerable<Vec> _path = null;
         private AStar _aStar;
 
@@ -49,7 +54,17 @@ namespace SurvivalHack.Ui
         protected override void Render()
         {
             if (!_controller.GameOver)
-                _offset = _controller.Player.Pos - Rect.Size.Center;
+            {
+                //var t = new Transform();
+                //t.Translate(Rect.Center);
+                //t.Scale(16, 16);
+                //t.Translate(_controller.Player.Pos);
+
+                _relToAbs = _controller.Player.Pos - Data.Size.Center;
+
+                //_screenToGame = t;
+                //_gameToScreen = t.GetInverse();
+            }
             
             Clear();
             RenderGrid();
@@ -69,13 +84,15 @@ namespace SurvivalHack.Ui
                 return 1;
             }
 
-            var area = (Rect + _offset);
+            var area = new Rect(_relToAbs, Data.Size);
+
+            //}// _screenToGame.TransformRect(Rect);
             foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags))) {
                 var p = _controller.FoV.ShowLocation(e);
 
                 if (p is Vec p2)
                 {
-                    p2 -= _offset;
+                    p2 += _relToAbs;
 
                     if (!Data.Size.Contains(p2))
                         continue;
@@ -92,7 +109,7 @@ namespace SurvivalHack.Ui
 
             foreach (var absPos in _path)
             {
-                var relPos = absPos - _offset;
+                var relPos = absPos - _relToAbs;
                 if (!Rect.Size.Contains(relPos))
                     continue;
 
@@ -107,23 +124,26 @@ namespace SurvivalHack.Ui
         {
             var area = Rect.Size;
 
-            foreach (var v in Data.Ids())
+            foreach (var rel in Data.Ids())
             {
-                if (!_level.InBoundary(v + _offset))
+                var abs = rel + _relToAbs;
+
+                if (!_level.InBoundary(abs))
                     continue;
 
-                var visibility = _controller.FoV.Visibility[v + _offset];
+                var visibility = _controller.FoV.Visibility[abs];
 
                 if (visibility == 0)
                     continue;
 
-                Data[v] = _level.GetTile(v + _offset).Symbol;
+                Data[rel] = _level.GetTile(abs).Symbol;
 
                 if ((visibility & FieldOfView.FLAG_VISIBLE) != FieldOfView.FLAG_VISIBLE)
-                    Data[v] = Data[v].Darken(128);
+                    Data[rel] = Data[rel].Darken(128);
             }
         }
 
+        /*
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
             if (flags.HasFlag(EventFlags.RightButton) && flags.HasFlag(EventFlags.MouseEventPress) && _path != null)
@@ -132,7 +152,7 @@ namespace SurvivalHack.Ui
             }
             else if (flags.HasFlag(EventFlags.LeftButton) & flags.HasFlag(EventFlags.MouseEventPress))
             {
-                _controller.ActiveTool?.Apply(mousePos + _offset);
+                _controller.ActiveTool?.Apply(mousePos + _relToAbs);
             }
         }
 
@@ -160,5 +180,6 @@ namespace SurvivalHack.Ui
         public void OnMouseWheel(Vec delta, EventFlags flags)
         {
         }
+        */
     }
 }

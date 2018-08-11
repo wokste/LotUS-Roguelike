@@ -1,6 +1,8 @@
 ﻿using HackConsole;
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
+
 
 namespace SurvivalHack.Mapgen
 {
@@ -11,7 +13,7 @@ namespace SurvivalHack.Mapgen
         public Transform Transform;
         public Size Size => Tiles.Size;
 
-        public Vec Center => Transform.Convert(Size.Center);
+        public Vec Center => Transform.TransformVec(Size.Center);
 
         public Grid<TileInfo> Tiles;
 
@@ -24,7 +26,7 @@ namespace SurvivalHack.Mapgen
         {
             foreach (var v in Tiles.Ids())
             {
-                var dest = Transform.Convert(v);
+                var dest = Transform.TransformVec(v);
                 if (maskMap[dest] == DungeonGenerator.MASKID_KEEP)
                     continue;
 
@@ -49,13 +51,13 @@ namespace SurvivalHack.Mapgen
         {
             var mapRect = new Rect(Vec.Zero, Level.Size);
 
-            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size.BottomRight)))
+            if (!mapRect.Contains(Transform.TransformVec(Vec.Zero)) || !mapRect.Contains(Transform.TransformVec(Size.BottomRight)))
                 return false;
 
             foreach (var vecSrc in Tiles.Ids())
             {
                 var newInfo = Tiles[vecSrc];
-                var vecDest = Transform.Convert(vecSrc);
+                var vecDest = Transform.TransformVec(vecSrc);
 
                 var oldId = Level.TileMap[vecDest];
                 var oldMask = maskMap[vecDest];
@@ -91,7 +93,7 @@ namespace SurvivalHack.Mapgen
         {
             var mapRect = new Rect(Vec.Zero, level.Size);
 
-            if (!mapRect.Contains(Transform.Convert(Vec.Zero)) || !mapRect.Contains(Transform.Convert(Size.BottomRight)))
+            if (!mapRect.Contains(Transform.TransformVec(Vec.Zero)) || !mapRect.Contains(Transform.TransformVec(Size.BottomRight)))
                 return false;
             
             Level = level;

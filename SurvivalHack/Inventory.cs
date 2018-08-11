@@ -49,13 +49,13 @@ namespace SurvivalHack
 
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     stack2.Count += stack1.Count;
-                    ColoredString.Write($"You aquired {item} making a total of {stack2.Count}", Color.Green);
+                    ColoredString.Write($"You aquired {item} making a total of {stack2.Count}", Colour.Green);
 
                     return;
                 };
             }
 
-            ColoredString.Write($"You aquired {item}", Color.Green);
+            ColoredString.Write($"You aquired {item}", Colour.Green);
             Items.Add(item);
         }
 
@@ -112,14 +112,14 @@ namespace SurvivalHack
             public bool NewItems;
             public bool Cursed => Item?.EntityFlags.HasFlag(EEntityFlag.Cursed) ?? false;
 
-            internal Color GetBackgroundColor()
+            internal Colour GetBackgroundColor()
             {
                 if (Cursed)
-                    return new Color(64, 0, 0);
+                    return new Colour(64, 0, 0);
                 else if (NewItems)
-                    return new Color(0, 64, 0);
+                    return new Colour(0, 64, 0);
                 else
-                    return new Color(0, 0, 0);
+                    return new Colour(0, 0, 0);
             }
         }
     }

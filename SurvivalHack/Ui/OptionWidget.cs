@@ -34,14 +34,14 @@ namespace SurvivalHack.Ui
         {
             Clear();
 
-            Print(new Vec(0, 0), Question, Color.White);
+            Print(new Vec(0, 0), Question, Colour.White);
 
             for (var i = 0; i < Set.Count; i++)
             {
                 var y = i + 1;
                 var item = Set[i];
 
-                var color = (i == _selectedIndex) ? Color.White : Color.Gray;
+                var color = (i == _selectedIndex) ? Colour.White : Colour.Gray;
 
                 if (item == null)
                 {

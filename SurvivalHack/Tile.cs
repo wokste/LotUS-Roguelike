@@ -43,7 +43,7 @@ namespace SurvivalHack
                 new Tile
                 {
                     Tag = "floor_stone",
-                    Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
+                    Symbol = new Symbol('.', new Colour(64, 64, 64), new Colour(16, 16, 16))
                 },
 
                 new Tile
@@ -51,14 +51,14 @@ namespace SurvivalHack
                     Tag = "floor_wood",
                     Natural = false,
                     Flamable = true,
-                    Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
+                    Symbol = new Symbol('=', Colour.Parse("#471802"), Colour.Parse("#260c00"))
                 },
 
                 new Tile
                 {
                     Tag = "short_grass",
                     Flamable = true,
-                    Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
+                    Symbol = new Symbol('\'', Colour.Parse("#004c00"), Colour.Parse("#002300"))
                 },
 
                 new Tile
@@ -66,7 +66,7 @@ namespace SurvivalHack
                     Tag = "tall_grass",
                     Flamable = true,
                     BlockSight = true,
-                    Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
+                    Symbol = new Symbol('"', Colour.Parse("#05a300"), Colour.Parse("#002300"))
                 },
 
                 new Tile
@@ -74,7 +74,7 @@ namespace SurvivalHack
                     Tag = "water",
                     WalkDanger = 0.5f,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
+                    Symbol = new Symbol('~', Colour.Parse("#0fa2db"), Colour.Parse("#0475a0"))
                 },
 
                 new Tile
@@ -82,7 +82,7 @@ namespace SurvivalHack
                     Tag = "water_deep",
                     WalkDanger = 0.5f,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#0f12db"), Color.Parse("#0409a0"))
+                    Symbol = new Symbol('~', Colour.Parse("#0f12db"), Colour.Parse("#0409a0"))
                 },
 
                 new Tile
@@ -90,7 +90,7 @@ namespace SurvivalHack
                     Tag = "lava",
                     WalkDanger = 10,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
+                    Symbol = new Symbol('~', Colour.Parse("#ffdf3f"), Colour.Parse("#d66422"))
                 },
 
                 new Tile
@@ -98,7 +98,7 @@ namespace SurvivalHack
                     Tag = "rock",
                     Solid = true,
                     BlockSight = true,
-                    Symbol = new Symbol('#', Color.Black, Color.Gray),
+                    Symbol = new Symbol('#', Colour.Black, Colour.Gray),
                     MineCost = 2,
                 },
 
@@ -107,7 +107,7 @@ namespace SurvivalHack
                     Tag = "wall_stone",
                     Solid = true,
                     BlockSight = true,
-                    Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
+                    Symbol = new Symbol('#', Colour.Black, new Colour(164, 87, 40)),
                     MineCost = 10
                 }
             };
