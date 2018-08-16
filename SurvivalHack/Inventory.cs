@@ -86,7 +86,7 @@ namespace SurvivalHack
             int? lastSlot = EquippedInSlot(item);
 
             // Check for cursed items
-            if ((item.EntityFlags.HasFlag(EEntityFlag.Cursed) && lastSlot != null) || (Slots[slot].Item != null && Slots[slot].Cursed))
+            if ((lastSlot != null && item.EntityFlags.HasFlag(EEntityFlag.Cursed)) || (Slots[slot].Item != null && Slots[slot].Cursed))
                 return false;
 
             if (lastSlot is int s)
@@ -99,6 +99,9 @@ namespace SurvivalHack
 
         public int? EquippedInSlot(Entity item)
         {
+            if (item == null)
+                return null;
+
             for (int i = 0; i < Slots.Length; ++i)
                 if (Slots[i].Item == item)
                     return i;
