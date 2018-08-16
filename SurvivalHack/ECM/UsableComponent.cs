@@ -34,12 +34,20 @@ namespace SurvivalHack.ECM
     public class MapRevealComponent : Component
     {
         public Type MessageType { get; }
-        public byte Flags;
+        private byte FovFlags;
+        public int Radius;
 
-        public MapRevealComponent(byte flags, Type messageType)
+        public enum RevealMethod {
+            Walls, All, // Maybe add heat (lava), movement (non-flying creatures), etc.
+        }
+        RevealMethod Method;
+
+        public MapRevealComponent(Type messageType, byte fovFlags, RevealMethod method, int radius)
         {
             MessageType = messageType;
-            Flags = flags;
+            FovFlags = fovFlags;
+            Method = method;
+            Radius = radius;
         }
 
         public override void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -66,11 +74,13 @@ namespace SurvivalHack.ECM
                 return false;
             }
 
+
+
             // Now update all tiles such that things become visible
             foreach (var v in Map.TileMap.Ids())
             {
-                if (Reachable(v))
-                    FoV.Visibility[v] |= Flags;
+                if (Reachable(v) && Map.GetTile(v).Solid)
+                    FoV.Visibility[v] |= FovFlags;
             }
         }
 

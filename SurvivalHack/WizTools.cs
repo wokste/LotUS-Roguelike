@@ -17,11 +17,11 @@ namespace SurvivalHack
 
             Entity entity;
             entity = new Entity(glyph, "Reveal Map", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastEvent)));
+            entity.Add(new MapRevealComponent(typeof(CastEvent), FieldOfView.SET_ALWAYSVISIBLE, MapRevealComponent.RevealMethod.All, 9001));
             Tools.Add(entity);
 
             entity = new Entity(glyph, "Discover Map - scroll?", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastEvent)));
+            entity.Add(new MapRevealComponent(typeof(CastEvent), FieldOfView.FLAG_DISCOVERED, MapRevealComponent.RevealMethod.Walls, 32));
             Tools.Add(entity);
 
             entity = new Entity(glyph, "Genocide", EEntityFlag.Pickable);

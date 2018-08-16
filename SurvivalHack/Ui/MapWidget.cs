@@ -172,7 +172,7 @@ namespace SurvivalHack.Ui
             public Size Size;
             public Vec RelToAbs;
             public Color VisibleColor = new Color(255, 255, 255, 255);
-            public Color KnownColor = new Color(64, 128, 64, 255);
+            public Color KnownColor = new Color(64, 96, 80, 255);
             public Color Black = new Color(0,0,0,0);
 
             private readonly VertexArray _vertices = new VertexArray();
