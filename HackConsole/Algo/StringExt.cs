@@ -21,6 +21,7 @@ namespace HackConsole.Algo
             }
         }
 
+        [Obsolete]
         public static IEnumerable<string> Wrap(this string msg, int maxWidth)// string prefix)
         {
             int FirstChar(int pos)
@@ -67,6 +68,7 @@ namespace HackConsole.Algo
             }
         }
 
+        [Obsolete]
         public static string CleanUp(this string source)
         {
             var sb = new StringBuilder(source.Length);

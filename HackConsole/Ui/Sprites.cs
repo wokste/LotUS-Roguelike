@@ -11,6 +11,7 @@ namespace HackConsole.Ui
     {
         public static Texture Ascii = MakeSprite("ascii.png");
         public static Texture Tileset = MakeSprite("tileset.png");
+        public static BitmapFont Font = new BitmapFont("font");
 
         private static Texture MakeSprite(string texName)
         {
