@@ -42,7 +42,7 @@ namespace SurvivalHack
         public bool IsSameTile(Vec v0, Vec v1)
         {
             if (!InBoundary(v1))
-                return true;
+                return false;
 
             return TileMap[v0] == TileMap[v1];
         }

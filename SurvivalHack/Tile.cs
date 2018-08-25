@@ -28,6 +28,7 @@ namespace SurvivalHack
         public static byte TERRAIN = 1;
         public static byte PIT = 2;
         public static byte ANIM = 3;
+        public static byte WALL = 4;
 
         public TileGlyph(byte x, byte y, byte method = 0)
         {
@@ -108,7 +109,7 @@ namespace SurvivalHack
                     Tag = "rock",
                     Solid = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(4,4,TileGlyph.TERRAIN), // TODO: 4 kinds of rock
+                    Glyph = new TileGlyph(0,4,TileGlyph.WALL), // TODO: 4 kinds of rock
                     MineCost = 2,
                 },
 
@@ -117,7 +118,7 @@ namespace SurvivalHack
                     Tag = "wall_stone",
                     Solid = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(16,4,TileGlyph.TERRAIN), // TODO: Two walls
+                    Glyph = new TileGlyph(16,4,TileGlyph.WALL), // TODO: Two walls
                     MineCost = 10
                 }
             };

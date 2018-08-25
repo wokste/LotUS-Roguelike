@@ -203,6 +203,8 @@ namespace SurvivalHack.Ui
 
             public void RenderMap(TurnController controller)
             {
+                _vertices.Clear();
+
                 var map = controller.Level;
                 var fov = controller.FoV;
 
@@ -221,8 +223,6 @@ namespace SurvivalHack.Ui
                         SetGlyph(rel, ChooseGlyph(map, abs), VisibleColor);
                     else if ((visibility & FieldOfView.FLAG_DISCOVERED) != 0)
                         SetGlyph(rel, ChooseGlyph(map, abs), KnownColor);
-                    else
-                        SetGlyph(rel, ChooseGlyph(map, abs), Black);
                 }
             }
 
@@ -233,20 +233,38 @@ namespace SurvivalHack.Ui
 
                 if (glyph.Method == TileGlyph.TERRAIN)
                 {
-                    var l = map.IsSameTile(pos, pos - new Vec(-1, 0));
-                    var r = map.IsSameTile(pos, pos - new Vec(1, 0));
+                    var l = map.IsSameTile(pos, pos + new Vec(-1, 0));
+                    var r = map.IsSameTile(pos, pos + new Vec(1, 0));
 
                     if (l && r) glyph.X += 2;
-                    if (l && !r) glyph.X += 1;
-                    if (!l && r) glyph.X += 3;
+                    if (l && !r) glyph.X += 3;
+                    if (!l && r) glyph.X += 1;
 
 
-                    var t = map.IsSameTile(pos, pos - new Vec(0, -1));
-                    var b = map.IsSameTile(pos, pos - new Vec(0, 1));
+                    var t = map.IsSameTile(pos, pos + new Vec(0, -1));
+                    var b = map.IsSameTile(pos, pos + new Vec(0, 1));
 
                     if (t && b) glyph.Y += 2;
-                    if (t && !b) glyph.Y += 1;
-                    if (!t && b) glyph.Y += 3;
+                    if (t && !b) glyph.Y += 3;
+                    if (!t && b) glyph.Y += 1;
+                }
+                if (glyph.Method == TileGlyph.WALL)
+                {
+                    Vec[] dir8 = { new Vec(-1, -1), new Vec(-1, 0), new Vec(-1, 1), new Vec(0,1), new Vec(1,1), new Vec(1,0), new Vec(1,-1), new Vec(0,-1) };
+                    var g = dir8.Select(d => map.IsSameTile(pos, pos + d)).ToArray();
+
+                    var t = g[7] && !(g[1] && g[0] && g[6] & g[5]);
+                    var b = g[3] && !(g[1] && g[2] && g[4] & g[5]);
+                    var l = g[1] && !(g[7] && g[0] && g[2] & g[3]);
+                    var r = g[5] && !(g[7] && g[6] && g[4] & g[3]);
+
+                    if (l && r) glyph.X += 2;
+                    if (l && !r) glyph.X += 3;
+                    if (!l && r) glyph.X += 1;
+
+                    if (t && b) glyph.Y += 2;
+                    if (t && !b) glyph.Y += 3;
+                    if (!t && b) glyph.Y += 1;
                 }
 
                 return glyph;
@@ -267,7 +285,7 @@ namespace SurvivalHack.Ui
 
                 for (uint i = 0; i < 4; ++i)
                 {
-                    _vertices[idx + i] = new Vertex(vecScreen + d[i], c, texPos + d[i]);
+                    _vertices.Append(new Vertex(vecScreen + d[i], c, texPos + d[i]));
                 }
             }
         }
