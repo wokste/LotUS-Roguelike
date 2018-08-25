@@ -22,32 +22,6 @@ namespace HackConsole
         }
         public bool Interrupt => (InnerWidget as IPopupWidget).Interrupt;
 
-        protected void RenderBorders()
-        {
-            /*
-            for (int x = Size.Left + 1; x < Size.Right - 1; x++)
-            {
-                var c = new Symbol((char)(205), FcColor, BgColor);
-                WindowData.Data[x, Size.Top] = c;
-                WindowData.Data[x, Size.Bottom - 1] = c;
-            }
-
-            for (int y = Size.Top + 1; y < Size.Bottom - 1; y++)
-            {
-                var c = new Symbol((char)(186), FcColor, BgColor);
-                WindowData.Data[Size.Left, y] = c;
-                WindowData.Data[Size.Right - 1, y] = c;
-            }
-
-            {
-                WindowData.Data[Size.Left, Size.Top] = new Symbol((char)(201), FcColor, BgColor);
-                WindowData.Data[Size.Left, Size.Bottom - 1] = new Symbol((char)(200), FcColor, BgColor);
-                WindowData.Data[Size.Right - 1, Size.Top] = new Symbol((char)(187), FcColor, BgColor);
-                WindowData.Data[Size.Right - 1, Size.Bottom - 1] = new Symbol((char)(188), FcColor, BgColor);
-            }
-            */
-        }
-
         protected override void OnResized()
         {
             var free = Rect.Grow(-BorderWidth);

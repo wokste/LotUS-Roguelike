@@ -115,6 +115,15 @@ namespace SurvivalHack
 
                 new Tile
                 {
+                    Tag = "rock2",
+                    Solid = true,
+                    BlockSight = true,
+                    Glyph = new TileGlyph(4,4,TileGlyph.WALL), // TODO: 4 kinds of rock
+                    MineCost = 2,
+                },
+
+                new Tile
+                {
                     Tag = "wall_stone",
                     Solid = true,
                     BlockSight = true,
@@ -134,6 +143,13 @@ namespace SurvivalHack
             var tileId = tiles.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileId != -1);
             return tileId;
+        }
+
+        public static Tile GetTile(this List<Tile> tiles, string tag)
+        {
+            var tileId = tiles.FindIndex(t => t.Tag == tag);
+            Debug.Assert(tileId != -1);
+            return tiles[tileId];
         }
     }
 }

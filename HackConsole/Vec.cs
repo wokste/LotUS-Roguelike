@@ -44,7 +44,7 @@ namespace HackConsole
         {
             unchecked
             {
-                return (X * 397) ^ Y;
+                return ((X * 397) ^ Y) * 1389;
             }
         }
 

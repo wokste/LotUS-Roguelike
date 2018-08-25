@@ -15,8 +15,7 @@ namespace HackConsole
     {
         private readonly List<ColoredString> _messages = new List<ColoredString>();
         protected readonly List<string> Lines = new List<string>();
-
-
+        
         private readonly VertexArray _vertices = new VertexArray();
         public BitmapFont Font;
         private bool _dirty = true;
