@@ -74,7 +74,7 @@
     <Compile Include="Symbol.cs" />
     <Compile Include="TextWidget.cs" />
     <Compile Include="Transform.cs" />
-    <Compile Include="Ui\Font.cs" />
+    <Compile Include="Ui\BitmapFont.cs" />
     <Compile Include="Ui\Sprites.cs" />
     <Compile Include="Vec.cs" />
     <Compile Include="Widget.cs" />

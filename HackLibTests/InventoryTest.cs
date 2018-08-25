@@ -29,7 +29,7 @@ namespace HackLibTests
             Assert.IsNull(FindItem(STACK_TYPE_A));
             Assert.IsNull(FindItem(STACK_TYPE_B));
 
-            inv.Add(new Entity(new TileGlyph(0,0), "A", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "A", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(5, STACK_TYPE_A) }
             });
@@ -37,7 +37,7 @@ namespace HackLibTests
             Assert.AreEqual(FindItem(STACK_TYPE_A), 5);
             Assert.IsNull(FindItem(STACK_TYPE_B));
 
-            inv.Add(new Entity(new TileGlyph(0, 0), "B", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "B", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(3, STACK_TYPE_B) }
             });
@@ -45,7 +45,7 @@ namespace HackLibTests
             Assert.AreEqual(FindItem(STACK_TYPE_A), 5);
             Assert.AreEqual(FindItem(STACK_TYPE_B), 3);
 
-            inv.Add(new Entity(new TileGlyph(0, 0), "A", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "A", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(4, STACK_TYPE_A) }
             });
@@ -59,13 +59,13 @@ namespace HackLibTests
         {
             var inv = new Inventory();
 
-            var normalItem = new Entity(new TileGlyph(0, 0), "Item", EEntityFlag.Pickable)
+            var normalItem = new Entity(new TileGlyph(), "Item", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new Equippable(ESlotType.Offhand) }
             };
             inv.Add(normalItem);
 
-            var cursedItem = new Entity(new TileGlyph(0, 0), "Cursed Item", EEntityFlag.Pickable | EEntityFlag.Cursed)
+            var cursedItem = new Entity(new TileGlyph(), "Cursed Item", EEntityFlag.Pickable | EEntityFlag.Cursed)
             {
                 Components = new List<IComponent> { new Equippable(ESlotType.Offhand) }
             };
