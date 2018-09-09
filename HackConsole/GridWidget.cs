@@ -21,7 +21,7 @@ namespace HackConsole
         }
 
         // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
-        public override void Draw(RenderTarget target)
+        protected override void DrawInternal(RenderTarget target)
         {
             if (Dirty)
             {
@@ -39,7 +39,7 @@ namespace HackConsole
                 foreach (var v in Data.Ids())
                 {
                     var idx = (uint)((v.Y * Data.Size.X) + v.X) * 8;
-                    var vecScreen = new Vector2f((v.X * _fontX + Rect.Left), (v.Y * _fontY + Rect.Top));
+                    var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
 
                     var Char = Data[v];
                     var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);

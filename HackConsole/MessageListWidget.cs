@@ -32,7 +32,7 @@ namespace HackConsole
         }
 
 
-        public override void Draw(RenderTarget target)
+        protected override void DrawInternal(RenderTarget target)
         {
             if (_dirty == true)
             {
@@ -77,7 +77,7 @@ namespace HackConsole
         private void RenderLine(string msg)
         {
             // TODO: Stuff
-            Font.Print(_vertices, msg, Rect.Width, new Vec(0, Rect.Top + _bottomY));
+            Font.Print(_vertices, msg, Rect.Width, new Vec(0, _bottomY));
             ScrollY += Font.LineHeight + Font.SpacingV;
             _bottomY += Font.LineHeight + Font.SpacingV;
         }

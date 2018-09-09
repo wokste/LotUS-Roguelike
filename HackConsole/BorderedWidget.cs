@@ -44,7 +44,7 @@ namespace HackConsole
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseMove(mousePos, mouseMove, flags);
         public void OnMouseWheel(Vec delta, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseWheel(delta, flags);
 
-        public override void Draw(RenderTarget target)
+        protected override void DrawInternal(RenderTarget target)
         {
             // TODO: render border
             InnerWidget.Draw(target);

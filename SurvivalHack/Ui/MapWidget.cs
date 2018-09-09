@@ -61,7 +61,7 @@ namespace SurvivalHack.Ui
         }
 
         // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
-        public override void Draw(RenderTarget target)
+        protected override void DrawInternal(RenderTarget target)
         {
             var states = new RenderStates(HackConsole.Ui.Sprites.Tileset);
             _mapView.Draw(target, states);
@@ -171,7 +171,6 @@ namespace SurvivalHack.Ui
         {
             public Size VisibleSize;
             public Vec RelToAbs;
-            public View View;
             public Color VisibleColor = new Color(255, 255, 255, 255);
             public Color KnownColor = new Color(64, 96, 80, 255);
             public Color Black = new Color(0,0,0,0);
@@ -182,38 +181,16 @@ namespace SurvivalHack.Ui
 
             public MapView()
             {
-                View = new View();
                 _vertices.PrimitiveType = PrimitiveType.Quads;
             }
 
             public void Draw(RenderTarget target, RenderStates states)
             {
-                var oldView = target.GetView();
-
-                // TODO: This might be a nice effect for earthquakes etc.
-                // View.Rotation = (float)Game.Rnd.NextDouble() * 3f - 1.5f;
-
-                target.SetView(View);
                 target.Draw(_vertices, states);
-                target.SetView(oldView);
-            }
-
-            public void ResizeView(Widget widget)
-            {
-                var widgetSize = widget.Rect;
-                View.Size = new Vector2f(widgetSize.Width, widgetSize.Height);
-                View.Center = new Vector2f(widgetSize.Width / 2, widgetSize.Height / 2);
-
-                var screenRect = widget.Ancestor.Rect;
-
-                var rect = new FloatRect((float)widgetSize.Left / screenRect.Width, (float)widgetSize.Top / screenRect.Height, (float)widgetSize.Width / screenRect.Width, (float)widgetSize.Height / screenRect.Height);
-                View.Viewport = rect;
             }
 
             public void OnResize(Widget widget, TurnController controller)
             {
-                ResizeView(widget);
-
                 var newSize = new Size(widget.Rect.Width / 16, widget.Rect.Height / 16);
 
                 if (VisibleSize == newSize)

@@ -35,7 +35,7 @@ namespace HackConsole
             return null;
         }
 
-        public override void Draw(RenderTarget target)
+        protected override void DrawInternal(RenderTarget target)
         {
 
             foreach (var w in Widgets)

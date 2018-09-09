@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.Window;
 
 namespace HackConsole
 {
@@ -7,11 +8,18 @@ namespace HackConsole
         public Rect Rect;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
+        public View View = new View();
 
         public Widget Parent;
         public Widget Ancestor => Parent == null ? this : Parent.Ancestor;
 
-        public abstract void Draw(RenderTarget target);
+        public void Draw(RenderTarget target)
+        {
+            target.SetView(View);
+            DrawInternal(target);
+        }
+
+        protected abstract void DrawInternal(RenderTarget target);
 
         //public abstract bool CanHasFocus { get; }
 
@@ -28,8 +36,20 @@ namespace HackConsole
                 return;
 
             Rect = newSize;
+            ResizeView();
 
             OnResized();
+        }
+
+        private void ResizeView()
+        {
+            View.Size = new Vector2f(Rect.Width, Rect.Height);
+            View.Center = new Vector2f(Rect.Width / 2, Rect.Height / 2);
+
+            var screenRect = Ancestor.Rect;
+
+            var rect = new FloatRect((float)Rect.Left / screenRect.Width, (float)Rect.Top / screenRect.Height, (float)Rect.Width / screenRect.Width, (float)Rect.Height / screenRect.Height);
+            View.Viewport = rect;
         }
 
         public void CenterPopup(Rect screen)
