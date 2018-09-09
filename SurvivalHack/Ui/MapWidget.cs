@@ -33,7 +33,7 @@ namespace SurvivalHack.Ui
         protected override void OnResized()
         {
             base.OnResized();
-            _mapView.ResizeVertices(Rect, _controller);
+            _mapView.OnResize(Rect, _controller);
         }
 
         private void ReactNewTurn()
@@ -82,7 +82,7 @@ namespace SurvivalHack.Ui
                 return 1;
             }
 
-            var area = new Rect(_mapView.RelToAbs, _mapView.Size);
+            var area = new Rect(_mapView.RelToAbs, _mapView.VisibleSize);
 
             foreach (var e in _level.GetEntities(area).OrderBy(e => RenderDepth(e.EntityFlags)))
             {
@@ -92,7 +92,7 @@ namespace SurvivalHack.Ui
                 {
                     var relLoc = absLoc2 - _mapView.RelToAbs;
 
-                    if (!_mapView.Size.Contains(relLoc))
+                    if (!_mapView.VisibleSize.Contains(relLoc))
                         continue;
 
                     var g = e.Glyph;
@@ -169,8 +169,9 @@ namespace SurvivalHack.Ui
 
         public class MapView : Drawable
         {
-            public Size Size;
+            public Size VisibleSize;
             public Vec RelToAbs;
+            public View View;
             public Color VisibleColor = new Color(255, 255, 255, 255);
             public Color KnownColor = new Color(64, 96, 80, 255);
             public Color Black = new Color(0,0,0,0);
@@ -179,24 +180,41 @@ namespace SurvivalHack.Ui
             protected readonly int _fontX = 16;
             protected readonly int _fontY = 16;
 
+            public MapView()
+            {
+                View = new View();
+                _vertices.PrimitiveType = PrimitiveType.Quads;
+            }
 
             public void Draw(RenderTarget target, RenderStates states)
             {
+                var v = target.GetView();
+
+                // TODO: This might be a nice effect for earthquakes etc.
+                // View.Rotation = (float)Game.Rnd.NextDouble() * 3f - 1.5f;
+
+                target.SetView(View);
                 target.Draw(_vertices, states);
+                target.SetView(v);
             }
 
-            public void ResizeVertices(Rect area, TurnController controller)
+            public void ResizeView(Rect widgetSize)
             {
-                var newSize = new Size(area.Width / 16, area.Height / 16);
+                View.Size = new Vector2f(widgetSize.Width, widgetSize.Height);
+                View.Center = new Vector2f(widgetSize.Width / 2, widgetSize.Height / 2);
+                //View.Viewport = new FloatRect(widgetSize.Left, widgetSize.Top, widgetSize.Width, widgetSize.Height);
+            }
 
-                if (Size == newSize)
+            public void OnResize(Rect widgetSize, TurnController controller)
+            {
+                ResizeView(widgetSize);
+
+                var newSize = new Size(widgetSize.Width / 16, widgetSize.Height / 16);
+
+                if (VisibleSize == newSize)
                     return;
 
-                Size = newSize;
-
-                // Build the vertex buffer
-                _vertices.PrimitiveType = PrimitiveType.Quads;
-                _vertices.Resize((uint)newSize.Area * 4);
+                VisibleSize = newSize;
 
                 RenderMap(controller);
             }
@@ -208,9 +226,9 @@ namespace SurvivalHack.Ui
                 var map = controller.Level;
                 var fov = controller.FoV;
 
-                RelToAbs = controller.Player.Pos - Size.Center;
+                RelToAbs = controller.Player.Pos - VisibleSize.Center;
 
-                foreach (var rel in Size.Iterator())
+                foreach (var rel in VisibleSize.Iterator())
                 {
                     var abs = rel + RelToAbs;
 
@@ -301,7 +319,7 @@ namespace SurvivalHack.Ui
                     new Vector2f(0, _fontY),
                 };
 
-                var idx = (uint)((v.Y * Size.X) + v.X) * 4;
+                var idx = (uint)((v.Y * VisibleSize.X) + v.X) * 4;
                 var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
                 var texPos = new Vector2f(g.X * _fontX, g.Y * _fontY);
 
