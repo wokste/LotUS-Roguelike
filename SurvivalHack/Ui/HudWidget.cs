@@ -13,7 +13,7 @@ namespace SurvivalHack.Ui
         {
             _controller = controller;
 
-            controller.OnTurnEnd += Render;
+            controller.OnTurnEnd += () => Dirty = true;
         }
 
         private void PrintBar(string name, int y, Bar bar)
