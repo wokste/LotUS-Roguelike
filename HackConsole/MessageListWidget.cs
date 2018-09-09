@@ -1,12 +1,6 @@
-﻿using HackConsole.Algo;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
-using SFML.Graphics;
-using SFML.Window;
 using HackConsole.Ui;
 
 namespace HackConsole

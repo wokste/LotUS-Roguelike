@@ -4,10 +4,8 @@ using SurvivalHack.Combat;
 using SurvivalHack.ECM;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack
 {

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SurvivalHack.Mapgen.Rooms;
 using HackConsole;
-using System.Diagnostics;
 using SurvivalHack.Mapgen.Automata;
-using SFML.Graphics;
 
 namespace SurvivalHack.Mapgen
 {

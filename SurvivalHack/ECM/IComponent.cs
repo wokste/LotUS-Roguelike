@@ -1,9 +1,4 @@
-﻿using SurvivalHack.Combat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace SurvivalHack.ECM
+﻿namespace SurvivalHack.ECM
 {
     public interface IComponent
     {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SurvivalHack.ECM
+﻿namespace SurvivalHack.ECM
 {
     public class StackComponent : IComponent
     {

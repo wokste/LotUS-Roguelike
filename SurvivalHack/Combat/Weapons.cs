@@ -1,8 +1,5 @@
-﻿using HackConsole;
-using HackConsole.Algo;
+﻿using HackConsole.Algo;
 using SurvivalHack.ECM;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SurvivalHack.Combat
 {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 using SurvivalHack.ECM;
-using System;
 using System.Collections.Generic;
 
 namespace HackLibTests

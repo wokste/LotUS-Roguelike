@@ -1,6 +1,4 @@
 ﻿using HackConsole;
-using SurvivalHack.ECM;
-using System;
 using System.Linq;
 
 namespace SurvivalHack.Ui

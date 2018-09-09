@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SurvivalHack.ECM;
-using HackConsole;
+﻿using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {

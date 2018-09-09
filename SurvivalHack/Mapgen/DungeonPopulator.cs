@@ -1,5 +1,4 @@
 ﻿using HackConsole;
-using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System;
 using System.Collections.Generic;
@@ -53,18 +52,23 @@ namespace SurvivalHack.Mapgen
             PlaceTreasure(room, difficulty);
         }
 
-        private Vec GetFreeTile(Room room)
+        private Vec? GetFreeTile(Room room, Func<Tile, bool> pred)
         {
             Vec v;
             var p0 = room.Transform.TransformVec(Vec.Zero);
             var p1 = room.Transform.TransformVec(room.Size.BottomRight - Vec.One);
 
+            var attempts = 0;
+
             do
             {
+                if (attempts > 10000)
+                    return null;
+
                 v = new Vec(
                     new Range(p0.X, p1.X).Rand(Game.Rnd),
                     new Range(p0.Y, p1.Y).Rand(Game.Rnd));
-            } while (_level.GetTile(v).Solid); // TODO: This can be less strict for flying creatures
+            } while (!pred(_level.GetTile(v))); // TODO: This can be less strict for flying creatures
 
             return v;
         }
@@ -72,16 +76,22 @@ namespace SurvivalHack.Mapgen
         void PlaceMonsters(Room room, int difficulty)
         {
             var monster = _monsterFactory.Gen(_info);
-            var pos = GetFreeTile(room);
-            monster.SetLevel(_level, pos);
-            _gen?.OnNewEvent(new ActEvent(monster));
+            var pos = GetFreeTile(room, t => !t.Solid && (t.WalkDanger == 0));
+            if (pos is Vec p2)
+            {
+                monster.SetLevel(_level, p2);
+                _gen?.OnNewEvent(new ActEvent(monster));
+            }
         }
 
         private void PlaceTreasure(Room room, int difficulty)
         {
             var item = _itemFactory.Gen(_info);
-            var pos = GetFreeTile(room);
-            item.SetLevel(_level, pos);
+            var pos = GetFreeTile(room, t => !t.Solid && (t.WalkDanger == 0));
+            if (pos is Vec p2)
+            {
+                item.SetLevel(_level, p2);
+            }
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using HackConsole;
-using SurvivalHack.ECM;
-using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
 
 namespace SurvivalHack.Combat
 {

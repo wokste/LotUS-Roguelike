@@ -1,7 +1,4 @@
-﻿using System;
-using SurvivalHack.ECM;
-
-namespace SurvivalHack.Combat
+﻿namespace SurvivalHack.Combat
 {
     /*
     public class Poisonous : IComponent

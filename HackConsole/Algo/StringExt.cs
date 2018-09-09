@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HackConsole.Algo
 {
@@ -68,7 +65,6 @@ namespace HackConsole.Algo
             }
         }
 
-        [Obsolete]
         public static string CleanUp(this string source)
         {
             var sb = new StringBuilder(source.Length);

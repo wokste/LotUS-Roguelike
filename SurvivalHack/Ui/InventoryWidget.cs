@@ -1,7 +1,6 @@
 ﻿using HackConsole;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
