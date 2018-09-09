@@ -70,15 +70,15 @@ namespace SurvivalHack.Mapgen
             return (map, rooms[0].Center);
         }
 
-        [Obsolete("Actually not obsolete but I need a better method to make this")]
         private void MakeBaseTerrain(Level map, int difficulty)
         {
             var table = new RandomTable<int>(new []{
                 (map.TileDefs.Get("rock"), 2),
                 (map.TileDefs.Get("rock2"), 2),
+                (map.TileDefs.Get("acid"), 1),
             });
 
-            var noise = VoronoiNoise<int>.Make(map.Size, 10, _rnd, table);
+            var noise = VoronoiNoise<int>.Make(map.Size, 5, _rnd, table);
 
             foreach (var v in map.TileMap.Ids()) {
                 var tileId = noise.Get(v);

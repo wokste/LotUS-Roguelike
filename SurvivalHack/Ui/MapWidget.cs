@@ -231,42 +231,64 @@ namespace SurvivalHack.Ui
                 var tile = map.GetTile(pos);
                 var glyph = tile.Glyph;
 
-                if (glyph.Method == TileGlyph.TERRAIN)
+                switch (glyph.Method)
                 {
-                    var l = map.IsSameTile(pos, pos + new Vec(-1, 0));
-                    var r = map.IsSameTile(pos, pos + new Vec(1, 0));
+                    case TileGlyph.TERRAIN:
+                    {
+                        var l = map.IsSameTile(pos, pos + new Vec(-1, 0));
+                        var r = map.IsSameTile(pos, pos + new Vec(1, 0));
 
-                    if (l && r) glyph.X += 2;
-                    if (l && !r) glyph.X += 3;
-                    if (!l && r) glyph.X += 1;
+                        if (l && r) glyph.X += 2;
+                        if (l && !r) glyph.X += 3;
+                        if (!l && r) glyph.X += 1;
 
 
-                    var t = map.IsSameTile(pos, pos + new Vec(0, -1));
-                    var b = map.IsSameTile(pos, pos + new Vec(0, 1));
+                        var t = map.IsSameTile(pos, pos + new Vec(0, -1));
+                        var b = map.IsSameTile(pos, pos + new Vec(0, 1));
 
-                    if (t && b) glyph.Y += 2;
-                    if (t && !b) glyph.Y += 3;
-                    if (!t && b) glyph.Y += 1;
+                        if (t && b) glyph.Y += 2;
+                        if (t && !b) glyph.Y += 3;
+                        if (!t && b) glyph.Y += 1;
+                        break;
+                    }
+                    case TileGlyph.WALL:
+                    {
+                        Vec[] dir8 = { new Vec(-1, -1), new Vec(-1, 0), new Vec(-1, 1), new Vec(0, 1), new Vec(1, 1), new Vec(1, 0), new Vec(1, -1), new Vec(0, -1) };
+                        var g = dir8.Select(d => map.IsSameTile(pos, pos + d)).ToArray();
+
+                        var t = g[7] && !(g[1] && g[0] && g[6] & g[5]);
+                        var b = g[3] && !(g[1] && g[2] && g[4] & g[5]);
+                        var l = g[1] && !(g[7] && g[0] && g[2] & g[3]);
+                        var r = g[5] && !(g[7] && g[6] && g[4] & g[3]);
+
+                        if (l && r) glyph.X += 2;
+                        if (l && !r) glyph.X += 3;
+                        if (!l && r) glyph.X += 1;
+
+                        if (t && b) glyph.Y += 2;
+                        if (t && !b) glyph.Y += 3;
+                        if (!t && b) glyph.Y += 1;
+                        break;
+                        }
+                    case TileGlyph.PIT:
+                    {
+                        Vec[] dir5 = { new Vec(-1, 0), new Vec(-1, -1), new Vec(0, -1), new Vec(1, -1), new Vec(1, 0)};
+                        var g = dir5.Select(d => map.IsSameTile(pos, pos + d)).ToArray();
+
+                        var t = g[2];
+                        var l = g[0];
+                        var r = g[4];
+
+                        if (l && r) glyph.X += 2;
+                        if (l && !r) glyph.X += 3;
+                        if (!l && r) glyph.X += 1;
+
+                        if (t) glyph.Y += 1;
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                if (glyph.Method == TileGlyph.WALL)
-                {
-                    Vec[] dir8 = { new Vec(-1, -1), new Vec(-1, 0), new Vec(-1, 1), new Vec(0,1), new Vec(1,1), new Vec(1,0), new Vec(1,-1), new Vec(0,-1) };
-                    var g = dir8.Select(d => map.IsSameTile(pos, pos + d)).ToArray();
-
-                    var t = g[7] && !(g[1] && g[0] && g[6] & g[5]);
-                    var b = g[3] && !(g[1] && g[2] && g[4] & g[5]);
-                    var l = g[1] && !(g[7] && g[0] && g[2] & g[3]);
-                    var r = g[5] && !(g[7] && g[6] && g[4] & g[3]);
-
-                    if (l && r) glyph.X += 2;
-                    if (l && !r) glyph.X += 3;
-                    if (!l && r) glyph.X += 1;
-
-                    if (t && b) glyph.Y += 2;
-                    if (t && !b) glyph.Y += 3;
-                    if (!t && b) glyph.Y += 1;
-                }
-
                 return glyph;
             }
 

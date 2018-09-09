@@ -24,11 +24,11 @@ namespace SurvivalHack
         public byte Method;
 
 
-        public static byte BASE = 0;
-        public static byte TERRAIN = 1;
-        public static byte PIT = 2;
-        public static byte ANIM = 3;
-        public static byte WALL = 4;
+        public const byte BASE = 0;
+        public const byte TERRAIN = 1;
+        public const byte PIT = 2;
+        public const byte ANIM = 3;
+        public const byte WALL = 4;
 
         public TileGlyph(byte x, byte y, byte method = 0)
         {
@@ -90,8 +90,8 @@ namespace SurvivalHack
 
                 new Tile
                 {
-                    Tag = "slime",
-                    WalkDanger = 0.5f,
+                    Tag = "acid",
+                    WalkDanger = 2.5f,
                     MineCost = 15f,
                     Glyph = new TileGlyph(56,6,TileGlyph.PIT),
                 },
@@ -128,7 +128,8 @@ namespace SurvivalHack
                     Solid = true,
                     BlockSight = true,
                     Glyph = new TileGlyph(16,4,TileGlyph.WALL), // TODO: Two walls
-                    MineCost = 10
+                    MineCost = 10,
+                    Natural = false,
                 }
             };
 
