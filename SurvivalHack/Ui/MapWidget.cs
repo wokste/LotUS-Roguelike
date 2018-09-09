@@ -33,7 +33,7 @@ namespace SurvivalHack.Ui
         protected override void OnResized()
         {
             base.OnResized();
-            _mapView.OnResize(Rect, _controller);
+            _mapView.OnResize(this, _controller);
         }
 
         private void ReactNewTurn()
@@ -188,28 +188,33 @@ namespace SurvivalHack.Ui
 
             public void Draw(RenderTarget target, RenderStates states)
             {
-                var v = target.GetView();
+                var oldView = target.GetView();
 
                 // TODO: This might be a nice effect for earthquakes etc.
                 // View.Rotation = (float)Game.Rnd.NextDouble() * 3f - 1.5f;
 
                 target.SetView(View);
                 target.Draw(_vertices, states);
-                target.SetView(v);
+                target.SetView(oldView);
             }
 
-            public void ResizeView(Rect widgetSize)
+            public void ResizeView(Widget widget)
             {
+                var widgetSize = widget.Rect;
                 View.Size = new Vector2f(widgetSize.Width, widgetSize.Height);
                 View.Center = new Vector2f(widgetSize.Width / 2, widgetSize.Height / 2);
-                //View.Viewport = new FloatRect(widgetSize.Left, widgetSize.Top, widgetSize.Width, widgetSize.Height);
+
+                var screenRect = widget.Ancestor.Rect;
+
+                var rect = new FloatRect((float)widgetSize.Left / screenRect.Width, (float)widgetSize.Top / screenRect.Height, (float)widgetSize.Width / screenRect.Width, (float)widgetSize.Height / screenRect.Height);
+                View.Viewport = rect;
             }
 
-            public void OnResize(Rect widgetSize, TurnController controller)
+            public void OnResize(Widget widget, TurnController controller)
             {
-                ResizeView(widgetSize);
+                ResizeView(widget);
 
-                var newSize = new Size(widgetSize.Width / 16, widgetSize.Height / 16);
+                var newSize = new Size(widget.Rect.Width / 16, widget.Rect.Height / 16);
 
                 if (VisibleSize == newSize)
                     return;

@@ -8,6 +8,9 @@ namespace HackConsole
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
 
+        public Widget Parent;
+        public Widget Ancestor => Parent == null ? this : Parent.Ancestor;
+
         public abstract void Draw(RenderTarget target);
 
         //public abstract bool CanHasFocus { get; }

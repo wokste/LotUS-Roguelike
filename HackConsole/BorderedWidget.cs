@@ -14,6 +14,7 @@ namespace HackConsole
         public BorderedWidget(Widget inner) {
             InnerWidget = inner;
             DesiredSize = InnerWidget.DesiredSize.Grow(BorderWidth);
+            Parent = inner;
         }
 
         public Action OnClose {

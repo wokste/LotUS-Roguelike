@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using SFML.Graphics;
 
 namespace HackConsole
@@ -9,7 +10,10 @@ namespace HackConsole
 
         public void Add(Widget w)
         {
+            Debug.Assert(w.Parent == null);
+
             Widgets.Add(w);
+            w.Parent = this;
             OnResized();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SFML.Graphics;
 
 namespace HackConsole
@@ -25,15 +26,22 @@ namespace HackConsole
 
         public void Push(Widget innerWidget)
         {
+            Debug.Assert(innerWidget.Parent == null);
+
             var outerWidget = new BorderedWidget(innerWidget);
             outerWidget.CenterPopup(Rect);
             (innerWidget as IPopupWidget).OnClose += () => { Pop(outerWidget); };
             _widgets.Add(outerWidget);
+
+            outerWidget.Parent = this;
         }
 
         private void Pop(Widget w)
         {
+            Debug.Assert(w.Parent == this);
+
             _widgets.Remove(w);
+            w.Parent = null;
         }
 
         public override Widget WidgetAt(Vec v)
