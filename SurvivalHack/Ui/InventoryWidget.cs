@@ -131,8 +131,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var relMousePos = mousePos - Rect.TopLeft;
-            _selectedRow = (relMousePos.Y - HEADER_HEIGHT) / ROW_HEIGHT;
+            _selectedRow = (mousePos.Y - HEADER_HEIGHT) / ROW_HEIGHT;
             Dirty = true;
         }
 

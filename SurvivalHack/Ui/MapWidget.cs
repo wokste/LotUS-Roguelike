@@ -8,7 +8,7 @@ using SFML.Window;
 
 namespace SurvivalHack.Ui
 {
-    public class MapWidget : Widget //, IMouseEventSuscriber
+    public class MapWidget : Widget, IMouseEventSuscriber
     {
         private Level _level;
         private MapView _mapView = new MapView();
@@ -127,8 +127,7 @@ namespace SurvivalHack.Ui
             }
         }
         */
-
-        /*
+        
         public void OnMouseEvent(Vec mousePos, EventFlags flags)
         {
             if (flags.HasFlag(EventFlags.RightButton) && flags.HasFlag(EventFlags.MouseEventPress) && _path != null)
@@ -137,18 +136,18 @@ namespace SurvivalHack.Ui
             }
             else if (flags.HasFlag(EventFlags.LeftButton) & flags.HasFlag(EventFlags.MouseEventPress))
             {
-                _controller.ActiveTool?.Apply(mousePos + _relToAbs);
+                _controller.ActiveTool?.Apply(_mapView.PxToTile(mousePos));
             }
         }
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var absPos = mousePos + _offset;
+            var absPos = _mapView.PxToTile(mousePos);
             if (!_level.InBoundary(absPos) || _controller.FoV.Visibility[absPos] == 0 || _controller.GameOver)
             {
                 OnSelected?.Invoke(null);
                 _path = null;
-                Dirty = true;
+                _mapView.RenderMap(_controller);
                 return;
             }
 
@@ -159,13 +158,12 @@ namespace SurvivalHack.Ui
                     OnSelected?.Invoke(e);
 
             _path = _aStar.Run(_controller.Player.Pos, absPos);
-            Dirty = true;
+            _mapView.RenderMap(_controller);
         }
 
         public void OnMouseWheel(Vec delta, EventFlags flags)
         {
         }
-        */
 
         public class MapView : Drawable
         {
@@ -183,6 +181,8 @@ namespace SurvivalHack.Ui
             {
                 _vertices.PrimitiveType = PrimitiveType.Quads;
             }
+
+            internal Vec PxToTile(Vec mousePos) => new Vec(mousePos.X / _fontX, mousePos.Y / _fontY) - RelToAbs;
 
             public void Draw(RenderTarget target, RenderStates states)
             {

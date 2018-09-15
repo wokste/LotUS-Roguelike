@@ -26,7 +26,7 @@ namespace HackConsole
         /// <summary>
         /// Called when the mouse is clicked or released. 
         /// </summary>
-        /// <param name="mousePos">The position of the mouse, in console coordinates.</param>
+        /// <param name="mousePos">The position of the mouse, in px coordinates where (0,0) is the topLeft of the widget.</param>
         /// <param name="flags">This includes at least whether it was pressed or released and the mouse button.</param>
         /// <returns>True if the IMouseEventSuscriber handled the event</returns>
         void OnMouseEvent(Vec mousePos, EventFlags flags);
@@ -34,8 +34,8 @@ namespace HackConsole
         /// <summary>
         /// Called when the mouse is moved. 
         /// </summary>
-        /// <param name="mousePos">The position of the mouse, at the end, in console coordinates.</param>
-        /// <param name="mouseMove">The relative position of the mouse, in console coordinates.</param>
+        /// <param name="mousePos">The position of the mouse, in px coordinates where (0,0) is the topLeft of the widget.</param>
+        /// <param name="mouseMove">The relative position of the mouse, in px coordinates.</param>
         /// <param name="flags">This may include special keys and mouse buttons that are pressed.</param>
         /// <returns>True if the IMouseEventSuscriber handled the event</returns>
         void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags);

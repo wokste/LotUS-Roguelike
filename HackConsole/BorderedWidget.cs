@@ -3,7 +3,7 @@ using SFML.Graphics;
 
 namespace HackConsole
 {
-    public class BorderedWidget : Widget, IPopupWidget, IKeyEventSuscriber, IMouseEventSuscriber
+    public class BorderedWidget : Widget, IPopupWidget, IKeyEventSuscriber
     {
         Widget InnerWidget;
         Colour FcColor = Colour.White;
@@ -39,10 +39,6 @@ namespace HackConsole
 
         public void OnKeyPress(char keyCode, EventFlags flags) => (InnerWidget as IKeyEventSuscriber)?.OnKeyPress(keyCode, flags);
         public void OnArrowPress(Vec move, EventFlags flags) => (InnerWidget as IKeyEventSuscriber)?.OnArrowPress(move, flags);
-
-        public void OnMouseEvent(Vec mousePos, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
-        public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseMove(mousePos, mouseMove, flags);
-        public void OnMouseWheel(Vec delta, EventFlags flags) => (InnerWidget as IMouseEventSuscriber)?.OnMouseWheel(delta, flags);
 
         protected override void DrawInternal(RenderTarget target)
         {

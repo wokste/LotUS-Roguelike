@@ -139,7 +139,7 @@ namespace HackConsole
                 return;
 
             var widget = WidgetAt(mousePos);
-            (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
+            (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos - widget.Rect.TopLeft, move, MakeFlags(true, true));
         }
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -172,7 +172,7 @@ namespace HackConsole
             var mousePos = new Vec(e.X, e.Y);
 
             var widget = WidgetAt(mousePos);
-            (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
+            (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos - widget.Rect.TopLeft, flags);
         }
 
         private void OnClosed(object sender, EventArgs e)
