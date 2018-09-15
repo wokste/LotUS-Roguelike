@@ -182,7 +182,7 @@ namespace SurvivalHack.Ui
                 _vertices.PrimitiveType = PrimitiveType.Quads;
             }
 
-            internal Vec PxToTile(Vec mousePos) => new Vec(mousePos.X / _fontX, mousePos.Y / _fontY) - RelToAbs;
+            internal Vec PxToTile(Vec mousePos) => new Vec(mousePos.X / _fontX, mousePos.Y / _fontY) + RelToAbs;
 
             public void Draw(RenderTarget target, RenderStates states)
             {
