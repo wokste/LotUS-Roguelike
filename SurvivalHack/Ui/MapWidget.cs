@@ -21,7 +21,6 @@ namespace SurvivalHack.Ui
         private IEnumerable<Vec> _path = null;
         private AStar _aStar;
 
-
         public MapWidget(TurnController controller)
         {
             _controller = controller;

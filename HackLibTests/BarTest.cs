@@ -4,7 +4,7 @@ using SurvivalHack;
 namespace HackLibTests
 {
     [TestClass]
-    public class BarTest
+    public class DamagableTest
     {
         [TestMethod]
         public void BarValues()

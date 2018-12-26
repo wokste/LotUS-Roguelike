@@ -1,14 +1,15 @@
-﻿using SurvivalHack.ECM;
+﻿using HackConsole;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
     public class Damagable : Component
     {
-        public Bar Health;
+        public Stat[] Stats = new Stat[3];
 
-        public Damagable(int HP)
+        public Damagable(int HP, int Energy, int MP)
         {
-            Health = new Bar(HP);
+            Health = new Stat(HP);
         }
 
         public override void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -66,6 +67,36 @@ namespace SurvivalHack.Combat
             }
             */
             
+        }
+
+        public struct Stat
+        {
+            private readonly float _inc;
+            private readonly float _base;
+            public int Cur { get; private set; }
+
+            public Stat(float baseVal, float incVal) : this()
+            {
+                _inc = incVal;
+                _base = baseVal;
+            }
+
+            public int Max(int level) => (int)(_base + _inc * level);
+
+            public float Perc(int level) => Cur / (float)Max(level);
+
+            public int Add(int val, int level) => Set(Cur + val, level);
+
+            public int Set(int val, int level)
+            {
+                Cur = MyMath.Clamp(val, 0, Max(level));
+                return val - Cur;
+            }
+
+            public void LevelUp(int oldlevel, int newLevel)
+            {
+                Set(Cur + Max(newLevel) - Max(oldlevel), newLevel);
+            }
         }
     }
 }

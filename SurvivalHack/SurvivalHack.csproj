@@ -89,7 +89,6 @@
     <Compile Include="Combat\Armor.cs" />
     <Compile Include="Combat\Damagable.cs" />
     <Compile Include="Combat\Weapons.cs" />
-    <Compile Include="Bar.cs" />
     <Compile Include="Ai\Attitude.cs" />
     <Compile Include="Ai\AiActor.cs" />
     <Compile Include="ECM\IComponent.cs" />
