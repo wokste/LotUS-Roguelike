@@ -29,13 +29,13 @@ namespace SurvivalHack.Factory
 
         public PotionFactory(Random rnd)
         {
-            types = types.OrderBy(p => rnd.Next()).ToArray();
+            types = types.OrderBy(p => rnd.Next()).Take(4).ToArray();
             BaseId = StackComponent.GenMergeId(types.Length);
         }
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            var potionId = info.Rnd.Next(3);
+            var potionId = info.Rnd.Next(types.Length);
 
             (var x, var article, var colorName) = types[potionId];
 
@@ -52,7 +52,10 @@ namespace SurvivalHack.Factory
                 case 1: // Greater healing potion
                     e.Add(new HealComponent(40, 0, typeof(ConsumeEvent)));
                     break;
-                case 2: // Poison draught
+                case 2: // Mana potion
+                    e.Add(new HealComponent(10, 1, typeof(ConsumeEvent)));
+                    break;
+                case 3: // Poison draught
                     //e.Add(new Combat.Poisonous(20, typeof(ConsumeEvent)));
                     break;
             }

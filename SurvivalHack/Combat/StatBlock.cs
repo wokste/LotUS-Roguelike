@@ -63,9 +63,8 @@ namespace SurvivalHack.Combat
         public void Heal(BaseEvent msg)
         {
             var heal = (HealEvent)msg;
-            int statID = 0;
 
-            var change = _stats[statID].Add(heal.Restore, _level);
+            var change = _stats[heal.Stat].Add(heal.Restore, _level);
 
             if (change == 0)
                 return;
