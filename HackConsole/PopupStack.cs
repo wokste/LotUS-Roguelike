@@ -24,16 +24,16 @@ namespace HackConsole
             }
         }
 
-        public void Push(Widget innerWidget)
+        public void Push(Widget widget)
         {
-            Debug.Assert(innerWidget.Parent == null);
+            Debug.Assert(widget.Parent == null);
 
-            var outerWidget = new BorderedWidget(innerWidget);
-            outerWidget.CenterPopup(Rect);
-            (innerWidget as IPopupWidget).OnClose += () => { Pop(outerWidget); };
-            _widgets.Add(outerWidget);
+            (widget as IPopupWidget).OnClose += () => { Pop(widget); };
+            _widgets.Add(widget);
 
-            outerWidget.Parent = this;
+            widget.CenterPopup(Rect);
+
+            widget.Parent = this;
         }
 
         private void Pop(Widget w)
