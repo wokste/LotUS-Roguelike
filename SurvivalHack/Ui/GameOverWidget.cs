@@ -11,6 +11,7 @@ namespace SurvivalHack.Ui
 
         protected override void RenderImpl()
         {
+            Clear();
             Print(new Vec(0,0), "Game Over", Color.White);
         }
     }
