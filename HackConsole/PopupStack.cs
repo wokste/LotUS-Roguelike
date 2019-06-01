@@ -31,9 +31,8 @@ namespace HackConsole
             (widget as IPopupWidget).OnClose += () => { Pop(widget); };
             _widgets.Add(widget);
 
-            widget.CenterPopup(Rect);
-
             widget.Parent = this;
+            widget.CenterPopup(Rect);
         }
 
         private void Pop(Widget w)

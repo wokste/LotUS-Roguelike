@@ -54,6 +54,9 @@ namespace HackConsole
 
             var screenRect = Ancestor.Rect;
 
+            Debug.Assert(screenRect.Left == 0);
+            Debug.Assert(screenRect.Top == 0);
+
             var rect = new FloatRect((float)Rect.Left / screenRect.Width, (float)Rect.Top / screenRect.Height, (float)Rect.Width / screenRect.Width, (float)Rect.Height / screenRect.Height);
             View.Viewport = rect;
         }
