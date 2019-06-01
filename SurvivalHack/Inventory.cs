@@ -42,7 +42,7 @@ namespace SurvivalHack
                 {
                     var stack2 = i.GetOne<StackComponent>();
 
-                    if (stack2 == null || stack1.MergeId != stack2.MergeId)
+                    if (stack2 == null || stack1.Prototype != stack2.Prototype)
                         continue;
 
                     // Stacking items shouldn't create a new stack if you already have a stack.

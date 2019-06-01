@@ -12,6 +12,8 @@ namespace SurvivalHack
         public static Inventory Tools = new Inventory();
 
         public static void Init() {
+
+            /*
             var glyph = new TileGlyph(2, 23, TileGlyph.ANIM);
 
             Entity entity;
@@ -30,6 +32,7 @@ namespace SurvivalHack
             entity = new Entity(glyph, "Heal", EEntityFlag.Pickable);
             entity.Add(new HealComponent(9001, 0, typeof(CastEvent)));
             Tools.Add(entity);
+            */
         }
 
         public class AreaAttack : Component

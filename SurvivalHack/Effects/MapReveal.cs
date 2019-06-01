@@ -1,48 +1,27 @@
 ﻿using HackConsole;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Effects
 {
-    public class HealComponent : Component
-    {
-        public int Restore;
-        public int StatID;
-        public Type MessageType { get; }
-
-        public HealComponent(int restore, int statID, Type messageType)
-        {
-            Restore = restore;
-            StatID = statID;
-            MessageType = messageType;
-        }
-
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
-        {
-            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
-                message.OnEvent += Heal;
-        }
-
-        public void Heal(BaseEvent msg)
-        {
-            Eventing.On(new HealEvent(msg, Restore, StatID), msg);
-        }
-
-        public override string Describe() => $"Heals {Restore} when used.";
-    }
-
-    public class MapRevealComponent : Component
+    /*
+    public class MapReveal : ITileEffect
     {
         public Type MessageType { get; }
         private readonly byte FovFlags;
         public int Radius;
 
-        public enum RevealMethod {
+        public enum RevealMethod
+        {
             Walls, All, // Maybe add heat (lava), movement (non-flying creatures), etc.
         }
 
         readonly RevealMethod Method;
 
-        public MapRevealComponent(Type messageType, byte fovFlags, RevealMethod method, int radius)
+        public MapReveal(Type messageType, byte fovFlags, RevealMethod method, int radius)
         {
             MessageType = messageType;
             FovFlags = fovFlags;
@@ -74,8 +53,6 @@ namespace SurvivalHack.ECM
                 return false;
             }
 
-
-
             // Now update all tiles such that things become visible
             foreach (var v in Map.TileMap.Ids())
             {
@@ -84,6 +61,17 @@ namespace SurvivalHack.ECM
             }
         }
 
-        public override string Describe() => $"Reveals the map";
+        public string Describe() => $"Reveals the map";
+
+        public bool Use(Entity insignator, Grid<Tile> map, StringBuilder sb)
+        {
+            throw new NotImplementedException();
+        }
+
+        public float Efficiency(Entity instignator, Grid<Tile> map)
+        {
+            throw new NotImplementedException();
+        }
     }
+    */
 }

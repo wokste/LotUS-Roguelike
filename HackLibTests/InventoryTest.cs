@@ -11,14 +11,14 @@ namespace HackLibTests
         [TestMethod]
         public void Inventory_StackSize()
         {
-            const int STACK_TYPE_A = 1;
-            const int STACK_TYPE_B = 2;
+            object STACK_TYPE_A = "1";
+            object STACK_TYPE_B = "2";
 
             var inv = new Inventory();
 
-            int? FindItem(int mergeId)
+            int? FindItem(object prototype)
             {
-                var item = inv.Items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().MergeId == mergeId);
+                var item = inv.Items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().Prototype == prototype);
                 if (item == null)
                     return null;
 

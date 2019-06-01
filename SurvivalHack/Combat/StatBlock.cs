@@ -25,9 +25,6 @@ namespace SurvivalHack.Combat
         {
             if (message is DamageEvent && source == EUseSource.Target)
                 message.OnEvent += TakeDamage;
-
-            if (message is HealEvent && source == EUseSource.Target)
-                message.OnEvent += Heal;
         }
 
         public object Cur(int statID) => _stats[statID].Cur;
@@ -57,19 +54,18 @@ namespace SurvivalHack.Combat
                 attack.KillHit = true;
             }
 
-            UpdateStats(msg.Target);
+            //UpdateStats(msg.Target);
         }
 
-        public void Heal(BaseEvent msg)
+        public int Heal(int restore, int statID)
         {
-            var heal = (HealEvent)msg;
+            var change = _stats[statID].Add(restore, _level);
 
-            var change = _stats[heal.Stat].Add(heal.Restore, _level);
-
-            if (change == 0)
-                return;
-
-            UpdateStats(msg.Target);
+            /*
+            if (change > 0)
+                UpdateStats(msg.Target);
+            */
+            return change;
         }
 
         private void UpdateStats(Entity self)

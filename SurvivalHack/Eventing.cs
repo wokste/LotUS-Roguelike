@@ -269,23 +269,6 @@ namespace SurvivalHack
         }
     }
 
-    public class HealEvent : BaseEvent
-    {
-        public int Restore;
-        public readonly int Stat;
-
-        public HealEvent(BaseEvent parent, int value, int stat) : base(parent)
-        {
-            Restore = value;
-            Stat = stat;
-        }
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            return $"{Word.AName(User)} {Word.Verb(User, "heal")} {Restore} HP. ";
-        }
-    }
-
     public class GrabEvent : BaseEvent
     {
         public GrabEvent(Entity user, Entity item, Entity target) : base(user, item, target)

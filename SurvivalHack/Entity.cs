@@ -13,22 +13,17 @@ namespace SurvivalHack
         public string Name { get; set; }
 
         public EEntityFlag EntityFlags;
-
         public override string ToString() => Name;
-
         public List<IComponent> Components = new List<IComponent>();
 
         public TileGlyph Glyph;
-
         public float Speed = 1;
 
         public AiActor Ai;
         public Attitude Attitude;
 
         public float LeftoverMove;
-
         public Action<Entity> OnDestroy;
-
 
         public Level Level { get; private set; }
         public Vec Pos;
