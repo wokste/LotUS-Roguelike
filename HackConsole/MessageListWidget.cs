@@ -13,16 +13,15 @@ namespace HackConsole
         private readonly VertexArray _vertices = new VertexArray();
         public BitmapFont Font;
         private bool _dirty = true;
-        /*
+        
         private int _scrollY;
         protected int ScrollY {
             get => _scrollY;
             set {
-                var max = Math.Max(0, Lines.Count * (Font.LineHeight + Font.SpacingV) - Rect.Height);
-                _scrollY = value;// MyMath.Clamp(value, 0, max);
+                var max = Math.Max(0, _bottomY - Rect.Height);
+                _scrollY = MyMath.Clamp(value, 0, max);
             }
         }
-        */
 
         private int _bottomY;
 
@@ -43,6 +42,7 @@ namespace HackConsole
 
             var states = new RenderStates(Font.Texture);
 
+
             target.Draw(_vertices,states);
         }
 
@@ -53,44 +53,32 @@ namespace HackConsole
 
             foreach (var l in _messages)
             {
-                RenderLine(l.Text);
+                RenderLine(l);
             }
 
-            /*
-            var firstLine = _posY;
-            var i = firstLine;
-            while (i < Lines.Count && y < Data.Height)
-            {
-                Print(new Vec(0, y), Lines[i], Colour.White);
-                i++;
-                y++;
-            }
-            */
+            UpdateView(true);
         }
-
 
         protected override void OnResized()
         {
             base.OnResized();
-            _dirty = true;
+            //_dirty = true;
         }
 
-        private void RenderLine(string msg)
+        private void RenderLine(ColoredString msg)
         {
             // TODO: Stuff
             Font.Print(_vertices, msg, Rect.Width, new Vec(0, _bottomY));
+
             _bottomY += Font.LineHeight + Font.SpacingV;
         }
 
         public void Add(ColoredString msg)
         {
             _messages.Add(msg);
-            RenderLine(msg.Text);
-            //View.Move(new SFML.Window.Vector2f(0,Font.LineHeight + Font.SpacingV));
-            /*var range = StringExt.Prefix(StringExt.Wrap(msg.Text, Rect.Width - 2), "> ");
-            PosY += range.Count();
-            Lines.AddRange(range);
-            Dirty = true;*/
+            RenderLine(msg);
+            
+            UpdateView(true);
         }
 
         public virtual void OnMouseEvent(Vec mousePos, EventFlags flags)
@@ -103,8 +91,16 @@ namespace HackConsole
 
         public void OnMouseWheel(Vec delta, EventFlags flags)
         {
+            ScrollY += delta.Y * -10;
+            UpdateView(false);
+        }
 
-            View.Move(new SFML.Window.Vector2f(0, delta.Y * -10));
+        private void UpdateView(bool scrollToBottom = true) {
+            if (scrollToBottom)
+                ScrollY = int.MaxValue; // Will be clamped
+
+            var center = Rect.Size.Center;
+            View.Center = new SFML.Window.Vector2f(center.X, center.Y + ScrollY);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HackConsole
 {
@@ -26,5 +27,13 @@ namespace HackConsole
         }
 
         public static Action<ColoredString> OnMessage;
+
+        internal IEnumerable<(char, Colour)> Iterate()
+        {
+            foreach (var c in Text)
+            {
+                yield return (c, Color);
+            }
+        }
     }
 }

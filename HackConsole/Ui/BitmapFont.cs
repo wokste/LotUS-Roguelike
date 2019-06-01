@@ -57,34 +57,32 @@ namespace HackConsole.Ui
             Debug.WriteLine(_charData.Count);
         }
 
-        public void Print(VertexArray vertexArray, string text, int width, Vec v)
+        public void Print(VertexArray vertexArray, ColoredString text, int width, Vec v)
         {
             Vector2f posF = new Vector2f(v.X, v.Y);
-            foreach (var c in text)
+            foreach ((var c, var color) in text.Iterate())
             {
-                BfChar bitmapChar;
 
-                if (!_charData.TryGetValue(c, out bitmapChar) && !_charData.TryGetValue('\0', out bitmapChar))
+                if (!_charData.TryGetValue(c, out BfChar bitmapChar) && !_charData.TryGetValue('\0', out bitmapChar))
                     throw new Exception();
 
-                PrintChar(vertexArray, bitmapChar, posF);
+                PrintChar(vertexArray, bitmapChar, posF, color.ToSfmlColor());
                 posF.X += bitmapChar.Width + SpacingH;
             }
         }
 
-        private void PrintChar(VertexArray vertexArray, BfChar c, Vector2f posF)
+        private void PrintChar(VertexArray vertexArray, BfChar c, Vector2f posF, SFML.Graphics.Color color)
         {
-            var topColor = new SFML.Graphics.Color(255, 255, 255, 255);
-            var bottomColor = new SFML.Graphics.Color(255, 0, 0, 255);
+            var white = new SFML.Graphics.Color(255, 255, 255, 255);
             var texCoord = new Vector2f(c.Left, c.Top);
             var vX = new Vector2f(c.Width, 0);
             var vY = new Vector2f(0, LineHeight); // TODO: 12 is a magic number indicating font height.
             var vXY = vX + vY;
 
-            vertexArray.Append(new Vertex(posF, topColor, texCoord));
-            vertexArray.Append(new Vertex(posF + vX, topColor, texCoord + vX));
-            vertexArray.Append(new Vertex(posF + vXY, bottomColor, texCoord + vXY));
-            vertexArray.Append(new Vertex(posF + vY, bottomColor, texCoord + vY));
+            vertexArray.Append(new Vertex(posF, white, texCoord));
+            vertexArray.Append(new Vertex(posF + vX, white, texCoord + vX));
+            vertexArray.Append(new Vertex(posF + vXY, color, texCoord + vXY));
+            vertexArray.Append(new Vertex(posF + vY, color, texCoord + vY));
         }
     }
 }

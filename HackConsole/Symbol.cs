@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Linq;
 using System;
+using SFML.Graphics;
 
 namespace HackConsole
 {
@@ -69,6 +70,11 @@ namespace HackConsole
             G = (byte)((G * (255 - f) + other.G * f) / 256);
             B = (byte)((B * (255 - f) + other.B * f) / 256);
             A = 255;
+        }
+
+        internal Color ToSfmlColor()
+        {
+            return new Color(R, G, B, A);
         }
 
         public static Colour? TryParse(string text) {

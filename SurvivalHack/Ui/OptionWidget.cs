@@ -10,7 +10,6 @@ namespace SurvivalHack.Ui
         public List<Entity> Set;
         public string Question;
         private int _selectedIndex = 0;
-        //private int _columns = 1;
         private const int COLUMN_WIDTH = 42;
 
         private int LINE_HEIGHT => _fontY;
