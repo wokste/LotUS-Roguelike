@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using System.Linq;
+using SurvivalHack.Combat;
 
 namespace SurvivalHack.Ui
 {
@@ -16,13 +17,13 @@ namespace SurvivalHack.Ui
             controller.OnTurnEnd += () => Dirty = true;
         }
 
-        private void PrintBar(string name, int y, Bar bar)
+        private void PrintBar(string name, int y, Damagable stats, int statID)
         {
-            var str = $"{name} ({bar.Current}/{bar.Max})";
+            var str = $"{name} ({stats.Cur(statID)}/{stats.Max(statID)})";
             var width = Data.Size.X;
             var offset = (width - str.Length) / 2;
 
-            var p = bar.Perc;
+            var p = stats.Perc(statID);
             var fgColor = Colour.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
             
             for (int x = 0; x < width; x++)
@@ -48,7 +49,9 @@ namespace SurvivalHack.Ui
                 Print(new Vec(0, y++), "Dead", Colour.White, Colour.Transparent);
                 return;
             }
-            PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>().Health);
+            PrintBar("HP:", y++, _controller.Player.GetOne<Combat.Damagable>(), 0);
+            PrintBar("MP:", y++, _controller.Player.GetOne<Combat.Damagable>(), 1);
+            PrintBar("XP:", y++, _controller.Player.GetOne<Combat.Damagable>(), 2);
 
             var FoV = _controller.FoV;
             var monsterList = _controller.Level.GetEntities().Where(e => (
@@ -65,7 +68,7 @@ namespace SurvivalHack.Ui
 
                 var damagable = e.GetOne<Combat.Damagable>();
                 if (damagable != null)
-                    PrintBar("HP:", y++, damagable.Health);
+                    PrintBar("HP:", y++, damagable, 0);
             }
         }
     }

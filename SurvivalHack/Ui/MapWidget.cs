@@ -11,12 +11,12 @@ namespace SurvivalHack.Ui
     public class MapWidget : Widget, IMouseEventSuscriber
     {
         private Level _level;
-        private MapView _mapView = new MapView();
+        private readonly MapView _mapView = new MapView();
         private readonly TurnController _controller;
         private readonly Colour _pathColor = new Colour(0, 128, 255, 128);
 
         //private Vec _relToAbs;
-        private Sprite _entitySprite = new Sprite();
+        private readonly Sprite _entitySprite = new Sprite();
 
         private IEnumerable<Vec> _path = null;
         private AStar _aStar;

@@ -5,7 +5,7 @@ namespace SurvivalHack.Ui.Tools
 {
     class RangedWeaponTool : ITool
     {
-        private TurnController _turnController;
+        private readonly TurnController _turnController;
 
         public RangedWeaponTool(TurnController controller) {
             _turnController = controller;

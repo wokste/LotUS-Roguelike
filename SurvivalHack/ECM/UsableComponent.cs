@@ -33,13 +33,14 @@ namespace SurvivalHack.ECM
     public class MapRevealComponent : Component
     {
         public Type MessageType { get; }
-        private byte FovFlags;
+        private readonly byte FovFlags;
         public int Radius;
 
         public enum RevealMethod {
             Walls, All, // Maybe add heat (lava), movement (non-flying creatures), etc.
         }
-        RevealMethod Method;
+
+        readonly RevealMethod Method;
 
         public MapRevealComponent(Type messageType, byte fovFlags, RevealMethod method, int radius)
         {

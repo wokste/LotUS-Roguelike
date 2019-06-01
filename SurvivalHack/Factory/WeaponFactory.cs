@@ -5,7 +5,7 @@ namespace SurvivalHack.Factory
 {
     public class WeaponFactory : IEntityFactory
     {
-        RandomTable<string> BasePropabilities;
+        readonly RandomTable<string> BasePropabilities;
 
         public WeaponFactory() {
             BasePropabilities = RandomTable<string>.FromString("dagger:3,ssword:2,lsword:5,axe:3,spear:5,mace:2,wshield:3,ishield:1,sbow:13,lbow:21,armour_leather:3,armour_chain:2,armour_plate:1,helmet:5,gloves:2,boots:2,ring:1,cloak:1,amulet:1,@resistance:3");

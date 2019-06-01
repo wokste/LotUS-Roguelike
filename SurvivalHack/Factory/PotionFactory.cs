@@ -7,8 +7,7 @@ namespace SurvivalHack.Factory
     public class PotionFactory : IEntityFactory
     {
         static int BaseId;
-
-        (byte, string, string)[] types = new(byte, string, string)[]{
+        readonly (byte, string, string)[] types = new(byte, string, string)[]{
             (0, "a", "red"),
             (1, "a", "pink"),
             (2, "an", "orange"),

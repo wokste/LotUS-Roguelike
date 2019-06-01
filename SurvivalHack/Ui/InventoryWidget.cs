@@ -7,11 +7,11 @@ namespace SurvivalHack.Ui
 {
     public class InventoryWidget : GridWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
-        TurnController _controller;
-        private BaseWindow _window;
+        readonly TurnController _controller;
+        private readonly BaseWindow _window;
         private int _selectedRow = 0;
-        private int[] _columnCharWidth = new int[4];
-        private int[] _columnPxWidth = new int[4];
+        private readonly int[] _columnCharWidth = new int[4];
+        private readonly int[] _columnPxWidth = new int[4];
 
         public Action OnClose { get ; set ; }
         public bool Interrupt => false;

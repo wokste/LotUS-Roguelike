@@ -1,15 +1,24 @@
-﻿using HackConsole;
+﻿using System;
+using HackConsole;
 using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
     public class Damagable : Component
     {
-        public Stat[] Stats = new Stat[3];
+        private readonly Stat[] _stats = new Stat[3];
+        private readonly int _level = 0;
 
-        public Damagable(int HP, int Energy, int MP)
+        public Damagable(int HP, int MP, int XP)
         {
-            Health = new Stat(HP);
+            _stats[0] = new Stat(HP, 1);
+            _stats[1] = new Stat(MP, 1);
+            _stats[2] = new Stat(XP, 1);
+
+            for (int i = 0; i < _stats.Length; ++i)
+            {
+                _stats[i].Set(int.MaxValue, _level); // Will be clamped anyway.
+            }
         }
 
         public override void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -21,17 +30,28 @@ namespace SurvivalHack.Combat
                 message.OnEvent += Heal;
         }
 
+        internal object Cur(int statID) => _stats[statID].Cur;
+
+        internal object Max(int statID) => _stats[statID].Max(_level);
+
+        internal float Perc(int statID) => _stats[statID].Perc(_level);
+
         public void TakeDamage(BaseEvent msg)
         {
             var attack = (DamageEvent)msg;
+            var statID = 0;
 
             var damage = attack.Damage;
 
             if (damage <= 0)
                 return;
 
-            Health.Current -= damage;
-            if (Health.Current <= 0)
+            var change = _stats[statID].Add(-1 * damage, _level);
+
+            if (change == 0)
+                return;
+
+            if (_stats[statID].Cur <= 0)
             {
                 msg.Target.Destroy();
                 attack.KillHit = true;
@@ -43,13 +63,14 @@ namespace SurvivalHack.Combat
         public void Heal(BaseEvent msg)
         {
             var heal = (HealEvent)msg;
+            int statID = 0;
 
-            if (Health.Current == Health.Max)
+            var change = _stats[statID].Add(heal.Restore, _level);
+
+            if (change == 0)
                 return;
 
-            Health.Current += heal.Restore;
             UpdateStats(msg.Target);
-            return;
         }
 
         private void UpdateStats(Entity self)

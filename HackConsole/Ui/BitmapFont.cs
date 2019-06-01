@@ -27,7 +27,7 @@ namespace HackConsole.Ui
         public readonly int SpacingH;
         public readonly int SpacingV;
 
-        private Dictionary<char, BfChar> _charData = new Dictionary<char, BfChar>();
+        private readonly Dictionary<char, BfChar> _charData = new Dictionary<char, BfChar>();
 
         public BitmapFont(string name, int lineHeight, int spacingH, int spacingV)
         {

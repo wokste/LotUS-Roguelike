@@ -11,10 +11,10 @@ namespace SurvivalHack.Mapgen
         //private Dictionary<int, RandomTable<string>> _randomTables = new Dictionary<int, RandomTable<string>>();
         private readonly DungeonGenerator _gen;
         private EntityGenerationInfo _info;
-        private Level _level;
+        private readonly Level _level;
 
-        private IEntityFactory _monsterFactory = new MonsterFactory();
-        private IEntityFactory _itemFactory;
+        private readonly IEntityFactory _monsterFactory = new MonsterFactory();
+        private readonly IEntityFactory _itemFactory;
 
         public DungeonPopulator(DungeonGenerator gen, Level level, Random rnd)
         {
