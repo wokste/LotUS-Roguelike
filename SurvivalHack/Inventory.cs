@@ -46,13 +46,13 @@ namespace SurvivalHack
 
                     // Stacking items shouldn't create a new stack if you already have a stack.
                     stack2.Count += stack1.Count;
-                    ColoredString.Write($"You aquired {item} making a total of {stack2.Count}", Colour.Green);
+                    ColoredString.Write($"You aquired @cb{item}@ca making a total of @cc{stack2.Count}@ca", Colour.Green);
 
                     return;
                 };
             }
 
-            ColoredString.Write($"You aquired {item}", Colour.Green);
+            ColoredString.Write($"You aquired @cb{item}@ca", Colour.Green);
             Items.Add(item);
         }
 
