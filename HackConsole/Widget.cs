@@ -1,4 +1,6 @@
-﻿using SFML.Graphics;
+﻿using System;
+using System.Diagnostics;
+using SFML.Graphics;
 using SFML.Window;
 
 namespace HackConsole
@@ -28,16 +30,20 @@ namespace HackConsole
         /// </summary>
         protected virtual void OnResized() {}
 
-        public void Resize(ref Rect free)
+        public void ResizeDocked(ref Rect free)
         {
-            var newSize = MakeSize(ref free);
+            var newSize = MakeDockingSize(ref free);
 
+            Resize(newSize);
+        }
+
+        public void Resize(Rect newSize)
+        {
             if (Rect.Left == newSize.Left && Rect.Width == newSize.Width && Rect.Top == newSize.Top && Rect.Height == newSize.Height)
                 return;
 
             Rect = newSize;
             ResizeView();
-
             OnResized();
         }
 
@@ -58,15 +64,10 @@ namespace HackConsole
             newSize.Left = screen.Left + (screen.Width - newSize.Width) / 2;
             newSize.Top = screen.Top + (screen.Height - newSize.Height) / 2;
 
-            if (Rect.Left == newSize.Left && Rect.Width == newSize.Width && Rect.Top == newSize.Top && Rect.Height == newSize.Height)
-                return;
-
-            Rect = newSize;
-
-            OnResized();
+            Resize(newSize);
         }
 
-        private Rect MakeSize(ref Rect free)
+        private Rect MakeDockingSize(ref Rect free)
         {
             switch (Docking)
             {
@@ -106,9 +107,10 @@ namespace HackConsole
                 }
                 case Docking.Fill:
                     return free;
+                default:
+                    Debug.Assert(false);
+                    return new Rect(free.TopLeft, DesiredSize.Size);
             }
-
-            return new Rect(free.TopLeft, DesiredSize.Size);
         }
 
         public virtual Widget WidgetAt(Vec pos)

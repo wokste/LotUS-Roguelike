@@ -26,7 +26,7 @@ namespace HackConsole
         protected override void OnResized()
         {
             var free = Rect.Grow(-BorderWidth);
-            InnerWidget.Resize(ref free);
+            InnerWidget.Resize(free);
         }
 
         public override Widget WidgetAt(Vec pos)

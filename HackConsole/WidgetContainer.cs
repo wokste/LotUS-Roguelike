@@ -22,7 +22,7 @@ namespace HackConsole
             var free = Rect;
             foreach (var w in Widgets)
             {
-                w.Resize(ref free);
+                w.ResizeDocked(ref free);
             }
         }
 

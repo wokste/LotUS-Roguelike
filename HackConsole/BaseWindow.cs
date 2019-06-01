@@ -20,10 +20,10 @@ namespace HackConsole
             var size = new Size((int)x, (int)y);
 
             var r = new Rect(Vec.Zero, size);
-            PopupStack.Resize(ref r);
+            PopupStack.ResizeDocked(ref r);
 
             r = new Rect(Vec.Zero, size);
-            Widgets.Resize(ref r);
+            Widgets.ResizeDocked(ref r);
         }
 
         protected Widget WidgetAt(Vec pos)
