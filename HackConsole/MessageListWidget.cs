@@ -7,7 +7,7 @@ namespace HackConsole
 {
     public class MessageListWidget : Widget, IMouseEventSuscriber
     {
-        private readonly List<ColoredString> _messages = new List<ColoredString>();
+        private readonly List<string> _messages = new List<string>();
         protected readonly List<string> Lines = new List<string>();
         
         private readonly VertexArray _vertices = new VertexArray();
@@ -65,7 +65,7 @@ namespace HackConsole
             //_dirty = true;
         }
 
-        private void RenderLine(ColoredString msg)
+        private void RenderLine(string msg)
         {
             // TODO: Stuff
             Font.Print(_vertices, msg, Rect.Width, new Vec(0, _bottomY));
@@ -73,7 +73,7 @@ namespace HackConsole
             _bottomY += Font.LineHeight + Font.SpacingV;
         }
 
-        public void Add(ColoredString msg)
+        public void Add(string msg)
         {
             _messages.Add(msg);
             RenderLine(msg);

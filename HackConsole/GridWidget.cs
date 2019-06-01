@@ -119,7 +119,7 @@ namespace HackConsole
         /// </summary>
         /// <param name="v">Relative position to topleft of widget</param>
         /// <param name="msg">The text.</param>
-        protected bool Print(Vec v, ColoredString msg)
+        protected bool Print(Vec v, string msg, Colour textColor)
         {
             //TODO: Input validation
 
@@ -127,7 +127,7 @@ namespace HackConsole
 
             for (var i = 0; i < length; i++)
             {
-                Data[new Vec(v.X + i, v.Y)] = msg[i];
+                Data[new Vec(v.X + i, v.Y)] = new Symbol(msg[i], textColor);
             }
             return true;
         }

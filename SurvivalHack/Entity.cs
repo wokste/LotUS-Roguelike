@@ -10,7 +10,7 @@ namespace SurvivalHack
 {
     public class Entity
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         public EEntityFlag EntityFlags;
 

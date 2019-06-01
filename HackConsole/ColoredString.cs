@@ -1,42 +1,39 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace HackConsole
 {
-    public struct ColoredString
+    public static class ColoredString
     {
-        public string Text;
-        public Colour Color;
-        public int Length => Text.Length;
+        /*
+        Color coding:
+            @ca	White    Plain text
+            @cb	Blue     Monsters / Traps
+            @cc Cyan     Status Effects
+            @cd	Red      Damage / Cursed Items / Monsters
+            @ce Purple   Spells / Artifacts / MP
+            @cf Gray     Mundane Items, stairs, etc.
+            @cg	Green    Healing
+            @ch Yellow   Consumable Items / Minor enchantments
+        */
 
-        public static Colour[] colors = new Colour[] { Colour.White, Colour.Red, Colour.Blue, Colour.Green, Colour.Gray, Colour.Cyan, Colour.Orange, Colour.Pink };
+        public static Color[] colors = new Color[] { new Color(128, 128, 128), Color.Blue, Color.Cyan, Color.Red, Color.Magenta, Color.Cyan, Color.Green, Color.Yellow };
 
-        private ColoredString(string text, Colour color)
+        public static void Write(string text)
         {
-            Text = text;
-            Color = color;
+            OnMessage?.Invoke(text);
         }
 
-        public static void Write(string text, Colour color)
-        {
-            OnMessage?.Invoke(new ColoredString(text, color));
-        }
+        public static Action<string> OnMessage;
 
-        public Symbol this[int index] {
-            get {
-                return new Symbol(Text[index], Color, Colour.Transparent);
-            }
-        }
-
-        public static Action<ColoredString> OnMessage;
-
-        internal IEnumerable<(char, Colour)> Iterate()
+        public static IEnumerable<(char, Color)> Iterate(this string text)
         {
             var state = STATE_TEXT;
-            Colour color = Colour.White;
+            Color color = colors[0];
 
-            foreach (var c in Text)
+            foreach (var c in text)
             {
                 switch (state)
                 {

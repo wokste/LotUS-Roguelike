@@ -5,7 +5,7 @@ namespace HackConsole
 {
     public abstract class TextWidget : GridWidget , IMouseEventSuscriber
     {
-        protected readonly List<ColoredString> Lines = new List<ColoredString>();
+        protected readonly List<string> Lines = new List<string>();
 
         private int _posY;
 
@@ -28,7 +28,7 @@ namespace HackConsole
             var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
             {
-                Print(new Vec(0, y), Lines[i]);
+                Print(new Vec(0, y), Lines[i], Colour.White);
                 y++;
             }
         }

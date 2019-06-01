@@ -45,7 +45,7 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public string Describe() => $"Melee attack deals {Damage} {DamageType} damage";
+        public string Describe() => $"Melee attack deals @cd{Damage} {DamageType} damage@ca.";
 
         public bool FitsIn(ESlotType type) => type == ESlotType.Hand;
     }
@@ -91,7 +91,7 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public string Describe() => $"Ranged attack deals {Damage} {DamageType} damage";
+        public string Describe() => $"Ranged attack deals @cd{Damage} {DamageType} damage@ca.";
         public bool FitsIn(ESlotType type) => type == ESlotType.Ranged;
     }
 }

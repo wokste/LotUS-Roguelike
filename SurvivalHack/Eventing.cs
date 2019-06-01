@@ -42,7 +42,7 @@ namespace SurvivalHack
                 var str = check.Invoke(evt);
                 if (str != null)
                 {
-                    ColoredString.Write(str.CleanUp(), Colour.Red);
+                    ColoredString.Write(str.CleanUp());
                     return false;
                 }
             }
@@ -56,7 +56,7 @@ namespace SurvivalHack
             if (parent != null)
 				parent.PostMessage += message;
 			else
-				ColoredString.Write(message.CleanUp(), Colour.Yellow); //TODO: Color
+				ColoredString.Write(message.CleanUp()); //TODO: Color
 
             return true;
         }
@@ -251,7 +251,11 @@ namespace SurvivalHack
             var dmg = Damage;
 
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")} {(dmg > 0 ? dmg.ToString() : "no") } damage");
+            sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")}");
+            if (dmg > 0)
+                sb.Append($" @cd{dmg}@ca damage");
+            else
+                sb.Append($" @cfNo@ca damage");
             sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ". ");
             
             if (Modifiers.Count > 0)

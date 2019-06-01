@@ -20,7 +20,7 @@ namespace SurvivalHack.Ui
             InitGame();
             _window = InitGui();
 
-            ColoredString.Write("You wake up in an @cdUnknown@ca world.", Colour.White);
+            ColoredString.Write("You wake up in an Unknown world.");
         }
 
         private void InitGame()

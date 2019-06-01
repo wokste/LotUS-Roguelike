@@ -57,7 +57,7 @@ namespace HackConsole.Ui
             Debug.WriteLine(_charData.Count);
         }
 
-        public void Print(VertexArray vertexArray, ColoredString text, int width, Vec v)
+        public void Print(VertexArray vertexArray, string text, int width, Vec v)
         {
             Vector2f posF = new Vector2f(v.X, v.Y);
             foreach ((var c, var color) in text.Iterate())
@@ -66,7 +66,7 @@ namespace HackConsole.Ui
                 if (!_charData.TryGetValue(c, out BfChar bitmapChar) && !_charData.TryGetValue('\0', out bitmapChar))
                     throw new Exception();
 
-                PrintChar(vertexArray, bitmapChar, posF, color.ToSfmlColor());
+                PrintChar(vertexArray, bitmapChar, posF, color);
                 posF.X += bitmapChar.Width + SpacingH;
             }
         }
