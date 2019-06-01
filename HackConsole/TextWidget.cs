@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace HackConsole
@@ -21,14 +22,14 @@ namespace HackConsole
 
         protected override void Render()
         {
-            Clear(Colour.Gray);
+            Clear(new Color(128,128,128));
 
             var y = 0;
 
             var firstLine = _posY;
             for (var i = firstLine; i < Math.Min(firstLine + Rect.Height, Lines.Count); i++)
             {
-                Print(new Vec(0, y), Lines[i], Colour.White);
+                Print(new Vec(0, y), Lines[i], Color.White);
                 y++;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,9 +98,8 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear(Colour.Black);
-
-            Print(new Vec(0, 0), "  Slot             Item", Colour.White);
+            Clear(Color.Black);
+            Print(new Vec(0, 0), "  Slot             Item", Color.White);
 
             var inv = _controller.Inventory;
             for (int i = 0; i < Inventory.SlotNames.Length; ++i)
@@ -107,22 +107,22 @@ namespace SurvivalHack.Ui
                 var (type, name, key) = Inventory.SlotNames[i];
                 var slot = inv.Slots[i];
 
-                var color = (i == _selectedRow) ? Colour.White : Colour.Gray;
+                var color = (i == _selectedRow) ? Color.White : new Color(128,128,128);
                 var bgColor = slot.GetBackgroundColor();
 
                 var y = i + 1;
 
-                Print(new Vec(0, y), new Symbol(key, Colour.Yellow));
+                Print(new Vec(0, y), new Symbol(key, Color.Yellow));
                 Print(new Vec(2, y), name, color, bgColor);
 
                 if (slot.Item is Entity item)
                 {
                     var x = _columnCharWidth[0] + _columnCharWidth[1] + 2;
-                    Print(new Vec(x, y), new Symbol(item.Name[0], Colour.White));
+                    Print(new Vec(x, y), new Symbol(item.Name[0], Color.White));
 
                     x += 2;
 
-                    Print(new Vec(x, y), item.Name, Colour.White); // TODO: What if the length is too long
+                    Print(new Vec(x, y), item.Name, Color.White); // TODO: What if the length is too long
                 }
             }
         }

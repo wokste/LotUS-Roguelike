@@ -1,5 +1,6 @@
 ﻿using System;
 using HackConsole;
+using SFML.Graphics;
 
 namespace SurvivalHack.Ui
 {
@@ -11,7 +12,7 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Print(new Vec(0,0), "Game Over", Colour.White);
+            Print(new Vec(0,0), "Game Over", Color.White);
         }
     }
 }

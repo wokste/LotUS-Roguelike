@@ -4,6 +4,7 @@ using SFML.Window;
 
 namespace HackConsole
 {
+    [Obsolete("All GridWidgedt based classes should be refactored at one point or another. If removing GridWidget, don't forget to remove Symbol.")]
     public abstract class GridWidget : Widget
     {
         private readonly VertexArray _vertices = new VertexArray();
@@ -44,8 +45,8 @@ namespace HackConsole
                     var Char = Data[v];
                     var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);
 
-                    var bgColor = ColorToSfml(Char.BackgroundColor);
-                    var fgColor = ColorToSfml(Char.TextColor);
+                    var bgColor = Char.BackgroundColor;
+                    var fgColor = Char.TextColor;
 
                     for (uint i = 0; i < 4; ++i)
                     {
@@ -75,22 +76,16 @@ namespace HackConsole
             _vertices.Resize((uint)newSize.Area * 8);
         }
 
-        private Color ColorToSfml(HackConsole.Colour color)
-        {
-            return new Color(color.R, color.G, color.B);
-        }
-
-
         #region HelperFunctions
 
         /// <summary>
         /// Clear the area of the widget.
         /// </summary>
-        protected void Clear(Colour bg)
+        protected void Clear(Color bg)
         {
             foreach (var v in Data.Ids())
             {
-                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Colour.Black, TextColor = Colour.White };
+                Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.White };
             }
         }
 
@@ -101,7 +96,7 @@ namespace HackConsole
         /// <param name="msg">The text.</param>
         /// <param name="fgColor">Foreground color</param>
         /// <param name="bgColor">Background color</param>
-        protected bool Print(Vec v, string msg, Colour fgColor, Colour bgColor = default(Colour))
+        protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
         {
             //TODO: Input validation
 
@@ -109,25 +104,8 @@ namespace HackConsole
 
             for (var i = 0; i < length; i++)
             {
-                Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
-        /// </summary>
-        /// <param name="v">Relative position to topleft of widget</param>
-        /// <param name="msg">The text.</param>
-        protected bool Print(Vec v, string msg, Colour textColor)
-        {
-            //TODO: Input validation
-
-            var length = Math.Min(msg.Length, Data.Size.X - v.X);
-
-            for (var i = 0; i < length; i++)
-            {
-                Data[new Vec(v.X + i, v.Y)] = new Symbol(msg[i], textColor);
+                var bg = bgColor.A == 0 ? Data[new Vec(v.X + i, v.Y)].BackgroundColor : bgColor;
+                Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bg, TextColor = fgColor };
             }
             return true;
         }

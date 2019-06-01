@@ -6,8 +6,6 @@ namespace HackConsole
     public class BorderedWidget : Widget, IPopupWidget, IKeyEventSuscriber
     {
         readonly Widget InnerWidget;
-        Colour FcColor = Colour.White;
-        Colour BgColor = Colour.Gray;
 
         public int BorderWidth = 4;
 

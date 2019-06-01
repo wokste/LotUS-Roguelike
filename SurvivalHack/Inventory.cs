@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
+using SFML.Graphics;
 using SurvivalHack.ECM;
 
 namespace SurvivalHack
@@ -112,14 +113,14 @@ namespace SurvivalHack
             public bool NewItems;
             public bool Cursed => Item?.EntityFlags.HasFlag(EEntityFlag.Cursed) ?? false;
 
-            internal Colour GetBackgroundColor()
+            internal Color GetBackgroundColor()
             {
                 if (Cursed)
-                    return new Colour(64, 0, 0);
+                    return new Color(64, 0, 0);
                 else if (NewItems)
-                    return new Colour(0, 64, 0);
+                    return new Color(0, 64, 0);
                 else
-                    return new Colour(0, 0, 64);
+                    return new Color(0, 0, 64);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using HackConsole;
 using System.Linq;
 using SurvivalHack.Combat;
+using SFML.Graphics;
 
 namespace SurvivalHack.Ui
 {
@@ -24,11 +25,11 @@ namespace SurvivalHack.Ui
             var offset = (width - str.Length) / 2;
 
             var p = stats.Perc(statID);
-            var fgColor = Colour.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
+            var fgColor = Color.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
             
             for (int x = 0; x < width; x++)
             {
-                var bgColor = (x <= p * width + 0.5) ? Colour.Red : Colour.Black;
+                var bgColor = (x <= p * width + 0.5) ? Color.Red : Color.Black;
 
                 var ascii = (x >= offset && x < str.Length + offset) ? str[x-offset] : ' ';
                 Data[new Vec(x, y)] = new Symbol { Ascii = ascii, BackgroundColor = bgColor, TextColor = fgColor };
@@ -38,20 +39,21 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear(Colour.Red);
+            Clear(Color.Red);
 
             var y = 0;
 
-            Print(new Vec(0, y++), "Player:", Colour.White, Colour.Transparent);
+            Print(new Vec(0, y++), "Player:", Color.White, Color.Transparent);
 
             if (_controller.GameOver)
             {
-                Print(new Vec(0, y++), "Dead", Colour.White, Colour.Transparent);
+                Print(new Vec(0, y++), "Dead", Color.White, Color.Transparent);
                 return;
             }
-            PrintBar("HP:", y++, _controller.Player.GetOne<Combat.StatBlock>(), 0);
-            PrintBar("MP:", y++, _controller.Player.GetOne<Combat.StatBlock>(), 1);
-            PrintBar("XP:", y++, _controller.Player.GetOne<Combat.StatBlock>(), 2);
+            var statblock = _controller.Player.GetOne<StatBlock>();
+            PrintBar("HP:", y++, statblock, 0);
+            PrintBar("MP:", y++, statblock, 1);
+            PrintBar("XP:", y++, statblock, 2);
 
             var FoV = _controller.FoV;
             var monsterList = _controller.Level.GetEntities().Where(e => (
@@ -64,9 +66,9 @@ namespace SurvivalHack.Ui
             {
                 y++;
 
-                Print(new Vec(0, y++), e.Name, Colour.White, Colour.Transparent);
+                Print(new Vec(0, y++), e.Name, Color.White, Color.Transparent);
 
-                var damagable = e.GetOne<Combat.StatBlock>();
+                var damagable = e.GetOne<StatBlock>();
                 if (damagable != null)
                     PrintBar("HP:", y++, damagable, 0);
             }

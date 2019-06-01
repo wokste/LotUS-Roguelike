@@ -13,7 +13,7 @@ namespace SurvivalHack.Ui
         private Level _level;
         private readonly MapView _mapView = new MapView();
         private readonly TurnController _controller;
-        private readonly Colour _pathColor = new Colour(0, 128, 255, 128);
+        private readonly Color _pathColor = new Color(0, 128, 255, 128);
 
         //private Vec _relToAbs;
         private readonly Sprite _entitySprite = new Sprite();
