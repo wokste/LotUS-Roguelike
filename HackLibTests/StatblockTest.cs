@@ -1,33 +1,33 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SurvivalHack;
+using SurvivalHack.Combat;
 
 namespace HackLibTests
 {
     [TestClass]
-    public class DamagableTest
+    public class StatblockTest
     {
         [TestMethod]
         public void BarValues()
         {
-            var b = new Bar(10);
+            var sb = new StatBlock(10,0,0);
 
-            Assert.AreEqual(b.Current, 10);
-            Assert.AreEqual(b.Max, 10);
-            Assert.AreEqual(b.Perc, 1f);
-
-            b.Current -= 5;
-            Assert.AreEqual(b.Current, 5);
-            Assert.AreEqual(b.Max, 10);
-            Assert.AreEqual(b.Perc, 0.5f);
+            Assert.AreEqual(sb.Cur(0), 10);
+            Assert.AreEqual(sb.Max(0), 10);
+            Assert.AreEqual(sb.Perc(0), 1f);
+            /*
+            sb.TakeDamage( -= 5;
+            Assert.AreEqual(sb.Cur(0), 5);
+            Assert.AreEqual(sb.Max, 10);
+            Assert.AreEqual(sb.Perc, 0.5f);
 
             b.Current += 15;
-            Assert.AreEqual(b.Current, 10);
-            Assert.AreEqual(b.Max, 10);
-            Assert.AreEqual(b.Perc, 1f);
+            Assert.AreEqual(sb.Current, 10);
+            Assert.AreEqual(sb.Max, 10);
+            Assert.AreEqual(sb.Perc, 1f);
 
             b.Max = 15;
-            Assert.AreEqual(b.Current, 10);
-            Assert.AreEqual(b.Max, 15);
+            Assert.AreEqual(sb.Current, 10);
+            Assert.AreEqual(sb.Max, 15);
 
             b.Max = 5;
             Assert.AreEqual(b.Current, 5);
@@ -43,6 +43,7 @@ namespace HackLibTests
             Assert.AreEqual(b.Current, 0);
             Assert.AreEqual(b.Max, 10);
             Assert.AreEqual(b.Perc, 0f);
+            */
         }
     }
 }

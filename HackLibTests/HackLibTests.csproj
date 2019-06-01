@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AStarTest.cs" />
-    <Compile Include="BarTest.cs" />
+    <Compile Include="StatblockTest.cs" />
     <Compile Include="LineTest.cs" />
     <Compile Include="InventoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

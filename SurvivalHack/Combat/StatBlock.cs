@@ -30,11 +30,11 @@ namespace SurvivalHack.Combat
                 message.OnEvent += Heal;
         }
 
-        internal object Cur(int statID) => _stats[statID].Cur;
+        public object Cur(int statID) => _stats[statID].Cur;
 
-        internal object Max(int statID) => _stats[statID].Max(_level);
+        public object Max(int statID) => _stats[statID].Max(_level);
 
-        internal float Perc(int statID) => _stats[statID].Perc(_level);
+        public float Perc(int statID) => _stats[statID].Perc(_level);
 
         public void TakeDamage(BaseEvent msg)
         {
