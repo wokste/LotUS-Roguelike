@@ -9,8 +9,7 @@ namespace SurvivalHack
     {
         public readonly List<Entity> Items = new List<Entity>();
         public const int SLOT_RANGED = 2;
-        public const int SLOT_WAND = 2;
-
+        public const int SLOT_WAND = 3;
 
         public static readonly (ESlotType type, string name, char key)[] SlotNames = new(ESlotType type, string name, char key)[] {
             (ESlotType.Hand,    "Main Hand", 'm'),

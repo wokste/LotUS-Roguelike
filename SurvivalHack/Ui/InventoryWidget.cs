@@ -13,7 +13,7 @@ namespace SurvivalHack.Ui
         private readonly int[] _columnCharWidth = new int[4];
         private readonly int[] _columnPxWidth = new int[4];
 
-        public Action OnClose { get ; set ; }
+        public Action OnClose { get; set; }
         public bool Interrupt => false;
         private const int ROW_HEIGHT = 16;
         private const int HEADER_HEIGHT = 16;
@@ -34,7 +34,7 @@ namespace SurvivalHack.Ui
                 _columnPxWidth[i] = _columnCharWidth[i] * _fontX;
             }
 
-            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() + (_columnPxWidth.Length -1) * BORDER_WIDTH, Inventory.SlotNames.Length * _fontY);
+            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() + (_columnPxWidth.Length - 1) * BORDER_WIDTH, Inventory.SlotNames.Length * ROW_HEIGHT + HEADER_HEIGHT);
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)
@@ -97,27 +97,31 @@ namespace SurvivalHack.Ui
 
         protected override void Render()
         {
-            Clear(Colour.Pink);
+            Clear(Colour.Black);
+
+            Print(new Vec(0, 0), "  Slot             Item", Colour.White);
 
             var inv = _controller.Inventory;
-            for (var y = 0; y < inv.Slots.Length; y++)
+            for (int i = 0; i < Inventory.SlotNames.Length; ++i)
             {
-                var (type, name, key) = Inventory.SlotNames[y];
-                var item = inv.Slots[y].Item;
+                var (type, name, key) = Inventory.SlotNames[i];
+                var slot = inv.Slots[i];
 
-                var color = (y == _selectedRow) ? Colour.White : Colour.Gray;
-                var bgColor = inv.Slots[y].GetBackgroundColor();
+                var color = (i == _selectedRow) ? Colour.White : Colour.Gray;
+                var bgColor = slot.GetBackgroundColor();
 
-                Print(new Vec(2, y), name, color, bgColor);
+                var y = i + 1;
+
                 Print(new Vec(0, y), new Symbol(key, Colour.Yellow));
+                Print(new Vec(2, y), name, color, bgColor);
 
-                if (item != null)
+                if (slot.Item is Entity item)
                 {
                     var x = _columnCharWidth[0] + _columnCharWidth[1] + 2;
                     Print(new Vec(x, y), new Symbol(item.Name[0], Colour.White));
 
                     x += 2;
-                    
+
                     Print(new Vec(x, y), item.Name, Colour.White); // TODO: What if the length is too long
                 }
             }
