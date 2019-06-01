@@ -4,12 +4,12 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    public class Damagable : Component
+    public class StatBlock : Component
     {
         private readonly Stat[] _stats = new Stat[3];
         private readonly int _level = 0;
 
-        public Damagable(int HP, int MP, int XP)
+        public StatBlock(int HP, int MP, int XP)
         {
             _stats[0] = new Stat(HP, 1);
             _stats[1] = new Stat(MP, 1);

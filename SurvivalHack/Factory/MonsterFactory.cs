@@ -34,7 +34,7 @@ namespace SurvivalHack.Factory
                         Components = new List<IComponent>()
                         {
                             new Combat.MeleeWeapon(9, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing),
-                            new Combat.Damagable(20,0,1),
+                            new Combat.StatBlock(20,0,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -46,7 +46,7 @@ namespace SurvivalHack.Factory
                         Components = new List<IComponent>()
                         {
                             new Combat.MeleeWeapon(3, Combat.EAttackMove.Close, Combat.EDamageType.Piercing),
-                            new Combat.Damagable(8,0,1),
+                            new Combat.StatBlock(8,0,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -58,7 +58,7 @@ namespace SurvivalHack.Factory
                         Components = new List<IComponent>()
                         {
                             new Combat.RangedWeapon(9, Combat.EDamageType.Piercing, 50),
-                            new Combat.Damagable(12,0,1),
+                            new Combat.StatBlock(12,0,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -70,7 +70,7 @@ namespace SurvivalHack.Factory
                         Components = new List<IComponent>()
                         {
                             new Combat.MeleeWeapon(6, Combat.EAttackMove.Close, Combat.EDamageType.Piercing | Combat.EDamageType.Fire),
-                            new Combat.Damagable(16,8,1),
+                            new Combat.StatBlock(16,8,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),

@@ -87,7 +87,7 @@
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />
-    <Compile Include="Combat\Damagable.cs" />
+    <Compile Include="Combat\StatBlock.cs" />
     <Compile Include="Combat\Weapons.cs" />
     <Compile Include="Ai\Attitude.cs" />
     <Compile Include="Ai\AiActor.cs" />

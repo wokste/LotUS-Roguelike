@@ -31,7 +31,7 @@ namespace SurvivalHack
                 {
                     this,
                     new Combat.MeleeWeapon(2, Combat.EAttackMove.Thrust, Combat.EDamageType.Bludgeoing),
-                    new Combat.Damagable(100, 20, 0),
+                    new Combat.StatBlock(100, 20, 0),
                     Inventory
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
