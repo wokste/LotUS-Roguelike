@@ -120,13 +120,17 @@ namespace SurvivalHack
             }
         }
 
-        public virtual bool Move(Vec direction)
+        public bool TryMove(Vec direction)
         {
             Debug.Assert(Level != null);
 
-            var newPosition = Pos;
-            newPosition += direction;
+            var newPosition = Pos + direction;
 
+            return TrySetPos(newPosition);
+        }
+
+        public bool TrySetPos(Vec newPosition)
+        {
             // You cannot walk of the edge of map
             if (!Level.InBoundary(newPosition))
                 return false;

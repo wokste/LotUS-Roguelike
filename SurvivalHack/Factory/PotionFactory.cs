@@ -27,10 +27,11 @@ namespace SurvivalHack.Factory
 
         Potion[] MakePotions() {
             return new Potion[] {
-                new Potion("Lesser healing potion", new[] { new Heal(20, 0, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Greater healing potion", new[] { new Heal(40, 0, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Mana potion", new[] { new Heal(10, 1, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Fruit Juice", new IEffect[] {}),
+                new Potion("Lesser healing potion", new[] { new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Greater healing potion", new[] { new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Mana potion", new[] { new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Teleportaion potion", new IEffect[] {new TeleportEffect(EntityTarget.Self | EntityTarget.Others)}),
+                //new Potion("Acid", new IEffect[] {new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others)}),
             };
         }
 

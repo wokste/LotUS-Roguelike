@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
-    public interface IEffect
-    {
-        string Describe();
+    public interface IEffect {
+
     }
 
     public interface IEntityEffect : IEffect
     {
-        EntityTarget Target { get; }
+        EntityTarget UseOn { get; }
 
         bool Use(Entity instignator, Entity target, StringBuilder sb);
         float Efficiency(Entity instignator, Entity target);

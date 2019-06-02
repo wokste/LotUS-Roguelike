@@ -227,7 +227,7 @@ namespace SurvivalHack.Ui
                 }
             }
 
-            _controller.Move(move);
+            _controller.TryMove(move);
         }
     }
 }

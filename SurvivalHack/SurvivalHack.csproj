@@ -81,12 +81,14 @@
   <ItemGroup>
     <Compile Include="ECM\Potion.cs" />
     <Compile Include="ECM\Stairs.cs" />
+    <Compile Include="Effects\HarmEffect.cs" />
+    <Compile Include="Effects\TeleportEffect.cs" />
     <Compile Include="Eventing.cs" />
     <Compile Include="Mapgen\Automata\BomberAutomata.cs" />
     <Compile Include="Mapgen\VoronoiNoise.cs" />
-    <Compile Include="Effects\Heal.cs" />
+    <Compile Include="Effects\HealEffect.cs" />
     <Compile Include="Effects\Interfaces.cs" />
-    <Compile Include="Effects\MapReveal.cs" />
+    <Compile Include="Effects\MapRevealEffect.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />

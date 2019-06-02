@@ -7,22 +7,20 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
-    public class Heal : IEntityEffect
+    public class HealEffect : IEntityEffect
     {
         public int Restore;
         public int StatID;
 
-        public EntityTarget Target { get; }
+        public EntityTarget UseOn { get; }
 
-        public Heal(int restore, int statID, EntityTarget target)
+        public HealEffect(int restore, int statID, EntityTarget useOn)
         {
             Restore = restore;
             StatID = statID;
-            Target = target;
+            UseOn = useOn;
         }
-
-        public string Describe() => $"Heals {Restore} when used.";
-
+        
         public bool Use(Entity instignator, Entity target, StringBuilder sb)
         {
             var stats = target.GetOne<StatBlock>();

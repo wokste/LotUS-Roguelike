@@ -52,7 +52,7 @@ namespace SurvivalHack.ECM
             {
                 if (e is IEntityEffect ee)
                 {
-                    if (ee.Target == EntityTarget.Self)
+                    if (ee.UseOn.HasFlag(EntityTarget.Self))
                         ee.Use(user, user, sb);
                 }
             }

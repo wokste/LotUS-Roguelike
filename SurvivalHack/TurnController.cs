@@ -63,9 +63,9 @@ namespace SurvivalHack
             OnTurnEnd?.Invoke();
         }
 
-        public bool Move(Vec move, bool interrupt = true)
+        public bool TryMove(Vec move, bool interrupt = true)
         {
-            if (Player.Move(move))
+            if (Player.TryMove(move))
             {
                 EndTurn(interrupt);
                 return true;
@@ -81,7 +81,7 @@ namespace SurvivalHack
             Debug.Assert(Player.Pos == Path.First());
             
             Path.RemoveAt(0);
-            if (Move(Path.First() - Player.Pos, false))
+            if (TryMove(Path.First() - Player.Pos, false))
             {
                 return true;
             }

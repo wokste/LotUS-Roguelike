@@ -34,7 +34,7 @@ namespace SurvivalHack.Ai
             {
                 var delta = new Vec(move.Rand(Game.Rnd), move.Rand(Game.Rnd));
                 
-                if (self.Move(delta))
+                if (self.TryMove(delta))
                     return;
             }
         }
@@ -48,23 +48,23 @@ namespace SurvivalHack.Ai
             if (delta == deltaClamped)
                 return;
 
-            if (self.Move(deltaClamped))
+            if (self.TryMove(deltaClamped))
                 return;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (self.Move(new Vec(deltaClamped.X, 0)))
+                if (self.TryMove(new Vec(deltaClamped.X, 0)))
                     return;
 
-                if (self.Move(new Vec(0, deltaClamped.Y)))
+                if (self.TryMove(new Vec(0, deltaClamped.Y)))
                     return;
             }
             else
             {
-                if (self.Move(new Vec(0, deltaClamped.Y)))
+                if (self.TryMove(new Vec(0, deltaClamped.Y)))
                     return;
                 
-                if (self.Move(new Vec(deltaClamped.X, 0)))
+                if (self.TryMove(new Vec(deltaClamped.X, 0)))
                     return;
             }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SurvivalHack.Effects
 {
     /*
-    public class MapReveal : ITileEffect
+    public class MapRevealEffect : ITileEffect
     {
         public Type MessageType { get; }
         private readonly byte FovFlags;
@@ -21,7 +21,7 @@ namespace SurvivalHack.Effects
 
         readonly RevealMethod Method;
 
-        public MapReveal(Type messageType, byte fovFlags, RevealMethod method, int radius)
+        public MapRevealEffect(byte fovFlags, RevealMethod method, int radius)
         {
             MessageType = messageType;
             FovFlags = fovFlags;
