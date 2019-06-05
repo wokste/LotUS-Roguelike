@@ -60,9 +60,7 @@ namespace SurvivalHack.Effects
                     FoV.Visibility[v] |= FovFlags;
             }
         }
-
-        public string Describe() => $"Reveals the map";
-
+        
         public bool Use(Entity insignator, Grid<Tile> map, StringBuilder sb)
         {
             throw new NotImplementedException();

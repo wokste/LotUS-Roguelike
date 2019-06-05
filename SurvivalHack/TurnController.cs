@@ -8,7 +8,7 @@ using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
-    public class TurnController : Component
+    public class TurnController : IActionComponent
     {
         public Entity Player;
         public List<Vec> Path;
@@ -92,7 +92,7 @@ namespace SurvivalHack
             }
         }
 
-        public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
             if (source == EUseSource.Target && (msg is AttackEvent || msg is ThreatenEvent))
                 msg.OnEvent += (m) => Interrupt();

@@ -6,7 +6,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class Inventory : Component
+    public class Inventory : IComponent
     {
         public readonly List<Entity> Items = new List<Entity>();
         public const int SLOT_RANGED = 2;
@@ -31,9 +31,8 @@ namespace SurvivalHack
         public void Add(Entity item)
         {
             for (int i = 0; i < Slots.Length; ++i)
-                foreach (var component in item.Components)
-                    if (component.FitsIn(SlotNames[i].type))
-                        Slots[i].NewItems = true;
+                if (CanEquipInSlot(i, item))
+                    Slots[i].NewItems = true;
 
             var stack1 = item.GetOne<StackComponent>();
             if (stack1 != null)
@@ -73,12 +72,9 @@ namespace SurvivalHack
 
         public bool Equip(Entity item, int slot)
         {
-            if (item != null)
+            if (item != null && !CanEquipInSlot(slot, item))
             {
-                var ecs = item.Components;
-
-                if (!ecs.Any(ec => ec.FitsIn(SlotNames[slot].type)))
-                    return false; // Can't equip said item in said slot
+                return false; // Can't equip said item in said slot
             }
 
             int? lastSlot = EquippedInSlot(item);
@@ -107,6 +103,15 @@ namespace SurvivalHack
             return null;
         }
 
+        public static bool CanEquipInSlot(int slotId, Entity item)
+        {
+            var slotType = SlotNames[slotId].type;
+
+            bool Fits(ESlotType? actualSlot) => (slotType == actualSlot) || (slotType == ESlotType.Offhand && actualSlot == ESlotType.Hand);
+
+            return item.Components.Any(c => Fits((c as IEquippableComponent)?.SlotType));
+        }
+
         public struct Slot
         {
             public Entity Item;
@@ -125,18 +130,14 @@ namespace SurvivalHack
         }
     }
     
-    public class Equippable : IComponent
+    public class Equippable : IEquippableComponent
     {
-        private readonly ESlotType _slotType;
-
         public Equippable(ESlotType slotType)
         {
-            _slotType = slotType;
+            SlotType = slotType;
         }
-        
-        public string Describe() => $"Can be equipped in {_slotType}";
 
-        public bool FitsIn(ESlotType type) => (type == _slotType) || (type == ESlotType.Hand && _slotType == ESlotType.Offhand);
+        public ESlotType SlotType { get; }
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source) {}
     }

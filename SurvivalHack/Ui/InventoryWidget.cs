@@ -64,7 +64,7 @@ namespace SurvivalHack.Ui
             {
                 for (var y = 0; y < Inventory.SlotNames.Length; y++)
                 {
-                    var (type, name, key) = Inventory.SlotNames[y];
+                    var (_, _, key) = Inventory.SlotNames[y];
                     if (key == keyCode)
                     {
                         _selectedRow = y;
@@ -80,11 +80,13 @@ namespace SurvivalHack.Ui
             if (_selectedRow < 0 || _selectedRow >= Inventory.SlotNames.Length)
                 return;
 
-            var slotType = Inventory.SlotNames[_selectedRow].type;
+            if (_controller.Inventory.Slots[_selectedRow].Cursed)
+                return; // You can't change items in a cursed slot. Period.
+
             _controller.Inventory.Slots[_selectedRow].NewItems = false;
 
             var list = new List<Entity>();
-            list.AddRange(_controller.Inventory.Items.Where(e => e.Components.Any(c => c.FitsIn(slotType))));
+            list.AddRange(_controller.Inventory.Items.Where(e => Inventory.CanEquipInSlot(_selectedRow, e)));
             list.Add(null);
 
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", list, i => {
@@ -104,7 +106,7 @@ namespace SurvivalHack.Ui
             var inv = _controller.Inventory;
             for (int i = 0; i < Inventory.SlotNames.Length; ++i)
             {
-                var (type, name, key) = Inventory.SlotNames[i];
+                var (_, name, key) = Inventory.SlotNames[i];
                 var slot = inv.Slots[i];
 
                 var color = (i == _selectedRow) ? Color.White : new Color(128,128,128);

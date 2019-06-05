@@ -4,7 +4,7 @@ using System;
 
 namespace SurvivalHack
 {
-    public class FieldOfView : Component
+    public class FieldOfView : IComponent
     {
         public const byte FLAG_DISCOVERED = 0x1;    // True when the player seen the tile
         public const byte FLAG_VISIBLE = 0x2;       // True if the player sees the tile. In general, if something is visible it sould also be discovered.
@@ -96,7 +96,7 @@ namespace SurvivalHack
             }
             else
             {
-                if (e.LastSeenPos is Vec p2 && e.EntityFlags.HasFlag(EEntityFlag.Pickable))
+                if (e.LastSeenPos is Vec && e.EntityFlags.HasFlag(EEntityFlag.Pickable))
                     return e.LastSeenPos;
                 else
                     return null;
@@ -248,10 +248,8 @@ namespace SurvivalHack
         private void UpdateVisibility(Vec v)
         {
             var dist = (_entityPos - v).Length;
-            
-            var distanceVisibility = dist < VisualRange ? 1f : 0f;
-
-            Visibility[v] |= SET_VISIBLE;
+            if (dist < VisualRange)
+                Visibility[v] |= SET_VISIBLE;
         }
     }
 }

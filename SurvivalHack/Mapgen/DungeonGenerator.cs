@@ -89,7 +89,7 @@ namespace SurvivalHack.Mapgen
             
             for (var i = 0; i < NumRooms; i++)
             {
-                var room = GenerateRoom(map, mask, rooms);
+                _ = GenerateRoom(map, mask, rooms);
             }
 
             // Create MST

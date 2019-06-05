@@ -21,13 +21,7 @@ namespace SurvivalHack.ECM
             IdentifiedName = identifiedName;
             Effects = effects;
         }
-
-        public string Describe()
-        {
-            return $"Does something when drunk";
-            // TODO: Add better description based on effects.
-        }
-
+        
         public bool FitsIn(ESlotType type)
         {
             return false;

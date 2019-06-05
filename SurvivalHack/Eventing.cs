@@ -15,24 +15,24 @@ namespace SurvivalHack
         {
             // Prepare event, filling in PreEvent, OnEvent, PostEvent, etc
             foreach (var c in evt.Item.Components)
-                c.GetActions(evt.Item, evt, EUseSource.Item);
+                (c as IActionComponent)?.GetActions(evt.Item, evt, EUseSource.Item);
 
             if (evt.Target != null)
             {
                 foreach (var c in evt.Target.Components)
-                    c.GetActions(evt.Target, evt, EUseSource.Target);
+                    (c as IActionComponent)?.GetActions(evt.Target, evt, EUseSource.Target);
                 foreach (var e in evt.Target.ListSubEntities())
                     foreach (var c in e.Components)
-                        c.GetActions(e, evt, EUseSource.TargetItem);
+                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.TargetItem);
             }
 
             if (evt.User != null)
             {
                 foreach (var c in evt.User.Components)
-                    c.GetActions(evt.User, evt, EUseSource.User);
+                    (c as IActionComponent)?.GetActions(evt.User, evt, EUseSource.User);
                 foreach (var e in evt.User.ListSubEntities())
                     foreach (var c in e.Components)
-                        c.GetActions(e, evt, EUseSource.UserItem);
+                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.UserItem);
             }
 
             // == Execute the event ==

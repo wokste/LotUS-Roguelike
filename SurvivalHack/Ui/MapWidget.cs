@@ -299,8 +299,6 @@ namespace SurvivalHack.Ui
                     new Vector2f(_fontX, _fontY),
                     new Vector2f(0, _fontY),
                 };
-
-                var idx = (uint)((v.Y * VisibleSize.X) + v.X) * 4;
                 var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
                 var texPos = new Vector2f(g.X * _fontX, g.Y * _fontY);
 

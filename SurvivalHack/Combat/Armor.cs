@@ -2,7 +2,7 @@
 
 namespace SurvivalHack.Combat
 {
-    public class Blockable : Component
+    public class Blockable : IActionComponent
     {
         public int Priority { get; set; } = 100;
 
@@ -15,7 +15,7 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 message.PreEvent += Mutate;
@@ -33,11 +33,6 @@ namespace SurvivalHack.Combat
 
             attack.State = BlockMethod;
             return;
-        }
-
-        public override string Describe()
-        {
-            return $"Has a {BlockChance:%} to block incoming attacks";
         }
     }
 
@@ -78,11 +73,6 @@ namespace SurvivalHack.Combat
             return;
         }
 
-        public string Describe()
-        {
-            return $"Reduces damage by {DamageReduction}.";
-        }
-
         public bool FitsIn(ESlotType type)
         {
 
@@ -102,7 +92,7 @@ namespace SurvivalHack.Combat
         }
     }
 
-    public class ElementalResistance : Component
+    public class ElementalResistance : IActionComponent
     {
         private readonly EDamageType DamageType;
         private readonly float Mult;
@@ -112,10 +102,8 @@ namespace SurvivalHack.Combat
             DamageType = damageType;
             Mult = mult;
         }
-
-        public override string Describe() => $"Reduces all {DamageType} damage by {Mult}";
-
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
                 message.PreEvent += Mutate;

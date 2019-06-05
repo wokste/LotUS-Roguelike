@@ -2,16 +2,16 @@
 {
     public interface IComponent
     {
-        string Describe();
-        void GetActions(Entity self, BaseEvent message, EUseSource source);
-        bool FitsIn(ESlotType type);
     }
 
-    public abstract class Component : IComponent
+    public interface IActionComponent : IComponent
     {
-        public virtual string Describe() => "";
-        public virtual void GetActions(Entity self, BaseEvent message, EUseSource source) { }
-        public virtual bool FitsIn(ESlotType type) => false;
+        void GetActions(Entity self, BaseEvent message, EUseSource source);
+    }
+
+    public interface IEquippableComponent : IComponent
+    {
+        ESlotType SlotType { get; }
     }
 
     public enum EUseSource

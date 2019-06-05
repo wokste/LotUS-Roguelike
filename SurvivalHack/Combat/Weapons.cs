@@ -10,7 +10,7 @@ namespace SurvivalHack.Combat
         EAttackMove AttackMove { get; }
     }
 
-    public class MeleeWeapon : IWeapon
+    public class MeleeWeapon : IWeapon, IEquippableComponent
     {
         public float Damage;
         public EAttackMove AttackMove { get; }
@@ -45,12 +45,10 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public string Describe() => $"Melee attack deals @cd{Damage} {DamageType} damage@ca.";
-
-        public bool FitsIn(ESlotType type) => type == ESlotType.Hand;
+        public ESlotType SlotType => ESlotType.Hand;
     }
 
-    public class RangedWeapon : IWeapon
+    public class RangedWeapon : IWeapon, IEquippableComponent
     {
         public float Damage;
         public EAttackMove AttackMove => EAttackMove.Projectile;
@@ -91,7 +89,6 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public string Describe() => $"Ranged attack deals @cd{Damage} {DamageType} damage@ca.";
-        public bool FitsIn(ESlotType type) => type == ESlotType.Ranged;
+        public ESlotType SlotType => ESlotType.Ranged;
     }
 }

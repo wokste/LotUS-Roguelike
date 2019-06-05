@@ -4,7 +4,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    public class StatBlock : Component
+    public class StatBlock : IActionComponent
     {
         private readonly Stat[] _stats = new Stat[3];
         private readonly int _level = 0;
@@ -21,7 +21,7 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void GetActions(Entity self, BaseEvent message, EUseSource source)
         {
             if (message is DamageEvent && source == EUseSource.Target)
                 message.OnEvent += TakeDamage;
