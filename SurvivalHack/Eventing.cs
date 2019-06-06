@@ -137,47 +137,12 @@ namespace SurvivalHack
 
     public class AttackEvent : BaseEvent
     {
-        public EAttackState State = EAttackState.Hit;
+        public EAttackResult State = EAttackResult.HitDamage;
         public EAttackMove Move;
-        public EDamageLocation Location;
 
         public AttackEvent(Entity user, Entity weapon, Entity target, EAttackMove move) : base(user, weapon, target)
         {
             Move = move;
-            Location = GetRandomLocation();
-        }
-
-        private EDamageLocation GetRandomLocation()
-        {
-            var rnd = Game.Rnd.NextDouble();
-            if (rnd < 0.75)
-                return EDamageLocation.Body;
-            else if (rnd < 0.9)
-                return EDamageLocation.Head;
-            else if (rnd < 0.95)
-                return EDamageLocation.Hands;
-            else
-                return EDamageLocation.Feet;
-        }
-
-        private string LocationToString(EDamageLocation loc)
-        {
-            switch (loc) {
-                case EDamageLocation.Body:
-                    return "torso";
-                case EDamageLocation.Head:
-                    return "head";
-                case EDamageLocation.Hands:
-                    return "hand";
-                case EDamageLocation.Feet:
-                    return "foot";
-                case EDamageLocation.LArm:
-                    return "left arm";
-                case EDamageLocation.RArm:
-                    return "right arm";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
 
@@ -196,75 +161,23 @@ namespace SurvivalHack
                 sb.Append($"{Word.AName(User)} {Word.Verb(User, "swing")} {Word.Its(User)} {Word.Name(Item)} at {Word.AName(Target)}");
             }
 
-            if (State == EAttackState.Hit)
+            if (State == EAttackResult.HitNoDamage || State == EAttackResult.HitDamage || State == EAttackResult.HitKill)
             {
-                sb.Append($" and {Word.Verb(User, "hit")} {Word.Its(Target)} {LocationToString(Location)}. ");
+                sb.Append($" and {Word.Verb(User, "hit")} {Word.It(Target)}. ");
             }
-            else if (State == EAttackState.Miss)
+            else if (State == EAttackResult.Miss)
             {
                 sb.Append($" but {Word.Verb(User, "miss", "misses")} the attack. ");
             }
             else
             {
-                var verbs = new string[,] { { null, null }, { null, null }, { "dodge", null }, { "block", null }, { "parry", "parries" } };
+                var verbs = new string[,] { { null, null }, { null, null }, { null, null }, { null, null }, { "dodge", null }, { "block", null }, { "parry", "parries" } };
                 var verb = Word.Verb(Target, verbs[(int)State, 0], verbs[(int)State, 1]);
 
                 //TODO: What if I add hooking.
                 sb.Append($" but {verb} the attack. No damage is dealt. ");
             }
             
-            return sb.ToString();
-        }
-    }
-
-    public class DamageEvent : BaseEvent
-    {
-        public readonly int BaseDamage;
-        public EDamageType DamageType;
-        public EDamageLocation Location;
-        //public List<(double, string)> PreMults = new List<(double, string)>();
-        public List<(int, string)> Modifiers = new List<(int, string)>();
-        //public List<(double, string)> PostMults = new List<(double, string)>();
-        public bool KillHit = false;
-
-        public int Damage {
-            get {
-                double dmg = BaseDamage;
-                //foreach ((var d, var s) in PreMults) dmg *= (d+1);
-                foreach ((var i, var s) in Modifiers) dmg += i;
-                //foreach ((var d, var s) in PostMults) dmg *= (d+1);
-
-                return (int)(Math.Max(dmg + 0.5, 0));
-            }
-        }
-        public bool Significant => (Damage > 0);
-
-        public DamageEvent(BaseEvent parentEvent, int damage, EDamageType damageType, EDamageLocation location) : base (parentEvent)
-        {
-            BaseDamage = damage;
-            DamageType = damageType;
-            Location = location;
-        }
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            var dmg = Damage;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")}");
-            if (dmg > 0)
-                sb.Append($" @cd{dmg}@ca damage");
-            else
-                sb.Append($" @cfNo@ca damage");
-            sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ". ");
-            
-            if (Modifiers.Count > 0)
-            {
-                string adds = string.Join("", Modifiers.Select(p => $" {(p.Item1 >= 0 ? "+" : "-")} {Math.Abs(p.Item1)} {p.Item2}"));
-                string formula = ($"({BaseDamage}{adds}). ");
-                sb.Append(formula);
-            }
-
             return sb.ToString();
         }
     }

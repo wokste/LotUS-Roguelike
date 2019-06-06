@@ -4,7 +4,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    public class StatBlock : IActionComponent
+    public class StatBlock : IComponent
     {
         private readonly Stat[] _stats = new Stat[3];
         private readonly int _level = 0;
@@ -20,41 +20,29 @@ namespace SurvivalHack.Combat
                 _stats[i].Set(int.MaxValue, _level); // Will be clamped anyway.
             }
         }
-
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
-        {
-            if (message is DamageEvent && source == EUseSource.Target)
-                message.OnEvent += TakeDamage;
-        }
-
+        
         public object Cur(int statID) => _stats[statID].Cur;
 
         public object Max(int statID) => _stats[statID].Max(_level);
 
         public float Perc(int statID) => _stats[statID].Perc(_level);
 
-        public void TakeDamage(BaseEvent msg)
+        public void TakeDamage(ref Damage dmg)
         {
-            var attack = (DamageEvent)msg;
-            var statID = 0;
+            var statID = 0; // TODO: attacks on different stats
 
-            var damage = attack.Damage;
-
-            if (damage <= 0)
+            if (dmg.Dmg <= 0)
                 return;
 
-            var change = _stats[statID].Add(-1 * damage, _level);
+            var change = _stats[statID].Add(-1 * (int)dmg.Dmg, _level);
 
             if (change == 0)
                 return;
 
             if (_stats[statID].Cur <= 0)
             {
-                msg.Target.Destroy();
-                attack.KillHit = true;
+                dmg.KillHit = true;
             }
-
-            //UpdateStats(msg.Target);
         }
 
         public int Heal(int restore, int statID)

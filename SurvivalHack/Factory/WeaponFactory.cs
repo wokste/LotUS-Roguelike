@@ -41,28 +41,28 @@ namespace SurvivalHack.Factory
                     {
                         var e = new Entity(new TileGlyph(1,12), "Dagger", EEntityFlag.Pickable | EEntityFlag.Throwable);
                         e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
                         return e;
                     }
                 case "ssword":
                     {
                         var e = new Entity(new TileGlyph(2, 12), "Shortsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
                         return e;
                     }
                 case "lsword":
                     {
                         var e = new Entity(new TileGlyph(5, 12), "Longsword", EEntityFlag.Pickable);
                         e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackState.Parried));
+                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
                         return e;
                     }
                 case "axe":
                     {
                         var e = new Entity(new TileGlyph(7, 12),"Handaxe", EEntityFlag.Pickable | EEntityFlag.Throwable);
                         e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
-                        e.Add(new Combat.Blockable(0.1f, Combat.EAttackState.Parried));
+                        e.Add(new Combat.Blockable(0.1f, Combat.EAttackResult.Parried));
                         return e;
                     }
                 case "spear":
@@ -80,13 +80,13 @@ namespace SurvivalHack.Factory
                 case "wshield":
                     {
                         var e = new Entity(new TileGlyph(13, 13), "Wooden Shield", EEntityFlag.Pickable);
-                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
+                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackResult.Blocked));
                         return e;
                     }
                 case "ishield":
                     {
                         var e = new Entity(new TileGlyph(14, 13), "Iron Shield", EEntityFlag.Pickable);
-                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackState.Blocked));
+                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackResult.Blocked));
                         return e;
                     }
                 case "sbow":
@@ -106,38 +106,36 @@ namespace SurvivalHack.Factory
                 case "armour_leather":
                     {
                         var e = new Entity(new TileGlyph(0, 13), "Leather Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 2, 0.05f));
+                        e.Add(new Combat.Armor(2, ESlotType.Body));
                         return e;
                     }
                 case "armour_chain":
                     {
                         var e = new Entity(new TileGlyph(1, 13), "Chainmail Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 3, 0.05f));
+                        e.Add(new Combat.Armor(3, ESlotType.Body));
                         return e;
                     }
                 case "armour_plate":
                     {
                         var e = new Entity(new TileGlyph(2, 13), "Plate Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.AllBody, 4, 0.05f));
+                        e.Add(new Combat.Armor(4, ESlotType.Body));
                         return e;
                     }
                 case "helmet":
                     {
                         var e = new Entity(new TileGlyph(10, 13), "Helmet", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.Head, 3, 0.1f));
+                        e.Add(new Combat.Armor(3, ESlotType.Head));
                         return e;
                     }
 
                 case "boots":
                     {
                         var e = new Entity(new TileGlyph(5, 13), "Boots", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.Feet, 2, 0.1f));
                         return e;
                     }
                 case "gloves":
                     {
                         var e = new Entity(new TileGlyph(6, 13), "Gloves", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armour(Combat.EDamageLocation.Hands, 2, 0.1f));
                         return e;
                     }
                 case "ring":

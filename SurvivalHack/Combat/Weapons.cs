@@ -1,9 +1,11 @@
-﻿using HackConsole.Algo;
+﻿using HackConsole;
+using HackConsole.Algo;
 using SurvivalHack.ECM;
+using System.Text;
 
 namespace SurvivalHack.Combat
 {
-    public interface IWeapon : IComponent
+    public interface IWeapon : IActionComponent
     {
         bool InRange(Entity attacker, Entity defender);
         float WeaponPriority { get; }
@@ -39,9 +41,12 @@ namespace SurvivalHack.Combat
         private void ToHitRoll(BaseEvent msg)
         {
             var attack = (AttackEvent)msg;
-            if (attack.State == EAttackState.Hit)
+            if (attack.State.IsAHit())
             {
-                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location), msg);
+                var sb = new StringBuilder();
+                var damage = new Damage(Damage, DamageType);
+                CombatSystem.DoDamage(attack.Target, ref damage, sb);
+                ColoredString.OnMessage(sb.ToString());
             }
         }
 
@@ -83,9 +88,12 @@ namespace SurvivalHack.Combat
         private void ToHitRoll(BaseEvent msg)
         {
             var attack = (AttackEvent)msg;
-            if (attack.State == EAttackState.Hit)
+            if (attack.State.IsAHit())
             {
-                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location), msg);
+                var sb = new StringBuilder();
+                var damage = new Damage(Damage, DamageType);
+                CombatSystem.DoDamage(attack.Target, ref damage, sb);
+                ColoredString.OnMessage(sb.ToString());
             }
         }
 

@@ -79,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Combat\CombatSystem.cs" />
     <Compile Include="ECM\Potion.cs" />
     <Compile Include="ECM\Stairs.cs" />
     <Compile Include="Effects\HarmEffect.cs" />

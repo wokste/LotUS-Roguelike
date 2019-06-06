@@ -50,10 +50,10 @@ namespace SurvivalHack
 
             public void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
-                if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
-                    msg.OnEvent += Genocide;
+                //if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
+                //    msg.OnEvent += Genocide;
             }
-
+            /*
             public void Genocide(BaseEvent msg)
             {
                 var level = msg.User.Level;
@@ -69,6 +69,7 @@ namespace SurvivalHack
                     Eventing.On(dmgMsg, msg);
                 }
             }
+            */
         }
     }
 }
