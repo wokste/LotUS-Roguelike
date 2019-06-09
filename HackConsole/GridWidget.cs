@@ -4,7 +4,6 @@ using SFML.Window;
 
 namespace HackConsole
 {
-    [Obsolete("All GridWidgedt based classes should be refactored at one point or another. If removing GridWidget, don't forget to remove Symbol.")]
     public abstract class GridWidget : Widget
     {
         private readonly VertexArray _vertices = new VertexArray();

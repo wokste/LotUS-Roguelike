@@ -135,53 +135,6 @@ namespace SurvivalHack
         }
     }
 
-    public class AttackEvent : BaseEvent
-    {
-        public EAttackResult State = EAttackResult.HitDamage;
-        public EAttackMove Move;
-
-        public AttackEvent(Entity user, Entity weapon, Entity target, EAttackMove move) : base(user, weapon, target)
-        {
-            Move = move;
-        }
-
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (Item == User)
-            {
-                sb.Append($"{Word.AName(User)} {Word.Verb(User, "attack")} {Word.AName(Target)}");
-            }
-            else
-            {
-                // TODO: Verb 'swing' should be based on the actual attack.
-
-                sb.Append($"{Word.AName(User)} {Word.Verb(User, "swing")} {Word.Its(User)} {Word.Name(Item)} at {Word.AName(Target)}");
-            }
-
-            if (State == EAttackResult.HitNoDamage || State == EAttackResult.HitDamage || State == EAttackResult.HitKill)
-            {
-                sb.Append($" and {Word.Verb(User, "hit")} {Word.It(Target)}. ");
-            }
-            else if (State == EAttackResult.Miss)
-            {
-                sb.Append($" but {Word.Verb(User, "miss", "misses")} the attack. ");
-            }
-            else
-            {
-                var verbs = new string[,] { { null, null }, { null, null }, { null, null }, { null, null }, { "dodge", null }, { "block", null }, { "parry", "parries" } };
-                var verb = Word.Verb(Target, verbs[(int)State, 0], verbs[(int)State, 1]);
-
-                //TODO: What if I add hooking.
-                sb.Append($" but {verb} the attack. No damage is dealt. ");
-            }
-            
-            return sb.ToString();
-        }
-    }
-
     public class GrabEvent : BaseEvent
     {
         public GrabEvent(Entity user, Entity item, Entity target) : base(user, item, target)

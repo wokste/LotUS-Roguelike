@@ -2,11 +2,16 @@
 
 namespace SurvivalHack.Combat
 {
+    interface IShieldComponent : IComponent
+    {
+
+    }
+
     interface IArmorComponent : IComponent {
 
     }
 
-    public class Blockable : IActionComponent
+    public class Blockable : IShieldComponent
     {
         public int Priority { get; set; } = 100;
 
@@ -19,24 +24,9 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void Mutate(ref float hitChance, ref Damage _)
         {
-            if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                message.PreEvent += Mutate;
-        }
-
-        public void Mutate(BaseEvent msg)
-        {
-            AttackEvent attack = (AttackEvent)msg;
-
-            if (!attack.State.IsAHit())
-                return;
-
-            if (Game.Rnd.NextDouble() > BlockChance)
-                return;
-
-            attack.State = BlockMethod;
-            return;
+            hitChance *= (1 - BlockChance);
         }
     }
 

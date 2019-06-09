@@ -94,7 +94,8 @@ namespace SurvivalHack
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {
-            if (source == EUseSource.Target && (msg is AttackEvent || msg is ThreatenEvent))
+            // TODO: Interrupt when attacked
+            if (source == EUseSource.Target && (msg is ThreatenEvent))
                 msg.OnEvent += (m) => Interrupt();
         }
 

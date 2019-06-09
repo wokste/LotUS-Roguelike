@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HackConsole;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,26 @@ namespace SurvivalHack.Combat
 {
     static class CombatSystem
     {
-        public static EAttackResult DoAttack(Entity attacker, Entity defender, Entity weapon, StringBuilder sb)
+        public static void DoAttack(Entity attacker, IEnumerable<Entity> defenders, (Entity, IWeapon) weaponPair)
         {
+            var sb = new StringBuilder();
+            foreach (var target in defenders)
+            {
+                DoAttack(attacker, target, weaponPair, sb);
+            }
+            ColoredString.OnMessage(sb.ToString());
+        }
+
+        public static EAttackResult DoAttack(Entity attacker, Entity defender, (Entity, IWeapon) weaponPair, StringBuilder sb)
+        {
+            // TODO: Calculate hit/miss
 
             // TODO: Increase damage based on items the player is wearing.
-            return EAttackResult.HitKill;
+
+            Damage damageCopy = weaponPair.Item2.Damage;
+            var ret = DoDamage(defender, ref damageCopy, sb);
+            ColoredString.OnMessage(sb.ToString());
+            return ret;
         }
 
         public static bool IsAHit(this EAttackResult res)
@@ -51,18 +67,28 @@ namespace SurvivalHack.Combat
         }
     }
 
+
+    public struct Attack
+    {
+        public int HitChance;
+        public int CritChance;
+        public EAttackMove AttackMove;
+    }
+
     public struct Damage
     {
         public float Dmg;
         public EDamageType DamageType;
+        public EAttackMove AttackMove;
         public bool KillHit;
 
         public bool Significant => (Dmg > 0);
 
-        public Damage(float damage, EDamageType damageType)
+        public Damage(float damage, EDamageType damageType, EAttackMove attackMove)
         {
             Dmg = damage;
             DamageType = damageType;
+            AttackMove = attackMove;
             KillHit = false;
         }
 

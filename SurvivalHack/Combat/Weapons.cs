@@ -1,74 +1,73 @@
 ﻿using HackConsole;
 using HackConsole.Algo;
 using SurvivalHack.ECM;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SurvivalHack.Combat
 {
-    public interface IWeapon : IActionComponent
+    public interface IWeapon : IComponent
     {
-        bool InRange(Entity attacker, Entity defender);
-        float WeaponPriority { get; }
-        EAttackMove AttackMove { get; }
+        Damage Damage { get; }
+        Vec? Dir(Entity attacker, Entity defender);
+        IEnumerable<Entity> Targets(Entity self, Vec value);
     }
 
     public class MeleeWeapon : IWeapon, IEquippableComponent
     {
-        public float Damage;
-        public EAttackMove AttackMove { get; }
-        public EDamageType DamageType;
+        public Damage Damage { get; }
 
-        public float WeaponPriority { get; set; }
-
-        public MeleeWeapon(float damage, EAttackMove attackMove, EDamageType damageType)
+        public MeleeWeapon(Damage damage)
         {
             Damage = damage;
-            AttackMove = attackMove;
-            DamageType = damageType;
         }
 
-        public bool InRange(Entity attacker, Entity defender)
+
+        public MeleeWeapon(float damage, EAttackMove move, EDamageType type)
         {
-            return (attacker.Pos - defender.Pos).ManhattanLength <= 1;
+            Damage = new Damage(damage, type, move);
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public Vec? Dir(Entity attacker, Entity defender)
         {
-            if (message is AttackEvent && (source == EUseSource.Item))
-                message.OnEvent += ToHitRoll;
+            Vec delta = (defender.Pos - attacker.Pos);
+
+            if (delta.ManhattanLength > 1)
+                return null;
+
+            return delta;
         }
 
-        private void ToHitRoll(BaseEvent msg)
+        public IEnumerable<Entity> Targets(Entity attacker, Vec dir)
         {
-            var attack = (AttackEvent)msg;
-            if (attack.State.IsAHit())
-            {
-                var sb = new StringBuilder();
-                var damage = new Damage(Damage, DamageType);
-                CombatSystem.DoDamage(attack.Target, ref damage, sb);
-                ColoredString.OnMessage(sb.ToString());
-            }
+            var level = attacker.Level;
+            return level.GetEntities(attacker.Pos + dir);
         }
 
         public ESlotType SlotType => ESlotType.Hand;
     }
 
-    public class RangedWeapon : IWeapon, IEquippableComponent
+    public class RangedWeapon : MeleeWeapon// IWeapon, IEquippableComponent
     {
-        public float Damage;
-        public EAttackMove AttackMove => EAttackMove.Projectile;
-        public EDamageType DamageType;
+        //public Damage Damage;
         public float Range;
-        public float WeaponPriority { get; set; }
 
-        public RangedWeapon(float damage, EDamageType damageType, float range)
+        public RangedWeapon(int damage, EDamageType type, float range) : base(new Damage(damage, type, EAttackMove.Projectile))
         {
-            Damage = damage;
-            DamageType = damageType;
+            //Damage = damage;
             Range = range;
         }
 
-        public bool InRange(Entity attacker, Entity defender)
+        public RangedWeapon(Damage damage, float range) : base(damage)
+        {
+            //Damage = damage;
+            Range = range;
+        }
+
+        //TODO: Fix ranged weapons
+        /*
+        public bool CanAttack(Entity attacker, Entity defender)
         {
             var level = attacker.Level;
             var path = Line.Run(attacker.Pos, defender.Pos);
@@ -91,12 +90,13 @@ namespace SurvivalHack.Combat
             if (attack.State.IsAHit())
             {
                 var sb = new StringBuilder();
-                var damage = new Damage(Damage, DamageType);
-                CombatSystem.DoDamage(attack.Target, ref damage, sb);
+                var damageCopy = Damage;
+                CombatSystem.DoDamage(attack.Target, ref damageCopy, sb);
                 ColoredString.OnMessage(sb.ToString());
             }
         }
 
         public ESlotType SlotType => ESlotType.Ranged;
+        */
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SFML.Graphics;
@@ -9,6 +10,9 @@ namespace SurvivalHack
     public class Inventory : IComponent
     {
         public readonly List<Entity> Items = new List<Entity>();
+
+        public const int SLOT_MAINHAND = 0;
+        public const int SLOT_OFFHAND = 1;
         public const int SLOT_RANGED = 2;
         public const int SLOT_WAND = 3;
 
@@ -27,6 +31,7 @@ namespace SurvivalHack
         };
 
         public readonly Slot[] Slots = new Slot[SlotNames.Length];
+
 
         public void Add(Entity item)
         {
@@ -138,8 +143,6 @@ namespace SurvivalHack
         }
 
         public ESlotType SlotType { get; }
-
-        public void GetActions(Entity self, BaseEvent msg, EUseSource source) {}
     }
 
     public enum ESlotType

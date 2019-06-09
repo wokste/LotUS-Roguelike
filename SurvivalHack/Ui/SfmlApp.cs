@@ -1,4 +1,6 @@
 ﻿using HackConsole;
+using SurvivalHack.Combat;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -9,7 +11,7 @@ namespace SurvivalHack.Ui
         private readonly BaseWindow _window;
         private TurnController _controller;
 
-        private static void Main(string[] args)
+        private static void Main(string[] _)
         {
             var app = new SfmlApp();
             app.Run();
@@ -212,22 +214,37 @@ namespace SurvivalHack.Ui
         {
             var actPoint = _controller.Player.Pos + move;
 
-            foreach (var enemy in _controller.Level.GetEntities(actPoint))
-            {
-                if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
-                {
-                    (var weapon, var comp) = _controller.Player.GetWeapon(enemy);
+            bool targetSquareContainsEnemy = _controller.Level.GetEntities(actPoint).Any(e => e.EntityFlags.HasFlag(EEntityFlag.TeamMonster));
 
-                    if (weapon != null)
-                    {
-                        Eventing.On(new AttackEvent(_controller.Player, weapon, enemy, comp.AttackMove));
-                        _controller.EndTurn();
-                    }
-                    return;
-                }
+            if (targetSquareContainsEnemy)
+            {
+                if (DoAttack(Inventory.SLOT_MAINHAND, move))
+                    _controller.EndTurn();
+
+                return;
             }
 
             _controller.TryMove(move);
+        }
+
+        public bool DoAttack(int slot, Vec dir)
+        {
+            var weapon = _controller.Player.GetOne<Inventory>().Slots[slot].Item;
+
+            if (weapon == null)
+                return false;
+
+            var weaponComponent = weapon.GetOne<IWeapon>();
+            if (weaponComponent == null)
+                return false;
+
+            var targets = weaponComponent.Targets(_controller.Player, dir);
+            CombatSystem.DoAttack(_controller.Player, targets.ToArray(), (weapon, weaponComponent));
+
+            if (slot == Inventory.SLOT_MAINHAND)
+                DoAttack(Inventory.SLOT_OFFHAND, dir);
+
+            return true;
         }
     }
 }

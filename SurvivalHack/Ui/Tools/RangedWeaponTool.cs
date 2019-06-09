@@ -23,7 +23,8 @@ namespace SurvivalHack.Ui.Tools
 
                 foreach (var enemy in map.GetEntities(shape).ToArray())
                 {
-                    Eventing.On(new AttackEvent(player, item, enemy, weapon.AttackMove));
+                    // TODO: Fixme
+                    //Eventing.On(new AttackEvent(player, item, enemy, weapon.AttackMove));
                     effective = true;
                 }
 

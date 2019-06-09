@@ -84,25 +84,6 @@ namespace SurvivalHack
                 SetLevel(null, Vec.Zero);
         }
 
-        public (Entity,IWeapon) GetWeapon(Entity target)
-        {
-            IEnumerable<Entity> It() {
-                var inventory = GetOne<Inventory>();
-                yield return inventory?.Slots[0].Item;
-                yield return inventory?.Slots[1].Item;
-                yield return this;
-            }
-
-            foreach(var elem in It())
-            {
-                var comp = elem?.GetOne<IWeapon>();
-                if (comp != null && comp.InRange(this, target))
-                    return (elem, comp);
-            }
-
-            return (null, null);
-        }
-
         public void SetLevel(Level newLevel, Vec newPos)
         {
             Level?.GetChunck(Pos).Remove(this);
