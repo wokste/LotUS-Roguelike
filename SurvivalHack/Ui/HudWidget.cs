@@ -1,4 +1,5 @@
 ﻿using HackConsole;
+using System.Diagnostics;
 using System.Linq;
 using SurvivalHack.Combat;
 using SFML.Graphics;
@@ -54,24 +55,19 @@ namespace SurvivalHack.Ui
             PrintBar("HP:", y++, statblock, 0);
             PrintBar("MP:", y++, statblock, 1);
             PrintBar("XP:", y++, statblock, 2);
-
-            var FoV = _controller.FoV;
-            var monsterList = _controller.Level.GetEntities().Where(e => (
-                e != _controller.Player &&
-                e.EntityFlags.HasFlag(EEntityFlag.TeamMonster) &&
-                FoV.ShowLocation(e) != null
-            ));
-
-            foreach (var e in monsterList)
+            
+            foreach (var e in _controller.VisibleEnemies)
             {
                 y++;
+                var fgColor = (e == _controller.SelectedTarget) ? Color.White : new Color(128,128,128);
 
-                Print(new Vec(0, y++), e.Name, Color.White, Color.Transparent);
+                Print(new Vec(0, y++), e.Name, fgColor, Color.Transparent);
 
                 var damagable = e.GetOne<StatBlock>();
                 if (damagable != null)
                     PrintBar("HP:", y++, damagable, 0);
             }
+            Dirty = true; // This is temporary.
         }
     }
 }

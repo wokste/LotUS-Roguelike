@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
-using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
@@ -15,12 +14,27 @@ namespace SurvivalHack
         public FieldOfView FoV;
         public Inventory Inventory;
         public Level Level => Player.Level;
-
-        public ITool ActiveTool; // TODO: Event on tool change
-
         public Action OnTurnEnd;
         public Action OnGameOver;
         public bool GameOver { get; private set; } = false;
+
+        public Entity SelectedTarget = null;
+        private IList<Entity> _visibleEnemies = null;
+        public IList<Entity> VisibleEnemies
+        {
+            get
+            {
+                if (_visibleEnemies == null)
+                {
+                    _visibleEnemies = Level.GetEntities().Where(e => (
+                        e != Player &&
+                        e.EntityFlags.HasFlag(EEntityFlag.TeamMonster) &&
+                        FoV.ShowLocation(e) != null
+                    )).ToArray();
+                }
+                return _visibleEnemies;
+            }
+        }
 
         public TurnController(Game game) {
             Inventory = new Inventory();
@@ -56,6 +70,8 @@ namespace SurvivalHack
         }
 
         public void EndTurn(bool interrupt = true) {
+            _visibleEnemies = null; // Triggers a recalculaton;
+
             // Make sure that auto turns will not be executed anymore after a manual turn.
             if (interrupt)
             {

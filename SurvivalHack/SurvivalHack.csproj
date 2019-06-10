@@ -87,6 +87,7 @@
     <Compile Include="Eventing.cs" />
     <Compile Include="Mapgen\Automata\BomberAutomata.cs" />
     <Compile Include="Mapgen\VoronoiNoise.cs" />
+    <Compile Include="Mapgen\Encounters\Encounter.cs" />
     <Compile Include="Effects\HealEffect.cs" />
     <Compile Include="Effects\Interfaces.cs" />
     <Compile Include="Effects\MapRevealEffect.cs" />
@@ -129,8 +130,6 @@
     <Compile Include="Timeline.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Ui\MapWidget.cs" />
-    <Compile Include="Ui\Tools\ITool.cs" />
-    <Compile Include="Ui\Tools\RangedWeaponTool.cs" />
     <Compile Include="WizTools.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>
