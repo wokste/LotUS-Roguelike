@@ -39,13 +39,29 @@ namespace SurvivalHack
         public IEnumerable<T> Get<T>() where T : class, IComponent
         {
             foreach (var c in Components)
+                if (c is T c2)
+                    yield return c2;
+
+        }
+
+        public IEnumerable<T> GetNested<T>(IList<T> list = null) where T : class, IComponent
+        {
+            list = list ?? new List<T>();
+            foreach (var c in Components)
             {
                 if (c is T c2)
                 {
-                    yield return c2;
+                    list.Add(c2);
+                }
+                else if (c is INestedComponent nc)
+                {
+                    nc.GetNested(list);
                 }
             }
+            return list;
         }
+
+
 
         public T GetOne<T>() where T : class, IComponent
         {

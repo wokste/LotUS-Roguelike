@@ -9,40 +9,36 @@ namespace SurvivalHack.Combat
 {
     static class CombatSystem
     {
-        public static void DoAttack(Entity attacker, IEnumerable<Entity> defenders, (Entity, IWeapon) weaponPair)
+        public static void RollAttack(Entity attacker, IEnumerable<Entity> defenders, (Entity, IWeapon) weaponPair)
         {
             var sb = new StringBuilder();
             foreach (var target in defenders)
             {
+                if (target.GetOne<StatBlock>() != null)
                 DoAttack(attacker, target, weaponPair, sb);
             }
             ColoredString.OnMessage(sb.ToString());
         }
 
-        public static EAttackResult DoAttack(Entity attacker, Entity defender, (Entity, IWeapon) weaponPair, StringBuilder sb)
+        private static EAttackResult DoAttack(Entity attacker, Entity defender, (Entity, IWeapon) weaponPair, StringBuilder sb)
         {
-            // TODO: Calculate hit/miss
-
+            Attack attack = new Attack { HitChance = 0.7f, CritChance = 0.04f };
+            Damage damageCopy = weaponPair.Item2.Damage;
             // TODO: Increase damage based on items the player is wearing.
 
-            Damage damageCopy = weaponPair.Item2.Damage;
+            foreach (var armor in defender.GetNested<IArmorComponent>().OrderBy(a => -a.ArmorPriority)){
+                armor.Mutate(ref attack, ref damageCopy);
+            }
+
             var ret = DoDamage(defender, ref damageCopy, sb);
             ColoredString.OnMessage(sb.ToString());
             return ret;
         }
 
-        public static bool IsAHit(this EAttackResult res)
-        {
-            return res == EAttackResult.HitNoDamage || res == EAttackResult.HitDamage || res == EAttackResult.HitKill;
-        }
-
-        public static EAttackResult DoDamage(Entity target, ref Damage dmg, StringBuilder sb)
-        {
-            // TODO: Reduce damage based on armour etc.
-
-            // TODO: Target takes damage.
+        private static EAttackResult DoDamage(Entity target, ref Damage dmg, StringBuilder sb)
+        {   
             var stats = target.GetOne<StatBlock>();
-            stats.TakeDamage(ref dmg);
+            stats?.TakeDamage(ref dmg);
 
             EAttackResult res;
             if (dmg.Dmg > 0)
@@ -70,8 +66,8 @@ namespace SurvivalHack.Combat
 
     public struct Attack
     {
-        public int HitChance;
-        public int CritChance;
+        public float HitChance;
+        public float CritChance;
         public EAttackMove AttackMove;
     }
 

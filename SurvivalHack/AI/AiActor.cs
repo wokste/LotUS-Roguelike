@@ -124,7 +124,7 @@ namespace SurvivalHack.Ai
                 if (!targets.Contains(enemy))
                     continue;
 
-                CombatSystem.DoAttack(self, targets, weaponPair);
+                CombatSystem.RollAttack(self, targets, weaponPair);
                 return true;
             }
             return false;

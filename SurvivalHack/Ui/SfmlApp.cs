@@ -239,7 +239,7 @@ namespace SurvivalHack.Ui
                 return false;
 
             var targets = weaponComponent.Targets(_controller.Player, dir);
-            CombatSystem.DoAttack(_controller.Player, targets.ToArray(), (weapon, weaponComponent));
+            CombatSystem.RollAttack(_controller.Player, targets.ToArray(), (weapon, weaponComponent));
 
             if (slot == Inventory.SLOT_MAINHAND)
                 DoAttack(Inventory.SLOT_OFFHAND, dir);

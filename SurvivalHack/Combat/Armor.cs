@@ -2,18 +2,16 @@
 
 namespace SurvivalHack.Combat
 {
-    interface IShieldComponent : IComponent
+    interface IArmorComponent : IComponent
     {
+        int ArmorPriority { get; }
 
+        void Mutate(ref Attack attack, ref Damage damage);
     }
 
-    interface IArmorComponent : IComponent {
-
-    }
-
-    public class Blockable : IShieldComponent
+    public class Blockable : IArmorComponent
     {
-        public int Priority { get; set; } = 100;
+        public int ArmorPriority => 100;
 
         public float BlockChance;
         public EAttackResult BlockMethod;
@@ -24,15 +22,15 @@ namespace SurvivalHack.Combat
             BlockMethod = blockMethod;
         }
 
-        public void Mutate(ref float hitChance, ref Damage _)
+        public void Mutate(ref Attack attack, ref Damage _)
         {
-            hitChance *= (1 - BlockChance);
+            attack.HitChance *= (1 - BlockChance);
         }
     }
 
     public class Armor : IArmorComponent, IEquippableComponent
     {
-        public int Priority { get; set; } = 50;
+        public int ArmorPriority => 50;
 
         public ESlotType SlotType { get; private set; }
 
@@ -44,15 +42,17 @@ namespace SurvivalHack.Combat
             SlotType = slotType;
         }
         
-        public void Mutate(ref Damage attack)
+        public void Mutate(ref Attack _, ref Damage damage)
         {
-            attack.Dmg -= DamageReduction;
+            damage.Dmg -= DamageReduction;
             return;
         }
     }
 
     public class ElementalResistance : IArmorComponent
     {
+        public int ArmorPriority => 30;
+
         private readonly EDamageType DamageType;
         private readonly float Mult;
 
@@ -62,12 +62,12 @@ namespace SurvivalHack.Combat
             Mult = mult;
         }
         
-        public void Mutate(ref Damage attack)
+        public void Mutate(ref Attack _, ref Damage damage)
         {
-            if ((attack.DamageType & DamageType) == 0)
+            if ((damage.DamageType & DamageType) == 0)
                 return;
 
-            attack.Dmg *= Mult;
+            damage.Dmg *= Mult;
             return;
         }
     }

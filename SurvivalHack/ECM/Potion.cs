@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SurvivalHack.ECM
 {
-    public class Potion : IComponent
+    public class Potion : IActionComponent
     {
         public IEnumerable<IEffect> Effects;
         public string IdentifiedName;

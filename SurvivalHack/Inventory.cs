@@ -7,7 +7,7 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class Inventory : IComponent
+    public class Inventory : INestedComponent
     {
         public readonly List<Entity> Items = new List<Entity>();
 
@@ -115,6 +115,17 @@ namespace SurvivalHack
             bool Fits(ESlotType? actualSlot) => (slotType == actualSlot) || (slotType == ESlotType.Offhand && actualSlot == ESlotType.Hand);
 
             return item.Components.Any(c => Fits((c as IEquippableComponent)?.SlotType));
+        }
+
+        public void GetNested<T>(IList<T> list) where T : class, IComponent
+        {
+            foreach (var s in Slots)
+            {
+                if (s.Item is Entity item)
+                {
+                    item.GetNested<T>(list);
+                }
+            }
         }
 
         public struct Slot
