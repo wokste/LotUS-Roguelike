@@ -90,6 +90,7 @@
     <Compile Include="Effects\HealEffect.cs" />
     <Compile Include="Effects\Interfaces.cs" />
     <Compile Include="Effects\MapRevealEffect.cs" />
+    <Compile Include="Spell.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />

@@ -8,7 +8,7 @@ using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
-    public class TurnController : IActionComponent
+    public class TurnController : IComponent
     {
         public Entity Player;
         public List<Vec> Path;
@@ -58,7 +58,9 @@ namespace SurvivalHack
         public void EndTurn(bool interrupt = true) {
             // Make sure that auto turns will not be executed anymore after a manual turn.
             if (interrupt)
-                Interrupt();
+            {
+                Path = null;
+            }
 
             OnTurnEnd?.Invoke();
         }
@@ -78,6 +80,12 @@ namespace SurvivalHack
             if (Path == null || Path.Count <= 1)
                 return false;
 
+            if (InCombat())
+            {
+                Path = null;
+                return false;
+            }
+
             Debug.Assert(Player.Pos == Path.First());
             
             Path.RemoveAt(0);
@@ -92,16 +100,19 @@ namespace SurvivalHack
             }
         }
 
-        public void GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public bool InCombat()
         {
-            // TODO: Interrupt when attacked
-            if (source == EUseSource.Target && (msg is ThreatenEvent))
-                msg.OnEvent += (m) => Interrupt();
-        }
+            foreach (var e in Player.Level.GetEntities())
+            {
+                if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
+                    continue;
 
-        private void Interrupt()
-        {
-            Path = null;
+                if (e.LastSeenPos != e.Pos)
+                    continue;
+
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using SurvivalHack.Combat;
+using SurvivalHack.Effects;
 using System.Diagnostics;
 using System.Linq;
 
@@ -103,6 +104,14 @@ namespace SurvivalHack.Ui
                 case 'c':
                     {
                         // TODO: Reserved for casting spells
+
+                        // Temporary: Heal spell
+                        var spell = new Spell(6, new IEffect[] { new HealEffect(25, 0, EntityTarget.Self) });
+
+                        if (spell.Cast(_controller.Player, _controller.Player))
+                        {
+                            _controller.EndTurn();
+                        }
                     }
                     break;
                 case 'd': // Drop Item
@@ -212,6 +221,8 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
+
+
             var actPoint = _controller.Player.Pos + move;
 
             bool targetSquareContainsEnemy = _controller.Level.GetEntities(actPoint).Any(e => e.EntityFlags.HasFlag(EEntityFlag.TeamMonster));

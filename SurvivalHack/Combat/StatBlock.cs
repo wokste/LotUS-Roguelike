@@ -7,25 +7,33 @@ namespace SurvivalHack.Combat
     public class StatBlock : IComponent
     {
         private readonly Stat[] _stats = new Stat[3];
-        private readonly int _level = 0;
 
         public StatBlock(int HP, int MP, int XP)
         {
-            _stats[0] = new Stat(HP, 1);
-            _stats[1] = new Stat(MP, 1);
-            _stats[2] = new Stat(XP, 1);
+            _stats[0] = new Stat(HP);
+            _stats[1] = new Stat(MP);
+            _stats[2] = new Stat(XP);
 
             for (int i = 0; i < _stats.Length; ++i)
             {
-                _stats[i].Set(int.MaxValue, _level); // Will be clamped anyway.
+                _stats[i].Set(int.MaxValue); // Will be clamped anyway.
             }
         }
         
         public object Cur(int statID) => _stats[statID].Cur;
 
-        public object Max(int statID) => _stats[statID].Max(_level);
+        internal bool Spend(int cost, int statID)
+        {
+            if (_stats[statID].Cur < cost)
+                return false;
 
-        public float Perc(int statID) => _stats[statID].Perc(_level);
+            _stats[statID].Cur -= cost;
+            return true;
+        }
+
+        public object Max(int statID) => _stats[statID].Max;
+
+        public float Perc(int statID) => _stats[statID].Perc;
 
         public void TakeDamage(ref Damage dmg)
         {
@@ -34,7 +42,7 @@ namespace SurvivalHack.Combat
             if (dmg.Dmg <= 0)
                 return;
 
-            var change = _stats[statID].Add(-1 * (int)dmg.Dmg, _level);
+            var change = _stats[statID].Add(-1 * (int)dmg.Dmg);
 
             if (change == 0)
                 return;
@@ -47,7 +55,7 @@ namespace SurvivalHack.Combat
 
         public int Heal(int restore, int statID)
         {
-            var change = _stats[statID].Add(restore, _level);
+            var change = _stats[statID].Add(restore);
 
             /*
             if (change > 0)
@@ -73,33 +81,26 @@ namespace SurvivalHack.Combat
             
         }
 
-        public struct Stat
+        struct Stat
         {
-            private readonly float _inc;
-            private readonly float _base;
-            public int Cur { get; private set; }
+            internal int Cur;
+            internal int Max;
 
-            public Stat(float baseVal, float incVal) : this()
+            public Stat(int val) : this()
             {
-                _inc = incVal;
-                _base = baseVal;
+                Cur = val;
+                Max = val;
             }
 
-            public int Max(int level) => (int)(_base + _inc * level);
 
-            public float Perc(int level) => Cur / (float)Max(level);
+            public float Perc => Cur / (float)Max;
 
-            public int Add(int val, int level) => Set(Cur + val, level);
+            public int Add(int val) => Set(Cur + val);
 
-            public int Set(int val, int level)
+            public int Set(int val)
             {
-                Cur = MyMath.Clamp(val, 0, Max(level));
+                Cur = MyMath.Clamp(val, 0, Max);
                 return val - Cur;
-            }
-
-            public void LevelUp(int oldlevel, int newLevel)
-            {
-                Set(Cur + Max(newLevel) - Max(oldlevel), newLevel);
             }
         }
     }

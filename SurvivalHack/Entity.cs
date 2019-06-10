@@ -60,9 +60,7 @@ namespace SurvivalHack
             }
             return list;
         }
-
-
-
+        
         public T GetOne<T>() where T : class, IComponent
         {
             foreach (var comp in Components)
