@@ -30,7 +30,7 @@ namespace SurvivalHack.Factory
                 new Potion("Lesser healing potion", new[] { new Heal(20, 0, EntityTarget.Self | EntityTarget.Others) }),
                 new Potion("Greater healing potion", new[] { new Heal(40, 0, EntityTarget.Self | EntityTarget.Others) }),
                 new Potion("Mana potion", new[] { new Heal(10, 1, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Fruit Juice", new IEffect[] {}),
+                new Potion("Claivorance", new IEffect[] {new MapReveal(MapReveal.RevealMethod.Terrain, 15)}),
             };
         }
 
