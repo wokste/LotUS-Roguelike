@@ -1,34 +1,92 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace HackConsole
 {
-    public struct ColoredString
+    public static class ColoredString
     {
-        public string Text;
-        public Color Color;
-        public int Length => Text.Length;
+        /*
+        Color coding:
+            @ca	White    Plain text
+            @cb	Blue     Monsters / Traps
+            @cc Cyan     Status Effects
+            @cd	Red      Damage / Cursed Items / Monsters
+            @ce Purple   Spells / Artifacts / MP
+            @cf Gray     Mundane Items, stairs, etc.
+            @cg	Green    Healing
+            @ch Yellow   Consumable Items / Minor enchantments
+        */
 
-        private ColoredString(string text, Color color)
+        public static Color[] colors = new Color[] { new Color(128, 128, 128), Color.Blue, Color.Cyan, Color.Red, Color.Magenta, Color.Cyan, Color.Green, Color.Yellow };
+
+        public static void Write(string text)
         {
-            Text = text;
-            Color = color;
+            OnMessage?.Invoke(text);
         }
 
-        public static void Write(string text, Color color)
-        {
-            OnMessage?.Invoke(new ColoredString(text, color));
-        }
+        public static Action<string> OnMessage;
 
-        public Symbol this[int index] {
-            get {
-                return new Symbol(Text[index], Color, Color.Transparent);
+        public static IEnumerable<(char, Color)> Iterate(this string text)
+        {
+            var state = STATE_TEXT;
+            Color color = colors[0];
+
+            foreach (var c in text)
+            {
+                switch (state)
+                {
+                    case STATE_TEXT:
+                        {
+                            if (c == '@')
+                                state = STATE_CMD;
+                            else
+                                yield return (c, color);
+                            
+                            break;
+                        }
+                    case STATE_CMD:
+                        {
+                            switch (c)
+                            {
+                                case 'c':
+                                    {
+                                        state = STATE_CMD_COLOR;
+                                        break;
+                                    }
+                                default:
+                                    Debug.Assert(false);
+                                    state = STATE_TEXT;
+                                    break;
+                            }
+                            break;
+                        }
+                    case STATE_CMD_COLOR:
+                        {
+                            var colorId = c - 'a';
+                            if (colorId >= 0 && colorId < colors.Length)
+                            {
+                                color = colors[colorId];
+                            }
+                            else
+                            {
+                                Debug.Assert(false);
+                            }
+
+                            state = STATE_TEXT;
+                            break;
+                        }
+                    default:
+                        Debug.Assert(false);
+                        state = STATE_TEXT;
+                        break;
+                }
             }
         }
 
-        public static Action<ColoredString> OnMessage;
+        private const int STATE_TEXT = 0;
+        private const int STATE_CMD = 1;
+        private const int STATE_CMD_COLOR = 2;
     }
 }

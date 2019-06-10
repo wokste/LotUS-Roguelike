@@ -1,45 +1,32 @@
 ﻿using HackConsole;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SurvivalHack.ECM
+namespace SurvivalHack.Effects
 {
-    public class HealComponent : Component
-    {
-        public int Restore;
-        public int StatID;
-        public Type MessageType { get; }
-
-        public HealComponent(int restore, int statID, Type messageType)
-        {
-            Restore = restore;
-            StatID = statID;
-            MessageType = messageType;
-        }
-
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
-        {
-            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
-                message.OnEvent += Heal;
-        }
-
-        public void Heal(BaseEvent msg)
-        {
-            Eventing.On(new HealEvent(msg, Restore, StatID), msg);
-        }
-
-        public override string Describe() => $"Heals {Restore} when used.";
-    }
-
-    public class MapRevealComponent : Component
+    /*
+    public class MapRevealEffect : ITileEffect
     {
         public Type MessageType { get; }
-        public byte Flags;
+        private readonly byte FovFlags;
+        public int Radius;
 
-        public MapRevealComponent(byte flags, Type messageType)
+        public enum RevealMethod
+        {
+            Walls, All, // Maybe add heat (lava), movement (non-flying creatures), etc.
+        }
+
+        readonly RevealMethod Method;
+
+        public MapRevealEffect(byte fovFlags, RevealMethod method, int radius)
         {
             MessageType = messageType;
-            Flags = flags;
+            FovFlags = fovFlags;
+            Method = method;
+            Radius = radius;
         }
 
         public override void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -69,11 +56,20 @@ namespace SurvivalHack.ECM
             // Now update all tiles such that things become visible
             foreach (var v in Map.TileMap.Ids())
             {
-                if (Reachable(v))
-                    FoV.Visibility[v] |= Flags;
+                if (Reachable(v) && Map.GetTile(v).Solid)
+                    FoV.Visibility[v] |= FovFlags;
             }
         }
+        
+        public bool Use(Entity insignator, Grid<Tile> map, StringBuilder sb)
+        {
+            throw new NotImplementedException();
+        }
 
-        public override string Describe() => $"Reveals the map";
+        public float Efficiency(Entity instignator, Grid<Tile> map)
+        {
+            throw new NotImplementedException();
+        }
     }
+    */
 }

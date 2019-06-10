@@ -8,7 +8,7 @@ using SurvivalHack.Ui.Tools;
 
 namespace SurvivalHack
 {
-    public class TurnController : Component
+    public class TurnController : IComponent
     {
         public Entity Player;
         public List<Vec> Path;
@@ -25,13 +25,13 @@ namespace SurvivalHack
         public TurnController(Game game) {
             Inventory = new Inventory();
 
-            Player = new Entity((char)2, "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
+            Player = new Entity(new TileGlyph(0, 23, TileGlyph.ANIM), "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
                 Components = new List<IComponent>()
                 {
                     this,
                     new Combat.MeleeWeapon(2, Combat.EAttackMove.Thrust, Combat.EDamageType.Bludgeoing),
-                    new Combat.Damagable(100),
+                    new Combat.StatBlock(100, 20, 0),
                     Inventory
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
@@ -58,14 +58,16 @@ namespace SurvivalHack
         public void EndTurn(bool interrupt = true) {
             // Make sure that auto turns will not be executed anymore after a manual turn.
             if (interrupt)
-                Interrupt();
+            {
+                Path = null;
+            }
 
             OnTurnEnd?.Invoke();
         }
 
-        public bool Move(Vec move, bool interrupt = true)
+        public bool TryMove(Vec move, bool interrupt = true)
         {
-            if (Player.Move(move))
+            if (Player.TryMove(move))
             {
                 EndTurn(interrupt);
                 return true;
@@ -78,10 +80,16 @@ namespace SurvivalHack
             if (Path == null || Path.Count <= 1)
                 return false;
 
+            if (InCombat())
+            {
+                Path = null;
+                return false;
+            }
+
             Debug.Assert(Player.Pos == Path.First());
             
             Path.RemoveAt(0);
-            if (Move(Path.First() - Player.Pos, false))
+            if (TryMove(Path.First() - Player.Pos, false))
             {
                 return true;
             }
@@ -92,15 +100,19 @@ namespace SurvivalHack
             }
         }
 
-        public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
+        public bool InCombat()
         {
-            if (source == EUseSource.Target && (msg is AttackEvent || msg is ThreatenEvent))
-                msg.OnEvent += (m) => Interrupt();
-        }
+            foreach (var e in Player.Level.GetEntities())
+            {
+                if (!e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
+                    continue;
 
-        private void Interrupt()
-        {
-            Path = null;
+                if (e.LastSeenPos != e.Pos)
+                    continue;
+
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -1,113 +1,64 @@
 ﻿using System;
+using System.Diagnostics;
+using SFML.Graphics;
+using SFML.Window;
 
 namespace HackConsole
 {
-    public abstract class Widget
+    public abstract class Widget 
     {
-        public Rect Size;
+        public Rect Rect;
         public Rect DesiredSize;
         public Docking Docking = Docking.None;
-        public bool Dirty = true;
+        public View View = new View();
+
+        public Widget Parent;
+        public Widget Ancestor => Parent == null ? this : Parent.Ancestor;
+
+        public void Draw(RenderTarget target)
+        {
+            target.SetView(View);
+            DrawInternal(target);
+        }
+
+        protected abstract void DrawInternal(RenderTarget target);
 
         //public abstract bool CanHasFocus { get; }
 
         /// <summary>
-        /// Renders the widget on the CellGrid.
-        /// </summary>
-        /// <param name="forceUpdate">If this is false, the widget may assume that the previous content is still on the same location.</param>
-        /// <returns>True if something updated. False otherwise.</returns>
-        public virtual bool Render(bool forceUpdate)
-        {
-            if (!Dirty && !forceUpdate)
-                return false;
-
-            Dirty = false;
-            RenderImpl();
-            return true;
-        }
-
-        protected abstract void RenderImpl();
-
-        /// <summary>
         /// This will automatically be called when the widget is resized.
         /// </summary>
-        protected virtual void OnResized()
+        protected virtual void OnResized() {}
+
+        public void ResizeDocked(ref Rect free)
         {
+            var newSize = MakeDockingSize(ref free);
+
+            Resize(newSize);
         }
 
-        #region HelperFunctions
-
-        /// <summary>
-        /// Clear the area of the widget.
-        /// </summary>
-        protected void Clear()
+        public void Resize(Rect newSize)
         {
-            foreach (var v in Size.Iterator())
-            {
-                WindowData.Data[v] = new Symbol { Ascii = ' ', BackgroundColor = Color.Black, TextColor = Color.Yellow };
-            }
-        }
-
-        /// <summary>
-        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
-        /// </summary>
-        /// <param name="v">Relative position to topleft of widget</param>
-        /// <param name="msg">The text.</param>
-        /// <param name="fgColor">Foreground color</param>
-        /// <param name="bgColor">Background color</param>
-        protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
-        {
-            //TODO: Input validation
-
-            v += Size.TopLeft;
-            var length = Math.Min(msg.Length, Size.Right - v.X);
-
-            for (var i = 0; i < length; i++)
-            {
-                WindowData.Data[new Vec(v.X + i, v.Y)] = new Symbol { Ascii = msg[i], BackgroundColor = bgColor, TextColor = fgColor };
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Print a message at the (X,Y) position, relative to the TopLeft of the widget
-        /// </summary>
-        /// <param name="v">Relative position to topleft of widget</param>
-        /// <param name="msg">The text.</param>
-        protected bool Print(Vec v, ColoredString msg)
-        {
-            //TODO: Input validation
-
-            v += Size.TopLeft;
-            var length = Math.Min(msg.Length, Size.Right - v.X);
-
-            for (var i = 0; i < length; i++)
-            {
-                WindowData.Data[new Vec(v.X + i, v.Y)] = msg[i];
-            }
-            return true;
-        }
-
-        protected void Print(Vec v, Symbol s)
-        {
-            v += Size.TopLeft;
-            WindowData.Data[v] = s;
-        }
-
-        #endregion
-
-
-        public void Resize(ref Rect free)
-        {
-            var newSize = MakeSize(ref free);
-
-            if (Size.Left == newSize.Left && Size.Width == newSize.Width && Size.Top == newSize.Top && Size.Height == newSize.Height)
+            if (Rect.Left == newSize.Left && Rect.Width == newSize.Width && Rect.Top == newSize.Top && Rect.Height == newSize.Height)
                 return;
 
-            Size = newSize;
-
+            Rect = newSize;
+            ResizeView();
             OnResized();
-            Dirty = true;
+        }
+
+        private void ResizeView()
+        {
+            View.Size = new Vector2f(Rect.Width, Rect.Height);
+            View.Center = new Vector2f(Rect.Width / 2, Rect.Height / 2);
+
+            var screenRect = Ancestor.Rect;
+
+            Debug.Assert(screenRect.Left == 0);
+            Debug.Assert(screenRect.Top == 0);
+
+            var rect = new FloatRect((float)Rect.Left / screenRect.Width, (float)Rect.Top / screenRect.Height, (float)Rect.Width / screenRect.Width, (float)Rect.Height / screenRect.Height);
+            View.Viewport = rect;
         }
 
         public void CenterPopup(Rect screen)
@@ -116,15 +67,10 @@ namespace HackConsole
             newSize.Left = screen.Left + (screen.Width - newSize.Width) / 2;
             newSize.Top = screen.Top + (screen.Height - newSize.Height) / 2;
 
-            if (Size.Left == newSize.Left && Size.Width == newSize.Width && Size.Top == newSize.Top && Size.Height == newSize.Height)
-                return;
-
-            Size = newSize;
-
-            OnResized();
+            Resize(newSize);
         }
 
-        private Rect MakeSize(ref Rect free)
+        private Rect MakeDockingSize(ref Rect free)
         {
             switch (Docking)
             {
@@ -164,9 +110,10 @@ namespace HackConsole
                 }
                 case Docking.Fill:
                     return free;
+                default:
+                    Debug.Assert(false);
+                    return new Rect(free.TopLeft, DesiredSize.Size);
             }
-
-            return new Rect(free.TopLeft, DesiredSize.Size);
         }
 
         public virtual Widget WidgetAt(Vec pos)

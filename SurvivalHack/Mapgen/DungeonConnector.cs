@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using HackConsole;
 using HackConsole.Algo;
@@ -9,9 +8,9 @@ namespace SurvivalHack.Mapgen
 {
     public class DungeonConnector
     {
-        Level _map;
+        readonly Level _map;
         readonly double[,] Weights; // Adjacency matrix. 0 means the rooms are connected.
-        Room[] _rooms;
+        readonly Room[] _rooms;
 
         int RoomCount => _rooms.Length;
 

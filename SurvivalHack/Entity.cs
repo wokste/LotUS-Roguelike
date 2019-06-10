@@ -3,7 +3,6 @@ using HackConsole;
 using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System.Collections.Generic;
-using System.Linq;
 using SurvivalHack.Combat;
 using System.Diagnostics;
 
@@ -11,40 +10,28 @@ namespace SurvivalHack
 {
     public class Entity
     {
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         public EEntityFlag EntityFlags;
-
         public override string ToString() => Name;
-
         public List<IComponent> Components = new List<IComponent>();
-        
-        public Symbol Symbol;
 
+        public TileGlyph Glyph;
         public float Speed = 1;
 
         public AiActor Ai;
         public Attitude Attitude;
 
         public float LeftoverMove;
-
         public Action<Entity> OnDestroy;
-
 
         public Level Level { get; private set; }
         public Vec Pos;
         public Vec? LastSeenPos;
 
-        public Entity(char ascii, string name, EEntityFlag entityFlags)
+        public Entity(TileGlyph glyph, string name, EEntityFlag entityFlags)
         {
-            Symbol = new Symbol(ascii, Color.White);
-            Name = name;
-            EntityFlags = entityFlags;
-        }
-
-        public Entity(char ascii, Color fc, string name, EEntityFlag entityFlags)
-        {
-            Symbol = new Symbol(ascii, fc);
+            Glyph = glyph;
             Name = name;
             EntityFlags = entityFlags;
         }
@@ -52,14 +39,28 @@ namespace SurvivalHack
         public IEnumerable<T> Get<T>() where T : class, IComponent
         {
             foreach (var c in Components)
+                if (c is T c2)
+                    yield return c2;
+
+        }
+
+        public IEnumerable<T> GetNested<T>(IList<T> list = null) where T : class, IComponent
+        {
+            list = list ?? new List<T>();
+            foreach (var c in Components)
             {
                 if (c is T c2)
                 {
-                    yield return c2;
+                    list.Add(c2);
+                }
+                else if (c is INestedComponent nc)
+                {
+                    nc.GetNested(list);
                 }
             }
+            return list;
         }
-
+        
         public T GetOne<T>() where T : class, IComponent
         {
             foreach (var comp in Components)
@@ -97,25 +98,6 @@ namespace SurvivalHack
                 SetLevel(null, Vec.Zero);
         }
 
-        public (Entity,IWeapon) GetWeapon(Entity target)
-        {
-            IEnumerable<Entity> It() {
-                var inventory = GetOne<Inventory>();
-                yield return inventory?.Slots[0].Item;
-                yield return inventory?.Slots[1].Item;
-                yield return this;
-            }
-
-            foreach(var elem in It())
-            {
-                var comp = elem?.GetOne<IWeapon>();
-                if (comp != null && comp.InRange(this, target))
-                    return (elem, comp);
-            }
-
-            return (null, null);
-        }
-
         public void SetLevel(Level newLevel, Vec newPos)
         {
             Level?.GetChunck(Pos).Remove(this);
@@ -133,13 +115,17 @@ namespace SurvivalHack
             }
         }
 
-        public virtual bool Move(Vec direction)
+        public bool TryMove(Vec direction)
         {
             Debug.Assert(Level != null);
 
-            var newPosition = Pos;
-            newPosition += direction;
+            var newPosition = Pos + direction;
 
+            return TrySetPos(newPosition);
+        }
+
+        public bool TrySetPos(Vec newPosition)
+        {
             // You cannot walk of the edge of map
             if (!Level.InBoundary(newPosition))
                 return false;

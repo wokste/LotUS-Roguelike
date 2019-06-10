@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using HackConsole;
 
 namespace SurvivalHack
@@ -37,6 +35,14 @@ namespace SurvivalHack
         public Tile GetTile(Vec v)
         {
             return TileDefs[TileMap[v]];
+        }
+
+        public bool IsSameTile(Vec v0, Vec v1)
+        {
+            if (!InBoundary(v1))
+                return false;
+
+            return TileMap[v0] == TileMap[v1];
         }
 
         public IEnumerable<Entity> GetEntities()

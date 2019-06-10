@@ -7,9 +7,6 @@ namespace HackConsole
         protected uint _windowWidth = 1280;
         protected uint _windowHeight = 800;
 
-        protected readonly uint _fontX = 16;
-        protected readonly uint _fontY = 16;
-
         public WidgetContainer Widgets = new WidgetContainer { Docking = Docking.Fill };
 
         public IKeyEventSuscriber BaseKeyHandler;
@@ -20,15 +17,13 @@ namespace HackConsole
 
         protected void ResizeScreen(uint x, uint y)
         {
-            _windowWidth = x;
-            _windowHeight = y;
-            WindowData.Data = new Grid<Symbol>(new Size((int)(_windowWidth / _fontX), (int)(_windowHeight / _fontY)));
+            var size = new Size((int)x, (int)y);
 
-            var r = new Rect(Vec.Zero, WindowData.Data.Size);
-            PopupStack.Resize(ref r);
+            var r = new Rect(Vec.Zero, size);
+            PopupStack.ResizeDocked(ref r);
 
-            r = new Rect(Vec.Zero, WindowData.Data.Size);
-            Widgets.Resize(ref r);
+            r = new Rect(Vec.Zero, size);
+            Widgets.ResizeDocked(ref r);
         }
 
         protected Widget WidgetAt(Vec pos)
@@ -36,7 +31,7 @@ namespace HackConsole
             if (!PopupStack.Empty)
             {
                 var topStackWidget = PopupStack.Top;
-                if (topStackWidget.Size.Contains(pos))
+                if (topStackWidget.Rect.Contains(pos))
                     return topStackWidget;
                 else
                     return null;
@@ -44,23 +39,6 @@ namespace HackConsole
             return Widgets.WidgetAt(pos);
         }
 
-        protected bool RenderWidgets()
-        {
-            var dirty = WindowData.ForceUpdate;
-            WindowData.ForceUpdate = false;
-
-            var rendered = Widgets.Render(dirty);
-            rendered |= PopupStack.Render(dirty || rendered);
-
-            return rendered;
-        }
-
         public abstract void Run();
-    }
-
-    public static class WindowData
-    {
-        public static Grid<Symbol> Data;
-        public static bool ForceUpdate = true;
     }
 }

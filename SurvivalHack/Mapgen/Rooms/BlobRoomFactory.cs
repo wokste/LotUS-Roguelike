@@ -75,7 +75,7 @@ namespace SurvivalHack.Mapgen.Rooms
             private readonly double[] _dist;
             public Rect Rect;
             private readonly double _roughness;
-            private Random _rnd;
+            private readonly Random _rnd;
 
             public Blob(BlobRoomFactory brf, Random rnd)
             {

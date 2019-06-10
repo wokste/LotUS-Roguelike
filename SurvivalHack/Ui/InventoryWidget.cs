@@ -1,31 +1,41 @@
 ﻿using HackConsole;
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
 {
-    public class InventoryWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
+    public class InventoryWidget : GridWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
-        TurnController _controller;
-        private BaseWindow _window;
+        readonly TurnController _controller;
+        private readonly BaseWindow _window;
         private int _selectedRow = 0;
-        private int[] _columnWidth = new int[4];
+        private readonly int[] _columnCharWidth = new int[4];
+        private readonly int[] _columnPxWidth = new int[4];
 
-        public Action OnClose { get ; set ; }
+        public Action OnClose { get; set; }
         public bool Interrupt => false;
+        private const int ROW_HEIGHT = 16;
+        private const int HEADER_HEIGHT = 16;
+        private const int BORDER_WIDTH = 16;
+
         public InventoryWidget(TurnController controller, BaseWindow window)
         {
             _controller = controller;
 
-            _columnWidth[0] = 1;
-            _columnWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
-            _columnWidth[2] = 1;
-            _columnWidth[3] = 40;
+            _columnCharWidth[0] = 1;
+            _columnCharWidth[1] = Inventory.SlotNames.Max(p => p.name.Length);
+            _columnCharWidth[2] = 1;
+            _columnCharWidth[3] = 40;
             _window = window;
 
-            DesiredSize = new Rect(0, 0, _columnWidth.Sum() + _columnWidth.Length - 1, Inventory.SlotNames.Length);
+            for (int i = 0; i < 4; ++i)
+            {
+                _columnPxWidth[i] = _columnCharWidth[i] * _fontX;
+            }
+
+            DesiredSize = new Rect(0, 0, _columnPxWidth.Sum() + (_columnPxWidth.Length - 1) * BORDER_WIDTH, Inventory.SlotNames.Length * ROW_HEIGHT + HEADER_HEIGHT);
         }
 
         public void OnArrowPress(Vec move, EventFlags flags)
@@ -54,7 +64,7 @@ namespace SurvivalHack.Ui
             {
                 for (var y = 0; y < Inventory.SlotNames.Length; y++)
                 {
-                    var (type, name, key) = Inventory.SlotNames[y];
+                    var (_, _, key) = Inventory.SlotNames[y];
                     if (key == keyCode)
                     {
                         _selectedRow = y;
@@ -70,11 +80,13 @@ namespace SurvivalHack.Ui
             if (_selectedRow < 0 || _selectedRow >= Inventory.SlotNames.Length)
                 return;
 
-            var slotType = Inventory.SlotNames[_selectedRow].type;
+            if (_controller.Inventory.Slots[_selectedRow].Cursed)
+                return; // You can't change items in a cursed slot. Period.
+
             _controller.Inventory.Slots[_selectedRow].NewItems = false;
 
             var list = new List<Entity>();
-            list.AddRange(_controller.Inventory.Items.Where(e => e.Components.Any(c => c.FitsIn(slotType))));
+            list.AddRange(_controller.Inventory.Items.Where(e => Inventory.CanEquipInSlot(_selectedRow, e)));
             list.Add(null);
 
             var o = new OptionWidget($"Wield {Inventory.SlotNames[_selectedRow].name}", list, i => {
@@ -86,29 +98,32 @@ namespace SurvivalHack.Ui
             _window.PopupStack.Push(o);
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
-            Clear();
+            Clear(Color.Black);
+            Print(new Vec(0, 0), "  Slot             Item", Color.White);
 
             var inv = _controller.Inventory;
-            for (var y = 0; y < inv.Slots.Length; y++)
+            for (int i = 0; i < Inventory.SlotNames.Length; ++i)
             {
-                var (type, name, key) = Inventory.SlotNames[y];
-                var item = inv.Slots[y].Item;
+                var (_, name, key) = Inventory.SlotNames[i];
+                var slot = inv.Slots[i];
 
-                var color = (y == _selectedRow) ? Color.White : Color.Gray;
-                var bgColor = inv.Slots[y].GetBackgroundColor();
+                var color = (i == _selectedRow) ? Color.White : new Color(128,128,128);
+                var bgColor = slot.GetBackgroundColor();
 
-                Print(new Vec(2, y), name, color, bgColor);
+                var y = i + 1;
+
                 Print(new Vec(0, y), new Symbol(key, Color.Yellow));
+                Print(new Vec(2, y), name, color, bgColor);
 
-                if (item != null)
+                if (slot.Item is Entity item)
                 {
-                    var x = _columnWidth[0] + _columnWidth[1] + 2;
-                    Print(new Vec(x, y), item.Symbol);
+                    var x = _columnCharWidth[0] + _columnCharWidth[1] + 2;
+                    Print(new Vec(x, y), new Symbol(item.Name[0], Color.White));
 
                     x += 2;
-                    
+
                     Print(new Vec(x, y), item.Name, Color.White); // TODO: What if the length is too long
                 }
             }
@@ -122,8 +137,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var relMousePos = mousePos - Size.TopLeft;
-            _selectedRow = relMousePos.Y;
+            _selectedRow = (mousePos.Y - HEADER_HEIGHT) / ROW_HEIGHT;
             Dirty = true;
         }
 

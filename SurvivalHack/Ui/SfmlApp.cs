@@ -1,6 +1,7 @@
 ﻿using HackConsole;
-using SurvivalHack.ECM;
-using System;
+using SurvivalHack.Combat;
+using SurvivalHack.Effects;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -11,7 +12,7 @@ namespace SurvivalHack.Ui
         private readonly BaseWindow _window;
         private TurnController _controller;
 
-        private static void Main(string[] args)
+        private static void Main(string[] _)
         {
             var app = new SfmlApp();
             app.Run();
@@ -22,7 +23,7 @@ namespace SurvivalHack.Ui
             InitGame();
             _window = InitGui();
 
-            ColoredString.Write("You wake up in an unknown world.", Color.White);
+            ColoredString.Write("You wake up in an Unknown world.");
         }
 
         private void InitGame()
@@ -33,12 +34,11 @@ namespace SurvivalHack.Ui
             _controller = new TurnController(_game);
             _controller.OnTurnEnd += () => {
                 _game.MonsterTurn();
-                WindowData.ForceUpdate = true;
             };
             _controller.OnGameOver += () => {
                 var o = new GameOverWidget
                 {
-                    DesiredSize = new Rect(new Vec(), new Size(25, 25)),
+                    DesiredSize = new Rect(new Vec(), new Size(250, 250)),
                 };
                 _window.PopupStack.Push(o);
             };
@@ -46,8 +46,8 @@ namespace SurvivalHack.Ui
 
         private BaseWindow InitGui()
         {
-            var window = new VBOWindow("Lands of the undead sorceress");
-            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 10 } };
+            var window = new SFMLWindow("Lands of the undead sorceress");
+            var consoleWidget = new MessageListWidget { Docking = Docking.Bottom, DesiredSize = new Rect { Height = 160 } };
             ColoredString.OnMessage += (m) =>
             {
                 consoleWidget.Add(m);
@@ -55,12 +55,12 @@ namespace SurvivalHack.Ui
 
             window.Widgets.Add(consoleWidget);
 
-            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 16 } };
+            var infoWidget = new InfoWidget { Docking = Docking.Left, DesiredSize = new Rect { Width = 256 } };
             window.Widgets.Add(infoWidget);
 
             var characterWidget = new HudWidget(_controller)
             {
-                DesiredSize = { Width = 16 },
+                DesiredSize = { Width = 256 },
                 Docking = Docking.Right
             };
             window.Widgets.Add(characterWidget);
@@ -104,6 +104,14 @@ namespace SurvivalHack.Ui
                 case 'c':
                     {
                         // TODO: Reserved for casting spells
+
+                        // Temporary: Heal spell
+                        var spell = new Spell(6, new IEffect[] { new HealEffect(25, 0, EntityTarget.Self) });
+
+                        if (spell.Cast(_controller.Player, _controller.Player))
+                        {
+                            _controller.EndTurn();
+                        }
                     }
                     break;
                 case 'd': // Drop Item
@@ -213,24 +221,41 @@ namespace SurvivalHack.Ui
 
         public void OnArrowPress(Vec move, EventFlags flags)
         {
+
+
             var actPoint = _controller.Player.Pos + move;
 
-            foreach (var enemy in _controller.Level.GetEntities(actPoint))
-            {
-                if (enemy.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
-                {
-                    (var weapon, var comp) = _controller.Player.GetWeapon(enemy);
+            bool targetSquareContainsEnemy = _controller.Level.GetEntities(actPoint).Any(e => e.EntityFlags.HasFlag(EEntityFlag.TeamMonster));
 
-                    if (weapon != null)
-                    {
-                        Eventing.On(new AttackEvent(_controller.Player, weapon, enemy, comp.AttackMove));
-                        _controller.EndTurn();
-                    }
-                    return;
-                }
+            if (targetSquareContainsEnemy)
+            {
+                if (DoAttack(Inventory.SLOT_MAINHAND, move))
+                    _controller.EndTurn();
+
+                return;
             }
 
-            _controller.Move(move);
+            _controller.TryMove(move);
+        }
+
+        public bool DoAttack(int slot, Vec dir)
+        {
+            var weapon = _controller.Player.GetOne<Inventory>().Slots[slot].Item;
+
+            if (weapon == null)
+                return false;
+
+            var weaponComponent = weapon.GetOne<IWeapon>();
+            if (weaponComponent == null)
+                return false;
+
+            var targets = weaponComponent.Targets(_controller.Player, dir);
+            CombatSystem.RollAttack(_controller.Player, targets.ToArray(), (weapon, weaponComponent));
+
+            if (slot == Inventory.SLOT_MAINHAND)
+                DoAttack(Inventory.SLOT_OFFHAND, dir);
+
+            return true;
         }
     }
 }

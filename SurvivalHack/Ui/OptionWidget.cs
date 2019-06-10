@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using HackConsole;
+using SFML.Graphics;
 
 namespace SurvivalHack.Ui
 {
-    public class OptionWidget : Widget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
+    public class OptionWidget : GridWidget, IKeyEventSuscriber, IMouseEventSuscriber, IPopupWidget
     {
         public Action<Entity> OnSelect;
         public List<Entity> Set;
         public string Question;
         private int _selectedIndex = 0;
-        //private int _columns = 1;
         private const int COLUMN_WIDTH = 42;
+
+        private int LINE_HEIGHT => _fontY;
+        private int HEADER_HEIGHT => _fontY;
 
         public Action OnClose { get; set; }
         public bool Interrupt => false; // Maybe, this should be an option?
@@ -24,13 +26,12 @@ namespace SurvivalHack.Ui
             OnSelect = onSelect;
             //_columns = 1;
 
-            DesiredSize = new Rect(0, 0, COLUMN_WIDTH, Set.Count + 1);
+            DesiredSize = new Rect(0, 0, COLUMN_WIDTH * _fontX, Set.Count * LINE_HEIGHT + HEADER_HEIGHT);
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
-            Clear();
-
+            Clear(Color.Black);
             Print(new Vec(0, 0), Question, Color.White);
 
             for (var i = 0; i < Set.Count; i++)
@@ -38,7 +39,7 @@ namespace SurvivalHack.Ui
                 var y = i + 1;
                 var item = Set[i];
 
-                var color = (i == _selectedIndex) ? Color.White : Color.Gray;
+                var color = (i == _selectedIndex) ? Color.White : new Color(128,128,128);
 
                 if (item == null)
                 {
@@ -46,7 +47,7 @@ namespace SurvivalHack.Ui
                 }
                 else
                 {
-                    Print(new Vec(0, y), item.Symbol);
+                    //Print(new Vec(0, y), item.Symbol);
                     Print(new Vec(2, y), item.Name, color);
                 }
             }
@@ -96,8 +97,7 @@ namespace SurvivalHack.Ui
 
         public void OnMouseMove(Vec mousePos, Vec mouseMove, EventFlags flags)
         {
-            var relMousePos = mousePos - Size.TopLeft;
-            var index = relMousePos.Y - 1;
+            var index = (mousePos.Y - HEADER_HEIGHT) / LINE_HEIGHT;
             if (index >= 0 && index < Set.Count && _selectedIndex != index)
             {
                 _selectedIndex = index;

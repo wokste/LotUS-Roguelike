@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Linq;
 using System;
+using SFML.Graphics;
 
 namespace HackConsole
 {
@@ -16,61 +17,10 @@ namespace HackConsole
             TextColor = textColor;
             BackgroundColor = backgroundColor;
         }
-
-        public Symbol Darken(byte mult)
-        {
-            if (mult == 255)
-                return this;
-
-            return new Symbol(Ascii, TextColor.Darken(mult), BackgroundColor.Darken(mult));
-        }
     }
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Color
+
+    public static class ColorExtentions
     {
-        public static readonly Color White = new Color(255, 255, 255);
-        public static readonly Color Black = new Color(0, 0, 0);
-        public static readonly Color Red = new Color(255, 0, 0);
-        public static readonly Color Green = new Color(0, 255, 0);
-        public static readonly Color Blue = new Color(0, 0, 255);
-        public static readonly Color Yellow = new Color(255, 255, 0);
-        public static readonly Color Orange = new Color(255, 128, 0);
-        public static readonly Color Cyan = new Color(0, 255, 255);
-        public static readonly Color Pink = new Color(255, 0, 255);
-        public static readonly Color Gray = new Color(128, 128, 128);
-        public static readonly Color Transparent = new Color(0, 0, 0, 0);
-
-        public byte R;
-        public byte G;
-        public byte B;
-        public byte A;
-
-        public Color(byte r, byte g, byte b, byte a = 255)
-        {
-            R = r;
-            G = g;
-            B = b;
-            A = a;
-        }
-        
-        public Color Darken(byte mult)
-        {
-            return new Color(
-                (byte)(R * mult / 255),
-                (byte)(G * mult / 255),
-                (byte)(B * mult / 255),
-                A);
-        }
-
-        public void Add(Color other)
-        {
-            var f = other.A;
-            R = (byte)((R * (255 - f) + other.R * f) / 256);
-            G = (byte)((G * (255 - f) + other.G * f) / 256);
-            B = (byte)((B * (255 - f) + other.B * f) / 256);
-            A = 255;
-        }
-
         public static Color? TryParse(string text) {
             if (text == null)
                 return null;

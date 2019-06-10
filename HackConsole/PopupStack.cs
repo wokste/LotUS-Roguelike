@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using SFML.Graphics;
 
 namespace HackConsole
 {
@@ -14,40 +16,31 @@ namespace HackConsole
         public Widget Top => (_widgets.Count > 0 ? _widgets[_widgets.Count - 1] : null);
         public bool Empty => (_widgets.Count == 0);
 
-        public override bool Render(bool forceUpdate)
-        {
-            // TODO: Some widgets may be hidden below other widgets which allows optimalization.
-
-            var rendered = false;
-            foreach (var w in _widgets)
-                if (w.Render(rendered || forceUpdate))
-                    rendered = true; // All widgets on top of this widget should be forced to update. In addition we rendered 
-
-            return rendered;
-        }
-
-        protected override void RenderImpl() { throw new Exception("Function should never be called"); }
-
         protected override void OnResized()
         {
             foreach (var w in _widgets)
             {
-                w.CenterPopup(Size);
+                w.CenterPopup(Rect);
             }
         }
 
-        public void Push(Widget innerWidget)
+        public void Push(Widget widget)
         {
-            var outerWidget = new BorderedWidget(innerWidget);
-            outerWidget.CenterPopup(Size);
-            (innerWidget as IPopupWidget).OnClose += () => { Pop(outerWidget); };
-            _widgets.Add(outerWidget);
+            Debug.Assert(widget.Parent == null);
+
+            (widget as IPopupWidget).OnClose += () => { Pop(widget); };
+            _widgets.Add(widget);
+
+            widget.Parent = this;
+            widget.CenterPopup(Rect);
         }
 
         private void Pop(Widget w)
         {
+            Debug.Assert(w.Parent == this);
+
             _widgets.Remove(w);
-            WindowData.ForceUpdate = true;
+            w.Parent = null;
         }
 
         public override Widget WidgetAt(Vec v)
@@ -55,11 +48,17 @@ namespace HackConsole
             for (int i = _widgets.Count - 1; i >= 0; i--)
             {
                 var w = _widgets[i];
-                if (w.Size.Contains(v))
+                if (w.Rect.Contains(v))
                     return w.WidgetAt(v);
             }
 
             return null;
+        }
+
+        protected override void DrawInternal(RenderTarget target)
+        {
+            foreach (var w in _widgets)
+                w.Draw(target);
         }
     }
 

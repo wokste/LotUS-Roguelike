@@ -1,25 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace SurvivalHack.ECM
+﻿namespace SurvivalHack.ECM
 {
     public class StackComponent : IComponent
     {
         public int Count;
-        public int MergeId;
+        public object Prototype;
 
-        public StackComponent(int count, int mergeId)
+        public StackComponent(int count, object prototype)
         {
             Count = count;
-            MergeId = mergeId;
-        }
-
-        private static int MergeIdAutoIncrement;
-
-        public static int GenMergeId(int count)
-        {
-            var ret = MergeIdAutoIncrement;
-            MergeIdAutoIncrement += count;
-            return ret;
+            Prototype = prototype;
         }
 
         private void Consume(BaseEvent msg)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HackConsole;
+using System;
 
 namespace SurvivalHack.Mapgen
 {
@@ -58,7 +59,7 @@ namespace SurvivalHack.Mapgen
             return Lerp(i1, i2, yFrac);
         }
 
-        public float Get(float x, float y)
+        public float Get(Vec v)
         {
             var total = 0f;
 
@@ -67,7 +68,7 @@ namespace SurvivalHack.Mapgen
                 var frequency = (float)Math.Pow(2, i) / Scale;
                 var amplitude = (float)Math.Pow(Persistence, i);
 
-                total += InterpolatedNoise(x * frequency, y * frequency) * amplitude;
+                total += InterpolatedNoise(v.X * frequency, v.Y * frequency) * amplitude;
             }
             return total;
         }

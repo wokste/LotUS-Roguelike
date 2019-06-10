@@ -1,113 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SurvivalHack.ECM;
-using HackConsole;
+﻿using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat
 {
-    public class Blockable : Component
+    interface IArmorComponent : IComponent
     {
-        public int Priority { get; set; } = 100;
+        int ArmorPriority { get; }
+
+        void Mutate(ref Attack attack, ref Damage damage);
+    }
+
+    public class Blockable : IArmorComponent
+    {
+        public int ArmorPriority => 100;
 
         public float BlockChance;
-        public EAttackState BlockMethod;
+        public EAttackResult BlockMethod;
 
-        public Blockable(float blockChance, EAttackState blockMethod)
+        public Blockable(float blockChance, EAttackResult blockMethod)
         {
             BlockChance = blockChance;
             BlockMethod = blockMethod;
         }
 
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void Mutate(ref Attack attack, ref Damage _)
         {
-            if (message is AttackEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                message.PreEvent += Mutate;
-        }
-
-        public void Mutate(BaseEvent msg)
-        {
-            AttackEvent attack = (AttackEvent)msg;
-
-            if (attack.State != EAttackState.Hit)
-                return;
-
-            if (Game.Rnd.NextDouble() > BlockChance)
-                return;
-
-            attack.State = BlockMethod;
-            return;
-        }
-
-        public override string Describe()
-        {
-            return $"Has a {BlockChance:%} to block incoming attacks";
+            attack.HitChance *= (1 - BlockChance);
         }
     }
 
-    public class Armour : IComponent
+    public class Armor : IArmorComponent, IEquippableComponent
     {
-        public int Priority { get; set; } = 50;
+        public int ArmorPriority => 50;
 
-        public float CritChance = 0.02f;
+        public ESlotType SlotType { get; private set; }
+
         public int DamageReduction = 1;
-        public EDamageLocation ProtectLocation;
 
-        public Armour(EDamageLocation protectLocation, int damageReduction, float critChance)
+        public Armor(int damageReduction, ESlotType slotType)
         {
-            ProtectLocation = protectLocation;
             DamageReduction = damageReduction;
-            CritChance = critChance;
+            SlotType = slotType;
         }
-
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        
+        public void Mutate(ref Attack _, ref Damage damage)
         {
-            if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                message.PreEvent += Mutate;
-        }
-
-        public void Mutate(BaseEvent msg)
-        {
-            var attack = (DamageEvent)msg;
-
-            if ((attack.Location & ProtectLocation) == 0)
-                return;
-
-            if (Game.Rnd.NextDouble() < CritChance)
-            {
-                return;
-            }
-
-            attack.Modifiers.Add((-DamageReduction, "armor"));
+            damage.Dmg -= DamageReduction;
             return;
-        }
-
-        public string Describe()
-        {
-            return $"Reduces damage by {DamageReduction}.";
-        }
-
-        public bool FitsIn(ESlotType type)
-        {
-
-            switch (type)
-            {
-                case ESlotType.Head:
-                    return (ProtectLocation & EDamageLocation.Head) != 0;
-                case ESlotType.Body:
-                    return (ProtectLocation & EDamageLocation.AllBody) != 0;
-                case ESlotType.Gloves:
-                    return (ProtectLocation & EDamageLocation.Hands) != 0;
-                case ESlotType.Feet:
-                    return (ProtectLocation & EDamageLocation.Feet) != 0;
-                default:
-                    return false;
-            }
         }
     }
 
-    public class ElementalResistance : Component
+    public class ElementalResistance : IArmorComponent
     {
+        public int ArmorPriority => 30;
+
         private readonly EDamageType DamageType;
         private readonly float Mult;
 
@@ -116,21 +61,13 @@ namespace SurvivalHack.Combat
             DamageType = damageType;
             Mult = mult;
         }
-
-        public override string Describe() => $"Reduces all {DamageType} damage by {Mult}";
-
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        
+        public void Mutate(ref Attack _, ref Damage damage)
         {
-            if (message is DamageEvent && (source == EUseSource.Target || source == EUseSource.TargetItem))
-                message.PreEvent += Mutate;
-        }
+            if ((damage.DamageType & DamageType) == 0)
+                return;
 
-        public void Mutate(BaseEvent msg)
-        {
-            var attack = (DamageEvent)msg;
-
-            //TODO: Fix
-            attack.Modifiers.Add((-(int)(Mult * 10), "elemental resistance"));
+            damage.Dmg *= Mult;
             return;
         }
     }

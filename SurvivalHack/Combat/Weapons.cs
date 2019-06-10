@@ -3,98 +3,94 @@ using HackConsole.Algo;
 using SurvivalHack.ECM;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SurvivalHack.Combat
 {
     public interface IWeapon : IComponent
     {
-        bool InRange(Entity attacker, Entity defender);
-        float WeaponPriority { get; }
-        EAttackMove AttackMove { get; }
+        Damage Damage { get; }
+        Vec? Dir(Entity attacker, Entity defender);
+        IEnumerable<Entity> Targets(Entity attacker, Vec dir);
     }
 
-    public class MeleeWeapon : IWeapon
+    public class MeleeWeapon : IWeapon, IEquippableComponent
     {
-        public float Damage;
-        public EAttackMove AttackMove { get; }
-        public EDamageType DamageType;
+        public Damage Damage { get; }
 
-        public float WeaponPriority { get; set; }
-
-        public MeleeWeapon(float damage, EAttackMove attackMove, EDamageType damageType)
+        public MeleeWeapon(Damage damage)
         {
             Damage = damage;
-            AttackMove = attackMove;
-            DamageType = damageType;
         }
 
-        public bool InRange(Entity attacker, Entity defender)
+
+        public MeleeWeapon(float damage, EAttackMove move, EDamageType type)
         {
-            return (attacker.Pos - defender.Pos).ManhattanLength <= 1;
+            Damage = new Damage(damage, type, move);
         }
 
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public Vec? Dir(Entity attacker, Entity defender)
         {
-            if (message is AttackEvent && (source == EUseSource.Item))
-                message.OnEvent += ToHitRoll;
+            Vec delta = (defender.Pos - attacker.Pos);
+
+            if (delta.ManhattanLength > 1)
+                return null;
+
+            return delta;
         }
 
-        private void ToHitRoll(BaseEvent msg)
+        public IEnumerable<Entity> Targets(Entity attacker, Vec dir)
         {
-            var attack = (AttackEvent)msg;
-            if (attack.State == EAttackState.Hit)
-            {
-                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location), msg);
-            }
+            var level = attacker.Level;
+            return level.GetEntities(attacker.Pos + dir);
         }
 
-        public string Describe() => $"Melee attack deals {Damage} {DamageType} damage";
-
-        public bool FitsIn(ESlotType type) => type == ESlotType.Hand;
+        public ESlotType SlotType => ESlotType.Hand;
     }
 
-    public class RangedWeapon : IWeapon
+    public class RangedWeapon : IWeapon, IEquippableComponent
     {
-        public float Damage;
-        public EAttackMove AttackMove => EAttackMove.Projectile;
-        public EDamageType DamageType;
+        public Damage Damage { get; }
         public float Range;
-        public float WeaponPriority { get; set; }
 
-        public RangedWeapon(float damage, EDamageType damageType, float range)
+        public RangedWeapon(int damage, EDamageType type, float range)
         {
-            Damage = damage;
-            DamageType = damageType;
+            Damage = new Damage(damage,type, EAttackMove.Projectile);
             Range = range;
         }
 
-        public bool InRange(Entity attacker, Entity defender)
+        public RangedWeapon(Damage damage, float range)
+        {
+            Damage = damage;
+            Range = range;
+        }
+
+        //TODO: Fix ranged weapons
+        
+        public Vec? Dir(Entity attacker, Entity defender)
+        {
+            Vec delta = (defender.Pos - attacker.Pos);
+
+            return new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
+        }
+
+        public IEnumerable<Entity> Targets(Entity attacker, Vec dir)
         {
             var level = attacker.Level;
-            var path = Line.Run(attacker.Pos, defender.Pos);
-            foreach (var v in path)
-                if (level.GetTile(v).BlockSight)
-                    return false;
+            var pos = attacker.Pos;
 
-            return true;
-        }
-
-        public void GetActions(Entity self, BaseEvent message, EUseSource source)
-        {
-            if (message is AttackEvent && (source == EUseSource.Item))
-                message.OnEvent += ToHitRoll;
-        }
-
-        private void ToHitRoll(BaseEvent msg)
-        {
-            var attack = (AttackEvent)msg;
-            if (attack.State == EAttackState.Hit)
+            while (!level.GetTile(pos).Solid)
             {
-                Eventing.On(new DamageEvent(attack, (int)(Damage * (0.5 + Game.Rnd.NextDouble())), DamageType, attack.Location), msg);
+                pos += dir;
+                var targets = level.GetEntities(pos);
+
+                foreach (var target in targets)
+                    yield return target;
+
+                // TODO: Single-hit bullets. This works great for lightning bolt but that isn't really the idea here.
             }
         }
 
-        public string Describe() => $"Ranged attack deals {Damage} {DamageType} damage";
-        public bool FitsIn(ESlotType type) => type == ESlotType.Ranged;
+        public ESlotType SlotType => ESlotType.Ranged;
     }
 }

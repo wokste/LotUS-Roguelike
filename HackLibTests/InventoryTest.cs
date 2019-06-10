@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SurvivalHack;
 using SurvivalHack.ECM;
-using System;
 using System.Collections.Generic;
 
 namespace HackLibTests
@@ -12,14 +11,14 @@ namespace HackLibTests
         [TestMethod]
         public void Inventory_StackSize()
         {
-            const int STACK_TYPE_A = 1;
-            const int STACK_TYPE_B = 2;
+            object STACK_TYPE_A = "1";
+            object STACK_TYPE_B = "2";
 
             var inv = new Inventory();
 
-            int? FindItem(int mergeId)
+            int? FindItem(object prototype)
             {
-                var item = inv.Items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().MergeId == mergeId);
+                var item = inv.Items.Find(i => i.GetOne<StackComponent>() != null && i.GetOne<StackComponent>().Prototype == prototype);
                 if (item == null)
                     return null;
 
@@ -29,7 +28,7 @@ namespace HackLibTests
             Assert.IsNull(FindItem(STACK_TYPE_A));
             Assert.IsNull(FindItem(STACK_TYPE_B));
 
-            inv.Add(new Entity('a', "A", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "A", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(5, STACK_TYPE_A) }
             });
@@ -37,7 +36,7 @@ namespace HackLibTests
             Assert.AreEqual(FindItem(STACK_TYPE_A), 5);
             Assert.IsNull(FindItem(STACK_TYPE_B));
 
-            inv.Add(new Entity('b', "B", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "B", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(3, STACK_TYPE_B) }
             });
@@ -45,7 +44,7 @@ namespace HackLibTests
             Assert.AreEqual(FindItem(STACK_TYPE_A), 5);
             Assert.AreEqual(FindItem(STACK_TYPE_B), 3);
 
-            inv.Add(new Entity('a', "A", EEntityFlag.Pickable)
+            inv.Add(new Entity(new TileGlyph(), "A", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new StackComponent(4, STACK_TYPE_A) }
             });
@@ -59,13 +58,13 @@ namespace HackLibTests
         {
             var inv = new Inventory();
 
-            var normalItem = new Entity('\\', "Item", EEntityFlag.Pickable)
+            var normalItem = new Entity(new TileGlyph(), "Item", EEntityFlag.Pickable)
             {
                 Components = new List<IComponent> { new Equippable(ESlotType.Offhand) }
             };
             inv.Add(normalItem);
 
-            var cursedItem = new Entity('\\', "Cursed Item", EEntityFlag.Pickable | EEntityFlag.Cursed)
+            var cursedItem = new Entity(new TileGlyph(), "Cursed Item", EEntityFlag.Pickable | EEntityFlag.Cursed)
             {
                 Components = new List<IComponent> { new Equippable(ESlotType.Offhand) }
             };

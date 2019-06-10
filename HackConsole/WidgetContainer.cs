@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using SFML.Graphics;
 
 namespace HackConsole
 {
@@ -7,39 +8,38 @@ namespace HackConsole
     {
         public List<Widget> Widgets = new List<Widget>();
 
-        public override bool Render(bool forceUpdate)
-        {
-            var rendered = false;
-            foreach (var w in Widgets)
-                rendered |= w.Render(forceUpdate);
-
-            return rendered;
-        }
-
-        protected override void RenderImpl() { throw new Exception("Function should never be called"); }
-
         public void Add(Widget w)
         {
+            Debug.Assert(w.Parent == null);
+
             Widgets.Add(w);
+            w.Parent = this;
             OnResized();
         }
 
         protected override void OnResized()
         {
-            var free = Size;
+            var free = Rect;
             foreach (var w in Widgets)
             {
-                w.Resize(ref free);
+                w.ResizeDocked(ref free);
             }
         }
 
         public override Widget WidgetAt(Vec pos)
         {
             foreach (var w in Widgets)
-                if (w.Size.Contains(pos))
+                if (w.Rect.Contains(pos))
                     return w.WidgetAt(pos);
 
             return null;
+        }
+
+        protected override void DrawInternal(RenderTarget target)
+        {
+
+            foreach (var w in Widgets)
+                w.Draw(target);
         }
     }
 }

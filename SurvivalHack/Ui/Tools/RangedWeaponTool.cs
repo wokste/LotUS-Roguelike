@@ -1,15 +1,11 @@
 ﻿using HackConsole;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack.Ui.Tools
 {
     class RangedWeaponTool : ITool
     {
-        private TurnController _turnController;
+        private readonly TurnController _turnController;
 
         public RangedWeaponTool(TurnController controller) {
             _turnController = controller;
@@ -27,7 +23,8 @@ namespace SurvivalHack.Ui.Tools
 
                 foreach (var enemy in map.GetEntities(shape).ToArray())
                 {
-                    Eventing.On(new AttackEvent(player, item, enemy, weapon.AttackMove));
+                    // TODO: Fixme
+                    //Eventing.On(new AttackEvent(player, item, enemy, weapon.AttackMove));
                     effective = true;
                 }
 

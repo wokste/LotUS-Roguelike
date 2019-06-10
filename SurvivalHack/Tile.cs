@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using HackConsole;
 
 namespace SurvivalHack
 {
@@ -17,11 +16,29 @@ namespace SurvivalHack
         All = ~0,
     }
 
+    public struct TileGlyph
+    {
+        public byte X;
+        public byte Y;
+        public byte Method;
+
+
+        public const byte BASE = 0;
+        public const byte TERRAIN = 1;
+        public const byte PIT = 2;
+        public const byte ANIM = 3;
+        public const byte WALL = 4;
+
+        public TileGlyph(byte x, byte y, byte method = 0)
+        {
+            X = x; Y = y; Method = method;
+        }
+    }
+
     public class Tile
     {
         public string Tag;
-
-        public Symbol Symbol;
+        public TileGlyph Glyph;
         public float MineCost = 1;
         public bool Solid = false;
         public bool BlockSight = false;
@@ -43,7 +60,7 @@ namespace SurvivalHack
                 new Tile
                 {
                     Tag = "floor_stone",
-                    Symbol = new Symbol('.', new Color(64, 64, 64), new Color(16, 16, 16))
+                    Glyph = new TileGlyph(0,0,TileGlyph.TERRAIN), // TODO: Split dirt and stone floors
                 },
 
                 new Tile
@@ -51,22 +68,15 @@ namespace SurvivalHack
                     Tag = "floor_wood",
                     Natural = false,
                     Flamable = true,
-                    Symbol = new Symbol('=', Color.Parse("#471802"), Color.Parse("#260c00"))
-                },
+                    Glyph = new TileGlyph(8,0,TileGlyph.TERRAIN),
+                }, // TODO: wood 2
 
                 new Tile
                 {
-                    Tag = "short_grass",
-                    Flamable = true,
-                    Symbol = new Symbol('\'', Color.Parse("#004c00"), Color.Parse("#002300"))
-                },
-
-                new Tile
-                {
-                    Tag = "tall_grass",
+                    Tag = "grass",
                     Flamable = true,
                     BlockSight = true,
-                    Symbol = new Symbol('"', Color.Parse("#05a300"), Color.Parse("#002300"))
+                    Glyph = new TileGlyph(4,0,TileGlyph.TERRAIN),
                 },
 
                 new Tile
@@ -74,15 +84,15 @@ namespace SurvivalHack
                     Tag = "water",
                     WalkDanger = 0.5f,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#0fa2db"), Color.Parse("#0475a0"))
+                    Glyph = new TileGlyph(56,3,TileGlyph.PIT),
                 },
 
                 new Tile
                 {
-                    Tag = "water_deep",
-                    WalkDanger = 0.5f,
+                    Tag = "acid",
+                    WalkDanger = 2.5f,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#0f12db"), Color.Parse("#0409a0"))
+                    Glyph = new TileGlyph(56,6,TileGlyph.PIT),
                 },
 
                 new Tile
@@ -90,7 +100,7 @@ namespace SurvivalHack
                     Tag = "lava",
                     WalkDanger = 10,
                     MineCost = 15f,
-                    Symbol = new Symbol('~', Color.Parse("#ffdf3f"), Color.Parse("#d66422"))
+                    Glyph = new TileGlyph(56,9,TileGlyph.PIT),
                 },
 
                 new Tile
@@ -98,7 +108,16 @@ namespace SurvivalHack
                     Tag = "rock",
                     Solid = true,
                     BlockSight = true,
-                    Symbol = new Symbol('#', Color.Black, Color.Gray),
+                    Glyph = new TileGlyph(0,4,TileGlyph.WALL), // TODO: 4 kinds of rock
+                    MineCost = 2,
+                },
+
+                new Tile
+                {
+                    Tag = "rock2",
+                    Solid = true,
+                    BlockSight = true,
+                    Glyph = new TileGlyph(4,4,TileGlyph.WALL), // TODO: 4 kinds of rock
                     MineCost = 2,
                 },
 
@@ -107,8 +126,9 @@ namespace SurvivalHack
                     Tag = "wall_stone",
                     Solid = true,
                     BlockSight = true,
-                    Symbol = new Symbol('#', Color.Black, new Color(164, 87, 40)),
-                    MineCost = 10
+                    Glyph = new TileGlyph(16,4,TileGlyph.WALL), // TODO: Two walls
+                    MineCost = 10,
+                    Natural = false,
                 }
             };
 
@@ -123,6 +143,13 @@ namespace SurvivalHack
             var tileId = tiles.FindIndex(t => t.Tag == tag);
             Debug.Assert(tileId != -1);
             return tileId;
+        }
+
+        public static Tile GetTile(this List<Tile> tiles, string tag)
+        {
+            var tileId = tiles.FindIndex(t => t.Tag == tag);
+            Debug.Assert(tileId != -1);
+            return tiles[tileId];
         }
     }
 }

@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace HackConsole
 {
-    public class VBOWindow : BaseWindow
+    public class SFMLWindow : BaseWindow
     {
         private readonly RenderWindow _window;
-        private readonly Texture _fontTex;
-        private readonly VertexArray _vertices = new VertexArray();
 
-        public VBOWindow(string name)
+        public SFMLWindow(string name)
         {
             var contextSettings = new ContextSettings
             {
@@ -35,9 +32,7 @@ namespace HackConsole
             _window.MouseWheelMoved += OnMouseWheelMoved;
 
             _window.SetFramerateLimit(60);
-
-            _fontTex = MakeSprite("ascii.png");
-
+            
             OnResized(null, new SizeEventArgs(new SizeEvent {Width = _windowWidth, Height = _windowHeight }));
         }
 
@@ -70,14 +65,7 @@ namespace HackConsole
         {
             ResizeScreen(e.Width, e.Height);
             _window.SetView(new View(new FloatRect(0, 0, e.Width, e.Height)));
-            ResizeVertices();
-        }
-
-
-        void ResizeVertices() {
-            // Build the vertex buffer
-            _vertices.PrimitiveType = PrimitiveType.Quads;
-            _vertices.Resize((uint)WindowData.Data.Size.Area * 8);
+            //ResizeVertices();
         }
 
         private void OnKeyPressed(object sender, KeyEventArgs keyEventArgs)
@@ -134,7 +122,7 @@ namespace HackConsole
 
         private void OnMouseWheelMoved(object sender, MouseWheelEventArgs e)
         {
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
             var delta = new Vec(0, e.Delta > 0 ? 1 : -1);
             
             var widget = WidgetAt(mousePos);
@@ -143,7 +131,7 @@ namespace HackConsole
 
         private void OnMouseMoved(object sender, MouseMoveEventArgs e)
         {
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
             var move = (mousePos - _lastMousePos) ?? Vec.Zero;
             _lastMousePos = mousePos;
 
@@ -151,7 +139,7 @@ namespace HackConsole
                 return;
 
             var widget = WidgetAt(mousePos);
-            (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos, move, MakeFlags(true, true));
+            (widget as IMouseEventSuscriber)?.OnMouseMove(mousePos - widget.Rect.TopLeft, move, MakeFlags(true, true));
         }
 
         private void OnMouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -181,10 +169,10 @@ namespace HackConsole
                     flags |= EventFlags.RightButton;
                     break;
             }
-            var mousePos = new Vec((int)(e.X / _fontX), (int)(e.Y / _fontY));
+            var mousePos = new Vec(e.X, e.Y);
 
             var widget = WidgetAt(mousePos);
-            (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos, flags);
+            (widget as IMouseEventSuscriber)?.OnMouseEvent(mousePos - widget.Rect.TopLeft, flags);
         }
 
         private void OnClosed(object sender, EventArgs e)
@@ -200,63 +188,18 @@ namespace HackConsole
                 _window.DispatchEvents();
 
                 OnUpdate?.Invoke();
-                Render();
+                
+                Draw(_window);
                 Thread.Sleep(5);
             }
         }
 
-        private void Render()
+        public void Draw(RenderTarget target)
         {
-            if (RenderWidgets())
-            {
-                _window.Clear();
-                DrawGrid(_window, new RenderStates());
-                _window.Display();
-            }
-        }
-
-        private static Texture MakeSprite(string texName)
-        {
-            var image = new Image($"{texName}");
-            return new Texture(image);
-        }
-
-        // Inspired by https://github.com/thebracket/rltk/blob/master/rltk/virtual_terminal.cpp
-        private void DrawGrid(RenderTarget target, RenderStates states)
-        {
-            var spaceAscii = 219;
-            var spacePos = new Vector2f((spaceAscii % 16) * _fontX, (spaceAscii / 16) * _fontY);
-
-            var d = new Vector2f[] {
-                new Vector2f(0, 0),
-                new Vector2f(_fontX, 0),
-                new Vector2f(_fontX, _fontY),
-                new Vector2f(0, _fontY),
-            };
-
-            foreach (var v in WindowData.Data.Ids())
-            {
-                var idx = (uint)((v.Y * WindowData.Data.Size.X) + v.X) * 8;
-                var vecScreen = new Vector2f((v.X * _fontX), (v.Y * _fontY));
-
-                var Char = WindowData.Data[v];
-                var texPos = new Vector2f((Char.Ascii % 16) * _fontX, (Char.Ascii / 16) * _fontY);
-
-                var bgColor = ColorToSfml(Char.BackgroundColor);
-                var fgColor = ColorToSfml(Char.TextColor);
-
-                for (uint i = 0; i < 4; ++i)
-                {
-                    _vertices[idx + i] = new Vertex(vecScreen + d[i], bgColor, spacePos + d[i]);
-                    _vertices[idx + i + 4] = new Vertex(vecScreen + d[i], fgColor, texPos + d[i]);
-                }
-            }
-            RenderStates states2 = new RenderStates(_fontTex);
-            target.Draw(_vertices, states2);
-        }
-
-        private SFML.Graphics.Color ColorToSfml(HackConsole.Color color) {
-            return new SFML.Graphics.Color(color.R, color.G, color.B);
+            _window.Clear();
+            Widgets.Draw(target);
+            PopupStack.Draw(target);
+            _window.Display();
         }
     }
 }

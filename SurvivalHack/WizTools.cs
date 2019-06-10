@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.ECM;
@@ -13,25 +12,30 @@ namespace SurvivalHack
         public static Inventory Tools = new Inventory();
 
         public static void Init() {
+
+            /*
+            var glyph = new TileGlyph(2, 23, TileGlyph.ANIM);
+
             Entity entity;
-            entity = new Entity('w', "Reveal Map", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.SET_ALWAYSVISIBLE, typeof(CastEvent)));
+            entity = new Entity(glyph, "Reveal Map", EEntityFlag.Pickable);
+            entity.Add(new MapRevealComponent(typeof(CastEvent), FieldOfView.SET_ALWAYSVISIBLE, MapRevealComponent.RevealMethod.All, 9001));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Discover Map - scroll?", EEntityFlag.Pickable);
-            entity.Add(new MapRevealComponent(FieldOfView.FLAG_DISCOVERED, typeof(CastEvent)));
+            entity = new Entity(glyph, "Discover Map - scroll?", EEntityFlag.Pickable);
+            entity.Add(new MapRevealComponent(typeof(CastEvent), FieldOfView.FLAG_DISCOVERED, MapRevealComponent.RevealMethod.Walls, 32));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Genocide", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Genocide", EEntityFlag.Pickable);
             entity.Add(new AreaAttack(9001, Combat.EDamageType.Piercing, typeof(CastEvent)));
             Tools.Add(entity);
 
-            entity = new Entity('w', "Heal", EEntityFlag.Pickable);
+            entity = new Entity(glyph, "Heal", EEntityFlag.Pickable);
             entity.Add(new HealComponent(9001, 0, typeof(CastEvent)));
             Tools.Add(entity);
+            */
         }
 
-        public class AreaAttack : Component
+        public class AreaAttack : IActionComponent
         {
             public float Damage;
             public Combat.EDamageType DamageType;
@@ -44,12 +48,12 @@ namespace SurvivalHack
                 MessageType = messageType;
             }
 
-            public override void GetActions(Entity self, BaseEvent msg, EUseSource source)
+            public void GetActions(Entity self, BaseEvent msg, EUseSource source)
             {
-                if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
-                    msg.OnEvent += Genocide;
+                //if (source == EUseSource.Item && MessageType.IsAssignableFrom(msg.GetType()))
+                //    msg.OnEvent += Genocide;
             }
-
+            /*
             public void Genocide(BaseEvent msg)
             {
                 var level = msg.User.Level;
@@ -65,8 +69,7 @@ namespace SurvivalHack
                     Eventing.On(dmgMsg, msg);
                 }
             }
-
-            public override string Describe() => $"Area Attack deals {Damage} damage";
+            */
         }
     }
 }

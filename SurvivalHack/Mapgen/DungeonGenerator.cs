@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SurvivalHack.Mapgen.Rooms;
 using HackConsole;
-using System.Diagnostics;
 using SurvivalHack.Mapgen.Automata;
 
 namespace SurvivalHack.Mapgen
@@ -34,7 +33,7 @@ namespace SurvivalHack.Mapgen
             RoomFactories.Add(new RectRoomFactory(tileDefs) {
                 Odds = 60,
                 FloorTile = new Room.TileInfo { Id = tileDefs.Get("floor_stone"), Method = Room.PasteMethod.Paste },
-                WallTile = new Room.TileInfo { Id = tileDefs.Get("rock"), Method = Room.PasteMethod.Nil },
+                WallTile = new Room.TileInfo { Id = -1, Method = Room.PasteMethod.Nil },
                 RangeX = new Range("1"),
                 RangeY = new Range("1"),
             });
@@ -51,15 +50,14 @@ namespace SurvivalHack.Mapgen
             var mask = new Grid<int>(size, MASKID_VOID);
             var rooms = new List<Room>();
 
-            //MakeBaseTerrain(map, difficulty);
+            MakeBaseTerrain(map, difficulty);
             PlaceRooms(map, mask, rooms, difficulty);
 
             var floor = map.TileDefs.Get("floor_stone");
-            var wall = map.TileDefs[map.TileDefs.Get("rock")];
             var caveAutomata = new BomberAutomata
             {
                 TileId = floor,
-                AffectPred = (t) => t == wall
+                AffectPred = (t) => t.Solid && t.Natural
             };
             caveAutomata.Run(_rnd, map);
 
@@ -70,21 +68,20 @@ namespace SurvivalHack.Mapgen
             return (map, rooms[0].Center);
         }
 
-        [Obsolete("Actually not obsolete but I need a better method to make this")]
         private void MakeBaseTerrain(Level map, int difficulty)
         {
-            PerlinNoise perlin = new PerlinNoise(_rnd.Next())
-            {
-                Scale = 10
-            };
+            var table = new RandomTable<int>(new []{
+                (map.TileDefs.Get("rock"), 2),
+                (map.TileDefs.Get("rock2"), 2),
+                (map.TileDefs.Get("acid"), 1),
+            });
 
-            var water = map.TileDefs.Get("water");
-            var rock = map.TileDefs.Get("rock");
+            var noise = VoronoiNoise<int>.Make(map.Size, 5, _rnd, table);
 
             foreach (var v in map.TileMap.Ids()) {
-                var f = perlin.Get(v.X, v.Y);
+                var tileId = noise.Get(v);
 
-                map.TileMap[v] = f > 0.25 ? water : rock;
+                map.TileMap[v] = tileId;
             }
         }
 
@@ -92,7 +89,7 @@ namespace SurvivalHack.Mapgen
             
             for (var i = 0; i < NumRooms; i++)
             {
-                var room = GenerateRoom(map, mask, rooms);
+                _ = GenerateRoom(map, mask, rooms);
             }
 
             // Create MST
@@ -134,10 +131,7 @@ namespace SurvivalHack.Mapgen
                 var rangeX = new Range((int)(free.X * a1), (int)(free.X * a2));
                 var rangeY = new Range((int)(free.Y * a1), (int)(free.Y * a2));
 
-                room.Transform = new Transform
-                {
-                    Offset = new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd))
-                };
+                room.Transform = TransformExt.MakeTranslateRotate(new Vec(rangeX.Rand(_rnd), rangeY.Rand(_rnd)), 0f);
 
                 if (room.TryPlaceOnMap(map, mask, rooms))
                 {

@@ -1,9 +1,10 @@
 ﻿using HackConsole;
 using HackConsole.Algo;
+using SFML.Graphics;
 
 namespace SurvivalHack.Ui
 {
-    public class InfoWidget : Widget
+    public class InfoWidget : GridWidget
     {
         private Entity _item;
         //protected readonly List<string> Lines = new List<string>();
@@ -20,9 +21,9 @@ namespace SurvivalHack.Ui
             }
         }
 
-        protected override void RenderImpl()
+        protected override void Render()
         {
-            Clear();
+            Clear(Color.Blue);
 
             var y = 0;
 
@@ -31,13 +32,6 @@ namespace SurvivalHack.Ui
                 Print(new Vec(0, y++), _item.Name, Color.White);
                 //if (_item.EntityFlags.HasFlag(EEntityFlag.Identified))
                 {
-                    foreach (var c in _item.Components)
-                    {
-                        var s = c.Describe();
-                        if (s != null)
-                            foreach (var l in StringExt.Prefix(StringExt.Wrap(s, Size.Width - 2), " -"))
-                                Print(new Vec(0, y++), l, Color.White);
-                    }
                 }
             }
         }

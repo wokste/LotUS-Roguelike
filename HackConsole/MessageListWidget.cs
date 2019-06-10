@@ -1,62 +1,84 @@
-﻿using HackConsole.Algo;
+﻿using SFML.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using HackConsole.Ui;
 
 namespace HackConsole
 {
     public class MessageListWidget : Widget, IMouseEventSuscriber
     {
-        private readonly List<ColoredString> _messages = new List<ColoredString>();
+        private readonly List<string> _messages = new List<string>();
         protected readonly List<string> Lines = new List<string>();
-
-        private int _posY;
-
-        protected int PosY {
-            get => _posY;
+        
+        private readonly VertexArray _vertices = new VertexArray();
+        public BitmapFont Font;
+        private bool _dirty = true;
+        
+        private int _scrollY;
+        protected int ScrollY {
+            get => _scrollY;
             set {
-                var max = Math.Max(0, Lines.Count - Size.Height);
-                _posY = MyMath.Clamp(value, 0, max);
+                var max = Math.Max(0, _bottomY - Rect.Height);
+                _scrollY = MyMath.Clamp(value, 0, max);
             }
         }
 
-        protected override void RenderImpl()
+        private int _bottomY;
+
+        public MessageListWidget(BitmapFont font = null)
         {
-            Clear();
+            Font = font ?? Sprites.Font;
+            _vertices.PrimitiveType = PrimitiveType.Quads;
+        }
 
-            var y = 0;
 
-            var firstLine = _posY;
-            for (var i = firstLine; i < Math.Min(firstLine + Size.Height, Lines.Count); i++)
+        protected override void DrawInternal(RenderTarget target)
+        {
+            if (_dirty == true)
             {
-                Print(new Vec(0, y), Lines[i], Color.White);
-                y++;
+                Render();
+                _dirty = false;
             }
+
+            var states = new RenderStates(Font.Texture);
+
+
+            target.Draw(_vertices,states);
         }
 
-        public void Add(ColoredString msg)
+        protected void Render()
         {
-            _messages.Add(msg);
-            var range = StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> ");
-            PosY += range.Count();
-            Lines.AddRange(range);
-            Dirty = true;
-        }
+            _vertices.Clear();
+            _bottomY = 0;
 
-        protected void MakeLines()
-        {
-            Lines.Clear();
-            foreach (var msg in _messages)
-                Lines.AddRange(StringExt.Prefix(StringExt.Wrap(msg.Text, Size.Width - 2), "> "));
+            foreach (var l in _messages)
+            {
+                RenderLine(l);
+            }
+
+            UpdateView(true);
         }
 
         protected override void OnResized()
         {
-            // If the width has changed, the lines need to be recalculated.
-            MakeLines();
-            PosY = Math.Max(0, Lines.Count - Size.Height);
-            Dirty = true;
+            base.OnResized();
+            //_dirty = true;
+        }
+
+        private void RenderLine(string msg)
+        {
+            // TODO: Stuff
+            Font.Print(_vertices, msg, Rect.Width, new Vec(0, _bottomY));
+
+            _bottomY += Font.LineHeight + Font.SpacingV;
+        }
+
+        public void Add(string msg)
+        {
+            _messages.Add(msg);
+            RenderLine(msg);
+            
+            UpdateView(true);
         }
 
         public virtual void OnMouseEvent(Vec mousePos, EventFlags flags)
@@ -69,8 +91,16 @@ namespace HackConsole
 
         public void OnMouseWheel(Vec delta, EventFlags flags)
         {
-            Dirty = true;
-            PosY -= delta.Y;
+            ScrollY += delta.Y * -10;
+            UpdateView(false);
+        }
+
+        private void UpdateView(bool scrollToBottom = true) {
+            if (scrollToBottom)
+                ScrollY = int.MaxValue; // Will be clamped
+
+            var center = Rect.Size.Center;
+            View.Center = new SFML.Window.Vector2f(center.X, center.Y + ScrollY);
         }
     }
 }

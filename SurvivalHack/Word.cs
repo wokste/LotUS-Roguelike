@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SurvivalHack
+﻿namespace SurvivalHack
 {
     static public class Word
     {
         public static string Name(Entity e)
         {
-            return e.EntityFlags.HasFlag(EEntityFlag.IsPlayer) ? "you" : e.Name;
+            return e.EntityFlags.HasFlag(EEntityFlag.IsPlayer) ? "you" : $"{ColorString(e)}{e.Name}@ca";
         }
 
         public static string AName(Entity e)
         {
-            return e.EntityFlags.HasFlag(EEntityFlag.IsPlayer) ? "you" : $"a {e.Name}";
+            return e.EntityFlags.HasFlag(EEntityFlag.IsPlayer) ? "you" : $"a {ColorString(e)}{e.Name}@ca";
         }
 
         public static string It(Entity e)
@@ -34,6 +28,31 @@ namespace SurvivalHack
                 verbs = verb + "s";
 
             return e.EntityFlags.HasFlag(EEntityFlag.IsPlayer) ? verb : verbs;
+        }
+
+
+        public static string ColorString(Entity e)
+        {
+            var f = e.EntityFlags;
+            if (f.HasFlag(EEntityFlag.Pickable))
+            {
+                if (f.HasFlag(EEntityFlag.Identified) && f.HasFlag(EEntityFlag.Cursed))
+                    return "@cd"; // Cursed items are red
+
+                if (f.HasFlag(EEntityFlag.Consumable))
+                    return "@ch"; // Consumable items are yellow
+
+                // Items
+                return "@cf"; // Items are gray
+            }
+            else if (f.HasFlag(EEntityFlag.TeamMonster)){
+                return "@cd"; // Enemy monsters are red
+            }
+            else if (f.HasFlag(EEntityFlag.TeamPlayer))
+            {
+                return "@cg"; // Allied monsters are green
+            }
+            return "@cf"; // Just, dunno. Pick gray.
         }
     }
 }

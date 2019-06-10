@@ -1,68 +1,71 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using SurvivalHack.Effects;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Factory
 {
     public class PotionFactory : IEntityFactory
     {
-        static int BaseId;
-
-        (string, string, Color)[] types = new(string, string, Color)[]{
-            ("a", "red", Color.Parse("#f33")),
-            ("a", "blue", Color.Parse("#36f")),
-            ("an", "aqua", Color.Parse("#0fc")),
-            ("a", "purple", Color.Parse("#f0f")),
-            ("a", "green", Color.Parse("#3f0")),
-            ("a", "violet", Color.Parse("#CDA4DE")),
-            ("a", "yellow", Color.Parse("#FFE135")),
-            ("a", "bronze ", Color.Parse("#CD7F32")),
-            ("an", "orange ", Color.Parse("#ED9121")),
-            ("a", "crystal ", Color.Parse("#A7D8DE")),
-            ("a", "pink ", Color.Parse("#FFC0CB")),
-            ("a", "sandy ", Color.Parse("#EDC9AF")),
-            ("a", "beige ", Color.Parse("#F5F5DC")),
-            ("a", "gold ", Color.Parse("#CFB53B")),
-            ("a", "mossy ", Color.Parse("#867E36")),
-            ("a", "rusty ", Color.Parse("#B7410E")),
-            ("a", "silvery ", Color.Parse("#848482")),
-            ("a", "peachy ", Color.Parse("#FFE5B4")),
-        };
+        public Potion[] _potions;
 
         public PotionFactory(Random rnd)
         {
-            types = types.OrderBy(p => rnd.Next()).ToArray();
-            BaseId = StackComponent.GenMergeId(types.Length);
+            _potions = MakePotions();
+            var icons = MakeNames().OrderBy(p => rnd.Next()).ToArray();
+
+            Debug.Assert(_potions.Length <= icons.Length);
+
+            for (int i = 0; i < _potions.Length; ++i)
+            {
+                _potions[i].UnidentifiedName = icons[i].Name;
+                _potions[i].Glyph = icons[i].Glyph;
+            }
+        }
+
+        Potion[] MakePotions() {
+            return new Potion[] {
+                new Potion("Lesser healing potion", new[] { new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Greater healing potion", new[] { new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Mana potion", new[] { new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) }),
+                new Potion("Teleportaion potion", new IEffect[] {new TeleportEffect(EntityTarget.Self | EntityTarget.Others)}),
+                //new Potion("Acid", new IEffect[] {new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others)}),
+            };
+        }
+
+        (TileGlyph Glyph, string Article, string Name)[] MakeNames()
+        {
+            return new(TileGlyph, string, string)[]{
+                (new TileGlyph(0,15), "a", "red potion"),
+                (new TileGlyph(1,15), "a", "pink potion"),
+                (new TileGlyph(2,15), "an", "orange potion"),
+                (new TileGlyph(3,15), "a", "yellow potion"),
+                (new TileGlyph(4,15), "a", "grassy potion"),
+                (new TileGlyph(5,15), "a", "mouldy potion"),
+                (new TileGlyph(6,15), "a", "cyan potion"),
+                (new TileGlyph(7,15), "a", "light blue potion"),
+                (new TileGlyph(8,15), "a", "dark blue potion"),
+                (new TileGlyph(16,15), "an", "oily potion"),
+                (new TileGlyph(17,15), "a", "watery potion"),
+                (new TileGlyph(18,15), "a", "dark potion"),
+                (new TileGlyph(19,15), "a", "golden potion"),
+                (new TileGlyph(20,15), "a", "muddy potion"),
+                (new TileGlyph(22,15), "a", "gray potion"),
+                (new TileGlyph(23,15), "a", "milky potion"),
+            };
         }
 
         public Entity Gen(EntityGenerationInfo info)
         {
-            Entity e = new Entity('!', "Potion", EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
+            var potionId = info.Rnd.Next(_potions.Length);
+            var potion = _potions[potionId];
 
-            var potionId = info.Rnd.Next(3);
+            Entity e = new Entity(potion.Glyph, potion.IdentifiedName, EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
 
-            (var article, var colorName, var color) = types[potionId];
-            e.Symbol = new Symbol('!', color);
-
-            e.Add(new StackComponent(1, potionId + BaseId));
-
-            switch (potionId)
-            {
-                case 0: // Lesser healing potion
-                    e.Add(new HealComponent(20, 0, typeof(ConsumeEvent)));
-                    break;
-                case 1: // Greater healing potion
-                    e.Add(new HealComponent(40, 0, typeof(ConsumeEvent)));
-                    break;
-                case 2: // Poison draught
-                    //e.Add(new Combat.Poisonous(20, typeof(ConsumeEvent)));
-                    break;
-            }
-            //TODO: Add randomized effects to the potion.
-
-            //TODO: Work on identitying potions
-            e.Name = $"{colorName} potion";
+            e.Add(new StackComponent(1, potion));
+            e.Add(potion);
 
             return e;
         }

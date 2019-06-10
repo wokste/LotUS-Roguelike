@@ -4,10 +4,8 @@ using SurvivalHack.Combat;
 using SurvivalHack.ECM;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack
 {
@@ -17,24 +15,24 @@ namespace SurvivalHack
         {
             // Prepare event, filling in PreEvent, OnEvent, PostEvent, etc
             foreach (var c in evt.Item.Components)
-                c.GetActions(evt.Item, evt, EUseSource.Item);
+                (c as IActionComponent)?.GetActions(evt.Item, evt, EUseSource.Item);
 
             if (evt.Target != null)
             {
                 foreach (var c in evt.Target.Components)
-                    c.GetActions(evt.Target, evt, EUseSource.Target);
+                    (c as IActionComponent)?.GetActions(evt.Target, evt, EUseSource.Target);
                 foreach (var e in evt.Target.ListSubEntities())
                     foreach (var c in e.Components)
-                        c.GetActions(e, evt, EUseSource.TargetItem);
+                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.TargetItem);
             }
 
             if (evt.User != null)
             {
                 foreach (var c in evt.User.Components)
-                    c.GetActions(evt.User, evt, EUseSource.User);
+                    (c as IActionComponent)?.GetActions(evt.User, evt, EUseSource.User);
                 foreach (var e in evt.User.ListSubEntities())
                     foreach (var c in e.Components)
-                        c.GetActions(e, evt, EUseSource.UserItem);
+                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.UserItem);
             }
 
             // == Execute the event ==
@@ -44,7 +42,7 @@ namespace SurvivalHack
                 var str = check.Invoke(evt);
                 if (str != null)
                 {
-                    ColoredString.Write(str.CleanUp(), Color.Red);
+                    ColoredString.Write(str.CleanUp());
                     return false;
                 }
             }
@@ -58,7 +56,7 @@ namespace SurvivalHack
             if (parent != null)
 				parent.PostMessage += message;
 			else
-				ColoredString.Write(message.CleanUp(), Color.Yellow); //TODO: Color
+				ColoredString.Write(message.CleanUp()); //TODO: Color
 
             return true;
         }
@@ -134,153 +132,6 @@ namespace SurvivalHack
                 return $"{Word.AName(User)} spotted {Word.AName(Target)}. ";
             else
                 return "";
-        }
-    }
-
-    public class AttackEvent : BaseEvent
-    {
-        public EAttackState State = EAttackState.Hit;
-        public EAttackMove Move;
-        public EDamageLocation Location;
-
-        public AttackEvent(Entity user, Entity weapon, Entity target, EAttackMove move) : base(user, weapon, target)
-        {
-            Move = move;
-            Location = GetRandomLocation();
-        }
-
-        private EDamageLocation GetRandomLocation()
-        {
-            var rnd = Game.Rnd.NextDouble();
-            if (rnd < 0.75)
-                return EDamageLocation.Body;
-            else if (rnd < 0.9)
-                return EDamageLocation.Head;
-            else if (rnd < 0.95)
-                return EDamageLocation.Hands;
-            else
-                return EDamageLocation.Feet;
-        }
-
-        private string LocationToString(EDamageLocation loc)
-        {
-            switch (loc) {
-                case EDamageLocation.Body:
-                    return "torso";
-                case EDamageLocation.Head:
-                    return "head";
-                case EDamageLocation.Hands:
-                    return "hand";
-                case EDamageLocation.Feet:
-                    return "foot";
-                case EDamageLocation.LArm:
-                    return "left arm";
-                case EDamageLocation.RArm:
-                    return "right arm";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (Item == User)
-            {
-                sb.Append($"{Word.AName(User)} {Word.Verb(User, "attack")} {Word.AName(Target)}");
-            }
-            else
-            {
-                // TODO: Verb 'swing' should be based on the actual attack.
-
-                sb.Append($"{Word.AName(User)} {Word.Verb(User, "swing")} {Word.Its(User)} {Word.Name(Item)} at {Word.AName(Target)}");
-            }
-
-            if (State == EAttackState.Hit)
-            {
-                sb.Append($" and {Word.Verb(User, "hit")} {Word.Its(Target)} {LocationToString(Location)}. ");
-            }
-            else if (State == EAttackState.Miss)
-            {
-                sb.Append($" but {Word.Verb(User, "miss", "misses")} the attack. ");
-            }
-            else
-            {
-                var verbs = new string[,] { { null, null }, { null, null }, { "dodge", null }, { "block", null }, { "parry", "parries" } };
-                var verb = Word.Verb(Target, verbs[(int)State, 0], verbs[(int)State, 1]);
-
-                //TODO: What if I add hooking.
-                sb.Append($" but {verb} the attack. No damage is dealt. ");
-            }
-            
-            return sb.ToString();
-        }
-    }
-
-    public class DamageEvent : BaseEvent
-    {
-        public readonly int BaseDamage;
-        public EDamageType DamageType;
-        public EDamageLocation Location;
-        //public List<(double, string)> PreMults = new List<(double, string)>();
-        public List<(int, string)> Modifiers = new List<(int, string)>();
-        //public List<(double, string)> PostMults = new List<(double, string)>();
-        public bool KillHit = false;
-
-        public int Damage {
-            get {
-                double dmg = BaseDamage;
-                //foreach ((var d, var s) in PreMults) dmg *= (d+1);
-                foreach ((var i, var s) in Modifiers) dmg += i;
-                //foreach ((var d, var s) in PostMults) dmg *= (d+1);
-
-                return (int)(Math.Max(dmg + 0.5, 0));
-            }
-        }
-        public bool Significant => (Damage > 0);
-
-        public DamageEvent(BaseEvent parentEvent, int damage, EDamageType damageType, EDamageLocation location) : base (parentEvent)
-        {
-            BaseDamage = damage;
-            DamageType = damageType;
-            Location = location;
-        }
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            var dmg = Damage;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{(isChildMessage ? Word.It(Target) : Word.AName(Target))} {Word.Verb(Target, "take")} {(dmg > 0 ? dmg.ToString() : "no") } damage");
-            sb.Append(KillHit ? $" killing {(Word.It(Target))}." : ". ");
-            
-            if (Modifiers.Count > 0)
-            {
-                string adds = string.Join("", Modifiers.Select(p => $" {(p.Item1 >= 0 ? "+" : "-")} {Math.Abs(p.Item1)} {p.Item2}"));
-                string formula = ($"({BaseDamage}{adds}). ");
-                sb.Append(formula);
-            }
-
-            return sb.ToString();
-        }
-    }
-
-    public class HealEvent : BaseEvent
-    {
-        public int Restore;
-        public readonly int Stat;
-
-        public HealEvent(BaseEvent parent, int value, int stat) : base(parent)
-        {
-            Restore = value;
-            Stat = stat;
-        }
-
-        public override string GetMessage(bool isChildMessage)
-        {
-            return $"{Word.AName(User)} {Word.Verb(User, "heal")} {Restore} HP. ";
         }
     }
 

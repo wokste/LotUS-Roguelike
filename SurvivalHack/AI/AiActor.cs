@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using HackConsole;
-using SurvivalHack.ECM;
+using SurvivalHack.Combat;
 
 namespace SurvivalHack.Ai
 {
@@ -35,7 +39,7 @@ namespace SurvivalHack.Ai
             {
                 var delta = new Vec(move.Rand(Game.Rnd), move.Rand(Game.Rnd));
                 
-                if (self.Move(delta))
+                if (self.TryMove(delta))
                     return;
             }
         }
@@ -49,23 +53,23 @@ namespace SurvivalHack.Ai
             if (delta == deltaClamped)
                 return;
 
-            if (self.Move(deltaClamped))
+            if (self.TryMove(deltaClamped))
                 return;
 
             if (Math.Abs(delta.X) > Math.Abs(delta.Y))
             {
-                if (self.Move(new Vec(deltaClamped.X, 0)))
+                if (self.TryMove(new Vec(deltaClamped.X, 0)))
                     return;
 
-                if (self.Move(new Vec(0, deltaClamped.Y)))
+                if (self.TryMove(new Vec(0, deltaClamped.Y)))
                     return;
             }
             else
             {
-                if (self.Move(new Vec(0, deltaClamped.Y)))
+                if (self.TryMove(new Vec(0, deltaClamped.Y)))
                     return;
                 
-                if (self.Move(new Vec(deltaClamped.X, 0)))
+                if (self.TryMove(new Vec(deltaClamped.X, 0)))
                     return;
             }
 
@@ -88,17 +92,40 @@ namespace SurvivalHack.Ai
             }
         }
 
+
+        public static IEnumerable<(Entity, IWeapon)> ChooseWeapon(Entity self)
+        {
+            IEnumerable<Entity> It()
+            {
+                var inventory = self.GetOne<Inventory>();
+
+                yield return inventory?.Slots[Inventory.SLOT_WAND].Item;
+                yield return inventory?.Slots[Inventory.SLOT_RANGED].Item;
+                yield return inventory?.Slots[Inventory.SLOT_MAINHAND].Item;
+                yield return self;
+            }
+
+            return It().Select(i => (i, i?.GetOne<IWeapon>())).Where(pair => pair.Item2 != null);
+        }
+
         private bool ActionAttackEnemy(Entity self, Entity enemy)
         {
-            if (enemy != null)
-            {
-                (var weapon, var comp) = self.GetWeapon(enemy);
+            if (enemy == null)
+                return false;
 
-                if (weapon != null)
-                {
-                    Eventing.On(new AttackEvent(self, weapon, enemy, comp.AttackMove));
-                    return true;
-                }
+            foreach (var weaponPair in ChooseWeapon(self))
+            {
+                var weaponComponent = weaponPair.Item2;
+                var dir = weaponComponent.Dir(self, enemy);
+                if (dir == null)
+                    continue;
+
+                var targets = weaponComponent.Targets(self, dir.Value);
+                if (!targets.Contains(enemy))
+                    continue;
+
+                CombatSystem.RollAttack(self, targets, weaponPair);
+                return true;
             }
             return false;
         }
@@ -125,7 +152,7 @@ namespace SurvivalHack.Ai
             _entity.LeftoverMove += _entity.Speed;
             for (var i = 1; i <= _entity.LeftoverMove; i++)
                 _entity.Ai.Move(_entity, goal);
-            _entity.LeftoverMove = _entity.LeftoverMove - (int)_entity.LeftoverMove;
+            _entity.LeftoverMove -= (int)_entity.LeftoverMove;
 
             // Acting
             _entity.Ai.StandardAction(_entity, goal);

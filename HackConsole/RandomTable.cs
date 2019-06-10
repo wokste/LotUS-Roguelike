@@ -12,6 +12,16 @@ namespace HackConsole
 
         private RandomTable()
         {
+
+        }
+
+        public RandomTable(IEnumerable<(T Elem, int Odds)> elems)
+        {
+            _elems = elems.Select(s =>
+            {
+                _totalOdds += s.Odds;
+                return (s.Elem, _totalOdds);
+            }).ToArray();
         }
 
         static public RandomTable<string> FromString(string line)
