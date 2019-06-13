@@ -1,46 +1,39 @@
 ﻿using HackConsole;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
-    /*
-    public class MapRevealEffect : ITileEffect
+    public class MapRevealEffect : IEntityEffect
     {
-        public Type MessageType { get; }
-        private readonly byte FovFlags;
+        public EntityTarget Target => EntityTarget.Self;
+        
         public int Radius;
 
         public enum RevealMethod
         {
-            Walls, All, // Maybe add heat (lava), movement (non-flying creatures), etc.
+            Terrain, TremorSense, FullKnowledge
         }
 
         readonly RevealMethod Method;
 
-        public MapRevealEffect(byte fovFlags, RevealMethod method, int radius)
+        public MapRevealEffect(RevealMethod method, int radius = int.MaxValue)
         {
-            MessageType = messageType;
-            FovFlags = fovFlags;
             Method = method;
             Radius = radius;
         }
 
-        public override void GetActions(Entity self, BaseEvent message, EUseSource source)
+        public void RevealAround(FieldOfView fov, IShape shape, RevealMethod method, Func<Vec, bool> pred = null)
         {
-            if (MessageType.IsAssignableFrom(message.GetType()) && source == EUseSource.Item)
-                message.OnEvent += Reveal;
-        }
+            var Map = fov.Map;
 
-        public void Reveal(BaseEvent msg)
-        {
-            var FoV = msg.User.GetOne<FieldOfView>();
-            var Map = FoV.Map;
+            var flags = (method == RevealMethod.FullKnowledge) ? FieldOfView.FLAG_ALWAYSVISIBLE : FieldOfView.FLAG_DISCOVERED;
 
-            // This function returns true if it can be seen from any direction.
+            // Returns whether it can be seen from any direction.
             bool Reachable(Vec v)
             {
                 for (int y = Math.Max(v.Y - 1, 0); y <= Math.Min(v.Y + 1, Map.Size.Y - 1); y++)
@@ -56,20 +49,45 @@ namespace SurvivalHack.Effects
             // Now update all tiles such that things become visible
             foreach (var v in Map.TileMap.Ids())
             {
-                if (Reachable(v) && Map.GetTile(v).Solid)
-                    FoV.Visibility[v] |= FovFlags;
+                if (Reachable(v) && (pred == null || pred(v)))
+                    fov.Visibility[v] |= flags;
             }
         }
         
-        public bool Use(Entity insignator, Grid<Tile> map, StringBuilder sb)
+        [Obsolete("Delete me after merge")]
+        public bool Use(Entity instignator, Entity target, StringBuilder sb)
         {
+            var map = instignator.Level;
+            var fov = instignator.GetOne<FieldOfView>();
+            var circle = new Circle(instignator.Pos, Radius);
+
+            Debug.Assert(fov != null);
+            if (fov == null)
+                return false;
+
+            switch (Method) {
+                case RevealMethod.FullKnowledge:
+                case RevealMethod.Terrain:
+                    {
+                        RevealAround(fov, circle, Method);
+                        break;
+                    }
+                case RevealMethod.TremorSense:
+                    {
+                        foreach (var e in map.GetEntities(circle))
+                            if (e.EntityFlags.HasFlag(EEntityFlag.TeamPlayer) || e.EntityFlags.HasFlag(EEntityFlag.TeamMonster))
+                                RevealAround(fov, new Circle(e.Pos, 1), Method);
+                    }
+                    break;
+            }
+
+
             throw new NotImplementedException();
         }
 
-        public float Efficiency(Entity instignator, Grid<Tile> map)
+        public float Efficiency(Entity instignator, Entity target)
         {
-            throw new NotImplementedException();
+            return 0; // AI's can't work with this component.
         }
     }
-    */
 }

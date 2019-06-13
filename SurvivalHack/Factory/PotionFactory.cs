@@ -31,6 +31,7 @@ namespace SurvivalHack.Factory
                 new Potion("Greater healing potion", new[] { new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) }),
                 new Potion("Mana potion", new[] { new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) }),
                 new Potion("Teleportaion potion", new IEffect[] {new TeleportEffect(EntityTarget.Self | EntityTarget.Others)}),
+                new Potion("Claivorance potion", new IEffect[] {new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 15)}),
                 //new Potion("Acid", new IEffect[] {new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others)}),
             };
         }
