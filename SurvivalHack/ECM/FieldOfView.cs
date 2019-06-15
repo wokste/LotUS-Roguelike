@@ -17,7 +17,7 @@ namespace SurvivalHack
 
         public Level Map;
 
-        private int _visualRange = 32;
+        private int _visualRange = 16;
 
         public int VisualRange
         {

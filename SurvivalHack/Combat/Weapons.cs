@@ -2,6 +2,7 @@
 using SurvivalHack.ECM;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Combat
 {
@@ -14,7 +15,9 @@ namespace SurvivalHack.Combat
 
     public class MeleeWeapon : IWeapon, IEquippableComponent
     {
-        public Damage Damage { get; }
+
+        [XmlElement]
+        public Damage Damage { get; set; }
 
         public MeleeWeapon(Damage damage)
         {
@@ -48,20 +51,23 @@ namespace SurvivalHack.Combat
 
     public class SweepWeapon : IWeapon, IEquippableComponent
     {
+        [XmlElement]
         public Damage Damage { get; }
-        public int MinRange { get; } = 1;
-        public int MaxRange { get; } = 1;
 
-        public SweepWeapon(Damage damage, int minRange = 1, int maxRange = 1 )
+        [XmlAttribute]
+        public Range Range { get; } = new Range(1,1);
+
+        public SweepWeapon(Damage damage, Range range)
         {
             Damage = damage;
+            Range = range;
         }
 
         public Vec? Dir(Entity attacker, Entity defender)
         {
             Vec delta = (defender.Pos - attacker.Pos);
 
-            if (delta.ManhattanLength > MaxRange)
+            if (!Range.Contains(delta.ManhattanLength))
                 return null;
 
             return delta.Clamped;
@@ -72,7 +78,7 @@ namespace SurvivalHack.Combat
             var level = attacker.Level;
             var center = attacker.Pos;
 
-            return level.GetEntities(center.BoundingBox.Grow(MaxRange)).Where(e => (e.Pos - center).ManhattanLength >= MinRange);
+            return level.GetEntities(center.BoundingBox.Grow(Range.Max)).Where(e => Range.Contains((e.Pos - center).ManhattanLength));
         }
 
         public ESlotType SlotType => ESlotType.Hand;
@@ -80,8 +86,11 @@ namespace SurvivalHack.Combat
 
     public class RangedWeapon : IWeapon, IEquippableComponent
     {
-        public Damage Damage { get; }
-        public float Range;
+        [XmlElement]
+        public Damage Damage { get; set; }
+
+        [XmlAttribute]
+        public float Range { get; set; }
 
         public RangedWeapon(int damage, EDamageType type, float range)
         {
@@ -101,7 +110,7 @@ namespace SurvivalHack.Combat
         {
             Vec delta = (defender.Pos - attacker.Pos);
 
-            return new Vec(MyMath.Clamp(delta.X, -1, 1), MyMath.Clamp(delta.Y, -1, 1));
+            return delta.Clamped;
         }
 
         public IEnumerable<Entity> Targets(Entity attacker, Vec dir)

@@ -1,4 +1,5 @@
 ﻿using SurvivalHack.ECM;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Combat
 {
@@ -13,7 +14,10 @@ namespace SurvivalHack.Combat
     {
         public int ArmorPriority => 100;
 
+        [XmlAttribute]
         public float BlockChance;
+
+        [XmlAttribute]
         public EAttackResult BlockMethod;
 
         public Blockable(float blockChance, EAttackResult blockMethod)
@@ -32,8 +36,10 @@ namespace SurvivalHack.Combat
     {
         public int ArmorPriority => 50;
 
+        [XmlAttribute]
         public ESlotType SlotType { get; private set; }
 
+        [XmlAttribute]
         public int DamageReduction = 1;
 
         public Armor(int damageReduction, ESlotType slotType)
@@ -53,7 +59,10 @@ namespace SurvivalHack.Combat
     {
         public int ArmorPriority => 30;
 
+        [XmlAttribute]
         private readonly EDamageType DamageType;
+
+        [XmlAttribute]
         private readonly float Mult;
 
         public ElementalResistance(EDamageType damageType, float mult)

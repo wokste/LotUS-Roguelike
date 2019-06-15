@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SurvivalHack.Mapgen
 {
-    class VoronoiNoise<T>
+    public class VoronoiNoise<T>
     {
         int Scale;
         Grid<T> Cells;

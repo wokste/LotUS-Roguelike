@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace SurvivalHack
 {
@@ -18,8 +19,13 @@ namespace SurvivalHack
 
     public struct TileGlyph
     {
+        [XmlAttribute]
         public byte X;
+
+        [XmlAttribute]
         public byte Y;
+
+        [XmlAttribute]
         public byte Method;
 
 

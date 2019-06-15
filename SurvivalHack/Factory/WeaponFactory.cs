@@ -62,7 +62,7 @@ namespace SurvivalHack.Factory
                 case "axe":
                     {
                         var e = new Entity(new TileGlyph(7, 12),"Handaxe", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new SweepWeapon(new Damage(6, EDamageType.Slashing, EAttackMove.Swing)));
+                        e.Add(new SweepWeapon(new Damage(6, EDamageType.Slashing, EAttackMove.Swing), new Range(1)));
                         e.Add(new Blockable(0.1f, EAttackResult.Parried));
                         return e;
                     }

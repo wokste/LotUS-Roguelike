@@ -1,15 +1,22 @@
 ﻿using SurvivalHack.Combat;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    class HarmEffect : IEntityEffect
+    public class HarmEffect : Effect
     {
-        public int Damage;
-        public int StatID;
-        public EDamageType DamageType;
+        [XmlAttribute]
+        public int Damage { get; set; }
+        [XmlAttribute]
+        public int StatID { get; set; }
 
-        public EntityTarget UseOn { get; }
+        [XmlAttribute]
+        public EDamageType DamageType { get; set; }
+
+        public HarmEffect()
+        {
+        }
 
         public HarmEffect(int damage, EDamageType damageType, int statID, EntityTarget useOn)
         {
@@ -18,7 +25,7 @@ namespace SurvivalHack.Effects
             StatID = statID;
             UseOn = useOn;
         }
-        public bool Use(Entity instignator, Entity target, StringBuilder sb)
+        public override void Use(Entity instignator, Entity target, StringBuilder sb)
         {
             /*
             if (target.GetOne<StatBlock>() is StatBlock stats)
@@ -28,10 +35,9 @@ namespace SurvivalHack.Effects
             }
             throw new NotImplementedException();
             */
-            return true;
         }
 
-        public float Efficiency(Entity instignator, Entity target)
+        public override float Efficiency(Entity instignator, Entity target)
         {
             return 1;
         }

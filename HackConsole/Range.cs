@@ -8,6 +8,12 @@ namespace HackConsole
     {
         public readonly int Min, Max;
 
+        public Range(int val)
+        {
+            Min = val;
+            Max = val;
+        }
+
         public Range(string str)
         {
             var tokens = str.Split('-');
@@ -37,6 +43,11 @@ namespace HackConsole
         public double RandDouble(Random rnd)
         {
             return rnd.NextDouble() * (Max - Min) + Min;
+        }
+
+        public bool Contains(int val)
+        {
+            return Min <= val && val <= Max;
         }
     }
 

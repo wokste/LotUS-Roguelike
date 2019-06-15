@@ -2,7 +2,7 @@
 
 namespace SurvivalHack.ECM
 {
-    public class Stairs : IComponent
+    public class Stairs : IActionComponent
     {
         public int Depth;
 
@@ -10,8 +10,6 @@ namespace SurvivalHack.ECM
         {
             Depth = depth;
         }
-
-        public string Describe() => $"Can be used to travel down";
 
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source)

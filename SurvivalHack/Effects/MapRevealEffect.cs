@@ -2,21 +2,26 @@
 using System;
 using System.Diagnostics;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class MapRevealEffect : IEntityEffect
+    public class MapRevealEffect : Effect
     {
-        public EntityTarget UseOn => EntityTarget.Self;
-
-        public int Radius;
+        [XmlAttribute]
+        public int Radius { get; set; } = int.MaxValue;
 
         public enum RevealMethod
         {
             Terrain, TremorSense, FullKnowledge
         }
 
-        readonly RevealMethod Method;
+        [XmlAttribute]
+        public RevealMethod Method { get; set; }
+
+        public MapRevealEffect()
+        {
+        }
 
         public MapRevealEffect(RevealMethod method, int radius = int.MaxValue)
         {
@@ -51,7 +56,7 @@ namespace SurvivalHack.Effects
             }
         }
         
-        public bool Use(Entity instignator, Entity target, StringBuilder _)
+        public override void Use(Entity instignator, Entity target, StringBuilder _)
         {
             var map = instignator.Level;
             var fov = instignator.GetOne<FieldOfView>();
@@ -59,7 +64,7 @@ namespace SurvivalHack.Effects
 
             Debug.Assert(fov != null);
             if (fov == null)
-                return false;
+                return;
 
             switch (Method) {
                 case RevealMethod.FullKnowledge:
@@ -76,10 +81,9 @@ namespace SurvivalHack.Effects
                     }
                     break;
             }
-            return true;
         }
 
-        public float Efficiency(Entity instignator, Entity target)
+        public override float Efficiency(Entity instignator, Entity target)
         {
             return 0; // AI's can't work with this component.
         }

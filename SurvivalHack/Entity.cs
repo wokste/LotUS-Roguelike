@@ -4,22 +4,32 @@ using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace SurvivalHack
 {
     public class Entity
     {
+        [XmlAttribute]
         public string Name { get; set; }
 
-        public EEntityFlag EntityFlags;
+        [XmlAttribute]
+        public EEntityFlag EntityFlags { get; set; }
         public override string ToString() => Name;
-        public List<IComponent> Components = new List<IComponent>();
 
-        public TileGlyph Glyph;
-        public float Speed = 1;
+        [XmlElement]
+        public List<IComponent> Components { get; set; } = new List<IComponent>();
 
-        public AiActor Ai;
-        public Attitude Attitude;
+        [XmlElement]
+        public TileGlyph Glyph { get; set; }
+
+        [XmlAttribute]
+        public float Speed { get; set; } = 1;
+
+        public AiActor Ai { get; set; }
+
+        [XmlAttribute]
+        public Attitude Attitude { get; set; }
 
         public float LeftoverMove;
         public Action<Entity> OnDestroy;

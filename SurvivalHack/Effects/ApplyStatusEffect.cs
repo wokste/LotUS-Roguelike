@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    class ApplyStatusEffect : IEntityEffect
+    public class ApplyStatusEffect : Effect
     {
-        public StatusEffect Effect;
+        [XmlElement]
+        public StatusEffect Effect { get; set; }
 
-        public EntityTarget UseOn { get; set; }
-
-        public float Efficiency(Entity instignator, Entity target)
+        public override float Efficiency(Entity instignator, Entity target)
         {
             return 1;
         }
 
-        public bool Use(Entity instignator, Entity target, StringBuilder sb)
+        public override void Use(Entity instignator, Entity target, StringBuilder sb)
         {
             Effect.AddCopyTo(target);
-            return true;
         }
     }
 }

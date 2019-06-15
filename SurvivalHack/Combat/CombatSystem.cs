@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Combat
 {
@@ -64,17 +65,23 @@ namespace SurvivalHack.Combat
 
     public struct Attack
     {
-        public float HitChance;
-        public float CritChance;
-        public EAttackMove AttackMove;
+        [XmlAttribute]
+        public float HitChance { get; set; }
+        [XmlAttribute]
+        public float CritChance { get; set; }
+        [XmlAttribute]
+        public EAttackMove AttackMove { get; set; }
     }
 
     public struct Damage
     {
-        public float Dmg;
-        public EDamageType DamageType;
-        public EAttackMove AttackMove;
-        public bool KillHit;
+        [XmlAttribute]
+        public float Dmg { get; set; }
+        [XmlAttribute]
+        public EDamageType DamageType { get; set; }
+        [XmlAttribute]
+        public EAttackMove AttackMove { get; set; }
+        public bool KillHit { get; set; }
 
         public bool Significant => (Dmg > 0);
 

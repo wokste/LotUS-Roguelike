@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SurvivalHack.Mapgen.Automata
 {
-    class BomberAutomata
+    public class BomberAutomata
     {
         public int TileId;
         public Func<Tile, bool> AffectPred;

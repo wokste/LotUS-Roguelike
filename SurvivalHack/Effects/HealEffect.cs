@@ -1,14 +1,20 @@
 ﻿using SurvivalHack.Combat;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class HealEffect : IEntityEffect
+    public class HealEffect : Effect
     {
-        public int Restore;
-        public int StatID;
+        [XmlAttribute]
+        public int Restore { get; set; }
 
-        public EntityTarget UseOn { get; }
+        [XmlAttribute]
+        public int StatID { get; set; }
+
+        public HealEffect()
+        {
+        }
 
         public HealEffect(int restore, int statID, EntityTarget useOn)
         {
@@ -17,16 +23,15 @@ namespace SurvivalHack.Effects
             UseOn = useOn;
         }
         
-        public bool Use(Entity instignator, Entity target, StringBuilder sb)
+        public override void Use(Entity instignator, Entity target, StringBuilder sb)
         {
             var stats = target.GetOne<StatBlock>();
 
             stats.Heal(Restore, StatID);
             sb?.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} HP. "); // TODO: not always HP
-            return true;
         }
 
-        public float Efficiency(Entity instignator, Entity target)
+        public override float Efficiency(Entity instignator, Entity target)
         {
             return 1; // TODO
         }

@@ -2,7 +2,9 @@
 using SurvivalHack.Effects;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Factory
 {
@@ -22,16 +24,23 @@ namespace SurvivalHack.Factory
                 _potions[i].UnidentifiedName = icons[i].Name;
                 _potions[i].Glyph = icons[i].Glyph;
             }
+
+            // TODO_TEMP: Remove
+            XmlSerializer serializer = new XmlSerializer(typeof(Potion[]));
+            using (TextWriter writer = new StreamWriter(@"D:\Potions.xml"))
+            {
+                serializer.Serialize(writer, _potions);
+            }
         }
 
         Potion[] MakePotions() {
             return new Potion[] {
-                new Potion("Lesser healing potion", new[] { new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Greater healing potion", new[] { new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Mana potion", new[] { new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) }),
-                new Potion("Teleportaion potion", new IEffect[] {new TeleportEffect(EntityTarget.Self | EntityTarget.Others)}),
-                new Potion("Claivorance potion", new IEffect[] {new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 15)}),
-                //new Potion("Acid", new IEffect[] {new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others)}),
+                new Potion("Lesser healing potion", new EffectList( new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) )),
+                new Potion("Greater healing potion", new EffectList( new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) )),
+                new Potion("Mana potion", new EffectList(new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) )),
+                new Potion("Teleportaion potion", new EffectList( new TeleportEffect(EntityTarget.Self | EntityTarget.Others))),
+                new Potion("Claivorance potion", new EffectList( new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 15))),
+                new Potion("Acid", new EffectList( new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others))),
             };
         }
 

@@ -2,26 +2,35 @@
 using SurvivalHack.Effects;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.ECM
 {
     public class Potion : IActionComponent
     {
-        public IEnumerable<IEffect> Effects;
-        public string IdentifiedName;
-        public string UnidentifiedName;
-        public TileGlyph Glyph;
-        public bool IsIdentified;
 
-        public Potion(string identifiedName, IEffect[] effects)
+        [XmlElement]
+        public EffectList Effects { get; set; }
+
+        [XmlAttribute]
+        public string IdentifiedName { get; set; }
+
+        [XmlAttribute]
+        public string UnidentifiedName { get; set; }
+
+        [XmlElement]
+        public TileGlyph Glyph { get; set; }
+
+        [XmlAttribute]
+        public bool IsIdentified { get; set; }
+
+        public Potion()
+        { }
+
+        public Potion(string identifiedName, EffectList effects)
         {
             IdentifiedName = identifiedName;
             Effects = effects;
-        }
-        
-        public bool FitsIn(ESlotType type)
-        {
-            return false;
         }
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -39,14 +48,7 @@ namespace SurvivalHack.ECM
             var sb = new StringBuilder();
             sb.Append($"{IdentifiedName}: ");
 
-            foreach (var e in Effects)
-            {
-                if (e is IEntityEffect ee)
-                {
-                    if (ee.UseOn.HasFlag(EntityTarget.Self))
-                        ee.Use(user, user, sb);
-                }
-            }
+            Effects.Use(user, user, sb, EntityTarget.Self);
             ColoredString.OnMessage(sb.ToString());
         }
     }

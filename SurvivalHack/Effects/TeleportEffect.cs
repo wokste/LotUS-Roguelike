@@ -1,24 +1,27 @@
 ﻿using HackConsole;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    class TeleportEffect : IEntityEffect
+    public class TeleportEffect : Effect
     {
-        public EntityTarget UseOn { get; }
+        public TeleportEffect()
+        {
+        }
 
         public TeleportEffect(EntityTarget useOn)
         {
             UseOn = useOn;
         }
 
-        public float Efficiency(Entity instignator, Entity target)
+        public override float Efficiency(Entity instignator, Entity target)
         {
             // TODO:
             return 1;
         }
 
-        public bool Use(Entity instignator, Entity target, StringBuilder _)
+        public override void Use(Entity instignator, Entity target, StringBuilder _)
         {
             var level = target.Level;
             var rnd = Game.Rnd;
@@ -33,9 +36,8 @@ namespace SurvivalHack.Effects
                     continue;
 
                 if (target.TrySetPos(v))
-                    return true;
+                    return;
             }
-            return false;
         }
     }
 }

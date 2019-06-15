@@ -1,10 +1,12 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Combat
 {
     public class StatBlock : IComponent
     {
+        [XmlElement]
         private readonly Stat[] _stats = new Stat[3];
 
         public StatBlock(int HP, int MP, int XP)
@@ -82,8 +84,11 @@ namespace SurvivalHack.Combat
 
         struct Stat
         {
-            internal int Cur;
-            internal int Max;
+            [XmlAttribute]
+            internal int Cur { get; set; }
+
+            [XmlAttribute]
+            internal int Max { get; set; }
 
             public Stat(int val) : this()
             {

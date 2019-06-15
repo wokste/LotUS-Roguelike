@@ -83,6 +83,7 @@
     <Compile Include="ECM\Potion.cs" />
     <Compile Include="ECM\Stairs.cs" />
     <Compile Include="Effects\ApplyStatusEffect.cs" />
+    <Compile Include="Effects\Effect.cs" />
     <Compile Include="Effects\HarmEffect.cs" />
     <Compile Include="Effects\TeleportEffect.cs" />
     <Compile Include="Eventing.cs" />

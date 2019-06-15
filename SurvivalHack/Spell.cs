@@ -7,12 +7,13 @@ using System.Text;
 
 namespace SurvivalHack
 {
-    class Spell : IComponent
+    public class Spell : IComponent
     {
+        // TODO: XML
         public int MpCost;
-        public IList<IEffect> Effects;
+        public EffectList Effects;
 
-        public Spell(int mpCost, IList<IEffect> effects)
+        public Spell(int mpCost, EffectList effects)
         {
             MpCost = mpCost;
             Effects = effects;
@@ -24,13 +25,7 @@ namespace SurvivalHack
             if (statBlock?.Spend(MpCost, 1) ?? false)
             {
                 var stringBuilder = new StringBuilder();
-                foreach (var e in Effects)
-                {
-                    if (e is IEntityEffect ee)
-                    {
-                        ee.Use(caster, target, stringBuilder);
-                    }
-                }
+                Effects.Use(caster, target, stringBuilder, EntityTarget.Self);
                 ColoredString.OnMessage(stringBuilder.ToString());
                 return true;
             }
