@@ -48,6 +48,38 @@ namespace SurvivalHack.Combat
         public ESlotType SlotType => ESlotType.Hand;
     }
 
+    public class SweepWeapon : IWeapon, IEquippableComponent
+    {
+        public Damage Damage { get; }
+        public int MinRange { get; } = 1;
+        public int MaxRange { get; } = 1;
+
+        public SweepWeapon(Damage damage, int minRange = 1, int maxRange = 1 )
+        {
+            Damage = damage;
+        }
+
+        public Vec? Dir(Entity attacker, Entity defender)
+        {
+            Vec delta = (defender.Pos - attacker.Pos);
+
+            if (delta.ManhattanLength > MaxRange)
+                return null;
+
+            return delta.Clamped;
+        }
+
+        public IEnumerable<Entity> Targets(Entity attacker, Vec _)
+        {
+            var level = attacker.Level;
+            var center = attacker.Pos;
+
+            return level.GetEntities(center.BoundingBox.Grow(MaxRange)).Where(e => (e.Pos - center).ManhattanLength >= MinRange);
+        }
+
+        public ESlotType SlotType => ESlotType.Hand;
+    }
+
     public class RangedWeapon : IWeapon, IEquippableComponent
     {
         public Damage Damage { get; }

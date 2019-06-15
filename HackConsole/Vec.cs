@@ -52,6 +52,9 @@ namespace HackConsole
 
         // Shape
         public Rect BoundingBox => new Rect(this, Size.One);
+
+        public Vec Clamped => new Vec(MyMath.Clamp(X, -1, 1), MyMath.Clamp(Y, -1, 1));
+
         public bool Contains(Vec v) => v == this;
         public IEnumerable<Vec> Iterator() { yield return this; }
     }

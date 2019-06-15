@@ -1,5 +1,6 @@
 ﻿using System;
 using HackConsole;
+using SurvivalHack.Combat;
 
 namespace SurvivalHack.Factory
 {
@@ -40,29 +41,29 @@ namespace SurvivalHack.Factory
                 case "dagger":
                     {
                         var e = new Entity(new TileGlyph(1,12), "Dagger", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new Combat.MeleeWeapon(5, Combat.EAttackMove.Close, Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
+                        e.Add(new MeleeWeapon(5, EAttackMove.Close, EDamageType.Piercing));
+                        e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "ssword":
                     {
                         var e = new Entity(new TileGlyph(2, 12), "Shortsword", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
+                        e.Add(new MeleeWeapon(6, EAttackMove.Swing, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "lsword":
                     {
                         var e = new Entity(new TileGlyph(5, 12), "Longsword", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing | Combat.EDamageType.Piercing));
-                        e.Add(new Combat.Blockable(0.2f, Combat.EAttackResult.Parried));
+                        e.Add(new MeleeWeapon(7, EAttackMove.Swing, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "axe":
                     {
                         var e = new Entity(new TileGlyph(7, 12),"Handaxe", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Slashing));
-                        e.Add(new Combat.Blockable(0.1f, Combat.EAttackResult.Parried));
+                        e.Add(new SweepWeapon(new Damage(6, EDamageType.Slashing, EAttackMove.Swing)));
+                        e.Add(new Blockable(0.1f, EAttackResult.Parried));
                         return e;
                     }
                 case "spear":
@@ -74,57 +75,57 @@ namespace SurvivalHack.Factory
                 case "mace":
                     {
                         var e = new Entity(new TileGlyph(9, 12), "Mace", EEntityFlag.Pickable);
-                        e.Add(new Combat.MeleeWeapon(6, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing));
+                        e.Add(new MeleeWeapon(6, EAttackMove.Swing, EDamageType.Bludgeoing));
                         return e;
                     }
                 case "wshield":
                     {
                         var e = new Entity(new TileGlyph(13, 13), "Wooden Shield", EEntityFlag.Pickable);
-                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackResult.Blocked));
+                        e.Add(new Blockable(0.3f, EAttackResult.Blocked));
                         return e;
                     }
                 case "ishield":
                     {
                         var e = new Entity(new TileGlyph(14, 13), "Iron Shield", EEntityFlag.Pickable);
-                        e.Add(new Combat.Blockable(0.3f, Combat.EAttackResult.Blocked));
+                        e.Add(new Blockable(0.3f, EAttackResult.Blocked));
                         return e;
                     }
                 case "sbow":
                     {
                         var e = new Entity(new TileGlyph(16, 12), "Shortbow", EEntityFlag.Pickable);
-                        e.Add(new Combat.RangedWeapon(5, Combat.EDamageType.Piercing, 20));
+                        e.Add(new RangedWeapon(5, EDamageType.Piercing, 20));
                         //TODO: require ammo
                         return e;
                     }
                 case "lbow":
                     {
                         var e = new Entity(new TileGlyph(17, 12), "Longbow", EEntityFlag.Pickable);
-                        e.Add(new Combat.RangedWeapon(6, Combat.EDamageType.Piercing, 50 ));
+                        e.Add(new RangedWeapon(6, EDamageType.Piercing, 50 ));
                         //TODO: require ammo
                         return e;
                     }
                 case "armour_leather":
                     {
                         var e = new Entity(new TileGlyph(0, 13), "Leather Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armor(2, ESlotType.Body));
+                        e.Add(new Armor(2, ESlotType.Body));
                         return e;
                     }
                 case "armour_chain":
                     {
                         var e = new Entity(new TileGlyph(1, 13), "Chainmail Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armor(3, ESlotType.Body));
+                        e.Add(new Armor(3, ESlotType.Body));
                         return e;
                     }
                 case "armour_plate":
                     {
                         var e = new Entity(new TileGlyph(2, 13), "Plate Armour", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armor(4, ESlotType.Body));
+                        e.Add(new Armor(4, ESlotType.Body));
                         return e;
                     }
                 case "helmet":
                     {
                         var e = new Entity(new TileGlyph(10, 13), "Helmet", EEntityFlag.Pickable);
-                        e.Add(new Combat.Armor(3, ESlotType.Head));
+                        e.Add(new Armor(3, ESlotType.Head));
                         return e;
                     }
 
@@ -158,7 +159,7 @@ namespace SurvivalHack.Factory
                     }
                 case "@resistance":
                     {
-                        var resistanceTypes = new(Combat.EDamageType Damage, string RandomTable)[] { ( Combat.EDamageType.Fire, "ring:5,amulet:1" ), ( Combat.EDamageType.Poison, "ring:5,amulet:1" ), (Combat.EDamageType.Ice, "ring:5,cloak:2") };
+                        var resistanceTypes = new(EDamageType Damage, string RandomTable)[] { (EDamageType.Fire, "ring:5,amulet:1" ), (EDamageType.Poison, "ring:5,amulet:1" ), (EDamageType.Ice, "ring:5,cloak:2") };
                         (var DamageType, var RandomTableText) = resistanceTypes[Game.Rnd.Next(resistanceTypes.Length)];
 
                         var e = GetBasic(RandomTable<string>.FromString(RandomTableText).GetRand(Game.Rnd));
@@ -167,7 +168,7 @@ namespace SurvivalHack.Factory
                         var (Name, Mult) = resistanceLevels[0];
 
                         e.Name = $"{e.Name} of {DamageType} {Name}";
-                        e.Add(new Combat.ElementalResistance(DamageType, Mult));
+                        e.Add(new ElementalResistance(DamageType, Mult));
                         return e;
                     }
             }

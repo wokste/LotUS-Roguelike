@@ -97,7 +97,8 @@ namespace HackConsole
         /// <param name="bgColor">Background color</param>
         protected bool Print(Vec v, string msg, Color fgColor, Color bgColor = default(Color))
         {
-            //TODO: Input validation
+            if (v.Y >= Data.Height)
+                return false;
 
             var length = Math.Min(msg.Length, Data.Size.X - v.X);
 
@@ -111,6 +112,9 @@ namespace HackConsole
 
         protected void Print(Vec v, Symbol s)
         {
+            if (v.Y >= Data.Height)
+                return;
+
             Data[v] = s;
         }
 

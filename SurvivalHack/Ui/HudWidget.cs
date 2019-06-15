@@ -63,6 +63,7 @@ namespace SurvivalHack.Ui
 
                 Print(new Vec(0, y++), e.Name, fgColor, Color.Transparent);
 
+
                 var damagable = e.GetOne<StatBlock>();
                 if (damagable != null)
                     PrintBar("HP:", y++, damagable, 0);

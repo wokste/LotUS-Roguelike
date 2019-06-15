@@ -10,8 +10,8 @@ namespace SurvivalHack.Effects
 {
     public class MapRevealEffect : IEntityEffect
     {
-        public EntityTarget Target => EntityTarget.Self;
-        
+        public EntityTarget UseOn => EntityTarget.Self;
+
         public int Radius;
 
         public enum RevealMethod
