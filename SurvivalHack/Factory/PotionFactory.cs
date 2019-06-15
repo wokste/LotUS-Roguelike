@@ -71,7 +71,7 @@ namespace SurvivalHack.Factory
             var potionId = info.Rnd.Next(_potions.Length);
             var potion = _potions[potionId];
 
-            Entity e = new Entity(potion.Glyph, potion.IdentifiedName, EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
+            Entity e = new Entity(potion.Glyph, potion.Name, EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
 
             e.Add(new StackComponent(1, potion));
             e.Add(potion);

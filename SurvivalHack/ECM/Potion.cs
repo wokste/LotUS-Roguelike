@@ -10,10 +10,10 @@ namespace SurvivalHack.ECM
     {
 
         [XmlElement]
-        public EffectList Effects { get; set; }
+        public EffectList OnUse { get; set; }
 
         [XmlAttribute]
-        public string IdentifiedName { get; set; }
+        public string Name { get; set; }
 
         [XmlAttribute]
         public string UnidentifiedName { get; set; }
@@ -21,16 +21,15 @@ namespace SurvivalHack.ECM
         [XmlElement]
         public TileGlyph Glyph { get; set; }
 
-        [XmlAttribute]
-        public bool IsIdentified { get; set; }
+        public bool IsIdentified => UnidentifiedName == null;
 
         public Potion()
         { }
 
-        public Potion(string identifiedName, EffectList effects)
+        public Potion(string name, EffectList effects)
         {
-            IdentifiedName = identifiedName;
-            Effects = effects;
+            Name = name;
+            OnUse = effects;
         }
 
         public void GetActions(Entity self, BaseEvent message, EUseSource source)
@@ -46,9 +45,9 @@ namespace SurvivalHack.ECM
         {
             var user = ((ConsumeEvent)evt).User;
             var sb = new StringBuilder();
-            sb.Append($"{IdentifiedName}: ");
+            sb.Append($"{Name}: ");
 
-            Effects.Use(user, user, sb, EntityTarget.Self);
+            OnUse.Use(user, user, sb, EntityTarget.Self);
             ColoredString.OnMessage(sb.ToString());
         }
     }

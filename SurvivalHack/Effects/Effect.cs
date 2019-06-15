@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public struct EffectList
+    public struct EffectList : IXmlSerializable
     {
         public Effect[] Effects;
 
@@ -37,6 +37,27 @@ namespace SurvivalHack.Effects
 
             // TODO: Check whether something is usable
             return Effects.Average(e => e.Efficiency(instignator, target));
+        }
+
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            // TODO: XML
+            throw new NotImplementedException();
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            foreach (var e in Effects)
+            {
+                XmlSerializer serial = new XmlSerializer(e.GetType());
+                serial.Serialize(writer, e);
+            }
+            
         }
     }
 

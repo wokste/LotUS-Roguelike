@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
@@ -19,15 +20,9 @@ namespace SurvivalHack
 
     public struct TileGlyph
     {
-        [XmlAttribute]
         public byte X;
-
-        [XmlAttribute]
         public byte Y;
-
-        [XmlAttribute]
         public byte Method;
-
 
         public const byte BASE = 0;
         public const byte TERRAIN = 1;
@@ -35,9 +30,55 @@ namespace SurvivalHack
         public const byte ANIM = 3;
         public const byte WALL = 4;
 
+        public static readonly string[] MethodTypes = new[] { "", "Terrain", "pit" };
+
         public TileGlyph(byte x, byte y, byte method = 0)
         {
             X = x; Y = y; Method = method;
+        }
+
+        public override string ToString() => Method == 0 ? $"{X},{Y}" : $"{(GlyphMethod)Method}: {X},{Y}";
+
+        public TileGlyph(string s) : this()
+        {
+            // TODO: XML
+            X = 0;
+            Y = 0;
+            Method = 0;
+        }
+
+        public enum GlyphMethod {
+            Base, Terrain, Pit, Anim, Wall
+        }
+    }
+
+
+    public class TileGlyphTypeConverter : ExpandableObjectConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return destinationType == typeof(TileGlyph);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value is string s)
+                return new TileGlyph(s);
+
+            return base.ConvertFrom(context, culture, value);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string) && value is TileGlyph g)
+                return g.ToString();
+
+            return base.ConvertTo(context, culture, value, destinationType);
         }
     }
 
