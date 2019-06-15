@@ -3,7 +3,6 @@ using HackConsole;
 using SurvivalHack.ECM;
 using SurvivalHack.Ai;
 using System.Collections.Generic;
-using SurvivalHack.Combat;
 using System.Diagnostics;
 
 namespace SurvivalHack

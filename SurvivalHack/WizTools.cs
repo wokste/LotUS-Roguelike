@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using HackConsole;
 using SurvivalHack.ECM;
 
 #if WIZTOOLS

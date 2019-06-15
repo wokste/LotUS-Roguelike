@@ -1,10 +1,7 @@
 ﻿using HackConsole;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
@@ -54,8 +51,7 @@ namespace SurvivalHack.Effects
             }
         }
         
-        [Obsolete("Delete me after merge")]
-        public bool Use(Entity instignator, Entity target, StringBuilder sb)
+        public bool Use(Entity instignator, Entity target, StringBuilder _)
         {
             var map = instignator.Level;
             var fov = instignator.GetOne<FieldOfView>();
@@ -80,9 +76,7 @@ namespace SurvivalHack.Effects
                     }
                     break;
             }
-
-
-            throw new NotImplementedException();
+            return true;
         }
 
         public float Efficiency(Entity instignator, Entity target)

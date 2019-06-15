@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SFML.Graphics;
@@ -124,7 +123,7 @@ namespace SurvivalHack
             {
                 if (s.Item is Entity item)
                 {
-                    item.GetNested<T>(list);
+                    item.GetNested(list);
                 }
             }
         }

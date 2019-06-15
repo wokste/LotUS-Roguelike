@@ -1,5 +1,4 @@
-﻿using HackConsole;
-using SurvivalHack.ECM;
+﻿using SurvivalHack.ECM;
 using SurvivalHack.Effects;
 using System;
 using System.Diagnostics;

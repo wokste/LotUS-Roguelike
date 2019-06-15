@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Linq;
+﻿using System.Linq;
 using System;
 using SFML.Graphics;
 

@@ -1,9 +1,5 @@
 ﻿using HackConsole;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
@@ -22,7 +18,7 @@ namespace SurvivalHack.Effects
             return 1;
         }
 
-        public bool Use(Entity instignator, Entity target, StringBuilder sb)
+        public bool Use(Entity instignator, Entity target, StringBuilder _)
         {
             var level = target.Level;
             var rnd = Game.Rnd;

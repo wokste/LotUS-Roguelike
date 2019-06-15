@@ -1,9 +1,5 @@
 ﻿using SurvivalHack.Combat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SurvivalHack.Effects
 {
@@ -26,7 +22,7 @@ namespace SurvivalHack.Effects
             var stats = target.GetOne<StatBlock>();
 
             stats.Heal(Restore, StatID);
-            sb.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} HP. "); // TODO: not always HP
+            sb?.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} HP. "); // TODO: not always HP
             return true;
         }
 

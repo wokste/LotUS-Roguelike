@@ -11,10 +11,8 @@ namespace SurvivalHack
     public class Timeline : ITimeEvent
     {
         private readonly SortedDictionary<long,List<ITimeEvent>> _sporadicListQueue = new SortedDictionary<long, List<ITimeEvent>>();
-        private long _time = 0;//long.MinValue;
-        //private List<IEvent> _repeatList;
+        private long _time = 0;
 
-        //public long Time => _time;
         public int RepeatTurns => 1;
 
         public void Insert(ITimeEvent evt)

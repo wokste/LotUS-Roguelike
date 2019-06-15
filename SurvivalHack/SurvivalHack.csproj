@@ -82,6 +82,7 @@
     <Compile Include="Combat\CombatSystem.cs" />
     <Compile Include="ECM\Potion.cs" />
     <Compile Include="ECM\Stairs.cs" />
+    <Compile Include="Effects\ApplyStatusEffect.cs" />
     <Compile Include="Effects\HarmEffect.cs" />
     <Compile Include="Effects\TeleportEffect.cs" />
     <Compile Include="Eventing.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Effects\Interfaces.cs" />
     <Compile Include="Effects\MapRevealEffect.cs" />
     <Compile Include="Spell.cs" />
+    <Compile Include="StatusEffect.cs" />
     <Compile Include="TurnController.cs" />
     <Compile Include="Combat\Attack.cs" />
     <Compile Include="Combat\Armor.cs" />

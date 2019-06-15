@@ -71,9 +71,9 @@ namespace HackConsole.Ui
             }
         }
 
-        private void PrintChar(VertexArray vertexArray, BfChar c, Vector2f posF, SFML.Graphics.Color color)
+        private void PrintChar(VertexArray vertexArray, BfChar c, Vector2f posF, Color color)
         {
-            var white = new SFML.Graphics.Color(255, 255, 255, 255);
+            var white = new Color(255, 255, 255, 255);
             var texCoord = new Vector2f(c.Left, c.Top);
             var vX = new Vector2f(c.Width, 0);
             var vY = new Vector2f(0, LineHeight); // TODO: 12 is a magic number indicating font height.

@@ -1,9 +1,7 @@
 ﻿using HackConsole;
-using HackConsole.Algo;
 using SurvivalHack.ECM;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SurvivalHack.Combat
 {

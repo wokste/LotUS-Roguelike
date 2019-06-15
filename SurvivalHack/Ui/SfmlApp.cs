@@ -1,7 +1,6 @@
 ﻿using HackConsole;
 using SurvivalHack.Combat;
 using SurvivalHack.Effects;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SurvivalHack.Ui
@@ -106,7 +105,17 @@ namespace SurvivalHack.Ui
                         // TODO: Reserved for casting spells
 
                         // Temporary: Heal spell
-                        var spell = new Spell(6, new IEffect[] { new HealEffect(25, 0, EntityTarget.Self) });
+                        var spell = new Spell(6, new IEffect[] { new ApplyStatusEffect{
+                            UseOn = EntityTarget.Self,
+                            Effect = new StatusEffect
+                            {
+                                TickEffect = new IEffect[]{new HealEffect(5,0,EntityTarget.Self)},
+                                FinalEffect = new IEffect[]{new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 10)},
+                                RunsToExecute = 10,
+                                RepeatTurns = 2,
+                                Components = new System.Collections.Generic.List<ECM.IComponent>{new Armor(20,ESlotType.Gloves) }
+                            }
+                        } }); ;
 
                         if (spell.Cast(_controller.Player, _controller.Player))
                         {

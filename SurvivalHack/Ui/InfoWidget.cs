@@ -1,5 +1,4 @@
 ﻿using HackConsole;
-using HackConsole.Algo;
 using SFML.Graphics;
 
 namespace SurvivalHack.Ui

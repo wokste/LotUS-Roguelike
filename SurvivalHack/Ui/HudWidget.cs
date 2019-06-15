@@ -1,6 +1,4 @@
 ﻿using HackConsole;
-using System.Diagnostics;
-using System.Linq;
 using SurvivalHack.Combat;
 using SFML.Graphics;
 

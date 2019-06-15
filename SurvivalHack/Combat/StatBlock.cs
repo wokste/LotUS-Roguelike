@@ -1,5 +1,4 @@
-﻿using System;
-using HackConsole;
+﻿using HackConsole;
 using SurvivalHack.ECM;
 
 namespace SurvivalHack.Combat

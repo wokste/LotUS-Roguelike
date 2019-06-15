@@ -69,7 +69,7 @@ namespace SurvivalHack.Factory
                 case "spear":
                     {
                         var e = new Entity(new TileGlyph(13, 12), "Spear", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new Combat.MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
+                        e.Add(new MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
                         return e;
                     }
                 case "mace":
