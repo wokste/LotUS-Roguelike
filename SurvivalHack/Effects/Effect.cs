@@ -11,9 +11,9 @@ namespace SurvivalHack.Effects
 {
     public struct EffectList : IXmlSerializable
     {
-        public Effect[] Effects;
+        public IEffect[] Effects;
 
-        public EffectList(Effect effect)
+        public EffectList(IEffect effect)
         {
             Effects = new[] { effect };
         }
@@ -52,6 +52,9 @@ namespace SurvivalHack.Effects
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
+            if (Effects == null)
+                return;
+
             foreach (var e in Effects)
             {
                 XmlSerializer serial = new XmlSerializer(e.GetType());
@@ -66,13 +69,13 @@ namespace SurvivalHack.Effects
     [XmlInclude(typeof(HealEffect))]
     [XmlInclude(typeof(MapRevealEffect))]
     [XmlInclude(typeof(TeleportEffect))]
-    public abstract class Effect
+    public interface IEffect
     {
         [XmlAttribute]
-        public EntityTarget UseOn { get; set; }
+        EntityTarget UseOn { get; set; }
 
-        public abstract void Use(Entity instignator, Entity target, StringBuilder sb);
-        public abstract float Efficiency(Entity instignator, Entity target);
+        void Use(Entity instignator, Entity target, StringBuilder sb);
+        float Efficiency(Entity instignator, Entity target);
     }
 
     [Flags]

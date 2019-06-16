@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace SurvivalHack
@@ -22,7 +23,9 @@ namespace SurvivalHack
     {
         public byte X;
         public byte Y;
-        public byte Method;
+        private readonly byte _method;
+
+        public GlyphMethod Method => (GlyphMethod)_method;
 
         public const byte BASE = 0;
         public const byte TERRAIN = 1;
@@ -30,26 +33,32 @@ namespace SurvivalHack
         public const byte ANIM = 3;
         public const byte WALL = 4;
 
-        public static readonly string[] MethodTypes = new[] { "", "Terrain", "pit" };
-
-        public TileGlyph(byte x, byte y, byte method = 0)
+        public TileGlyph(byte x, byte y, GlyphMethod method = 0)
         {
-            X = x; Y = y; Method = method;
+            X = x; Y = y; _method = (byte)method;
         }
 
         public override string ToString() => Method == 0 ? $"{X},{Y}" : $"{(GlyphMethod)Method}: {X},{Y}";
 
-        public TileGlyph(string s) : this()
+        public TileGlyph(string xmlString) : this()
         {
-            // TODO: XML
-            X = 0;
-            Y = 0;
-            Method = 0;
+            // TODO: Input validation
+            var colonPair = xmlString.Split(':');
+            if (colonPair.Length > 1)
+                _method = (byte)(Enum.Parse(typeof(GlyphMethod), colonPair[0]));
+            else
+                _method = 0;
+
+            var bytePair = colonPair.Last().Split(',').Select(s => byte.Parse(s)).ToArray();
+            X = bytePair[0];
+            Y = bytePair[1];
         }
 
-        public enum GlyphMethod {
-            Base, Terrain, Pit, Anim, Wall
-        }
+    }
+
+    public enum GlyphMethod
+    {
+        Base, Terrain, Pit, Anim, Wall
     }
 
 
@@ -107,7 +116,7 @@ namespace SurvivalHack
                 new Tile
                 {
                     Tag = "floor_stone",
-                    Glyph = new TileGlyph(0,0,TileGlyph.TERRAIN), // TODO: Split dirt and stone floors
+                    Glyph = new TileGlyph(0,0,GlyphMethod.Terrain), // TODO: Split dirt and stone floors
                 },
 
                 new Tile
@@ -115,7 +124,7 @@ namespace SurvivalHack
                     Tag = "floor_wood",
                     Natural = false,
                     Flamable = true,
-                    Glyph = new TileGlyph(8,0,TileGlyph.TERRAIN),
+                    Glyph = new TileGlyph(8,0,GlyphMethod.Terrain),
                 }, // TODO: wood 2
 
                 new Tile
@@ -123,7 +132,7 @@ namespace SurvivalHack
                     Tag = "grass",
                     Flamable = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(4,0,TileGlyph.TERRAIN),
+                    Glyph = new TileGlyph(4,0,GlyphMethod.Terrain),
                 },
 
                 new Tile
@@ -131,7 +140,7 @@ namespace SurvivalHack
                     Tag = "water",
                     WalkDanger = 0.5f,
                     MineCost = 15f,
-                    Glyph = new TileGlyph(56,3,TileGlyph.PIT),
+                    Glyph = new TileGlyph(56,3,GlyphMethod.Pit),
                 },
 
                 new Tile
@@ -139,7 +148,7 @@ namespace SurvivalHack
                     Tag = "acid",
                     WalkDanger = 2.5f,
                     MineCost = 15f,
-                    Glyph = new TileGlyph(56,6,TileGlyph.PIT),
+                    Glyph = new TileGlyph(56,6,GlyphMethod.Pit),
                 },
 
                 new Tile
@@ -147,7 +156,7 @@ namespace SurvivalHack
                     Tag = "lava",
                     WalkDanger = 10,
                     MineCost = 15f,
-                    Glyph = new TileGlyph(56,9,TileGlyph.PIT),
+                    Glyph = new TileGlyph(56,9,GlyphMethod.Pit),
                 },
 
                 new Tile
@@ -155,7 +164,7 @@ namespace SurvivalHack
                     Tag = "rock",
                     Solid = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(0,4,TileGlyph.WALL), // TODO: 4 kinds of rock
+                    Glyph = new TileGlyph(0,4,GlyphMethod.Wall), // TODO: 4 kinds of rock
                     MineCost = 2,
                 },
 
@@ -164,7 +173,7 @@ namespace SurvivalHack
                     Tag = "rock2",
                     Solid = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(4,4,TileGlyph.WALL), // TODO: 4 kinds of rock
+                    Glyph = new TileGlyph(4,4,GlyphMethod.Wall), // TODO: 4 kinds of rock
                     MineCost = 2,
                 },
 
@@ -173,7 +182,7 @@ namespace SurvivalHack
                     Tag = "wall_stone",
                     Solid = true,
                     BlockSight = true,
-                    Glyph = new TileGlyph(16,4,TileGlyph.WALL), // TODO: Two walls
+                    Glyph = new TileGlyph(16,4,GlyphMethod.Wall), // TODO: Two walls
                     MineCost = 10,
                     Natural = false,
                 }

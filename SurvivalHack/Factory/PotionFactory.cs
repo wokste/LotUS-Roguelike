@@ -36,7 +36,14 @@ namespace SurvivalHack.Factory
         Potion[] MakePotions() {
             return new Potion[] {
                 new Potion("Lesser healing potion", new EffectList( new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) )),
-                new Potion("Greater healing potion", new EffectList( new HealEffect(40, 0, EntityTarget.Self | EntityTarget.Others) )),
+                new Potion("Regeneration potion", new EffectList( new ApplyStatusEffect{
+                    Effect = new StatusEffect{
+                        TickEffect = new EffectList(new HealEffect(2, 0, EntityTarget.Self | EntityTarget.Others)),
+                        RepeatTurns = 20,
+                    },
+                    UseOn = EntityTarget.Self | EntityTarget.Others,
+                }
+                )),
                 new Potion("Mana potion", new EffectList(new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) )),
                 new Potion("Teleportaion potion", new EffectList( new TeleportEffect(EntityTarget.Self | EntityTarget.Others))),
                 new Potion("Claivorance potion", new EffectList( new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 15))),

@@ -4,13 +4,17 @@ using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class HealEffect : Effect
+    [XmlType("Heal")]
+    public class HealEffect : IEffect
     {
         [XmlAttribute]
         public int Restore { get; set; }
 
         [XmlAttribute]
         public int StatID { get; set; }
+
+        [XmlAttribute]
+        public EntityTarget UseOn { get; set; }
 
         public HealEffect()
         {
@@ -23,7 +27,7 @@ namespace SurvivalHack.Effects
             UseOn = useOn;
         }
         
-        public override void Use(Entity instignator, Entity target, StringBuilder sb)
+        public void Use(Entity instignator, Entity target, StringBuilder sb)
         {
             var stats = target.GetOne<StatBlock>();
 
@@ -31,7 +35,7 @@ namespace SurvivalHack.Effects
             sb?.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} HP. "); // TODO: not always HP
         }
 
-        public override float Efficiency(Entity instignator, Entity target)
+        public float Efficiency(Entity instignator, Entity target)
         {
             return 1; // TODO
         }

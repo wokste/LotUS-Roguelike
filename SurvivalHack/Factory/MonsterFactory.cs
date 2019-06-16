@@ -29,7 +29,7 @@ namespace SurvivalHack.Factory
             switch (tag)
             {
                 case "zombie":
-                    return new Entity(new TileGlyph(4, 20, TileGlyph.ANIM), "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(4, 20, GlyphMethod.Anim), "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -41,7 +41,7 @@ namespace SurvivalHack.Factory
                         Speed = 0.6f,
                     };
                 case "bat":
-                    return new Entity(new TileGlyph(10, 23, TileGlyph.ANIM), "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(10, 23, GlyphMethod.Anim), "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -53,7 +53,7 @@ namespace SurvivalHack.Factory
                         Speed = 1.5f,
                     };
                 case "skeleton":
-                    return new Entity(new TileGlyph(0, 20, TileGlyph.ANIM), "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(0, 20, GlyphMethod.Anim), "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {
@@ -65,7 +65,7 @@ namespace SurvivalHack.Factory
                         Speed = 0.6f,
                     };
                 case "firebat":
-                    return new Entity(new TileGlyph(12, 23, TileGlyph.ANIM), "Hell Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
+                    return new Entity(new TileGlyph(12, 23, GlyphMethod.Anim), "Hell Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new List<IComponent>()
                         {

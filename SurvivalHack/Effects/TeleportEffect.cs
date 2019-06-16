@@ -4,8 +4,12 @@ using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class TeleportEffect : Effect
+    [XmlType("Teleport")]
+    public class TeleportEffect : IEffect
     {
+        [XmlAttribute]
+        public EntityTarget UseOn { get; set; }
+
         public TeleportEffect()
         {
         }
@@ -15,13 +19,13 @@ namespace SurvivalHack.Effects
             UseOn = useOn;
         }
 
-        public override float Efficiency(Entity instignator, Entity target)
+        public float Efficiency(Entity instignator, Entity target)
         {
             // TODO:
             return 1;
         }
 
-        public override void Use(Entity instignator, Entity target, StringBuilder _)
+        public void Use(Entity instignator, Entity target, StringBuilder _)
         {
             var level = target.Level;
             var rnd = Game.Rnd;

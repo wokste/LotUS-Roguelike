@@ -20,8 +20,12 @@ namespace SurvivalHack
         [XmlElement]
         public List<IComponent> Components { get; set; } = new List<IComponent>();
 
-        [XmlElement]
-        public TileGlyph Glyph { get; set; }
+        [XmlIgnore]
+        public TileGlyph Glyph { get; private set; }
+
+
+        [XmlAttribute("Glyph")]
+        public string GlyphXmlString { get => Glyph.ToString(); set => Glyph = new TileGlyph(value); }
 
         [XmlAttribute]
         public float Speed { get; set; } = 1;

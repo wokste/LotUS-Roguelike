@@ -39,7 +39,7 @@ namespace SurvivalHack
         public TurnController(Game game) {
             Inventory = new Inventory();
 
-            Player = new Entity(new TileGlyph(0, 23, TileGlyph.ANIM), "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
+            Player = new Entity(new TileGlyph(0, 23, GlyphMethod.Anim), "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
                 Components = new List<IComponent>()
                 {

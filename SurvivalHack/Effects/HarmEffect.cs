@@ -4,12 +4,15 @@ using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class HarmEffect : Effect
+    [XmlType("Harm")]
+    public class HarmEffect : IEffect
     {
         [XmlAttribute]
         public int Damage { get; set; }
         [XmlAttribute]
         public int StatID { get; set; }
+        [XmlAttribute]
+        public EntityTarget UseOn { get; set; }
 
         [XmlAttribute]
         public EDamageType DamageType { get; set; }
@@ -25,7 +28,7 @@ namespace SurvivalHack.Effects
             StatID = statID;
             UseOn = useOn;
         }
-        public override void Use(Entity instignator, Entity target, StringBuilder sb)
+        public void Use(Entity instignator, Entity target, StringBuilder sb)
         {
             /*
             if (target.GetOne<StatBlock>() is StatBlock stats)
@@ -37,7 +40,7 @@ namespace SurvivalHack.Effects
             */
         }
 
-        public override float Efficiency(Entity instignator, Entity target)
+        public float Efficiency(Entity instignator, Entity target)
         {
             return 1;
         }

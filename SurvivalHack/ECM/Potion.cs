@@ -18,8 +18,12 @@ namespace SurvivalHack.ECM
         [XmlAttribute]
         public string UnidentifiedName { get; set; }
 
-        [XmlElement]
+        [XmlIgnore]
         public TileGlyph Glyph { get; set; }
+
+
+        [XmlAttribute("Glyph")]
+        public string GlyphXmlString { get => Glyph.ToString(); set => Glyph = new TileGlyph(value); }
 
         public bool IsIdentified => UnidentifiedName == null;
 

@@ -96,7 +96,7 @@ namespace SurvivalHack.Ui
 
                     var g = e.Glyph;
 
-                    if (g.Method == TileGlyph.ANIM && DateTime.Now.Millisecond < 500)
+                    if (g.Method == GlyphMethod.Anim && DateTime.Now.Millisecond < 500)
                         g.X++;
 
                     _entitySprite.Texture = HackConsole.Ui.Sprites.Tileset;
@@ -228,7 +228,7 @@ namespace SurvivalHack.Ui
 
                 switch (glyph.Method)
                 {
-                    case TileGlyph.TERRAIN:
+                    case GlyphMethod.Terrain:
                     {
                         var l = map.IsSameTile(pos, pos + new Vec(-1, 0));
                         var r = map.IsSameTile(pos, pos + new Vec(1, 0));
@@ -246,7 +246,7 @@ namespace SurvivalHack.Ui
                         if (!t && b) glyph.Y += 1;
                         break;
                     }
-                    case TileGlyph.WALL:
+                    case GlyphMethod.Wall:
                     {
                         Vec[] dir8 = { new Vec(-1, -1), new Vec(-1, 0), new Vec(-1, 1), new Vec(0, 1), new Vec(1, 1), new Vec(1, 0), new Vec(1, -1), new Vec(0, -1) };
                         var g = dir8.Select(d => map.IsSameTile(pos, pos + d)).ToArray();
@@ -265,7 +265,7 @@ namespace SurvivalHack.Ui
                         if (!t && b) glyph.Y += 1;
                         break;
                         }
-                    case TileGlyph.PIT:
+                    case GlyphMethod.Pit:
                     {
                         Vec[] dir5 = { new Vec(-1, 0), new Vec(-1, -1), new Vec(0, -1), new Vec(1, -1), new Vec(1, 0)};
                         var g = dir5.Select(d => map.IsSameTile(pos, pos + d)).ToArray();

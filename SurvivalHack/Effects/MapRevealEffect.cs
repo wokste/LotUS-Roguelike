@@ -6,8 +6,12 @@ using System.Xml.Serialization;
 
 namespace SurvivalHack.Effects
 {
-    public class MapRevealEffect : Effect
+    [XmlType("MapReveal")]
+    public class MapRevealEffect : IEffect
     {
+        [XmlAttribute]
+        public EntityTarget UseOn { get; set; }
+
         [XmlAttribute]
         public int Radius { get; set; } = int.MaxValue;
 
@@ -56,7 +60,7 @@ namespace SurvivalHack.Effects
             }
         }
         
-        public override void Use(Entity instignator, Entity target, StringBuilder _)
+        public void Use(Entity instignator, Entity target, StringBuilder _)
         {
             var map = instignator.Level;
             var fov = instignator.GetOne<FieldOfView>();
@@ -83,7 +87,7 @@ namespace SurvivalHack.Effects
             }
         }
 
-        public override float Efficiency(Entity instignator, Entity target)
+        public float Efficiency(Entity instignator, Entity target)
         {
             return 0; // AI's can't work with this component.
         }
