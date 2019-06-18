@@ -10,7 +10,7 @@ namespace SurvivalHack.Effects
     public class MapRevealEffect : IEffect
     {
         [XmlAttribute]
-        public EntityTarget UseOn { get; set; }
+        public TargetFilter Filter { get; set; }
 
         [XmlAttribute]
         public int Radius { get; set; } = int.MaxValue;

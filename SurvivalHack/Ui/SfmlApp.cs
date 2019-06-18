@@ -106,10 +106,10 @@ namespace SurvivalHack.Ui
 
                         // Temporary: Heal spell
                         var spell = new Spell(6, new EffectList(new ApplyStatusEffect{
-                            UseOn = EntityTarget.Self,
+                            Filter = TargetFilter.Self,
                             Effect = new StatusEffect{
-                                TickEffect = new EffectList(new HealEffect(5,0,EntityTarget.Self)),
-                                FinalEffect = new EffectList(new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 10)),
+                                OnTick = new EffectList(new HealEffect(5,0,TargetFilter.Self)),
+                                OnEnd = new EffectList(new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 10)),
                                 RunsToExecute = 10,
                                 RepeatTurns = 2,
                                 Components = new System.Collections.Generic.List<ECM.IComponent>{new Armor(20,ESlotType.Gloves) }

@@ -17,13 +17,13 @@ namespace SurvivalHack.Ui
             controller.OnTurnEnd += () => Dirty = true;
         }
 
-        private void PrintBar(string name, int y, StatBlock stats, int statID)
+        private void PrintBar(EStat stat, int y, StatBlock stats)
         {
-            var str = $"{name} ({stats.Cur(statID)}/{stats.Max(statID)})";
+            var str = $"{stat.ToString()}: ({stats.Cur(stat)}/{stats.Max(stat)})";
             var width = Data.Size.X;
             var offset = (width - str.Length) / 2;
 
-            var p = stats.Perc(statID);
+            var p = stats.Perc(stat);
             var fgColor = Color.White;// (p > 0.8) ? Color.Green : (p > 0.5) ? Color.Yellow : (p > 0.2) ? Color.Orange : Color.Red;
             
             for (int x = 0; x < width; x++)
@@ -50,9 +50,8 @@ namespace SurvivalHack.Ui
                 return;
             }
             var statblock = _controller.Player.GetOne<StatBlock>();
-            PrintBar("HP:", y++, statblock, 0);
-            PrintBar("MP:", y++, statblock, 1);
-            PrintBar("XP:", y++, statblock, 2);
+            PrintBar(EStat.HP, y++, statblock);
+            PrintBar(EStat.MP, y++, statblock);
             
             foreach (var e in _controller.VisibleEnemies)
             {
@@ -64,7 +63,7 @@ namespace SurvivalHack.Ui
 
                 var damagable = e.GetOne<StatBlock>();
                 if (damagable != null)
-                    PrintBar("HP:", y++, damagable, 0);
+                    PrintBar(EStat.HP, y++, damagable);
             }
             Dirty = true; // This is temporary.
         }

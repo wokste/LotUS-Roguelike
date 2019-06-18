@@ -1,4 +1,5 @@
-﻿using SurvivalHack.ECM;
+﻿using SurvivalHack.Combat;
+using SurvivalHack.ECM;
 using SurvivalHack.Effects;
 using System;
 using System.Diagnostics;
@@ -35,19 +36,19 @@ namespace SurvivalHack.Factory
 
         Potion[] MakePotions() {
             return new Potion[] {
-                new Potion("Lesser healing potion", new EffectList( new HealEffect(20, 0, EntityTarget.Self | EntityTarget.Others) )),
+                new Potion("Lesser healing potion", new EffectList( new HealEffect(20, EStat.HP, TargetFilter.Self | TargetFilter.Map) )),
                 new Potion("Regeneration potion", new EffectList( new ApplyStatusEffect{
                     Effect = new StatusEffect{
-                        TickEffect = new EffectList(new HealEffect(2, 0, EntityTarget.Self | EntityTarget.Others)),
+                        OnTick = new EffectList(new HealEffect(2, EStat.HP, TargetFilter.Self | TargetFilter.Map)),
                         RepeatTurns = 20,
                     },
-                    UseOn = EntityTarget.Self | EntityTarget.Others,
+                    Filter = TargetFilter.Self | TargetFilter.Map,
                 }
                 )),
-                new Potion("Mana potion", new EffectList(new HealEffect(10, 1, EntityTarget.Self | EntityTarget.Others) )),
-                new Potion("Teleportaion potion", new EffectList( new TeleportEffect(EntityTarget.Self | EntityTarget.Others))),
+                new Potion("Mana potion", new EffectList(new HealEffect(10, EStat.MP, TargetFilter.Self | TargetFilter.Map) )),
+                new Potion("Teleportaion potion", new EffectList( new TeleportEffect(TargetFilter.Self | TargetFilter.Map))),
                 new Potion("Claivorance potion", new EffectList( new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 15))),
-                new Potion("Acid", new EffectList( new HarmEffect(20, Combat.EDamageType.Poison, 0, EntityTarget.Self | EntityTarget.Others))),
+                new Potion("Acid", new EffectList( new HarmEffect(20, Combat.EDamageType.Poison, 0, TargetFilter.Self | TargetFilter.Map))),
             };
         }
 

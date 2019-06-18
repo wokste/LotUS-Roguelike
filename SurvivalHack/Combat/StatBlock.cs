@@ -21,20 +21,20 @@ namespace SurvivalHack.Combat
             }
         }
         
-        public object Cur(int statID) => _stats[statID].Cur;
+        public object Cur(EStat stat) => _stats[(int)stat].Cur;
 
-        internal bool Spend(int cost, int statID)
+        internal bool Spend(int cost, EStat stat)
         {
-            if (_stats[statID].Cur < cost)
+            if (_stats[(int)stat].Cur < cost)
                 return false;
 
-            _stats[statID].Cur -= cost;
+            _stats[(int)stat].Cur -= cost;
             return true;
         }
 
-        public object Max(int statID) => _stats[statID].Max;
+        public object Max(EStat stat) => _stats[(int)stat].Max;
 
-        public float Perc(int statID) => _stats[statID].Perc;
+        public float Perc(EStat stat) => _stats[(int)stat].Perc;
 
         public void TakeDamage(ref Damage dmg)
         {
@@ -54,9 +54,9 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public int Heal(int restore, int statID)
+        public int Heal(int restore, EStat statID)
         {
-            var change = _stats[statID].Add(restore);
+            var change = _stats[(int)statID].Add(restore);
 
             /*
             if (change > 0)
@@ -107,5 +107,11 @@ namespace SurvivalHack.Combat
                 return val - Cur;
             }
         }
+    }
+
+    public enum EStat
+    {
+        HP,
+        MP
     }
 }

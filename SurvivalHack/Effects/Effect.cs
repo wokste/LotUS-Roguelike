@@ -18,19 +18,19 @@ namespace SurvivalHack.Effects
             Effects = new[] { effect };
         }
 
-        public void Use(Entity instignator, Entity target, StringBuilder sb, EntityTarget filter)
+        public void Use(Entity instignator, Entity target, StringBuilder sb, TargetFilter filter)
         {
             if (Effects == null)
                 return;
 
             foreach (var e in Effects)
             {
-                if ((e.UseOn & filter) != 0)
+                if ((e.Filter & filter) != 0)
                     e.Use(instignator, target, sb);
             }
         }
 
-        public float Efficiency(Entity instignator, Entity target, EntityTarget filter)
+        public float Efficiency(Entity instignator, Entity target, TargetFilter filter)
         {
             if (Effects == null)
                 return 0;
@@ -72,18 +72,33 @@ namespace SurvivalHack.Effects
     public interface IEffect
     {
         [XmlAttribute]
-        EntityTarget UseOn { get; set; }
+        TargetFilter Filter { get; set; }
 
         void Use(Entity instignator, Entity target, StringBuilder sb);
         float Efficiency(Entity instignator, Entity target);
     }
 
     [Flags]
-    public enum EntityTarget
+    public enum TargetFilter
     {
-        Self = 1,
-        Inventory = 2,
-        Others = 4,
-        MultiTarget = 8,
+        Self = 0x1,
+        Item = 0x2,
+        Map = 0x4,
+
+        // TODO: Implement this
+        FlagHit = 0x100,
+        FlagKill = 0x200,
+
+        // TODO: Implement this
+        FlagCursed = 0x1000,
+        FlagNoncursed = 0x2000,
+        FlagBlessed = 0x4000,
+        FlagNonblesed = 0x8000,
+
+        // TODO: Implement this
+        TargetInstinator = 0x10000,
+        TargetWeapon = 0x20000,
+        TargetRandomItem = 0x40000,
+        TargetAllItems = 0x80000,
     }
 }

@@ -22,10 +22,10 @@ namespace SurvivalHack
         public bool Cast(Entity caster, Entity target)
         {
             var statBlock = caster.GetOne<StatBlock>();
-            if (statBlock?.Spend(MpCost, 1) ?? false)
+            if (statBlock?.Spend(MpCost, EStat.MP) ?? false)
             {
                 var stringBuilder = new StringBuilder();
-                Effects.Use(caster, target, stringBuilder, EntityTarget.Self);
+                Effects.Use(caster, target, stringBuilder, TargetFilter.Self);
                 ColoredString.OnMessage(stringBuilder.ToString());
                 return true;
             }

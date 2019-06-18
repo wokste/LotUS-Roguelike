@@ -8,15 +8,15 @@ namespace SurvivalHack.Effects
     public class TeleportEffect : IEffect
     {
         [XmlAttribute]
-        public EntityTarget UseOn { get; set; }
+        public TargetFilter Filter { get; set; }
 
         public TeleportEffect()
         {
         }
 
-        public TeleportEffect(EntityTarget useOn)
+        public TeleportEffect(TargetFilter useOn)
         {
-            UseOn = useOn;
+            Filter = useOn;
         }
 
         public float Efficiency(Entity instignator, Entity target)

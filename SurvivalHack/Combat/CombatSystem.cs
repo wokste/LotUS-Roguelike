@@ -81,6 +81,7 @@ namespace SurvivalHack.Combat
         public EDamageType DamageType { get; set; }
         [XmlAttribute]
         public EAttackMove AttackMove { get; set; }
+        [XmlIgnore]
         public bool KillHit { get; set; }
 
         public bool Significant => (Dmg > 0);

@@ -9,7 +9,7 @@ namespace SurvivalHack.Effects
         public StatusEffect Effect { get; set; }
 
         [XmlAttribute]
-        public EntityTarget UseOn { get; set; }
+        public TargetFilter Filter { get; set; }
 
         public float Efficiency(Entity instignator, Entity target)
         {

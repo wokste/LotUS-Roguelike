@@ -15,9 +15,9 @@ namespace SurvivalHack
         private Entity _parent;
 
         [XmlElement]
-        public EffectList TickEffect;
+        public EffectList OnTick;
         [XmlElement]
-        public EffectList FinalEffect;
+        public EffectList OnEnd;
 
         [XmlAttribute]
         public int RepeatTurns { get; set; } = 1;
@@ -41,8 +41,8 @@ namespace SurvivalHack
             var copy = new StatusEffect
             {
                 Components = Components,
-                TickEffect = TickEffect,
-                FinalEffect = FinalEffect,
+                OnTick = OnTick,
+                OnEnd = OnEnd,
                 _parent = parent,
                 RepeatTurns = RepeatTurns,
                 RunsToExecute = RunsToExecute,
@@ -61,11 +61,11 @@ namespace SurvivalHack
         public void Run()
         {
             RunsToExecute--;
-            TickEffect.Use(_parent, _parent, null, EntityTarget.Self);
+            OnTick.Use(_parent, _parent, null, TargetFilter.Self);
 
             if (RunsToExecute == 0)
             {
-                FinalEffect.Use(_parent, _parent, null, EntityTarget.Self);
+                OnEnd.Use(_parent, _parent, null, TargetFilter.Self);
                 Unattach();
             }
         }

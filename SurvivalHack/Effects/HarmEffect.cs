@@ -10,9 +10,9 @@ namespace SurvivalHack.Effects
         [XmlAttribute]
         public int Damage { get; set; }
         [XmlAttribute]
-        public int StatID { get; set; }
+        public EStat Stat { get; set; }
         [XmlAttribute]
-        public EntityTarget UseOn { get; set; }
+        public TargetFilter Filter { get; set; }
 
         [XmlAttribute]
         public EDamageType DamageType { get; set; }
@@ -21,23 +21,16 @@ namespace SurvivalHack.Effects
         {
         }
 
-        public HarmEffect(int damage, EDamageType damageType, int statID, EntityTarget useOn)
+        public HarmEffect(int damage, EDamageType damageType, EStat stat, TargetFilter useOn)
         {
             Damage = damage;
             DamageType = damageType;
-            StatID = statID;
-            UseOn = useOn;
+            Stat = stat;
+            Filter = useOn;
         }
         public void Use(Entity instignator, Entity target, StringBuilder sb)
         {
-            /*
-            if (target.GetOne<StatBlock>() is StatBlock stats)
-            {
-                // TODO: Armor.
-                //stats.TakeDamage();
-            }
-            throw new NotImplementedException();
-            */
+            CombatSystem.RollAttack(instignator, new[] { target }, (null,null));
         }
 
         public float Efficiency(Entity instignator, Entity target)

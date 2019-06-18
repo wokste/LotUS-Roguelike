@@ -9,7 +9,7 @@ namespace SurvivalHack.ECM
     public class Potion : IActionComponent
     {
 
-        [XmlElement]
+        [XmlAnyElement]
         public EffectList OnUse { get; set; }
 
         [XmlAttribute]
@@ -51,7 +51,7 @@ namespace SurvivalHack.ECM
             var sb = new StringBuilder();
             sb.Append($"{Name}: ");
 
-            OnUse.Use(user, user, sb, EntityTarget.Self);
+            OnUse.Use(user, user, sb, TargetFilter.Self);
             ColoredString.OnMessage(sb.ToString());
         }
     }
