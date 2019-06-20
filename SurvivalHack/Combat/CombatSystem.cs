@@ -14,7 +14,7 @@ namespace SurvivalHack.Combat
             foreach (var target in defenders)
             {
                 if (target.GetOne<StatBlock>() != null)
-                DoAttack(attacker, target, weaponPair, sb);
+                    DoAttack(attacker, target, weaponPair, sb);
             }
             ColoredString.OnMessage(sb.ToString());
         }

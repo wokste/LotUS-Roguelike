@@ -20,6 +20,10 @@ namespace SurvivalHack.Combat
         [XmlAttribute]
         public EAttackResult BlockMethod;
 
+        public Blockable()
+        {
+        }
+
         public Blockable(float blockChance, EAttackResult blockMethod)
         {
             BlockChance = blockChance;
@@ -37,10 +41,14 @@ namespace SurvivalHack.Combat
         public int ArmorPriority => 50;
 
         [XmlAttribute]
-        public ESlotType SlotType { get; private set; }
+        public ESlotType SlotType { get; set; }
 
         [XmlAttribute]
         public int DamageReduction = 1;
+
+        public Armor()
+        {
+        }
 
         public Armor(int damageReduction, ESlotType slotType)
         {
@@ -60,10 +68,14 @@ namespace SurvivalHack.Combat
         public int ArmorPriority => 30;
 
         [XmlAttribute]
-        private readonly EDamageType DamageType;
+        public readonly EDamageType DamageType;
 
         [XmlAttribute]
-        private readonly float Mult;
+        public readonly float Mult;
+
+        public ElementalResistance()
+        {
+        }
 
         public ElementalResistance(EDamageType damageType, float mult)
         {

@@ -2,7 +2,7 @@
 using SurvivalHack.ECM;
 using System;
 
-namespace SurvivalHack
+namespace SurvivalHack.ECM
 {
     public class FieldOfView : IComponent
     {

@@ -1,7 +1,9 @@
 ﻿using HackConsole;
 using SurvivalHack.Combat;
 using SurvivalHack.Effects;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Ui
 {
@@ -112,7 +114,7 @@ namespace SurvivalHack.Ui
                                 OnEnd = new EffectList(new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 10)),
                                 RunsToExecute = 10,
                                 RepeatTurns = 2,
-                                Components = new System.Collections.Generic.List<ECM.IComponent>{new Armor(20,ESlotType.Gloves) }
+                                Components = new ECM.ComponentList { new Armor(20, ESlotType.Gloves) }
                             },
                         } )); ;
 
@@ -124,7 +126,7 @@ namespace SurvivalHack.Ui
                     break;
                 case 'd': // Drop Item
                     {
-                        var inv = _controller.Player.GetOne<Inventory>();
+                        var inv = _controller.Inventory;
                         var o = new OptionWidget($"Drop Item", inv.Items, i => {
                             if (inv.Remove(i))
                             {
@@ -137,7 +139,7 @@ namespace SurvivalHack.Ui
                     break;
                 case 'e': // Use item
                     {
-                        var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
+                        var l = _controller.Inventory.Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Consumable)).ToList();
                         var o = new OptionWidget($"Consume", l, i => {
                             if (Eventing.On(new ConsumeEvent(_controller.Player, i)))
                                 _controller.EndTurn();
@@ -147,7 +149,7 @@ namespace SurvivalHack.Ui
                     break;
                 case 'f': // Fire ranged weapon
                     {
-                        var item = _controller.Player.GetOne<Inventory>()?.Slots[Inventory.SLOT_RANGED].Item;
+                        var item = _controller.Inventory?.Slots[Inventory.SLOT_RANGED].Item;
                         var enemy = _controller.SelectedTarget;
 
                         if (item != null && enemy != null)
@@ -166,7 +168,7 @@ namespace SurvivalHack.Ui
                             if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
                             {
                                 i.SetLevel(null, Vec.Zero);
-                                _controller.Player.GetOne<Inventory>().Add(i);
+                                _controller.Inventory.Add(i);
                                 didTurn = true;
                             }
                         }
@@ -175,11 +177,21 @@ namespace SurvivalHack.Ui
                 case 's':
                     {
                         // TODO: Reserved for searching
+
+                        // TEMP CODE
+
+                        var serializer = new XmlSerializer(typeof(Entity[]));
+                        using (var writer = new StreamWriter(@"D:\Save.xml"))
+                        {
+                            serializer.Serialize(writer, _controller.Level.GetEntities());
+                        }
+
+                        // END TEMP CODE
                     }
                     break;
                 case 't':
                     {
-                        var l = _controller.Player.GetOne<Inventory>().Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Throwable)).ToList();
+                        var l = _controller.Inventory.Items.Where(i => i.EntityFlags.HasFlag(EEntityFlag.Throwable)).ToList();
                         /* TODO: Reserved for throwing
                         var o = new OptionWidget($"Throw", l, i => {
                             
@@ -262,7 +274,7 @@ namespace SurvivalHack.Ui
 
         public bool DoAttack(int slot, Vec dir)
         {
-            var weapon = _controller.Player.GetOne<Inventory>().Slots[slot].Item;
+            var weapon = _controller.Inventory.Slots[slot].Item;
 
             if (weapon == null)
                 return false;

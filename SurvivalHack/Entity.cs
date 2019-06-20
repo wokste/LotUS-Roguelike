@@ -18,7 +18,7 @@ namespace SurvivalHack
         public override string ToString() => Name;
 
         [XmlElement]
-        public List<IComponent> Components { get; set; } = new List<IComponent>();
+        public ComponentList Components { get; set; } = new ComponentList();
 
         [XmlIgnore]
         public TileGlyph Glyph { get; private set; }
@@ -36,11 +36,16 @@ namespace SurvivalHack
         public Attitude Attitude { get; set; }
 
         public float LeftoverMove;
+        [XmlIgnore]
         public Action<Entity> OnDestroy;
 
         public Level Level { get; private set; }
         public Vec Pos;
         public Vec? LastSeenPos;
+
+        public Entity()
+        {
+        }
 
         public Entity(TileGlyph glyph, string name, EEntityFlag entityFlags)
         {
@@ -84,18 +89,6 @@ namespace SurvivalHack
             return null;
         }
 
-        public IEnumerable<Entity> ListSubEntities()
-        {
-            // == Inventory ==
-            var inv = GetOne<Inventory>();
-            if (inv != null)
-                foreach (var slot in inv.Slots)
-                    if (slot.Item != null)
-                        yield return slot.Item;
-
-            // == Status effects ==
-            // TODO: Add status effects.
-        }
 
         public void Add(IComponent component)
         {

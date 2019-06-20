@@ -25,13 +25,6 @@ namespace SurvivalHack.Factory
                 _potions[i].UnidentifiedName = icons[i].Name;
                 _potions[i].Glyph = icons[i].Glyph;
             }
-
-            // TODO_TEMP: Remove
-            XmlSerializer serializer = new XmlSerializer(typeof(Potion[]));
-            using (TextWriter writer = new StreamWriter(@"D:\Potions.xml"))
-            {
-                serializer.Serialize(writer, _potions);
-            }
         }
 
         Potion[] MakePotions() {
@@ -41,6 +34,13 @@ namespace SurvivalHack.Factory
                     Effect = new StatusEffect{
                         OnTick = new EffectList(new HealEffect(2, EStat.HP, TargetFilter.Self | TargetFilter.Map)),
                         RepeatTurns = 20,
+                    },
+                    Filter = TargetFilter.Self | TargetFilter.Map,
+                }
+                )),
+                new Potion("Ironskin Potion", new EffectList( new ApplyStatusEffect{
+                    Effect = new StatusEffect{
+                        Components = new ComponentList{new Armor(20,ESlotType.Gloves) }
                     },
                     Filter = TargetFilter.Self | TargetFilter.Map,
                 }

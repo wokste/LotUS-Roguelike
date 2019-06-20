@@ -5,6 +5,7 @@ using HackConsole;
 using HackConsole.Algo;
 using SFML.Graphics;
 using SFML.Window;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ui
 {

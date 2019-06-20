@@ -12,7 +12,7 @@ namespace SurvivalHack.Ai
 
         public static Goal NullGoal = new Goal(null, ETargetAction.Ignore, int.MinValue);
         public bool IsNull => Target == null;
-
+        
         public Goal(Entity target, ETargetAction action, int priority)
         {
             Target = target;
@@ -26,12 +26,15 @@ namespace SurvivalHack.Ai
         private Goal _goal;
 
         public ETeam Team;
-        private readonly IAttitudeRule[] _rules;
+        public IAttitudeRule[] Rules;
+
+
+        public Attitude() { }
 
         public Attitude(ETeam team, IAttitudeRule[] rules)
         {
             Team = team;
-            _rules = rules;
+            Rules = rules;
         }
 
         public Goal GetGoal(Entity self)
@@ -64,7 +67,7 @@ namespace SurvivalHack.Ai
                 if (level.GetTile(v).BlockSight)
                     return;
 
-            foreach (var rule in _rules)
+            foreach (var rule in Rules)
                 rule.On(self, other, ref _goal, ERisk.None);
         }
 
@@ -72,7 +75,7 @@ namespace SurvivalHack.Ai
         {
             var pos = self.Pos;
 
-            foreach (var rule in _rules)
+            foreach (var rule in Rules)
                 rule.On(self, other, ref _goal, ERisk.Threaten | ERisk.AttackFaction | ERisk.Attack);
 
             if (Team == 0)
@@ -96,7 +99,7 @@ namespace SurvivalHack.Ai
 
         private void TeamAttacked(Entity self, Entity other)
         {
-            foreach (var rule in _rules)
+            foreach (var rule in Rules)
                 rule.On(self, other, ref _goal, ERisk.Threaten | ERisk.AttackFaction);
         }
     }

@@ -9,8 +9,8 @@ namespace SurvivalHack
     public class StatusEffect : INestedComponent, ITimeEvent
     {
         // TODO: XML This shouldn't ignore components, but I want to limit the scope for now
-        [XmlIgnore]
-        public List<IComponent> Components = new List<IComponent>();
+        [XmlElement]
+        public ComponentList Components = new ComponentList();
         [XmlIgnore]
         private Entity _parent;
 
@@ -26,14 +26,7 @@ namespace SurvivalHack
 
         public void GetNested<T>(IList<T> list) where T : class, IComponent
         {
-            foreach (var c in Components)
-            {
-                if (c is T cT)
-                    list.Add(cT);
-
-                if (c is INestedComponent cNested)
-                    cNested.GetNested(list);
-            }
+            Components.GetNested(list);
         }
 
         public void AddCopyTo(Entity parent)

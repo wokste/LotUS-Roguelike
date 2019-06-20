@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Serialization;
 using HackConsole;
 using SurvivalHack.ECM;
 
@@ -14,7 +15,9 @@ namespace SurvivalHack
         public FieldOfView FoV;
         public Inventory Inventory;
         public Level Level => Player.Level;
+        [XmlIgnore]
         public Action OnTurnEnd;
+        [XmlIgnore]
         public Action OnGameOver;
         public bool GameOver { get; private set; } = false;
 
@@ -41,7 +44,7 @@ namespace SurvivalHack
 
             Player = new Entity(new TileGlyph(0, 23, GlyphMethod.Anim), "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
-                Components = new List<IComponent>()
+                Components = new ComponentList
                 {
                     this,
                     new Combat.MeleeWeapon(2, Combat.EAttackMove.Thrust, Combat.EDamageType.Bludgeoing),

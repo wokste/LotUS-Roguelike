@@ -11,26 +11,8 @@ namespace SurvivalHack
         public static bool On(BaseEvent evt, BaseEvent parent = null)
         {
             // Prepare event, filling in PreEvent, OnEvent, PostEvent, etc
-            foreach (var c in evt.Item.Components)
-                (c as IActionComponent)?.GetActions(evt.Item, evt, EUseSource.Item);
-
-            if (evt.Target != null)
-            {
-                foreach (var c in evt.Target.Components)
-                    (c as IActionComponent)?.GetActions(evt.Target, evt, EUseSource.Target);
-                foreach (var e in evt.Target.ListSubEntities())
-                    foreach (var c in e.Components)
-                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.TargetItem);
-            }
-
-            if (evt.User != null)
-            {
-                foreach (var c in evt.User.Components)
-                    (c as IActionComponent)?.GetActions(evt.User, evt, EUseSource.User);
-                foreach (var e in evt.User.ListSubEntities())
-                    foreach (var c in e.Components)
-                        (c as IActionComponent)?.GetActions(e, evt, EUseSource.UserItem);
-            }
+            foreach (var c in evt.Item.Get<IActionComponent>())
+                c.GetActions(evt.Item, evt, EUseSource.Item);
 
             // == Execute the event ==
             //evt.PreEventCheck?.Invoke(evt);

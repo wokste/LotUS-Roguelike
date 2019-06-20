@@ -1,6 +1,6 @@
 ﻿namespace SurvivalHack.ECM
 {
-    public class StackComponent : IComponent
+    public class StackComponent : IActionComponent
     {
         public int Count;
         public object Prototype;
@@ -30,9 +30,5 @@
                 }
             }
         }
-
-        public string Describe() => $"Stack consists of {Count} items";
-
-        public bool FitsIn(ESlotType type) => false;
     }
 }

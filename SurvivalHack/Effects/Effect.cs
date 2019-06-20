@@ -46,7 +46,7 @@ namespace SurvivalHack.Effects
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            // TODO: XML
+            //TODO: Implement
             throw new NotImplementedException();
         }
 
