@@ -79,27 +79,26 @@ namespace SurvivalHack.Combat
         public float Dmg { get; set; }
         [XmlAttribute]
         public EDamageType DamageType { get; set; }
-        [XmlAttribute]
-        public EAttackMove AttackMove { get; set; }
+
         [XmlIgnore]
         public bool KillHit { get; set; }
 
         public bool Significant => (Dmg > 0);
 
-        public Damage(float damage, EDamageType damageType, EAttackMove attackMove)
+        public Damage(float damage, EDamageType damageType)
         {
             Dmg = damage;
             DamageType = damageType;
-            AttackMove = attackMove;
             KillHit = false;
+        }
+
+        public Damage(string value) : this()
+        {
         }
 
         public override string ToString()
         {
-            if (Dmg > 0)
-                return $" @cd{Dmg}@ca damage";
-            else
-                return $" @cfNo@ca damage";
+            return $"{Dmg} {DamageType}";
         }
     }
 }

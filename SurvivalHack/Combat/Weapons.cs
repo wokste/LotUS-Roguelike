@@ -8,6 +8,8 @@ namespace SurvivalHack.Combat
 {
     public interface IWeapon : IComponent
     {
+        [XmlAttribute]
+        EAttackMove AttackMove { get; set; }
         Damage Damage { get; }
         Vec? Dir(Entity attacker, Entity defender);
         IEnumerable<Entity> Targets(Entity attacker, Vec dir);
@@ -15,9 +17,13 @@ namespace SurvivalHack.Combat
 
     public class MeleeWeapon : IWeapon, IEquippableComponent
     {
+        [XmlAttribute]
+        public EAttackMove AttackMove { get; set; }
+        [XmlIgnore]
+        public Damage Damage { get; private set; }
 
-        [XmlElement]
-        public Damage Damage { get; set; }
+        [XmlAttribute("Damage")]
+        public string DamageString { get { return Damage.ToString(); } set { Damage = new Damage(value); } }
 
 
         public MeleeWeapon()
@@ -25,15 +31,10 @@ namespace SurvivalHack.Combat
         }
 
 
-        public MeleeWeapon(Damage damage)
+        public MeleeWeapon(EAttackMove move, Damage damage)
         {
+            AttackMove = move;
             Damage = damage;
-        }
-
-
-        public MeleeWeapon(float damage, EAttackMove move, EDamageType type)
-        {
-            Damage = new Damage(damage, type, move);
         }
 
         public Vec? Dir(Entity attacker, Entity defender)
@@ -57,8 +58,13 @@ namespace SurvivalHack.Combat
 
     public class SweepWeapon : IWeapon, IEquippableComponent
     {
-        [XmlElement]
-        public Damage Damage { get; }
+        [XmlAttribute]
+        public EAttackMove AttackMove { get; set; }
+        [XmlIgnore]
+        public Damage Damage { get; private set; }
+
+        [XmlAttribute("Damage")]
+        public string DamageString { get { return Damage.ToString(); } set { Damage = new Damage(value); } }
 
         [XmlAttribute]
         public Range Range { get; } = new Range(1,1);
@@ -68,8 +74,9 @@ namespace SurvivalHack.Combat
         {
         }
 
-        public SweepWeapon(Damage damage, Range range)
+        public SweepWeapon(EAttackMove move, Damage damage, Range range)
         {
+            AttackMove = move;
             Damage = damage;
             Range = range;
         }
@@ -97,8 +104,15 @@ namespace SurvivalHack.Combat
 
     public class RangedWeapon : IWeapon, IEquippableComponent
     {
-        [XmlElement]
-        public Damage Damage { get; set; }
+
+        [XmlAttribute]
+        public EAttackMove AttackMove { get; set; } = EAttackMove.Projectile;
+
+        [XmlIgnore]
+        public Damage Damage { get; private set; }
+
+        [XmlAttribute("Damage")]
+        public string DamageString { get { return Damage.ToString(); } set { Damage = new Damage(value); } }
 
         [XmlAttribute]
         public float Range { get; set; }
@@ -106,11 +120,6 @@ namespace SurvivalHack.Combat
 
         public RangedWeapon()
         {
-        }
-        public RangedWeapon(int damage, EDamageType type, float range)
-        {
-            Damage = new Damage(damage,type, EAttackMove.Projectile);
-            Range = range;
         }
 
         public RangedWeapon(Damage damage, float range)

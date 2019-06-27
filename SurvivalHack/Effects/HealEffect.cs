@@ -33,7 +33,7 @@ namespace SurvivalHack.Effects
             var stats = target.GetOne<StatBlock>();
 
             stats.Heal(Restore, Stat);
-            sb?.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} {Stat.ToString()}. "); // TODO: not always HP
+            sb?.Append($"{Word.AName(target)} {Word.Verb(target, "heal")} {Restore} {Stat.ToString()}. ");
         }
 
         public float Efficiency(Entity instignator, Entity target)

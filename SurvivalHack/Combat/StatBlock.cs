@@ -8,7 +8,7 @@ namespace SurvivalHack.Combat
     public class StatBlock : IComponent
     {
         [XmlIgnore]
-        private Stat[] _stats = new Stat[3];
+        private readonly Stat[] _stats = new Stat[3];
 
         [XmlAttribute]
         public string HP { get { return _stats[0].ToString(); } set { _stats[0] = new Stat(value); } }
@@ -77,23 +77,6 @@ namespace SurvivalHack.Combat
                 UpdateStats(msg.Target);
             */
             return change;
-        }
-
-        private void UpdateStats(Entity self)
-        {
-            // TODO: Show being damaged in some way
-            /*
-            if (self.EntityFlags.HasFlag(EEntityFlag.IsPlayer))
-            {
-                var p = Health.Perc * 3;
-                byte r = 255;
-                byte g = (byte)MyMath.Lerp(p, 0, 255);
-                byte b = (byte)MyMath.Lerp(p - 1, 0, 255);
-
-                self.Symbol.TextColor = new Colour(r, g, b);
-            }
-            */
-            
         }
 
         public struct Stat

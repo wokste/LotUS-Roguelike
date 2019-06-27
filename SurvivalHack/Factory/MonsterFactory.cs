@@ -1,5 +1,6 @@
 ﻿using HackConsole;
 using SurvivalHack.Ai;
+using SurvivalHack.Combat;
 using SurvivalHack.ECM;
 using System;
 using System.Collections.Generic;
@@ -32,8 +33,8 @@ namespace SurvivalHack.Factory
                     return new Entity(new TileGlyph(4, 20, GlyphMethod.Anim), "Zombie", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new ComponentList{
-                            new Combat.MeleeWeapon(9, Combat.EAttackMove.Swing, Combat.EDamageType.Bludgeoing),
-                            new Combat.StatBlock(20,0,1)
+                            new MeleeWeapon(EAttackMove.Swing, new Damage(9,EDamageType.Bludgeoing)),
+                            new StatBlock(20,0,1)
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -43,8 +44,8 @@ namespace SurvivalHack.Factory
                     return new Entity(new TileGlyph(10, 23, GlyphMethod.Anim), "Giant Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new ComponentList{
-                            new Combat.MeleeWeapon(3, Combat.EAttackMove.Close, Combat.EDamageType.Piercing),
-                            new Combat.StatBlock(8,0,1)
+                            new MeleeWeapon(EAttackMove.Close, new Damage(3,EDamageType.Piercing)),
+                            new StatBlock(8,0,1)
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -54,8 +55,8 @@ namespace SurvivalHack.Factory
                     return new Entity(new TileGlyph(0, 20, GlyphMethod.Anim), "Skeleton", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new ComponentList{
-                            new Combat.RangedWeapon(9, Combat.EDamageType.Piercing, 50),
-                            new Combat.StatBlock(12,0,1),
+                            new RangedWeapon(new Damage(9, EDamageType.Piercing), 50),
+                            new StatBlock(12,0,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.Undead, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),
@@ -65,8 +66,8 @@ namespace SurvivalHack.Factory
                     return new Entity(new TileGlyph(12, 23, GlyphMethod.Anim), "Hell Bat", EEntityFlag.Blocking | EEntityFlag.TeamMonster)
                     {
                         Components = new ComponentList{
-                            new Combat.MeleeWeapon(6, Combat.EAttackMove.Close, Combat.EDamageType.Piercing | Combat.EDamageType.Fire),
-                            new Combat.StatBlock(16,8,1),
+                            new MeleeWeapon(EAttackMove.Close, new Damage(6, EDamageType.Piercing | EDamageType.Fire)),
+                            new StatBlock(16,8,1),
                         },
                         Ai = new AiActor(),
                         Attitude = new Attitude(ETeam.None, new[] { new TeamAttitudeRule(ETargetAction.Hate, ETeam.Player) }),

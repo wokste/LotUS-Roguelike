@@ -41,41 +41,41 @@ namespace SurvivalHack.Factory
                 case "dagger":
                     {
                         var e = new Entity(new TileGlyph(1,12), "Dagger", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new MeleeWeapon(5, EAttackMove.Close, EDamageType.Piercing));
+                        e.Add(new MeleeWeapon(EAttackMove.Close, new Damage(5, EDamageType.Piercing)));
                         e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "ssword":
                     {
                         var e = new Entity(new TileGlyph(2, 12), "Shortsword", EEntityFlag.Pickable);
-                        e.Add(new MeleeWeapon(6, EAttackMove.Swing, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new MeleeWeapon(EAttackMove.Swing, new Damage(6, EDamageType.Slashing | EDamageType.Piercing)));
                         e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "lsword":
                     {
                         var e = new Entity(new TileGlyph(5, 12), "Longsword", EEntityFlag.Pickable);
-                        e.Add(new MeleeWeapon(7, EAttackMove.Swing, EDamageType.Slashing | EDamageType.Piercing));
+                        e.Add(new MeleeWeapon(EAttackMove.Swing, new Damage(7, EDamageType.Slashing | EDamageType.Piercing)));
                         e.Add(new Blockable(0.2f, EAttackResult.Parried));
                         return e;
                     }
                 case "axe":
                     {
                         var e = new Entity(new TileGlyph(7, 12),"Handaxe", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new SweepWeapon(new Damage(6, EDamageType.Slashing, EAttackMove.Swing), new Range(1)));
+                        e.Add(new SweepWeapon(EAttackMove.Swing, new Damage(6, EDamageType.Slashing), new Range(1)));
                         e.Add(new Blockable(0.1f, EAttackResult.Parried));
                         return e;
                     }
                 case "spear":
                     {
                         var e = new Entity(new TileGlyph(13, 12), "Spear", EEntityFlag.Pickable | EEntityFlag.Throwable);
-                        e.Add(new MeleeWeapon(7, Combat.EAttackMove.Thrust, Combat.EDamageType.Piercing));
+                        e.Add(new MeleeWeapon(EAttackMove.Thrust, new Damage(7, EDamageType.Piercing)));
                         return e;
                     }
                 case "mace":
                     {
                         var e = new Entity(new TileGlyph(9, 12), "Mace", EEntityFlag.Pickable);
-                        e.Add(new MeleeWeapon(6, EAttackMove.Swing, EDamageType.Bludgeoing));
+                        e.Add(new MeleeWeapon(EAttackMove.Swing, new Damage(6,EDamageType.Bludgeoing)));
                         return e;
                     }
                 case "wshield":
@@ -93,14 +93,14 @@ namespace SurvivalHack.Factory
                 case "sbow":
                     {
                         var e = new Entity(new TileGlyph(16, 12), "Shortbow", EEntityFlag.Pickable);
-                        e.Add(new RangedWeapon(5, EDamageType.Piercing, 20));
+                        e.Add(new RangedWeapon(new Damage(5, EDamageType.Piercing), 20));
                         //TODO: require ammo
                         return e;
                     }
                 case "lbow":
                     {
                         var e = new Entity(new TileGlyph(17, 12), "Longbow", EEntityFlag.Pickable);
-                        e.Add(new RangedWeapon(6, EDamageType.Piercing, 50 ));
+                        e.Add(new RangedWeapon(new Damage(6, EDamageType.Piercing), 50 ));
                         //TODO: require ammo
                         return e;
                     }

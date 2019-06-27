@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml.Serialization;
 using HackConsole;
+using SurvivalHack.Combat;
 using SurvivalHack.ECM;
 
 namespace SurvivalHack
@@ -49,8 +50,8 @@ namespace SurvivalHack
                 Components = new ComponentList
                 {
                     this,
-                    new Combat.MeleeWeapon(2, Combat.EAttackMove.Thrust, Combat.EDamageType.Bludgeoing),
-                    new Combat.StatBlock(100, 20, 0),
+                    new MeleeWeapon(Combat.EAttackMove.Thrust, new Damage(2, EDamageType.Bludgeoing)),
+                    new StatBlock(100, 20, 0),
                     Inventory
                 },
                 Attitude = new Ai.Attitude(Ai.ETeam.Player, null),
