@@ -4,7 +4,8 @@ namespace SurvivalHack.ECM
 {
     public class StackComponent : IActionComponent
     {
-        public int Count;
+        [XmlAttribute]
+        public int Count = 1;
         [XmlIgnore]
         public object Prototype;
 

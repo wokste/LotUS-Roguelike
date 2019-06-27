@@ -6,7 +6,8 @@ namespace SurvivalHack
 {
     public class Game
     {
-        public static readonly Random Rnd = new Random();
+        // TODO: remove seed. This is needed for XML comparisons.
+        public static readonly Random Rnd = new Random(0);
 
         public Timeline Timeline = new Timeline();
         public List<Tile> TileDefs;

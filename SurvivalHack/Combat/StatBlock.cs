@@ -1,14 +1,23 @@
 ﻿using HackConsole;
 using SurvivalHack.ECM;
+using System;
 using System.Xml.Serialization;
 
 namespace SurvivalHack.Combat
 {
     public class StatBlock : IComponent
     {
-        [XmlElement]
-        public Stat[] _stats = new Stat[3];
+        [XmlIgnore]
+        private Stat[] _stats = new Stat[3];
 
+        [XmlAttribute]
+        public string HP { get { return _stats[0].ToString(); } set { _stats[0] = new Stat(value); } }
+
+        [XmlAttribute]
+        public string MP { get { return _stats[1].ToString(); } set { _stats[1] = new Stat(value); } }
+
+        [XmlAttribute]
+        public string XP { get { return _stats[2].ToString(); } set { _stats[2] = new Stat(value); } }
 
         public StatBlock()
         {
@@ -90,10 +99,10 @@ namespace SurvivalHack.Combat
         public struct Stat
         {
             [XmlAttribute]
-            internal int Cur { get; set; }
+            public int Cur { get; set; }
 
             [XmlAttribute]
-            internal int Max { get; set; }
+            public int Max { get; set; }
 
             public Stat(int val) : this()
             {
@@ -101,6 +110,12 @@ namespace SurvivalHack.Combat
                 Max = val;
             }
 
+            public Stat(string value) : this()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string ToString() => (Cur == Max) ? $"{Max}" : $"{Cur}/{Max}";
 
             public float Perc => Cur / (float)Max;
 

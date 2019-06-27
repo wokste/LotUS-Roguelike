@@ -17,7 +17,7 @@ namespace SurvivalHack
         public EEntityFlag EntityFlags { get; set; }
         public override string ToString() => Name;
 
-        [XmlElement]
+        [XmlAnyElement]
         public ComponentList Components { get; set; } = new ComponentList();
 
         [XmlIgnore]
@@ -30,9 +30,10 @@ namespace SurvivalHack
         [XmlAttribute]
         public float Speed { get; set; } = 1;
 
+        [XmlElement] // TODO
         public AiActor Ai { get; set; }
 
-        [XmlElement]
+        [XmlElement] // TODO
         public Attitude Attitude { get; set; }
 
         [XmlIgnore]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HackConsole;
 using SurvivalHack.Combat;
+using SurvivalHack.ECM;
 
 namespace SurvivalHack.Ai
 {
