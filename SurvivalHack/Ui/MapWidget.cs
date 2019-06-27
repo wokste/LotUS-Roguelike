@@ -77,7 +77,7 @@ namespace SurvivalHack.Ui
             {
                 if (flags.HasFlag(EEntityFlag.IsPlayer))
                     return 10;
-                else if (flags.HasFlag(EEntityFlag.Blocking))
+                else if (flags.HasFlag(EEntityFlag.Blocks))
                     return 5;
                 return 1;
             }
@@ -95,7 +95,7 @@ namespace SurvivalHack.Ui
                     if (!_mapView.VisibleSize.Contains(relLoc))
                         continue;
 
-                    var g = e.Glyph;
+                    var g = e.Icon;
 
                     if (g.Method == GlyphMethod.Anim && DateTime.Now.Millisecond < 500)
                         g.X++;

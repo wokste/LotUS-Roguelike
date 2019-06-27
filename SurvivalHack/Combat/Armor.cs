@@ -41,7 +41,7 @@ namespace SurvivalHack.Combat
         public int ArmorPriority => 50;
 
         [XmlAttribute]
-        public ESlotType SlotType { get; set; }
+        public ESlotType Slot { get; set; }
 
         [XmlAttribute]
         public int DamageReduction = 1;
@@ -53,7 +53,7 @@ namespace SurvivalHack.Combat
         public Armor(int damageReduction, ESlotType slotType)
         {
             DamageReduction = damageReduction;
-            SlotType = slotType;
+            Slot = slotType;
         }
         
         public void Mutate(ref Attack _, ref Damage damage)

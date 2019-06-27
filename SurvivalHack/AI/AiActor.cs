@@ -138,7 +138,7 @@ namespace SurvivalHack.Ai
             _entity = entity;
         }
 
-        public int RepeatTurns => _entity.EntityFlags.HasFlag(EEntityFlag.Destroyed) ? -1 : 1;
+        public int TicksPerTurn => _entity.EntityFlags.HasFlag(EEntityFlag.Destroyed) ? -1 : 1;
 
         public void Run()
         {

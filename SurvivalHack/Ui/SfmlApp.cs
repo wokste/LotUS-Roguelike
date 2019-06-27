@@ -112,8 +112,8 @@ namespace SurvivalHack.Ui
                             Effect = new StatusEffect{
                                 OnTick = new EffectList(new HealEffect(5,0,TargetFilter.Self)),
                                 OnEnd = new EffectList(new MapRevealEffect(MapRevealEffect.RevealMethod.Terrain, 10)),
-                                RunsToExecute = 10,
-                                RepeatTurns = 2,
+                                Turns = 10,
+                                TicksPerTurn = 2,
                                 Components = new ECM.ComponentList { new Armor(20, ESlotType.Gloves) }
                             },
                         } )); ;
@@ -165,7 +165,7 @@ namespace SurvivalHack.Ui
                         var pos = _controller.Player.Pos;
                         foreach (var i in _controller.Level.GetEntities(pos).ToArray())
                         {
-                            if (i.EntityFlags.HasFlag(EEntityFlag.Pickable))
+                            if (i.EntityFlags.HasFlag(EEntityFlag.Item))
                             {
                                 i.SetLevel(null, Vec.Zero);
                                 _controller.Inventory.Add(i);

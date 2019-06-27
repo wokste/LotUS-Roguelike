@@ -33,14 +33,15 @@ namespace SurvivalHack.Factory
                 new Potion("Regeneration potion", new EffectList( new ApplyStatusEffect{
                     Effect = new StatusEffect{
                         OnTick = new EffectList(new HealEffect(2, EStat.HP, TargetFilter.Self | TargetFilter.Map)),
-                        RepeatTurns = 20,
+                        Turns = 20,
                     },
                     Filter = TargetFilter.Self | TargetFilter.Map,
                 }
                 )),
                 new Potion("Ironskin Potion", new EffectList( new ApplyStatusEffect{
                     Effect = new StatusEffect{
-                        Components = new ComponentList{new Armor(20,ESlotType.Gloves) }
+                        Components = new ComponentList{new Armor(20,ESlotType.Gloves) },
+                        Turns = 10,
                     },
                     Filter = TargetFilter.Self | TargetFilter.Map,
                 }
@@ -79,7 +80,7 @@ namespace SurvivalHack.Factory
             var potionId = info.Rnd.Next(_potions.Length);
             var potion = _potions[potionId];
 
-            Entity e = new Entity(potion.Glyph, potion.Name, EEntityFlag.Pickable | EEntityFlag.Consumable | EEntityFlag.Throwable);
+            Entity e = new Entity(potion.Glyph, potion.Name, EEntityFlag.Item | EEntityFlag.Consumable | EEntityFlag.Throwable);
 
             e.Add(new StackComponent(1, potion));
             e.Add(potion);

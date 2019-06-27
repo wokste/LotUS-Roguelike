@@ -13,7 +13,7 @@ namespace SurvivalHack
         [XmlAttribute]
         public string Name { get; set; }
 
-        [XmlAttribute]
+        [XmlAttribute("Flags")]
         public EEntityFlag EntityFlags { get; set; }
         public override string ToString() => Name;
 
@@ -21,13 +21,14 @@ namespace SurvivalHack
         public ComponentList Components { get; set; } = new ComponentList();
 
         [XmlIgnore]
-        public TileGlyph Glyph { get; private set; }
+        public TileGlyph Icon { get; private set; }
 
 
-        [XmlAttribute("Glyph")]
-        public string GlyphXmlString { get => Glyph.ToString(); set => Glyph = new TileGlyph(value); }
+        [XmlAttribute("Icon")]
+        public string GlyphXmlString { get => Icon.ToString(); set => Icon = new TileGlyph(value); }
 
         [XmlAttribute]
+        [System.ComponentModel.DefaultValue(1)]
         public float Speed { get; set; } = 1;
 
         [XmlElement] // TODO
@@ -54,7 +55,7 @@ namespace SurvivalHack
 
         public Entity(TileGlyph glyph, string name, EEntityFlag entityFlags)
         {
-            Glyph = glyph;
+            Icon = glyph;
             Name = name;
             EntityFlags = entityFlags;
         }
@@ -146,9 +147,9 @@ namespace SurvivalHack
                 return false;
 
             // Monster collisions
-            if (EntityFlags.HasFlag(EEntityFlag.Blocking))
+            if (EntityFlags.HasFlag(EEntityFlag.Blocks))
                 foreach (var c in Level.GetEntities(newPosition))
-                    if (c.EntityFlags.HasFlag(EEntityFlag.Blocking))
+                    if (c.EntityFlags.HasFlag(EEntityFlag.Blocks))
                         return false;
 
             var oldChunk = Level.GetChunck(Pos);
@@ -170,9 +171,9 @@ namespace SurvivalHack
     [Flags]
     public enum EEntityFlag
     {
-        Blocking = 0x1, // Occupies a square
-        Pickable = 0x2, // Can be held in the inventory.
-        FixedPos = 0x4, // Nothing should be able to move this entity. E.g. Doors, fountains and stairs down shouldn't be affected by push-effects.
+        Blocks = 0x1, // Occupies a square
+        Item = 0x2, // Can be held in the inventory.
+        NoMove = 0x4, // Nothing should be able to move this entity. E.g. Doors, fountains and stairs down shouldn't be affected by push-effects.
         IsPlayer = 0x8, // Only the player actor is a player. This is useful for confusion-like debuffs that effect either AI or UI.
         Destroyed = 0x10,
 

@@ -5,7 +5,7 @@ namespace SurvivalHack
     public interface ITimeEvent {
         void Run();
 
-        int RepeatTurns { get; }
+        int TicksPerTurn { get; }
     }
 
     public class Timeline : ITimeEvent
@@ -13,14 +13,14 @@ namespace SurvivalHack
         private readonly SortedDictionary<long,List<ITimeEvent>> _sporadicListQueue = new SortedDictionary<long, List<ITimeEvent>>();
         private long _time = 0;
 
-        public int RepeatTurns => 1;
+        public int TicksPerTurn => 1;
 
         public void Insert(ITimeEvent evt)
         {
-            if (evt.RepeatTurns <= 0)
+            if (evt.TicksPerTurn <= 0)
                 return;
 
-            var absoluteTime = _time + evt.RepeatTurns;
+            var absoluteTime = _time + evt.TicksPerTurn;
 
             if (!_sporadicListQueue.TryGetValue(absoluteTime, out var list))
             {

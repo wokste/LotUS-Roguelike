@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using HackConsole;
 using SFML.Graphics;
 using SurvivalHack.ECM;
@@ -114,7 +115,7 @@ namespace SurvivalHack
 
             bool Fits(ESlotType? actualSlot) => (slotType == actualSlot) || (slotType == ESlotType.Offhand && actualSlot == ESlotType.Hand);
 
-            return item.Components.Any(c => Fits((c as IEquippableComponent)?.SlotType));
+            return item.Components.Any(c => Fits((c as IEquippableComponent)?.Slot));
         }
 
         public void GetNested<T>(IList<T> list) where T : class, IComponent
@@ -152,12 +153,13 @@ namespace SurvivalHack
         {
         }
 
-        public Equippable(ESlotType slotType)
+        public Equippable(ESlotType slot)
         {
-            SlotType = slotType;
+            Slot = slot;
         }
 
-        public ESlotType SlotType { get; set; }
+        [XmlAttribute]
+        public ESlotType Slot { get; set; }
     }
 
     public enum ESlotType

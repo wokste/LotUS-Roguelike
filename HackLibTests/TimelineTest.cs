@@ -11,7 +11,7 @@ namespace HackLibTests
         public class MockEvent : ITimeEvent
         {
             private readonly string v;
-            public int RepeatTurns { get; set; } = 1;
+            public int TicksPerTurn { get; set; } = 1;
             public int Hits { get; private set; } = 0;
             public Action<MockEvent> OnHit;
 
@@ -37,8 +37,8 @@ namespace HackLibTests
         {
             var timeline = new Timeline();
             var fixedEvents = new List<MockEvent>{new MockEvent("F0"), new MockEvent("F1"), new MockEvent("F2") };
-            var evenEvent = new MockEvent("even") { RepeatTurns = 2 };
-            var turn3Event = new MockEvent("turn3") { RepeatTurns = 3, OnHit = m => m.RepeatTurns = -1 };
+            var evenEvent = new MockEvent("even") { TicksPerTurn = 2 };
+            var turn3Event = new MockEvent("turn3") { TicksPerTurn = 3, OnHit = m => m.TicksPerTurn = -1 };
 
             var sporadicEvents = new List<(MockEvent,int)> { (new MockEvent("S0-3"), 3), (new MockEvent("S0-7"),7), (new MockEvent("S0-5"),5) };
 

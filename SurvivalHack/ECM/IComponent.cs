@@ -90,7 +90,7 @@ namespace SurvivalHack.ECM
 
     public interface IEquippableComponent : IComponent
     {
-        ESlotType SlotType { get; }
+        ESlotType Slot { get; }
     }
 
     public enum EUseSource

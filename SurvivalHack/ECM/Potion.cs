@@ -1,6 +1,7 @@
 ﻿using HackConsole;
 using SurvivalHack.Effects;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -10,6 +11,8 @@ namespace SurvivalHack.ECM
     {
 
         [XmlAnyElement]
+
+        [DefaultValue(typeof(EffectList))]
         public EffectList OnUse { get; set; }
 
         [XmlAttribute]

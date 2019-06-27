@@ -89,14 +89,14 @@ namespace SurvivalHack.ECM
         }
 
         public Vec? ShowLocation(Entity e) {
-            if (Is(e.Pos, FLAG_VISIBLE) || (Is(e.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.FixedPos)))
+            if (Is(e.Pos, FLAG_VISIBLE) || (Is(e.Pos, FLAG_DISCOVERED) && e.EntityFlags.HasFlag(EEntityFlag.NoMove)))
             {
                 e.LastSeenPos = e.Pos;
                 return e.Pos;
             }
             else
             {
-                if (e.LastSeenPos is Vec && e.EntityFlags.HasFlag(EEntityFlag.Pickable))
+                if (e.LastSeenPos is Vec && e.EntityFlags.HasFlag(EEntityFlag.Item))
                     return e.LastSeenPos;
                 else
                     return null;

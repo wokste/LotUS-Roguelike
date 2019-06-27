@@ -69,8 +69,6 @@ namespace SurvivalHack.Combat
         public float HitChance { get; set; }
         [XmlAttribute]
         public float CritChance { get; set; }
-        [XmlAttribute]
-        public EAttackMove AttackMove { get; set; }
     }
 
     public struct Damage

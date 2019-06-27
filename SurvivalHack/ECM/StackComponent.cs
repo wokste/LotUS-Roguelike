@@ -1,10 +1,12 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.ECM
 {
     public class StackComponent : IActionComponent
     {
         [XmlAttribute]
+        [DefaultValue(1)]
         public int Count = 1;
         [XmlIgnore]
         public object Prototype;

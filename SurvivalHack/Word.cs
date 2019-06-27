@@ -34,7 +34,7 @@
         public static string ColorString(Entity e)
         {
             var f = e.EntityFlags;
-            if (f.HasFlag(EEntityFlag.Pickable))
+            if (f.HasFlag(EEntityFlag.Item))
             {
                 if (f.HasFlag(EEntityFlag.Identified) && f.HasFlag(EEntityFlag.Cursed))
                     return "@cd"; // Cursed items are red

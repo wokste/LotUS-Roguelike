@@ -10,19 +10,24 @@ namespace SurvivalHack
     {
         // TODO: XML This shouldn't ignore components, but I want to limit the scope for now
         [XmlElement]
+        [System.ComponentModel.DefaultValue(typeof(ComponentList))]
         public ComponentList Components = new ComponentList();
         [XmlIgnore]
         private Entity _parent;
 
         [XmlElement]
+        [System.ComponentModel.DefaultValue(typeof(EffectList))]
         public EffectList OnTick;
         [XmlElement]
+        [System.ComponentModel.DefaultValue(typeof(EffectList))]
         public EffectList OnEnd;
 
         [XmlAttribute]
-        public int RepeatTurns { get; set; } = 1;
+        [System.ComponentModel.DefaultValue(1)]
+        public int TicksPerTurn { get; set; } = 1;
         [XmlAttribute]
-        public int RunsToExecute { get; set; } = int.MaxValue;
+        [System.ComponentModel.DefaultValue(int.MaxValue)]
+        public int Turns { get; set; } = int.MaxValue;
 
         public void GetNested<T>(IList<T> list) where T : class, IComponent
         {
@@ -37,8 +42,8 @@ namespace SurvivalHack
                 OnTick = OnTick,
                 OnEnd = OnEnd,
                 _parent = parent,
-                RepeatTurns = RepeatTurns,
-                RunsToExecute = RunsToExecute,
+                TicksPerTurn = TicksPerTurn,
+                Turns = Turns,
             };
 
             parent.Add(copy);
@@ -48,15 +53,15 @@ namespace SurvivalHack
         public void Unattach()
         {
             _parent.Components.Remove(this);
-            RepeatTurns = -1;
+            Turns = -1;
         }
 
         public void Run()
         {
-            RunsToExecute--;
+            Turns--;
             OnTick.Use(_parent, _parent, null, TargetFilter.Self);
 
-            if (RunsToExecute == 0)
+            if (Turns == 0)
             {
                 OnEnd.Use(_parent, _parent, null, TargetFilter.Self);
                 Unattach();

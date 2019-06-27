@@ -8,8 +8,6 @@ namespace SurvivalHack.Combat
 {
     public interface IWeapon : IComponent
     {
-        [XmlAttribute]
-        EAttackMove AttackMove { get; set; }
         Damage Damage { get; }
         Vec? Dir(Entity attacker, Entity defender);
         IEnumerable<Entity> Targets(Entity attacker, Vec dir);
@@ -17,8 +15,6 @@ namespace SurvivalHack.Combat
 
     public class MeleeWeapon : IWeapon, IEquippableComponent
     {
-        [XmlAttribute]
-        public EAttackMove AttackMove { get; set; }
         [XmlIgnore]
         public Damage Damage { get; private set; }
 
@@ -31,9 +27,8 @@ namespace SurvivalHack.Combat
         }
 
 
-        public MeleeWeapon(EAttackMove move, Damage damage)
+        public MeleeWeapon(Damage damage)
         {
-            AttackMove = move;
             Damage = damage;
         }
 
@@ -53,13 +48,11 @@ namespace SurvivalHack.Combat
             return level.GetEntities(attacker.Pos + dir);
         }
 
-        public ESlotType SlotType => ESlotType.Hand;
+        public ESlotType Slot => ESlotType.Hand;
     }
 
     public class SweepWeapon : IWeapon, IEquippableComponent
     {
-        [XmlAttribute]
-        public EAttackMove AttackMove { get; set; }
         [XmlIgnore]
         public Damage Damage { get; private set; }
 
@@ -74,9 +67,8 @@ namespace SurvivalHack.Combat
         {
         }
 
-        public SweepWeapon(EAttackMove move, Damage damage, Range range)
+        public SweepWeapon(Damage damage, Range range)
         {
-            AttackMove = move;
             Damage = damage;
             Range = range;
         }
@@ -99,14 +91,11 @@ namespace SurvivalHack.Combat
             return level.GetEntities(center.BoundingBox.Grow(Range.Max)).Where(e => Range.Contains((e.Pos - center).ManhattanLength));
         }
 
-        public ESlotType SlotType => ESlotType.Hand;
+        public ESlotType Slot => ESlotType.Hand;
     }
 
     public class RangedWeapon : IWeapon, IEquippableComponent
     {
-
-        [XmlAttribute]
-        public EAttackMove AttackMove { get; set; } = EAttackMove.Projectile;
 
         [XmlIgnore]
         public Damage Damage { get; private set; }
@@ -154,6 +143,6 @@ namespace SurvivalHack.Combat
             }
         }
 
-        public ESlotType SlotType => ESlotType.Ranged;
+        public ESlotType Slot => ESlotType.Ranged;
     }
 }

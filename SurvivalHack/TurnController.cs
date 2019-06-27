@@ -45,12 +45,12 @@ namespace SurvivalHack
         public TurnController(Game game) {
             Inventory = new Inventory();
 
-            Player = new Entity(new TileGlyph(0, 23, GlyphMethod.Anim), "Player", EEntityFlag.Blocking | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
+            Player = new Entity(new TileGlyph(0, 23, GlyphMethod.Anim), "Player", EEntityFlag.Blocks | EEntityFlag.IsPlayer | EEntityFlag.TeamPlayer)
             {
                 Components = new ComponentList
                 {
                     this,
-                    new MeleeWeapon(Combat.EAttackMove.Thrust, new Damage(2, EDamageType.Bludgeoing)),
+                    new MeleeWeapon(new Damage(2, EDamageType.Blunt)),
                     new StatBlock(100, 20, 0),
                     Inventory
                 },
