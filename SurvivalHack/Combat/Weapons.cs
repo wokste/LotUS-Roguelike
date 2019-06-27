@@ -19,6 +19,12 @@ namespace SurvivalHack.Combat
         [XmlElement]
         public Damage Damage { get; set; }
 
+
+        public MeleeWeapon()
+        {
+        }
+
+
         public MeleeWeapon(Damage damage)
         {
             Damage = damage;
@@ -57,6 +63,11 @@ namespace SurvivalHack.Combat
         [XmlAttribute]
         public Range Range { get; } = new Range(1,1);
 
+
+        public SweepWeapon()
+        {
+        }
+
         public SweepWeapon(Damage damage, Range range)
         {
             Damage = damage;
@@ -92,6 +103,10 @@ namespace SurvivalHack.Combat
         [XmlAttribute]
         public float Range { get; set; }
 
+
+        public RangedWeapon()
+        {
+        }
         public RangedWeapon(int damage, EDamageType type, float range)
         {
             Damage = new Damage(damage,type, EAttackMove.Projectile);

@@ -183,7 +183,7 @@ namespace SurvivalHack.Ui
                         var serializer = new XmlSerializer(typeof(Entity[]));
                         using (var writer = new StreamWriter(@"D:\Save.xml"))
                         {
-                            serializer.Serialize(writer, _controller.Level.GetEntities());
+                            serializer.Serialize(writer, _controller.Level.GetEntities().ToArray());
                         }
 
                         // END TEMP CODE

@@ -1,6 +1,7 @@
 ﻿using HackConsole;
 using HackConsole.Algo;
 using System;
+using System.Xml.Serialization;
 
 namespace SurvivalHack.Ai
 {
@@ -23,9 +24,12 @@ namespace SurvivalHack.Ai
 
     public class Attitude
     {
+        [XmlIgnore]
         private Goal _goal;
 
+        [XmlAttribute]
         public ETeam Team;
+        [XmlIgnore]
         public IAttitudeRule[] Rules;
 
 

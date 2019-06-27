@@ -8,16 +8,14 @@ using SurvivalHack.ECM;
 
 namespace SurvivalHack
 {
-    public class TurnController : IComponent
+    public class TurnController : IComponent, INoSerialize
     {
         public Entity Player;
         public List<Vec> Path;
         public FieldOfView FoV;
         public Inventory Inventory;
         public Level Level => Player.Level;
-        [XmlIgnore]
         public Action OnTurnEnd;
-        [XmlIgnore]
         public Action OnGameOver;
         public bool GameOver { get; private set; } = false;
 
@@ -37,6 +35,10 @@ namespace SurvivalHack
                 }
                 return _visibleEnemies;
             }
+        }
+
+        public TurnController()
+        {
         }
 
         public TurnController(Game game) {

@@ -25,6 +25,8 @@ namespace SurvivalHack.ECM
     {
     }
 
+    public interface INoSerialize {
+    }
 
     public class ComponentList : List<IComponent> , IXmlSerializable
     {
@@ -67,8 +69,10 @@ namespace SurvivalHack.ECM
         {
             foreach (var c in this)
             {
-                XmlSerializer serial = new XmlSerializer(c.GetType());
-                serial.Serialize(writer, c);
+                if (c is INoSerialize)
+                    continue;
+                var serializer = new XmlSerializer(c.GetType());
+                serializer.Serialize(writer, c);
             }
 
         }

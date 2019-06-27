@@ -7,7 +7,12 @@ namespace SurvivalHack.Combat
     public class StatBlock : IComponent
     {
         [XmlElement]
-        private readonly Stat[] _stats = new Stat[3];
+        public Stat[] _stats = new Stat[3];
+
+
+        public StatBlock()
+        {
+        }
 
         public StatBlock(int HP, int MP, int XP)
         {
@@ -82,7 +87,7 @@ namespace SurvivalHack.Combat
             
         }
 
-        struct Stat
+        public struct Stat
         {
             [XmlAttribute]
             internal int Cur { get; set; }

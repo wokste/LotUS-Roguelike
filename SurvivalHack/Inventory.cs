@@ -148,12 +148,16 @@ namespace SurvivalHack
     
     public class Equippable : IEquippableComponent
     {
+        public Equippable()
+        {
+        }
+
         public Equippable(ESlotType slotType)
         {
             SlotType = slotType;
         }
 
-        public ESlotType SlotType { get; }
+        public ESlotType SlotType { get; set; }
     }
 
     public enum ESlotType

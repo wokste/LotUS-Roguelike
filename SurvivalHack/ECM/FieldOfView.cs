@@ -4,7 +4,7 @@ using System;
 
 namespace SurvivalHack.ECM
 {
-    public class FieldOfView : IComponent
+    public class FieldOfView : IComponent, INoSerialize
     {
         public const byte FLAG_DISCOVERED = 0x1;    // True when the player seen the tile
         public const byte FLAG_VISIBLE = 0x2;       // True if the player sees the tile. In general, if something is visible it sould also be discovered.

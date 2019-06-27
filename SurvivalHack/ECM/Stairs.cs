@@ -6,11 +6,14 @@ namespace SurvivalHack.ECM
     {
         public int Depth;
 
+        public Stairs()
+        {
+        }
+
         public Stairs(int depth)
         {
             Depth = depth;
         }
-
 
         public void GetActions(Entity self, BaseEvent msg, EUseSource source)
         {

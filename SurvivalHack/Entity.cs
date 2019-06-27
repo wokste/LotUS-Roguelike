@@ -32,15 +32,19 @@ namespace SurvivalHack
 
         public AiActor Ai { get; set; }
 
-        [XmlAttribute]
+        [XmlElement]
         public Attitude Attitude { get; set; }
 
+        [XmlIgnore]
         public float LeftoverMove;
         [XmlIgnore]
         public Action<Entity> OnDestroy;
 
+        [XmlIgnore]
         public Level Level { get; private set; }
+        [XmlIgnore]
         public Vec Pos;
+        [XmlIgnore]
         public Vec? LastSeenPos;
 
         public Entity()
